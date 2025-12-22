@@ -7,94 +7,97 @@ STYLE = """
 <style>
     body { font-family: 'Times New Roman', serif; background-color: #f0f2f5; margin: 0; display: flex; color: #333; overflow-x: hidden; }
     
-    /* Yan Menü (Sidebar) */
-    .sidebar { width: 340px; background: #2c3e50; color: white; height: 100vh; padding: 20px; position: fixed; overflow-y: auto; box-shadow: 2px 0 10px rgba(0,0,0,0.3); }
-    .sidebar h2 { border-bottom: 2px solid #34495e; padding-bottom: 10px; font-size: 20px; color: #ecf0f1; text-align: center; }
+    /* Yan Menü (Sol Sidebar) */
+    .sidebar-left { width: 300px; background: #2c3e50; color: white; height: 100vh; padding: 20px; position: fixed; left: 0; overflow-y: auto; box-shadow: 2px 0 10px rgba(0,0,0,0.3); z-index: 10; }
+    
+    /* Sağ Panel (Tarih Paneli) */
+    .sidebar-right { width: 300px; background: #ecf0f1; color: #2c3e50; height: 100vh; padding: 20px; position: fixed; right: 0; overflow-y: auto; box-shadow: -2px 0 10px rgba(0,0,0,0.1); border-left: 4px solid #bdc3c7; }
     
     /* Ana İçerik */
-    .main-content { margin-left: 380px; padding: 40px; flex-grow: 1; display: flex; justify-content: center; }
-    .container { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 100%; max-width: 900px; }
+    .main-content { margin-left: 320px; margin-right: 320px; padding: 40px; flex-grow: 1; display: flex; justify-content: center; }
+    .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 100%; max-width: 800px; }
     
-    /* Araç Kutuları */
-    .tool-box { background: #34495e; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-top: 3px solid #3498db; }
-    .tool-box h4 { margin: 0 0 10px 0; color: #3498db; font-size: 16px; text-align: center; }
-    
-    /* Standart Hesap Makinesi */
-    .calc-display { width: 100%; height: 40px; background: #222; color: #0f0; text-align: right; padding: 5px; margin-bottom: 10px; font-family: monospace; font-size: 20px; border-radius: 4px; }
-    .calc-buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
-    .calc-buttons button { padding: 10px; background: #444; border: none; color: white; border-radius: 4px; cursor: pointer; font-weight: bold; }
-    .calc-buttons button:hover { background: #555; }
-    .calc-buttons .op { background: #e67e22; }
-    
-    /* Oyun Alanı */
+    /* Oyun Alanı Geliştirmesi */
     #game-container { width: 100%; height: 150px; background: #111; position: relative; overflow: hidden; border-radius: 8px; border: 2px solid #555; cursor: pointer; }
+    #game-start-msg { position: absolute; width: 100%; text-align: center; top: 40%; color: #2ecc71; font-weight: bold; font-family: sans-serif; }
     #player { width: 30px; height: 30px; background: #e74c3c; position: absolute; bottom: 0; left: 20px; border-radius: 4px; }
     .obstacle { width: 20px; height: 20px; background: #f1c40f; position: absolute; bottom: 0; right: -20px; border-radius: 2px; }
-    #score { position: absolute; top: 5px; right: 10px; color: white; font-family: monospace; font-size: 14px; }
+    #score { position: absolute; top: 5px; right: 10px; color: white; font-family: monospace; }
+    
+    /* Araç ve Tarih Kutuları */
+    .tool-box { background: #34495e; padding: 12px; border-radius: 8px; margin-bottom: 15px; }
+    .history-item { margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #bdc3c7; font-size: 14px; }
+    .history-item b { color: #c0392b; display: block; margin-bottom: 5px; }
     
     /* Kartlar */
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px; }
-    .card { background: #fff; border: 1px solid #ddd; padding: 20px; border-radius: 10px; text-decoration: none; text-align: center; transition: 0.3s; color: #2c3e50; }
-    .card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); border-color: #3498db; }
-    .card img { width: 60px; margin-bottom: 10px; border-radius: 4px; }
-    
-    .typing-text { line-height: 1.8; font-size: 18px; background: #fffdf9; padding: 25px; border-left: 6px solid #c0392b; border-radius: 4px; white-space: pre-wrap; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+    .card { background: #fff; border: 1px solid #ddd; padding: 15px; border-radius: 10px; text-decoration: none; text-align: center; color: #2c3e50; font-size: 14px; }
+    .card:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+    .card img { width: 40px; margin-bottom: 5px; }
+
+    .typing-text { line-height: 1.6; font-size: 16px; background: #fffdf9; padding: 20px; border-left: 5px solid #c0392b; white-space: pre-wrap; }
 </style>
 
 <script>
-    // --- HESAP MAKİNESİ MANTIĞI ---
+    // --- HESAP MAKİNESİ ---
     function addToCalc(val) { document.getElementById('display').innerText += val; }
     function clearCalc() { document.getElementById('display').innerText = ''; }
-    function solveCalc() {
-        try { document.getElementById('display').innerText = eval(document.getElementById('display').innerText); }
-        catch { document.getElementById('display').innerText = 'Hata'; }
-    }
+    function solveCalc() { try { document.getElementById('display').innerText = eval(document.getElementById('display').innerText); } catch { document.getElementById('display').innerText = 'Hata'; } }
 
-    // --- OYUN MANTIĞI (Enflasyon Canavarı) ---
+    // --- GELİŞMİŞ OYUN MANTIĞI ---
     let isJumping = false;
     let score = 0;
+    let gameStarted = false;
+
+    function startGame() {
+        if (gameStarted) { jump(); return; }
+        gameStarted = true;
+        document.getElementById("game-start-msg").style.display = "none";
+        createObstacle();
+    }
+
     function jump() {
-        if (isJumping) return;
+        if (isJumping || !gameStarted) return;
         let player = document.getElementById("player");
         isJumping = true;
         let pos = 0;
-        let timer = setInterval(function() {
+        let upTimer = setInterval(() => {
             if (pos >= 80) {
-                clearInterval(timer);
-                let downTimer = setInterval(function() {
+                clearInterval(upTimer);
+                let downTimer = setInterval(() => {
                     if (pos <= 0) { clearInterval(downTimer); isJumping = false; }
-                    pos -= 5;
-                    player.style.bottom = pos + "px";
+                    pos -= 5; player.style.bottom = pos + "px";
                 }, 20);
             }
-            pos += 5;
-            player.style.bottom = pos + "px";
+            pos += 5; player.style.bottom = pos + "px";
         }, 20);
     }
 
     function createObstacle() {
+        if (!gameStarted) return;
         let container = document.getElementById("game-container");
         let obs = document.createElement("div");
         obs.classList.add("obstacle");
         container.appendChild(obs);
-        let obsPos = 300;
-        let timer = setInterval(function() {
-            if (obsPos < -20) {
+        let obsPos = 0;
+        let timer = setInterval(() => {
+            obsPos += 5;
+            obs.style.right = obsPos + "px";
+            
+            let playerBottom = parseInt(window.getComputedStyle(document.getElementById("player")).getPropertyValue("bottom"));
+            let obsRight = parseInt(obs.style.right);
+
+            if (obsRight > 240 && obsRight < 270 && playerBottom < 20) {
+                alert("Enflasyona yenildin! Skor: " + score);
+                location.reload(); 
+            }
+
+            if (obsPos > 320) {
                 clearInterval(timer);
                 container.removeChild(obs);
                 score++;
                 document.getElementById("score").innerText = "Skor: " + score;
             }
-            // Çarpışma Kontrolü
-            let playerBottom = parseInt(window.getComputedStyle(document.getElementById("player")).getPropertyValue("bottom"));
-            if (obsPos > 20 && obsPos < 50 && playerBottom < 20) {
-                alert("Canavar seni yakaladı! Skor: " + score);
-                score = 0;
-                document.getElementById("score").innerText = "Skor: 0";
-                obsPos = -50;
-            }
-            obsPos -= 5;
-            obs.style.right = (300 - obsPos) + "px";
         }, 20);
         setTimeout(createObstacle, Math.random() * 2000 + 1000);
     }
@@ -108,34 +111,43 @@ STYLE = """
 """
 
 def layout(content):
-    sidebar = f"""
-    <div class="sidebar">
-        <h2>🛠️ ARAÇLAR & OYUN</h2>
-        
+    # Sol Sidebar: Araçlar ve Oyun
+    sidebar_left = f"""
+    <div class="sidebar-left">
+        <h2>🛠️ ARAÇLAR</h2>
         <div class="tool-box">
-            <h4>🧮 Hesap Makinesi</h4>
-            <div id="display" class="calc-display"></div>
-            <div class="calc-buttons">
-                <button onclick="addToCalc('7')">7</button><button onclick="addToCalc('8')">8</button><button onclick="addToCalc('9')">9</button><button class="op" onclick="addToCalc('/')">/</button>
-                <button onclick="addToCalc('4')">4</button><button onclick="addToCalc('5')">5</button><button onclick="addToCalc('6')">6</button><button class="op" onclick="addToCalc('*')">*</button>
-                <button onclick="addToCalc('1')">1</button><button onclick="addToCalc('2')">2</button><button onclick="addToCalc('3')">3</button><button class="op" onclick="addToCalc('-')">-</button>
-                <button onclick="clearCalc()">C</button><button onclick="addToCalc('0')">0</button><button onclick="solveCalc()">=</button><button class="op" onclick="addToCalc('+')">+</button>
+            <div id="display" style="background:#222; color:#0f0; padding:10px; text-align:right; margin-bottom:5px; border-radius:4px; font-family:monospace; height:20px;"></div>
+            <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:5px;">
+                <button onclick="addToCalc('7')">7</button><button onclick="addToCalc('8')">8</button><button onclick="addToCalc('9')">9</button><button onclick="addToCalc('/')">/</button>
+                <button onclick="addToCalc('4')">4</button><button onclick="addToCalc('5')">5</button><button onclick="addToCalc('6')">6</button><button onclick="addToCalc('*')">*</button>
+                <button onclick="clearCalc()">C</button><button onclick="addToCalc('0')">0</button><button onclick="solveCalc()">=</button><button onclick="addToCalc('+')">+</button>
             </div>
         </div>
-
-        <div class="tool-box" style="border-top-color: #e74c3c;">
-            <h4>🏃 Canavardan Kaç (Zıpla: Tıkla)</h4>
-            <div id="game-container" onclick="jump()">
+        <div class="tool-box">
+            <h4>🏃 ENFLASYON KOŞUSU</h4>
+            <div id="game-container" onclick="startGame()">
+                <div id="game-start-msg">BAŞLATMAK İÇİN TIKLA</div>
                 <div id="score">Skor: 0</div>
                 <div id="player"></div>
             </div>
-            <p style="font-size: 11px; text-align:center; color:#bdc3c7; margin-top:5px;">Enflasyon canavarına (sarı kutu) çarpmadan zıpla!</p>
         </div>
-        
-        <script>setTimeout(createObstacle, 2000);</script>
     </div>
     """
-    return f"{STYLE} {sidebar} <div class='main-content'>{content}</div>"
+    
+    # Sağ Sidebar: Kuruluş ve Devrimler
+    sidebar_right = f"""
+    <div class="sidebar-right">
+        <h2 style="font-size:18px; border-bottom:2px solid #333;">🏛️ TARİH ÇİZELGESİ</h2>
+        <div class="history-item"><b>🇹🇷 Türkiye (1923)</b>Cumhuriyet'in ilanı ile büyük bir ekonomik ve sosyal devrim başladı. 1928 Harf Devrimi okuryazarlığı sıçrattı.</div>
+        <div class="history-item"><b>🏛️ Antik Roma (M.Ö. 753)</b>Sezar'ın geçişi (M.Ö. 44) Roma'yı cumhuriyetten imparatorluğa taşıyan en büyük devrimdir.</div>
+        <div class="history-item"><b>🇩🇪 Almanya (1919)</b>Weimar Devrimi ile monarşi yıkıldı. Ancak 1923 hiperenflasyonu halkı sefalete sürükledi.</div>
+        <div class="history-item"><b>🇺🇸 ABD (1776)</b>1776 Bağımsızlık Bildirgesi modern demokrasinin en büyük devrimidir. 1929 Buhranı ise ekonomiyi yıktı.</div>
+        <div class="history-item"><b>🇭🇺 Macaristan (895)</b>1848 Macar Devrimi, Avrupa'daki özgürlük ateşinin en büyük parçalarından biriydi.</div>
+        <div class="history-item"><b>🕌 Osmanlı (1299)</b>1453 İstanbul'un Fethi, devleti bir imparatorluğa dönüştüren en büyük askeri ve kültürel devrimdir.</div>
+    </div>
+    """
+    
+    return f"{STYLE} {sidebar_left} {sidebar_right} <div class='main-content'>{content}</div>"
 
 FLAGS = {
     "OSMANLI": "https://flagcdn.com/w160/tr.png",
@@ -150,14 +162,14 @@ FLAGS = {
 def home():
     content = f"""
     <div class="container">
-        <h1 style="font-size: 36px; text-align:center;">📜 Dünya Tarih & Ekonomi Portalı</h1>
+        <h1 style="text-align:center;">📜 Dünya Tarih & Ekonomi Portalı</h1>
         <div class="grid">
-            <a href="/osmanli" class="card"><img src="{FLAGS['OSMANLI']}"><b>Osmanlı İmparatorluğu</b><br><small>Kuruluş: 1299</small></a>
-            <a href="/almanya" class="card"><img src="{FLAGS['ALMANYA']}"><b>Almanya (Weimar)</b><br><small>Kuruluş: 1919</small></a>
-            <a href="/turkiye" class="card"><img src="{FLAGS['TURKIYE']}"><b>Türkiye Cumhuriyeti</b><br><small>Kuruluş: 1923</small></a>
-            <a href="/roma" class="card"><img src="{FLAGS['ROMA']}"><b>Antik Roma</b><br><small>Kuruluş: M.Ö. 753</small></a>
-            <a href="/macaristan" class="card"><img src="{FLAGS['MACARISTAN']}"><b>Macaristan</b><br><small>Kuruluş: 895</small></a>
-            <a href="/usa" class="card"><img src="{FLAGS['USA']}"><b>ABD</b><br><small>Kuruluş: 1776</small></a>
+            <a href="/osmanli" class="card"><img src="{FLAGS['OSMANLI']}"><br>Osmanlı</a>
+            <a href="/almanya" class="card"><img src="{FLAGS['ALMANYA']}"><br>Almanya</a>
+            <a href="/turkiye" class="card"><img src="{FLAGS['TURKIYE']}"><br>Türkiye</a>
+            <a href="/roma" class="card"><img src="{FLAGS['ROMA']}"><br>Roma</a>
+            <a href="/macaristan" class="card"><img src="{FLAGS['MACARISTAN']}"><br>Macaristan</a>
+            <a href="/usa" class="card"><img src="{FLAGS['USA']}"><br>ABD</a>
         </div>
     </div>
     """
@@ -165,8 +177,8 @@ def home():
 
 @app.route("/osmanli")
 def osmanli():
-    text = """KURULUŞ: 1299. Osmanlı, Söğüt'te küçük bir beylikten cihan şümul bir devlete dönüştü. Ekonomisi uzun süre 'Akçe' üzerine kuruluydu. Ancak 16. yy'da Amerika'dan gelen gümüş akımı ve savaş masrafları nedeniyle 'Tağşiş' (paranın değerini düşürme) başladı... (Buraya istediğin kadar uzun bilgi ekleyebilirsin)"""
-    content = f"""<div class="container"><h2>📜 Osmanlı Tarihi</h2><div id="target" class="typing-text"></div><a href="/" class="back-link">← Geri Dön</a></div><script>typeWriter("target", `{text}`, 20);</script>"""
+    text = "Osmanlı İmparatorluğu'nda ekonomik devrimler genellikle savaş finansmanı üzerine kuruluydu. 1854'te alınan ilk dış borç, mali yapıda dönüm noktası oldu..."
+    content = f"""<div class="container"><h2>🕌 Osmanlı Devrimleri</h2><div id="target" class="typing-text"></div><a href="/" style="display:block; text-align:center; margin-top:20px; color:#2980b9;">← Geri Dön</a></div><script>typeWriter("target", `{text}`, 20);</script>"""
     return layout(content)
 
 if __name__ == "__main__":
