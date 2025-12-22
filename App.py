@@ -1,61 +1,76 @@
 from flask import Flask
+import os
 
 app = Flask(__name__)
 
+# CSS ve JavaScript efektlerini içeren STYLE değişkeni
 STYLE = """
 <style>
     body {
-        background-color: #f4f1ec;
-        font-family: Georgia, serif;
-        color: #2c2c2c;
+        background-color: #d1e9ff; /* Açık Mavi Arka Plan */
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #2c3e50;
         margin: 0;
         padding: 0;
     }
     .container {
-        max-width: 900px;
-        margin: 40px auto;
-        background-color: white;
-        padding: 30px;
-        border-radius: 8px;
-        box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        max-width: 800px;
+        margin: 50px auto;
+        background-color: #ffffff;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     }
     h1, h2 {
         text-align: center;
-    }
-    ul {
-        list-style: none;
-        padding: 0;
-        text-align: center;
-    }
-    li {
-        margin: 20px 0;
-        font-size: 20px;
+        color: #0056b3;
     }
     img.flag {
-        width: 36px;
+        width: 45px;
+        height: auto;
+        border-radius: 4px;
         vertical-align: middle;
         margin-right: 10px;
-        border: 1px solid #ccc;
     }
-    a {
-        text-decoration: none;
-        color: #7a1f1f;
-        font-weight: bold;
+    /* Yazı efekti için stil */
+    .typing-text {
+        font-size: 18px;
+        line-height: 1.8;
+        background: #f8f9fa;
+        padding: 20px;
+        border-left: 5px solid #2980b9;
+        border-radius: 5px;
+        min-height: 100px;
+        font-family: 'Georgia', serif;
     }
-    a:hover {
-        text-decoration: underline;
-    }
-    pre {
-        white-space: pre-wrap;
-        line-height: 1.6;
-        font-size: 15px;
-    }
+    ul { list-style: none; padding: 0; }
+    li { margin: 20px 0; font-size: 22px; text-align: center; }
+    a { text-decoration: none; color: #2980b9; font-weight: bold; }
+    .back-link { display: block; text-align: center; margin-top: 20px; }
 </style>
+
+<script>
+    // Yazıları tek tek döken fonksiyon
+    function typeWriter(elementId, text, speed) {
+        let i = 0;
+        let element = document.getElementById(elementId);
+        element.innerHTML = ""; // Önce içini temizle
+        
+        function type() {
+            if (i < text.length) {
+                element.innerHTML += text.charAt(i);
+                i++;
+                setTimeout(type, speed);
+            }
+        }
+        type();
+    }
+</script>
 """
 
 OSMANLI_FLAG = "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Flag_of_the_Ottoman_Empire_%281840%E2%80%931922%29.svg/320px-Flag_of_the_Ottoman_Empire_%281840%E2%80%931922%29.svg.png"
-GERMANY_FLAG = "https://flagcdn.com/w40/de.png"
-TURKEY_FLAG = "https://flagcdn.com/w40/tr.png"
+GERMANY_FLAG = "https://flagcdn.com/w80/de.png"
+TURKEY_FLAG = "https://flagcdn.com/w80/tr.png"
 
 @app.route("/")
 def home():
@@ -64,87 +79,52 @@ def home():
     <div class="container">
         <h1>📜 Tarih Dergisi</h1>
         <ul>
-            <li>
-                <img class="flag" src="{OSMANLI_FLAG}">
-                <a href="/osmanli">Osmanlı Enflasyonu</a>
-            </li>
-            <li>
-                <img class="flag" src="{GERMANY_FLAG}">
-                <a href="/almanya">Almanya Enflasyonu</a>
-            </li>
-            <li>
-                <img class="flag" src="{TURKEY_FLAG}">
-                <a href="/turkiye">Türkiye Enflasyonu</a>
-            </li>
+            <li><img class="flag" src="{OSMANLI_FLAG}"><a href="/osmanli">Osmanlı Enflasyonu</a></li>
+            <li><img class="flag" src="{GERMANY_FLAG}"><a href="/almanya">Almanya Enflasyonu</a></li>
+            <li><img class="flag" src="{TURKEY_FLAG}"><a href="/turkiye">Türkiye Enflasyonu</a></li>
         </ul>
     </div>
     """
 
 @app.route("/osmanli")
 def osmanli():
+    text = "Osmanlı'da fiyat artışları genellikle paranın içindeki değerli maden oranının düşürülmesi (tağşiş) ve bitmek bilmeyen savaşların getirdiği mali yükler nedeniyle oluşmuştur. 16. yüzyılda Amerika'dan gelen yoğun gümüş akışı da fiyatları sarsmıştır."
     return f"""
     {STYLE}
     <div class="container">
-        <h2>
-            <img class="flag" src="{OSMANLI_FLAG}">
-            Osmanlı Enflasyonu
-        </h2>
-        <pre>
-Osmanlı İmparatorluğu’nda enflasyon, modern anlamda tanımlanmasa da
-fiyatlar genel seviyesindeki uzun süreli artışlarla kendini göstermiştir.
-
-Enflasyonun temel nedenleri:
-- Akçe tağşişi
-- Sürekli savaşlar
-- Artan askerî ve bürokratik harcamalar
-- Amerika’dan gelen gümüş bolluğu
-
-Devlet bütçe açıklarını kapatmak için paranın içindeki gümüş oranını düşürmüş,
-bu durum halkın satın alma gücünü azaltmıştır.
-
-Yeniçerilerin maaşlarının değer kaybetmesi isyanlara yol açmış,
-devlet bu isyanları daha fazla para dağıtarak bastırmış,
-bu da enflasyonu kronik hale getirmiştir.
-        </pre>
-        <a href="/">← Ana Sayfa</a>
+        <h2><img class="flag" src="{OSMANLI_FLAG}"> Osmanlı Enflasyonu</h2>
+        <div id="text-target" class="typing-text"></div>
+        <a href="/" class="back-link">← Ana Sayfaya Dön</a>
     </div>
+    <script>typeWriter("text-target", "{text}", 40);</script>
     """
 
 @app.route("/almanya")
 def almanya():
+    text = "1923 yılında Almanya'da yaşanan hiperenflasyon tarihin en uç örneklerinden biridir. Kağıt para o kadar değersizleşti ki, çocuklar banknot desteleriyle oyun oynuyor, insanlar bir somun ekmek alabilmek için el arabası dolusu para taşıyordu."
     return f"""
     {STYLE}
     <div class="container">
-        <h2>
-            <img class="flag" src="{GERMANY_FLAG}">
-            Almanya Enflasyonu
-        </h2>
-        <pre>
-1923 Weimar Cumhuriyeti döneminde Almanya’da hiperenflasyon yaşanmıştır.
-Para neredeyse tamamen değersiz hale gelmiş,
-ekonomik ve sosyal düzen çökmüştür.
-        </pre>
-        <a href="/">← Ana Sayfa</a>
+        <h2><img class="flag" src="{GERMANY_FLAG}"> Almanya Enflasyonu</h2>
+        <div id="text-target" class="typing-text"></div>
+        <a href="/" class="back-link">← Ana Sayfaya Dön</a>
     </div>
+    <script>typeWriter("text-target", "{text}", 40);</script>
     """
 
 @app.route("/turkiye")
 def turkiye():
+    text = "Türkiye'nin enflasyon serüveni 1970'li yıllardan günümüze kadar farklı evrelerden geçmiştir. Petrol şokları, bütçe açıkları ve kur hareketleri, Türkiye ekonomisinde fiyat istikrarı mücadelesinin temel taşlarını oluşturur."
     return f"""
     {STYLE}
     <div class="container">
-        <h2>
-            <img class="flag" src="{TURKEY_FLAG}">
-            Türkiye Enflasyonu
-        </h2>
-        <pre>
-2018 sonrası dönemde Türkiye’de enflasyon,
-kur şokları ve ekonomi politikaları nedeniyle yükselmiştir.
-Sıkı para politikalarıyla düşürülmesi hedeflenmiştir.
-        </pre>
-        <a href="/">← Ana Sayfa</a>
+        <h2><img class="flag" src="{TURKEY_FLAG}"> Türkiye Enflasyonu</h2>
+        <div id="text-target" class="typing-text"></div>
+        <a href="/" class="back-link">← Ana Sayfaya Dön</a>
     </div>
+    <script>typeWriter("text-target", "{text}", 40);</script>
     """
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=10000, debug=False)
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
