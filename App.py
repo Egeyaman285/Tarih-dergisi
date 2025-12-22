@@ -14,144 +14,135 @@ STYLE = """
         .container { padding: 25px !important; width: 95% !important; }
     }
 
-    .sidebar-left { width: 320px; background: #2c3e50; color: white; height: 100vh; padding: 25px; position: fixed; left: 0; overflow-y: auto; z-index: 10; box-shadow: 2px 0 10px rgba(0,0,0,0.3); }
+    .sidebar-left { width: 320px; background: #1a1a2e; color: white; height: 100vh; padding: 25px; position: fixed; left: 0; overflow-y: auto; z-index: 10; border-right: 2px solid #e74c3c; }
     .sidebar-right { width: 320px; background: #ecf0f1; color: #2c3e50; height: 100vh; padding: 25px; position: fixed; right: 0; overflow-y: auto; border-left: 4px solid #bdc3c7; }
     .main-content { margin-left: 340px; margin-right: 340px; padding: 50px; flex-grow: 1; display: flex; justify-content: center; align-items: flex-start; }
     .container { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 850px; }
     
     h1 { color: #2c3e50; border-bottom: 3px solid #c0392b; padding-bottom: 10px; text-align: center; }
-    h2 { color: #c0392b; margin-top: 0; }
-
-    .tool-box { background: #34495e; padding: 15px; border-radius: 10px; margin-bottom: 25px; }
-    #display { background: #1a1a1a; color: #2ecc71; padding: 15px; text-align: right; border-radius: 5px; font-family: 'Courier New', monospace; font-size: 20px; margin-bottom: 10px; min-height: 25px; }
+    
+    /* HESAP MAKİNESİ */
+    .tool-box { background: #16213e; padding: 15px; border-radius: 10px; margin-bottom: 25px; }
+    #display { background: #0f3460; color: #2ecc71; padding: 15px; text-align: right; border-radius: 5px; font-family: 'Courier New', monospace; font-size: 20px; margin-bottom: 10px; min-height: 25px; }
     .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
     .calc-grid button { padding: 12px; border: none; border-radius: 5px; background: #4b6584; color: white; font-weight: bold; cursor: pointer; }
 
-    /* OYUN ALANI */
+    /* OYUN */
     #game-container { 
-        width: 100%; height: 180px; background: #1a1a2e; 
-        position: relative; overflow: hidden; border-radius: 10px; border: 3px solid #444; cursor: pointer;
+        width: 100%; height: 200px; background: #000; position: relative; 
+        overflow: hidden; border-radius: 10px; border: 3px solid #e74c3c; cursor: pointer;
     }
-    #player { 
-        width: 30px; height: 30px; background: #ff4757; position: absolute; 
-        bottom: 10px; left: 50px; border-radius: 5px; z-index: 100;
-        box-shadow: 0 0 10px #ff4757;
-    }
-    .obstacle { 
-        position: absolute; bottom: 10px; border-radius: 4px; z-index: 90;
-    }
-    #score-board { position: absolute; top: 10px; left: 10px; color: #2ecc71; font-weight: bold; z-index: 110; }
-    #ground { position: absolute; bottom: 0; width: 100%; height: 10px; background: #2ed573; }
+    #player { width: 30px; height: 30px; background: #e74c3c; position: absolute; bottom: 5px; left: 40px; border-radius: 4px; z-index: 10; box-shadow: 0 0 10px #e74c3c; }
+    .obstacle { width: 25px; background: #f1c40f; position: absolute; bottom: 5px; border-radius: 3px; }
+    .bird { width: 35px; height: 15px; background: #3498db; position: absolute; border-radius: 10px; box-shadow: 0 0 8px #3498db; }
+    #score-board { position: absolute; top: 10px; left: 10px; color: #2ecc71; font-family: monospace; font-size: 18px; z-index: 20; font-weight: bold; }
+    #msg-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-weight: bold; pointer-events: none; }
+
+    /* ANIMASYONLU METİN */
+    .typing-text { line-height: 1.8; font-size: 18px; color: #444; background: #fffdf9; padding: 30px; border-left: 8px solid #c0392b; border-radius: 5px; min-height: 120px; white-space: pre-wrap; }
+    .back-btn { display: inline-block; margin-top: 20px; padding: 12px 25px; background: #2c3e50; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; }
+    #hidden-data { display: none; }
 </style>
 
 <script>
+    let running = false; let score = 0; let isJumping = false; let gameSpeed = 7;
+
+    // HESAP MAKİNESİ
     function add(v) { document.getElementById('display').innerText += v; }
     function cls() { document.getElementById('display').innerText = ''; }
     function res() { try { document.getElementById('display').innerText = eval(document.getElementById('display').innerText); } catch { document.getElementById('display').innerText = 'Hata'; } }
 
-    let running = false; 
-    let score = 0; 
-    let isJumping = false;
-    let speed = 7;
-
+    // OYUN FONKSİYONLARI
     function play() {
-        if(!running) {
-            running = true;
-            score = 0;
-            speed = 7;
-            document.getElementById('score-num').innerText = '0';
-            document.getElementById('msg').style.display = 'none';
-            spawn();
-        }
-        
-        if(!isJumping) {
-            isJumping = true;
-            let p = document.getElementById('player');
-            let startPos = 10;
-            let jumpHeight = 100;
-            
-            let up = setInterval(() => {
-                startPos += 6;
-                p.style.bottom = startPos + 'px';
-                if(startPos >= jumpHeight) {
-                    clearInterval(up);
-                    let down = setInterval(() => {
-                        startPos -= 6;
-                        p.style.bottom = startPos + 'px';
-                        if(startPos <= 10) {
-                            clearInterval(down);
-                            isJumping = false;
-                        }
-                    }, 15);
-                }
-            }, 15);
-        }
+        if(running) { jump(); return; }
+        running = true; score = 0; gameSpeed = 7;
+        document.getElementById('score-num').innerText = '0';
+        document.getElementById('msg-overlay').style.display = 'none';
+        setTimeout(spawn, 1500); // 1.5 saniye sonra ilk engel
+    }
+
+    function jump() {
+        if(isJumping) return;
+        isJumping = true;
+        let p = document.getElementById('player');
+        let pos = 5;
+        let up = setInterval(() => {
+            if(pos >= 110) {
+                clearInterval(up);
+                let down = setInterval(() => {
+                    if(pos <= 5) { clearInterval(down); isJumping = false; }
+                    pos -= 5; p.style.bottom = pos + 'px';
+                }, 15);
+            }
+            pos += 5; p.style.bottom = pos + 'px';
+        }, 15);
     }
 
     function spawn() {
         if(!running) return;
+        let container = document.getElementById('game-container');
+        let obs = document.createElement('div');
         
-        const container = document.getElementById('game-container');
-        const obs = document.createElement('div');
-        obs.className = 'obstacle';
-        
-        // Rastgele engel tipleri
-        const heights = [25, 45, 60];
-        const colors = ['#ffa502', '#ff6348', '#ced6e0'];
-        const h = heights[Math.floor(Math.random() * heights.length)];
-        
-        obs.style.height = h + 'px';
-        obs.style.width = '25px';
-        obs.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-        obs.style.right = '-30px';
+        let isBird = score >= 10 && Math.random() > 0.5;
+        if(isBird) {
+            obs.className = 'bird';
+            let isHigh = Math.random() > 0.5;
+            obs.style.bottom = isHigh ? '95px' : '45px'; // Yüksek veya alçak kuş
+        } else {
+            obs.className = 'obstacle';
+            obs.style.height = (Math.random() * 20 + 20) + 'px';
+            obs.style.bottom = '5px';
+        }
+
+        obs.style.right = '-50px';
         container.appendChild(obs);
 
-        let pos = -30;
-        let moveObs = setInterval(() => {
-            if(!running) { clearInterval(moveObs); obs.remove(); return; }
-            
-            pos += speed;
+        let pos = -50;
+        let loop = setInterval(() => {
+            if(!running) { clearInterval(loop); obs.remove(); return; }
+            pos += gameSpeed;
             obs.style.right = pos + 'px';
 
-            // Çarpışma Kontrolü
-            let p = document.getElementById('player');
-            let pRect = p.getBoundingClientRect();
-            let oRect = obs.getBoundingClientRect();
+            // Çarpışma Algılama
+            let p = document.getElementById('player').getBoundingClientRect();
+            let o = obs.getBoundingClientRect();
 
-            if (pRect.right > oRect.left && pRect.left < oRect.right && pRect.bottom > oRect.top) {
+            if (p.right > o.left && p.left < o.right && p.bottom > o.top && p.top < o.bottom) {
                 running = false;
                 location.reload(); // Yanınca anında baştan başla
             }
 
-            if(pos > container.offsetWidth + 30) {
-                clearInterval(moveObs);
+            if(pos > container.offsetWidth + 50) {
+                clearInterval(loop);
                 obs.remove();
                 score++;
                 document.getElementById('score-num').innerText = score;
-                if(score % 5 == 0) speed += 0.8; // Her 5 engelde hızlan
+                gameSpeed += 0.2;
+                spawn(); // Tek engel mantığı: biri bitince diğeri başlar
             }
         }, 20);
-
-        // Bir sonraki engeli oluştur
-        setTimeout(spawn, Math.random() * 1000 + 800);
     }
 
+    // TYPING ANIMASYONU (KUSURSUZ)
     function startTyping() {
         const target = document.getElementById('target');
         const source = document.getElementById('hidden-text');
         if(!target || !source) return;
+        
         const text = source.innerText.trim();
         target.innerHTML = "";
         let i = 0;
+        
         function run() {
             if (i < text.length) {
                 target.innerHTML += text.charAt(i);
                 i++;
-                setTimeout(run, 15);
+                setTimeout(run, 20);
             }
         }
         run();
     }
+
     window.onload = startTyping;
 </script>
 """
@@ -159,7 +150,7 @@ STYLE = """
 def layout(content, long_text=""):
     left = f"""
     <div class="sidebar-left">
-        <h2>📊 EKONOMİ PANELİ</h2>
+        <h2 style="color:#e74c3c; border-bottom:1px solid #333; padding-bottom:10px;">📊 PANEL</h2>
         <div class="tool-box">
             <div id="display"></div>
             <div class="calc-grid">
@@ -171,19 +162,22 @@ def layout(content, long_text=""):
         </div>
         <div id="game-container" onclick="play()">
             <div id="score-board">SKOR: <span id="score-num">0</span></div>
-            <div id="msg" style="color:white; text-align:center; margin-top:70px; font-weight:bold; font-family:sans-serif;">BAŞLAMAK İÇİN TIKLA</div>
+            <div id="msg-overlay">BAŞLATMAK İÇİN TIKLA</div>
             <div id="player"></div>
-            <div id="ground"></div>
         </div>
+        <p style="font-size:12px; color:#888; margin-top:15px;">
+            * 10 puandan sonra kuşlar gelir.<br>
+            * Kuşlar yüksek veya alçak uçabilir.<br>
+            * Yanarsan anında başa döner.
+        </p>
     </div>
     """
     right = """
     <div class="sidebar-right">
-        <h3 style="border-bottom:2px solid #2c3e50;">📜 KISA ÖZETLER</h3>
-        <p><b>🇹🇷 Türkiye:</b> 1923'te küllerinden doğan ekonomi.</p>
-        <p><b>🕌 Osmanlı:</b> Cihan devletinin mali yükselişi.</p>
-        <p><b>🇩🇪 Almanya:</b> Hiperenflasyonun acı dersi.</p>
-        <p><b>🏛️ Roma:</b> Parası bozulan imparatorluğun sonu.</p>
+        <h3 style="border-bottom:2px solid #2c3e50;">📜 ÖZETLER</h3>
+        <p><b>🇹🇷 Türkiye:</b> 1923 İktisat Devrimi.</p>
+        <p><b>🇩🇪 Almanya:</b> 1923 Hiperenflasyon.</p>
+        <p><b>🏛️ Roma:</b> Paranın Çöküşü.</p>
     </div>
     """
     hidden = f"<div id='hidden-data'><div id='hidden-text'>{long_text}</div></div>"
@@ -194,11 +188,9 @@ def home():
     content = """
     <div class="container">
         <h1>🏛️ Dünya Tarih & Ekonomi Arşivi</h1>
-        <div class="grid">
-            <a href="/turkiye" class="card">🇹🇷 MODERN TÜRKİYE</a>
-            <a href="/osmanli" class="card">🕌 OSMANLI İMPARATORLUĞU</a>
-            <a href="/almanya" class="card">🇩🇪 WEIMAR ALMANYASI</a>
-            <a href="/roma" class="card">🏛️ ANTİK ROMA</a>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; margin-top:30px;">
+            <a href="/turkiye" style="padding:30px; background:#e74c3c; color:white; text-decoration:none; border-radius:10px; text-align:center; font-weight:bold;">🇹🇷 TÜRKİYE TARİHİ</a>
+            <a href="/roma" style="padding:30px; background:#3498db; color:white; text-decoration:none; border-radius:10px; text-align:center; font-weight:bold;">🏛️ ROMA TARİHİ</a>
         </div>
     </div>
     """
@@ -206,25 +198,13 @@ def home():
 
 @app.route("/turkiye")
 def turkiye():
-    text = "TÜRKİYE CUMHURİYETİ: 1923 yılında ilan edilen Cumhuriyet, sadece siyasi değil aynı zamanda dev bir ekonomik devrimdir. İzmir İktisat Kongresi ile yerli üretim hedeflenmiş, Osmanlı'dan kalan borçlar onurlu bir şekilde ödenmiş ve devlet destekli sanayileşme ile Türkiye modern dünyanın bir parçası haline gelmiştir."
+    text = "TÜRKİYE CUMHURİYETİ: 1923 yılında ilan edilen Cumhuriyet, sadece bir yönetim biçimi değil, büyük bir ekonomik bağımsızlık savaşıdır. Osmanlı'dan devralınan borçlar kuruşu kuruşuna ödenmiş, sanayi hamleleri başlatılmış ve Türk Lirası uzun yıllar değerini korumuştur. Bu dönem, yokluktan var edilen bir ulusun hikayesidir."
     content = '<h2>🇹🇷 Modern Türkiye</h2><div id="target" class="typing-text"></div><a href="/" class="back-btn">← ANA SAYFA</a>'
-    return layout(content, text)
-
-@app.route("/osmanli")
-def osmanli():
-    text = "OSMANLI İMPARATORLUĞU: 600 yılı aşkın süren bu devasa devlet, ekonomisini 'İaşe' ve 'Gelenekçilik' prensipleri üzerine kurmuştur. İstanbul'un fethiyle ticaret yollarını kontrol altına almış, ancak Coğrafi Keşifler ve sanayi devrimini yakalayamaması mali yapısını sarsmıştır."
-    content = '<h2>🕌 Osmanlı İmparatorluğu</h2><div id="target" class="typing-text"></div><a href="/" class="back-btn">← ANA SAYFA</a>'
-    return layout(content, text)
-
-@app.route("/almanya")
-def almanya():
-    text = "WEIMAR ALMANYASI: 1. Dünya Savaşı sonrası Versay Antlaşması'nın getirdiği ağır tazminat yükü altında ezilen Almanya, tarihin en dramatik hiperenflasyon dönemini yaşamıştır. 1923 yılında kağıt para o kadar değersizleşmiştir ki, bir somun ekmek almak için el arabasıyla para taşınması gerekmiştir."
-    content = '<h2>🇩🇪 Weimar Almanyası</h2><div id="target" class="typing-text"></div><a href="/" class="back-btn">← ANA SAYFA</a>'
     return layout(content, text)
 
 @app.route("/roma")
 def roma():
-    text = "ANTİK ROMA: Roma'nın çöküşü sadece askeri değil, aynı zamanda paranın saflığının bozulmasıyla gelen bir ekonomik faciadır. İmparatorlar masrafları karşılamak için gümüş Denarius'un içindeki gümüşü azaltıp yerine bakır koymuşlardır. Bu durum kontrol edilemez enflasyona yol açmıştır."
+    text = "ANTİK ROMA: Roma'nın çöküşündeki en büyük etkenlerden biri paradaki gümüş oranının düşürülmesidir. İmparatorlar daha fazla harcamak için parayı değersizleştirmiş, bu da tarihin gördüğü en büyük enflasyon krizlerinden birine yol açarak imparatorluğun ekonomik temelini yıkmıştır."
     content = '<h2>🏛️ Antik Roma</h2><div id="target" class="typing-text"></div><a href="/" class="back-btn">← ANA SAYFA</a>'
     return layout(content, text)
 
