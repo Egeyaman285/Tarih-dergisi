@@ -7,7 +7,6 @@ STYLE = """
 <style>
     body { font-family: 'Times New Roman', serif; background-color: #f0f2f5; margin: 0; display: flex; flex-direction: row; color: #333; min-height: 100vh; }
     
-    /* Mobil ve Tablet Uyumluluğu */
     @media (max-width: 1100px) {
         body { flex-direction: column; overflow-x: hidden; }
         .sidebar-left, .sidebar-right { position: relative !important; width: 100% !important; height: auto !important; margin: 0 !important; box-shadow: none !important; padding: 20px !important; box-sizing: border-box; }
@@ -24,7 +23,7 @@ STYLE = """
     .main-content { margin-left: 340px; margin-right: 340px; padding: 50px; flex-grow: 1; display: flex; justify-content: center; align-items: flex-start; }
     .container { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 850px; }
     
-    h1 { color: #2c3e50; border-bottom: 3px solid #c0392b; padding-bottom: 10px; text-align: center; font-size: clamp(20px, 5vw, 32px); }
+    h1 { color: #2c3e50; border-bottom: 3px solid #c0392b; padding-bottom: 10px; text-align: center; }
     h2 { color: #c0392b; margin-top: 0; }
 
     .tool-box { background: #34495e; padding: 15px; border-radius: 10px; margin-bottom: 25px; }
@@ -40,7 +39,7 @@ STYLE = """
     .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px; }
     .card { background: #ffffff; border: 1px solid #d1d8e0; padding: 25px; border-radius: 12px; text-decoration: none; text-align: center; color: #2d98da; font-weight: bold; transition: 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
 
-    .typing-text { line-height: 1.8; font-size: 18px; color: #444; background: #fffdf9; padding: 30px; border-left: 8px solid #c0392b; border-radius: 5px; white-space: pre-wrap; margin-bottom: 20px; min-height: 100px; opacity: 1 !important; visibility: visible !important; }
+    .typing-text { line-height: 1.8; font-size: 18px; color: #444; background: #fffdf9; padding: 30px; border-left: 8px solid #c0392b; border-radius: 5px; white-space: pre-wrap; margin-bottom: 20px; min-height: 100px; }
     .back-btn { display: inline-block; margin-top: 20px; padding: 12px 25px; background: #2c3e50; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; }
 </style>
 
@@ -81,19 +80,16 @@ STYLE = """
         setTimeout(spawn, Math.random() * 1500 + 800);
     }
 
-    // GÜNCELLENMİŞ YAZI FONKSİYONU (TELEFON UYUMLU)
     function typeEffect(elementId, text) {
         let i = 0;
         let target = document.getElementById(elementId);
         if(!target) return;
         target.innerHTML = "";
-        
-        // Temizleme garantisi
         function run() {
             if (i < text.length) {
                 target.innerHTML += text.charAt(i);
                 i++;
-                setTimeout(run, 15);
+                setTimeout(run, 10);
             }
         }
         run();
@@ -126,7 +122,8 @@ def layout(content):
         <h3 style="border-bottom:2px solid #2c3e50;">📜 KISA ÖZETLER</h3>
         <p><b>🇹🇷 Türkiye:</b> 1923'te küllerinden doğan bir ekonomi.</p>
         <p><b>🕌 Osmanlı:</b> 600 yıllık bir devin mali evrimi.</p>
-        <p><b>🇩🇪 Almanya:</b> Hiperenflasyonun ders niteliğindeki örneği.</p>
+        <p><b>🇩🇪 Almanya:</b> Hiperenflasyonun dramatik örneği.</p>
+        <p><b>🏛️ Roma:</b> Paranın saflığını bozarak çöken dev.</p>
     </div>
     """
     return f"{STYLE} {left} {right} <div class='main-content'>{content}</div>"
@@ -148,43 +145,23 @@ def home():
 
 @app.route("/turkiye")
 def turkiye():
-    # Metinleri \n yerine çift ters slaş ile koruyoruz
-    t = "TÜRKİYE EKONOMİSİ: 1923'ten günümüze uzanan büyük bir başarı hikayesi... İzmir İktisat Kongresi ile başlayan milli üretim hamlesi, sanayileşme devrimi ve bugün dünyanın en büyük ekonomileri arasında yer alma çabası. Tarih boyunca yaşanan krizler, Türkiye'nin dirençli yapısını her seferinde daha da güçlendirmiştir."
-    return layout(f"""
-        <div class="container">
-            <h2>🇹🇷 Modern Türkiye</h2>
-            <div id="target" class="typing-text"></div>
-            <a href="/" class="back-btn">← ANA SAYFA</a>
-        </div>
-        <script>
-            // Sayfa yüklendiğinde çalıştır
-            window.onload = function() {{
-                setTimeout(function() {{
-                    typeEffect('target', `{t}`);
-                }}, 500);
-            }};
-        </script>
-    """)
+    t = "TÜRKİYE EKONOMİSİ: 1923 İzmir İktisat Kongresi ile temelleri atılan tam bağımsızlık mücadelesi... Osmanlı'dan devralınan borçların (Duyun-u Umumiye) ödenmesi süreci ve yerli üretim fabrikalarının yükselişi. 1923-1938 arası yakalanan yüksek büyüme hızı, genç Cumhuriyetin ekonomik mucizesi olarak tarihe geçmiştir."
+    return layout(f"""<div class="container"><h2>🇹🇷 Modern Türkiye</h2><div id="target" class="typing-text"></div><a href="/" class="back-btn">← ANA SAYFA</a></div><script>window.onload = function() {{ setTimeout(function() {{ typeEffect('target', `{t}`); }}, 500); }};</script>""")
 
 @app.route("/osmanli")
 def osmanli():
-    t = "OSMANLI İMPARATORLUĞU: 600 yıl boyunca üç kıtada hüküm süren mali sistem... Narh sistemi, Lonca teşkilatları ve ticaret yollarının güvenliği. Ancak Coğrafi keşifler ve sanayi devrimine geç kalış, imparatorluğun mali yapısını sarsmış ve Duyun-u Umumiye sürecine yol açmıştır."
-    return layout(f"""
-        <div class="container">
-            <h2>🕌 Osmanlı İmparatorluğu</h2>
-            <div id="target" class="typing-text"></div>
-            <a href="/" class="back-btn">← ANA SAYFA</a>
-        </div>
-        <script>
-            window.onload = function() {{
-                setTimeout(function() {{
-                    typeEffect('target', `{t}`);
-                }}, 500);
-            }};
-        </script>
-    """)
+    t = "OSMANLI İMPARATORLUĞU: 1300'lerden 1922'ye uzanan mali evrim... İpek ve Baharat Yolları hakimiyetiyle güçlenen hazine, Coğrafi Keşifler sonrası sarsılmıştır. 1854'te başlayan dış borçlanma serüveni, 1881'de ekonomik bağımsızlığın fiilen kaybı anlamına gelen Duyun-u Umumiye idaresinin kurulmasıyla sonuçlanmıştır."
+    return layout(f"""<div class="container"><h2>🕌 Osmanlı İmparatorluğu</h2><div id="target" class="typing-text"></div><a href="/" class="back-btn">← ANA SAYFA</a></div><script>window.onload = function() {{ setTimeout(function() {{ typeEffect('target', `{t}`); }}, 500); }};</script>""")
 
-# Diğer rotaları da aynı window.onload yapısıyla ekleyebilirsin.
+@app.route("/almanya")
+def almanya():
+    t = "WEIMAR ALMANYASI (1919-1933): Versay Antlaşması'nın getirdiği devasa savaş tazminatları altında ezilen Almanya, çözümü karşılıksız para basmakta buldu. 1923 yılında yaşanan hiperenflasyon döneminde bir somun ekmeğin fiyatı milyarlarca marka ulaştı. İnsanlar ısınmak için banknotları yakıyor, çocuklar paralarla kule yaparak oyun oynuyordu. Bu ekonomik çöküş, halkın demokratik sisteme olan güvenini sarsarak aşırılıkçı hareketlerin (Nazizm) yükselmesine zemin hazırlayan en büyük sosyo-ekonomik faktör olmuştur."
+    return layout(f"""<div class="container"><h2>🇩🇪 Weimar Almanyası</h2><div id="target" class="typing-text"></div><a href="/" class="back-btn">← ANA SAYFA</a></div><script>window.onload = function() {{ setTimeout(function() {{ typeEffect('target', `{t}`); }}, 500); }};</script>""")
+
+@app.route("/roma")
+def roma():
+    t = "ANTİK ROMA EKONOMİSİ: Roma İmparatorluğu'nun çöküşünün en temel ancak en az konuşulan sebebi 'paranın değerinin sistematik olarak düşürülmesi'dir. İmparatorlar, artan ordu ve bürokrasi masraflarını karşılamak için gümüş paranın (Denarius) saflığını %95'ten zamanla %0'a kadar indirdiler. Gümüş yerine bakır kullanılması fiyatların kontrolden çıkmasına (enflasyon) neden oldu. Ticaret durdu, halk şehirlerden kaçarak malikanelere (Latifundia) sığındı. Bu ekonomik daralma, Roma'nın askeri gücünü koruyamamasına ve imparatorluğun bölünerek çökmesine neden olmuştur."
+    return layout(f"""<div class="container"><h2>🏛️ Antik Roma</h2><div id="target" class="typing-text"></div><a href="/" class="back-btn">← ANA SAYFA</a></div><script>window.onload = function() {{ setTimeout(function() {{ typeEffect('target', `{t}`); }}, 500); }};</script>""")
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
