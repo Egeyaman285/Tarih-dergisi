@@ -5,17 +5,13 @@ app = Flask(__name__)
 
 STYLE = """
 <style>
-    body { font-family: 'Times New Roman', serif; background-color: #f0f2f5; margin: 0; display: flex; flex-direction: row; color: #333; min-height: 100vh; }
+    body { font-family: 'Times New Roman', serif; background-color: #f0f2f5; margin: 0; display: flex; flex-direction: row; color: #333; min-height: 100vh; overflow-x: hidden; }
     
     @media (max-width: 1100px) {
-        body { flex-direction: column; overflow-x: hidden; }
+        body { flex-direction: column; }
         .sidebar-left, .sidebar-right { position: relative !important; width: 100% !important; height: auto !important; margin: 0 !important; box-shadow: none !important; padding: 20px !important; box-sizing: border-box; }
-        .main-content { margin: 0 !important; padding: 15px !important; width: 100% !important; box-sizing: border-box; }
-        .container { padding: 25px !important; margin: 0 auto; width: 95% !important; box-shadow: none !important; }
-        .grid { grid-template-columns: 1fr !important; gap: 12px !important; }
-        .calc-grid button { padding: 18px !important; font-size: 1.2rem !important; }
-        #game-container { height: 180px !important; }
-        .typing-text { font-size: 16px !important; padding: 20px !important; min-height: 200px; }
+        .main-content { margin: 0 !important; padding: 15px !important; width: 100% !important; }
+        .container { padding: 25px !important; width: 95% !important; }
     }
 
     .sidebar-left { width: 320px; background: #2c3e50; color: white; height: 100vh; padding: 25px; position: fixed; left: 0; overflow-y: auto; z-index: 10; box-shadow: 2px 0 10px rgba(0,0,0,0.3); }
@@ -29,20 +25,26 @@ STYLE = """
     .tool-box { background: #34495e; padding: 15px; border-radius: 10px; margin-bottom: 25px; }
     #display { background: #1a1a1a; color: #2ecc71; padding: 15px; text-align: right; border-radius: 5px; font-family: 'Courier New', monospace; font-size: 20px; margin-bottom: 10px; min-height: 25px; }
     .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-    .calc-grid button { padding: 12px; border: none; border-radius: 5px; background: #4b6584; color: white; font-weight: bold; cursor: pointer; touch-action: manipulation; }
+    .calc-grid button { padding: 12px; border: none; border-radius: 5px; background: #4b6584; color: white; font-weight: bold; cursor: pointer; }
 
-    #game-container { width: 100%; height: 160px; background: #000; position: relative; overflow: hidden; border-radius: 10px; border: 3px solid #555; cursor: pointer; touch-action: manipulation; }
-    #player { width: 35px; height: 35px; background: #eb4d4b; position: absolute; bottom: 0; left: 30px; border-radius: 5px; transition: bottom 0.12s ease-out; }
-    .obstacle { width: 25px; height: 25px; background: #f1c40f; position: absolute; bottom: 0; right: -30px; border-radius: 3px; }
-    #score-board { position: absolute; top: 10px; left: 10px; color: white; font-weight: bold; z-index: 5; }
+    /* GELİŞMİŞ OYUN ALANI */
+    #game-container { 
+        width: 100%; height: 200px; background: linear-gradient(to bottom, #1a1a2e, #16213e); 
+        position: relative; overflow: hidden; border-radius: 10px; border: 3px solid #333; cursor: pointer;
+        background-image: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+    }
+    #ground { position: absolute; bottom: 0; width: 200%; height: 5px; background: #2ecc71; animation: moveGround 2s linear infinite; }
+    @keyframes moveGround { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    #player { width: 30px; height: 30px; background: #e74c3c; position: absolute; bottom: 5px; left: 40px; border-radius: 4px; z-index: 5; box-shadow: 0 0 10px #e74c3c; }
+    .obstacle { position: absolute; bottom: 5px; border-radius: 3px; box-shadow: 0 0 8px rgba(0,0,0,0.5); }
+    #score-board { position: absolute; top: 10px; left: 10px; color: #2ecc71; font-family: monospace; font-size: 18px; z-index: 6; font-weight: bold; }
 
     .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px; }
     .card { background: #ffffff; border: 1px solid #d1d8e0; padding: 25px; border-radius: 12px; text-decoration: none; text-align: center; color: #2d98da; font-weight: bold; transition: 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-    .card:hover { transform: translateY(-5px); border-color: #c0392b; }
 
-    .typing-text { line-height: 1.8; font-size: 18px; color: #444; background: #fffdf9; padding: 30px; border-left: 8px solid #c0392b; border-radius: 5px; white-space: pre-wrap; margin-bottom: 20px; text-align: justify; }
+    .typing-text { line-height: 1.8; font-size: 18px; color: #444; background: #fffdf9; padding: 30px; border-left: 8px solid #c0392b; border-radius: 5px; white-space: pre-wrap; margin-bottom: 20px; min-height: 100px; }
     .back-btn { display: inline-block; margin-top: 20px; padding: 12px 25px; background: #2c3e50; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; }
-    
     #hidden-data { display: none; }
 </style>
 
@@ -51,35 +53,92 @@ STYLE = """
     function cls() { document.getElementById('display').innerText = ''; }
     function res() { try { document.getElementById('display').innerText = eval(document.getElementById('display').innerText); } catch { document.getElementById('display').innerText = 'Hata'; } }
 
-    let running = false; let score = 0; let isJumping = false;
+    let running = false; 
+    let score = 0; 
+    let isJumping = false;
+    let gameSpeed = 6;
+    let spawnRate = 1500;
+
     function play() {
-        if(!running) { running = true; score = 0; document.getElementById('score-num').innerText = '0'; document.getElementById('msg').style.display='none'; spawn(); }
+        if(!running) { 
+            running = true; 
+            score = 0; 
+            gameSpeed = 6;
+            document.getElementById('score-num').innerText = '0'; 
+            document.getElementById('msg').style.display='none'; 
+            gameLoop();
+            spawn(); 
+        }
+        
         let p = document.getElementById('player');
         if(!isJumping) {
             isJumping = true;
-            p.style.bottom = '90px';
-            setTimeout(() => { p.style.bottom = '0px'; setTimeout(()=> { isJumping = false; }, 100); }, 400);
+            let up = setInterval(() => {
+                let b = parseInt(window.getComputedStyle(p).bottom);
+                if(b >= 100) { 
+                    clearInterval(up); 
+                    let down = setInterval(() => {
+                        let b2 = parseInt(window.getComputedStyle(p).bottom);
+                        if(b2 <= 5) { clearInterval(down); isJumping = false; }
+                        p.style.bottom = (b2 - 5) + 'px';
+                    }, 20);
+                }
+                p.style.bottom = (b + 5) + 'px';
+            }, 15);
         }
     }
+
     function spawn() {
         if(!running) return;
         let container = document.getElementById('game-container');
         let obs = document.createElement('div');
         obs.className = 'obstacle';
+        
+        // Rastgele engel boyutları ve renkleri
+        let heights = [20, 35, 50];
+        let widths = [20, 30];
+        let colors = ['#f1c40f', '#e67e22', '#95a5a6'];
+        
+        let h = heights[Math.floor(Math.random()*heights.length)];
+        obs.style.height = h + 'px';
+        obs.style.width = widths[Math.floor(Math.random()*widths.length)] + 'px';
+        obs.style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
+        obs.style.right = '-50px';
+        
         container.appendChild(obs);
-        let pos = 0;
+        
+        let pos = -50;
         let loop = setInterval(() => {
             if(!running) { clearInterval(loop); obs.remove(); return; }
-            pos += 7; obs.style.right = pos + 'px';
-            let pBottom = parseInt(window.getComputedStyle(document.getElementById('player')).getPropertyValue('bottom'));
-            if(pos > (container.offsetWidth - 75) && pos < (container.offsetWidth - 30) && pBottom < 30) { 
-                running = false;
-                alert('Ekonomik Kriz! Skorun: ' + score); 
-                location.reload(); 
+            pos += gameSpeed; 
+            obs.style.right = pos + 'px';
+            
+            let p = document.getElementById('player');
+            let pRect = p.getBoundingClientRect();
+            let oRect = obs.getBoundingClientRect();
+
+            if (pRect.right > oRect.left && pRect.left < oRect.right && pRect.bottom > oRect.top) {
+                gameOver();
             }
-            if(pos > container.offsetWidth + 30) { clearInterval(loop); obs.remove(); score++; document.getElementById('score-num').innerText = score; }
+
+            if(pos > container.offsetWidth + 50) { 
+                clearInterval(loop); 
+                obs.remove(); 
+                score++; 
+                document.getElementById('score-num').innerText = score;
+                if(score % 5 == 0) gameSpeed += 0.5; // Her 5 skorda bir hızlan
+            }
         }, 20);
-        setTimeout(spawn, Math.random() * 1200 + 600);
+
+        setTimeout(spawn, Math.random() * spawnRate + 800);
+    }
+
+    function gameOver() {
+        running = false;
+        // Mesaj vermeden anında başa dön
+        setTimeout(() => {
+            location.reload();
+        }, 100);
     }
 
     function startTyping() {
@@ -93,11 +152,12 @@ STYLE = """
             if (i < text.length) {
                 target.innerHTML += text.charAt(i);
                 i++;
-                setTimeout(run, 12);
+                setTimeout(run, 15);
             }
         }
         run();
     }
+
     window.onload = startTyping;
 </script>
 """
@@ -115,21 +175,22 @@ def layout(content, long_text=""):
                 <button onclick="cls()" style="background:#e74c3c;">C</button><button onclick="add('0')">0</button><button onclick="res()" style="background:#2ecc71;">=</button><button onclick="add('+')">+</button>
             </div>
         </div>
-        <div id="game-container" onclick="play()" ontouchstart="play()">
-            <div id="score-board">SKOR: <span id="score-num">0</span></div>
-            <div id="msg" style="color:white; text-align:center; margin-top:60px; font-weight:bold;">ENFLASYON CANAVARI: BAŞLA</div>
+        <p style="font-size: 0.8rem; opacity: 0.7; text-align: center;">Zıplamak için kutuya tıkla!</p>
+        <div id="game-container" onclick="play()">
+            <div id="score-board">ENFLASYON: <span id="score-num">0</span></div>
+            <div id="msg" style="color:white; text-align:center; margin-top:80px; font-weight:bold;">BAŞLA</div>
             <div id="player"></div>
+            <div id="ground"></div>
         </div>
     </div>
     """
     right = """
     <div class="sidebar-right">
-        <h3 style="border-bottom:2px solid #2c3e50;">📜 TARİHİ SÖZLÜK</h3>
-        <p><b>Duyun-u Umumiye:</b> Osmanlı'nın iflasının ilanı.</p>
-        <p><b>Hiperenflasyon:</b> Paranın kağıt parçasına dönüşü.</p>
-        <p><b>Denarius:</b> Roma'nın değerini kaybeden gümüşü.</p>
-        <p><b>Merkantilizm:</b> Fransa'nın altın biriktirme hırsı.</p>
-        <p><b>Marshall Planı:</b> Avrupa'nın yeniden inşası.</p>
+        <h3 style="border-bottom:2px solid #2c3e50;">📜 KISA ÖZETLER</h3>
+        <p><b>🇹🇷 Türkiye:</b> 1923'te küllerinden doğan ekonomi.</p>
+        <p><b>🕌 Osmanlı:</b> Cihan devletinin mali yükselişi.</p>
+        <p><b>🇩🇪 Almanya:</b> Hiperenflasyonun acı dersi.</p>
+        <p><b>🏛️ Roma:</b> Parası bozulan imparatorluğun sonu.</p>
     </div>
     """
     hidden = f"<div id='hidden-data'><div id='hidden-text'>{long_text}</div></div>"
@@ -139,14 +200,11 @@ def layout(content, long_text=""):
 def home():
     content = """
     <div class="container">
-        <h1>🏛️ Küresel Tarih & Ekonomi Arşivi</h1>
-        <p style="text-align:center;">İmparatorlukların yükselişini ve çöküşünü tetikleyen ekonomik güçleri keşfedin.</p>
+        <h1>🏛️ Dünya Tarih & Ekonomi Arşivi</h1>
         <div class="grid">
             <a href="/turkiye" class="card">🇹🇷 MODERN TÜRKİYE</a>
             <a href="/osmanli" class="card">🕌 OSMANLI İMPARATORLUĞU</a>
-            <a href="/weimar" class="card">🇩🇪 WEIMAR ALMANYASI</a>
-            <a href="/nazi" class="card">🪖 NAZİ ALMANYASI</a>
-            <a href="/fransa" class="card">🇫🇷 FRANSA EKONOMİSİ</a>
+            <a href="/almanya" class="card">🇩🇪 WEIMAR ALMANYASI</a>
             <a href="/roma" class="card">🏛️ ANTİK ROMA</a>
         </div>
     </div>
@@ -155,37 +213,25 @@ def home():
 
 @app.route("/turkiye")
 def turkiye():
-    text = "TÜRKİYE CUMHURİYETİ (1923-Günümüz): Osmanlı'dan devralınan 161 milyon altın liralık devasa borç yüküne rağmen, Mustafa Kemal Atatürk önderliğinde 'Ekonomik Bağımsızlık' savaşı başlatıldı. 1923 İzmir İktisat Kongresi ile yerli üretim stratejisi belirlendi. Sümerbank, Etibank gibi kurumlarla sanayileşme hız kazandı. Cumhuriyet'in ilk 15 yılında dünya ortalamasının çok üzerinde bir büyüme hızı yakalandı. 1950 sonrası serbest piyasa geçişi, 1980'deki 24 Ocak kararları ve 2001 yapısal reformları Türkiye ekonomisinin modernleşme duraklarıdır."
+    text = "TÜRKİYE CUMHURİYETİ: 1923 yılında ilan edilen Cumhuriyet, sadece siyasi değil aynı zamanda dev bir ekonomik devrimdir. İzmir İktisat Kongresi ile yerli üretim hedeflenmiş, Osmanlı'dan kalan borçlar onurlu bir şekilde ödenmiş ve devlet destekli sanayileşme ile Türkiye modern dünyanın bir parçası haline gelmiştir. 1923-1938 arası dönem, dünyanın en hızlı büyüyen ekonomilerinden biri olarak tarihe geçmiştir."
     content = '<h2>🇹🇷 Modern Türkiye</h2><div id="target" class="typing-text"></div><a href="/" class="back-btn">← ANA SAYFA</a>'
     return layout(content, text)
 
 @app.route("/osmanli")
 def osmanli():
-    text = "OSMANLI İMPARATORLUĞU: Kuruluş döneminde ticaret yollarını (İpek ve Baharat) ele geçirerek zenginleşen imparatorluk, 16. yüzyılda Amerika'dan Avrupa'ya akan gümüşün yarattığı enflasyonla (Fiyat Devrimi) sarsıldı. 1854 Kırım Savaşı ile başlayan dış borç sarmalı, 1875'te 'Ramazan Kararnamesi' ile devletin iflasını açıklamasına neden oldu. 1881'de kurulan Duyun-u Umumiye, devletin gelirlerine el koyan uluslararası bir idare olarak ekonomik bağımsızlığın sonunu temsil eder."
+    text = "OSMANLI İMPARATORLUĞU: 600 yılı aşkın süren bu devasa devlet, ekonomisini 'İaşe' ve 'Gelenekçilik' prensipleri üzerine kurmuştur. İstanbul'un fethiyle ticaret yollarını kontrol altına almış, ancak Coğrafi Keşifler ve sanayi devrimini yakalayamaması mali yapısını sarsmıştır. 1854'te başlayan dış borç süreci, 1881'de Duyun-u Umumiye'nin kurulmasıyla ekonomik egemenliğin yitirilmesine yol açmıştır."
     content = '<h2>🕌 Osmanlı İmparatorluğu</h2><div id="target" class="typing-text"></div><a href="/" class="back-btn">← ANA SAYFA</a>'
     return layout(content, text)
 
-@app.route("/weimar")
-def weimar():
-    text = "WEIMAR ALMANYASI (1919-1923): 1. Dünya Savaşı sonrası Versay Antlaşması'nın getirdiği 132 milyar altın marklık tazminat, Almanya'yı tarihin en meşhur hiperenflasyonuna sürükledi. 1923'te bir ABD doları 4.2 trilyon marka eşitlendi. İşçiler maaşlarını günde iki kez alıyor ve parayı hemen harcamak için dükkanlara koşuyordu. Bu ekonomik travma, orta sınıfın birikimlerini yok ederek siyasi istikrarsızlığa ve demokrasinin çöküşüne giden yolu açmıştır."
+@app.route("/almanya")
+def almanya():
+    text = "WEIMAR ALMANYASI: 1. Dünya Savaşı sonrası Versay Antlaşması'nın getirdiği ağır tazminat yükü altında ezilen Almanya, tarihin en dramatik hiperenflasyon dönemini yaşamıştır. 1923 yılında kağıt para o kadar değersizleşmiştir ki, bir somun ekmek almak için el arabasıyla para taşınması gerekmiştir. Bu ekonomik yıkım, orta sınıfı bitirmiş ve halkın çaresizliği aşırı uç siyasi hareketlerin (Nazizm) güçlenmesine neden olmuştur."
     content = '<h2>🇩🇪 Weimar Almanyası</h2><div id="target" class="typing-text"></div><a href="/" class="back-btn">← ANA SAYFA</a>'
-    return layout(content, text)
-
-@app.route("/nazi")
-def nazi():
-    text = "NAZİ ALMANYASI (1933-1945): Hitler iktidara geldiğinde ekonomiyi 'Autarky' (Kendi kendine yetme) ve savaş hazırlığı üzerine kurdu. Hjalmar Schacht tarafından geliştirilen 'MEFO Bonoları' ile gizlice silahlanma finanse edildi. İşsizlik, devasa kamu projeleri (Otobanlar gibi) ve zorunlu askerlik ile kağıt üzerinde sıfıra indirildi. Ancak bu büyüme, fethedilen topraklardaki kaynakların yağmalanmasına ve zorunlu çalışmaya dayanıyordu. Savaşın sonuna gelindiğinde Alman ekonomisi tamamen yerle bir olmuş ve para birimi yerini takas sistemine bırakmıştır."
-    content = '<h2>🪖 Nazi Almanyası</h2><div id="target" class="typing-text"></div><a href="/" class="back-btn">← ANA SAYFA</a>'
-    return layout(content, text)
-
-@app.route("/fransa")
-def fransa():
-    text = "FRANSA EKONOMİSİ: 17. yüzyılda Jean-Baptiste Colbert liderliğinde geliştirilen 'Colbertizm' (Fransız Merkantilizmi), devletin ekonomiye sıkı müdahalesini ve ihracatın artırılmasını hedefledi. Ancak lüks harcamalar ve bitmek bilmeyen savaşlar, 1789 Fransız Devrimi'ni tetikleyen mali krize yol açtı. 2. Dünya Savaşı sonrası ise 'Dirigisme' modeliyle devlet planlaması öne çıktı. Bugün Fransa, yüksek tarımsal verimliliği, nükleer enerji yatırımları ve lüks tüketim ihracatıyla dünyanın en gelişmiş karma ekonomilerinden biri konumundadır."
-    content = '<h2>🇫🇷 Fransa Ekonomisi</h2><div id="target" class="typing-text"></div><a href="/" class="back-btn">← ANA SAYFA</a>'
     return layout(content, text)
 
 @app.route("/roma")
 def roma():
-    text = "ANTİK ROMA: Roma'nın çöküşü, 'para sahteciliği' yapan imparatorların hikayesidir. İlk dönemlerde gümüş oranı %98 olan Denarius parası, 3. yüzyılda %5'in altına düşürüldü. Paranın değer kaybı kontrol edilemez bir enflasyona yol açtı. İmparator Diocletianus fiyatları sabitlemeye çalışsa da (Tavan Fiyat Kararnamesi) karaborsayı engelleyemedi. Ekonomik çöküş, ordunun finanse edilememesine, şehirlerin boşalmasına ve Avrupa'nın karanlık bir feodalizm çağına girmesine neden olmuştur."
+    text = "ANTİK ROMA: Roma'nın çöküşü sadece askeri değil, aynı zamanda paranın saflığının bozulmasıyla gelen bir ekonomik faciadır. İmparatorlar masrafları karşılamak için gümüş Denarius'un içindeki gümüşü azaltıp yerine bakır koymuşlardır. Bu durum kontrol edilemez enflasyona ve ticaretin çökmesine yol açmıştır. Paranın değerini kaybetmesiyle halk şehirleri terk etmiş, feodalizmin temelleri bu dönemde atılmıştır."
     content = '<h2>🏛️ Antik Roma</h2><div id="target" class="typing-text"></div><a href="/" class="back-btn">← ANA SAYFA</a>'
     return layout(content, text)
 
