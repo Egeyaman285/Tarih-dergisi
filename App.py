@@ -41,6 +41,9 @@ STYLE = """
 
     .typing-text { line-height: 1.8; font-size: 18px; color: #444; background: #fffdf9; padding: 30px; border-left: 8px solid #c0392b; border-radius: 5px; white-space: pre-wrap; margin-bottom: 20px; min-height: 100px; }
     .back-btn { display: inline-block; margin-top: 20px; padding: 12px 25px; background: #2c3e50; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; }
+    
+    /* Gizli Veri Deposu */
+    #hidden-data { display: none; }
 </style>
 
 <script>
@@ -80,24 +83,31 @@ STYLE = """
         setTimeout(spawn, Math.random() * 1500 + 800);
     }
 
-    function typeEffect(elementId, text) {
-        let i = 0;
-        let target = document.getElementById(elementId);
-        if(!target) return;
+    // EN GARANTİ YAZI FONKSİYONU
+    function startTyping() {
+        const target = document.getElementById('target');
+        const source = document.getElementById('hidden-text');
+        if(!target || !source) return;
+        
+        const text = source.innerText.trim();
         target.innerHTML = "";
+        let i = 0;
+        
         function run() {
             if (i < text.length) {
                 target.innerHTML += text.charAt(i);
                 i++;
-                setTimeout(run, 10);
+                setTimeout(run, 15);
             }
         }
         run();
     }
+
+    window.onload = startTyping;
 </script>
 """
 
-def layout(content):
+def layout(content, long_text=""):
     left = f"""
     <div class="sidebar-left">
         <h2>📊 EKONOMİ PANELİ</h2>
@@ -120,13 +130,15 @@ def layout(content):
     right = """
     <div class="sidebar-right">
         <h3 style="border-bottom:2px solid #2c3e50;">📜 KISA ÖZETLER</h3>
-        <p><b>🇹🇷 Türkiye:</b> 1923'te küllerinden doğan bir ekonomi.</p>
-        <p><b>🕌 Osmanlı:</b> 600 yıllık bir devin mali evrimi.</p>
-        <p><b>🇩🇪 Almanya:</b> Hiperenflasyonun dramatik örneği.</p>
-        <p><b>🏛️ Roma:</b> Paranın saflığını bozarak çöken dev.</p>
+        <p><b>🇹🇷 Türkiye:</b> 1923'te küllerinden doğan ekonomi.</p>
+        <p><b>🕌 Osmanlı:</b> Cihan devletinin mali yükselişi.</p>
+        <p><b>🇩🇪 Almanya:</b> Hiperenflasyonun acı dersi.</p>
+        <p><b>🏛️ Roma:</b> Parası bozulan imparatorluğun sonu.</p>
     </div>
     """
-    return f"{STYLE} {left} {right} <div class='main-content'>{content}</div>"
+    # Gizli div içinde metni saklıyoruz ki JS oradan okusun
+    hidden = f"<div id='hidden-data'><div id='hidden-text'>{long_text}</div></div>"
+    return f"{STYLE} {left} {right} {hidden} <div class='main-content'>{content}</div>"
 
 @app.route("/")
 def home():
@@ -145,23 +157,27 @@ def home():
 
 @app.route("/turkiye")
 def turkiye():
-    t = "TÜRKİYE EKONOMİSİ: 1923 İzmir İktisat Kongresi ile temelleri atılan tam bağımsızlık mücadelesi... Osmanlı'dan devralınan borçların (Duyun-u Umumiye) ödenmesi süreci ve yerli üretim fabrikalarının yükselişi. 1923-1938 arası yakalanan yüksek büyüme hızı, genç Cumhuriyetin ekonomik mucizesi olarak tarihe geçmiştir."
-    return layout(f"""<div class="container"><h2>🇹🇷 Modern Türkiye</h2><div id="target" class="typing-text"></div><a href="/" class="back-btn">← ANA SAYFA</a></div><script>window.onload = function() {{ setTimeout(function() {{ typeEffect('target', `{t}`); }}, 500); }};</script>""")
+    text = "TÜRKİYE CUMHURİYETİ: 1923 yılında ilan edilen Cumhuriyet, sadece siyasi değil aynı zamanda dev bir ekonomik devrimdir. İzmir İktisat Kongresi ile yerli üretim hedeflenmiş, Osmanlı'dan kalan borçlar onurlu bir şekilde ödenmiş ve devlet destekli sanayileşme ile Türkiye modern dünyanın bir parçası haline gelmiştir. 1923-1938 arası dönem, dünyanın en hızlı büyüyen ekonomilerinden biri olarak tarihe geçmiştir."
+    content = '<h2>🇹🇷 Modern Türkiye</h2><div id="target" class="typing-text"></div><a href="/" class="back-btn">← ANA SAYFA</a>'
+    return layout(content, text)
 
 @app.route("/osmanli")
 def osmanli():
-    t = "OSMANLI İMPARATORLUĞU: 1300'lerden 1922'ye uzanan mali evrim... İpek ve Baharat Yolları hakimiyetiyle güçlenen hazine, Coğrafi Keşifler sonrası sarsılmıştır. 1854'te başlayan dış borçlanma serüveni, 1881'de ekonomik bağımsızlığın fiilen kaybı anlamına gelen Duyun-u Umumiye idaresinin kurulmasıyla sonuçlanmıştır."
-    return layout(f"""<div class="container"><h2>🕌 Osmanlı İmparatorluğu</h2><div id="target" class="typing-text"></div><a href="/" class="back-btn">← ANA SAYFA</a></div><script>window.onload = function() {{ setTimeout(function() {{ typeEffect('target', `{t}`); }}, 500); }};</script>""")
+    text = "OSMANLI İMPARATORLUĞU: 600 yılı aşkın süren bu devasa devlet, ekonomisini 'İaşe' ve 'Gelenekçilik' prensipleri üzerine kurmuştur. İstanbul'un fethiyle ticaret yollarını kontrol altına almış, ancak Coğrafi Keşifler ve sanayi devrimini yakalayamaması mali yapısını sarsmıştır. 1854'te başlayan dış borç süreci, 1881'de Duyun-u Umumiye'nin kurulmasıyla ekonomik egemenliğin yitirilmesine yol açmıştır."
+    content = '<h2>🕌 Osmanlı İmparatorluğu</h2><div id="target" class="typing-text"></div><a href="/" class="back-btn">← ANA SAYFA</a>'
+    return layout(content, text)
 
 @app.route("/almanya")
 def almanya():
-    t = "WEIMAR ALMANYASI (1919-1933): Versay Antlaşması'nın getirdiği devasa savaş tazminatları altında ezilen Almanya, çözümü karşılıksız para basmakta buldu. 1923 yılında yaşanan hiperenflasyon döneminde bir somun ekmeğin fiyatı milyarlarca marka ulaştı. İnsanlar ısınmak için banknotları yakıyor, çocuklar paralarla kule yaparak oyun oynuyordu. Bu ekonomik çöküş, halkın demokratik sisteme olan güvenini sarsarak aşırılıkçı hareketlerin (Nazizm) yükselmesine zemin hazırlayan en büyük sosyo-ekonomik faktör olmuştur."
-    return layout(f"""<div class="container"><h2>🇩🇪 Weimar Almanyası</h2><div id="target" class="typing-text"></div><a href="/" class="back-btn">← ANA SAYFA</a></div><script>window.onload = function() {{ setTimeout(function() {{ typeEffect('target', `{t}`); }}, 500); }};</script>""")
+    text = "WEIMAR ALMANYASI: 1. Dünya Savaşı sonrası Versay Antlaşması'nın getirdiği ağır tazminat yükü altında ezilen Almanya, tarihin en dramatik hiperenflasyon dönemini yaşamıştır. 1923 yılında kağıt para o kadar değersizleşmiştir ki, bir somun ekmek almak için el arabasıyla para taşınması gerekmiştir. Bu ekonomik yıkım, orta sınıfı bitirmiş ve halkın çaresizliği aşırı uç siyasi hareketlerin (Nazizm) güçlenmesine neden olmuştur."
+    content = '<h2>🇩🇪 Weimar Almanyası</h2><div id="target" class="typing-text"></div><a href="/" class="back-btn">← ANA SAYFA</a>'
+    return layout(content, text)
 
 @app.route("/roma")
 def roma():
-    t = "ANTİK ROMA EKONOMİSİ: Roma İmparatorluğu'nun çöküşünün en temel ancak en az konuşulan sebebi 'paranın değerinin sistematik olarak düşürülmesi'dir. İmparatorlar, artan ordu ve bürokrasi masraflarını karşılamak için gümüş paranın (Denarius) saflığını %95'ten zamanla %0'a kadar indirdiler. Gümüş yerine bakır kullanılması fiyatların kontrolden çıkmasına (enflasyon) neden oldu. Ticaret durdu, halk şehirlerden kaçarak malikanelere (Latifundia) sığındı. Bu ekonomik daralma, Roma'nın askeri gücünü koruyamamasına ve imparatorluğun bölünerek çökmesine neden olmuştur."
-    return layout(f"""<div class="container"><h2>🏛️ Antik Roma</h2><div id="target" class="typing-text"></div><a href="/" class="back-btn">← ANA SAYFA</a></div><script>window.onload = function() {{ setTimeout(function() {{ typeEffect('target', `{t}`); }}, 500); }};</script>""")
+    text = "ANTİK ROMA: Roma'nın çöküşü sadece askeri değil, aynı zamanda paranın saflığının bozulmasıyla gelen bir ekonomik faciadır. İmparatorlar masrafları karşılamak için gümüş Denarius'un içindeki gümüşü azaltıp yerine bakır koymuşlardır. Bu durum kontrol edilemez enflasyona ve ticaretin çökmesine yol açmıştır. Paranın değerini kaybetmesiyle halk şehirleri terk etmiş, feodalizmin temelleri bu dönemde atılmıştır."
+    content = '<h2>🏛️ Antik Roma</h2><div id="target" class="typing-text"></div><a href="/" class="back-btn">← ANA SAYFA</a>'
+    return layout(content, text)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
