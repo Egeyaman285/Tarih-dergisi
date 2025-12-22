@@ -15,7 +15,7 @@ STYLE = """
         .grid { grid-template-columns: 1fr !important; gap: 12px !important; }
         .calc-grid button { padding: 18px !important; font-size: 1.2rem !important; }
         #game-container { height: 180px !important; }
-        .typing-text { font-size: 16px !important; padding: 20px !important; min-height: 150px; }
+        .typing-text { font-size: 16px !important; padding: 20px !important; min-height: 200px; }
     }
 
     .sidebar-left { width: 320px; background: #2c3e50; color: white; height: 100vh; padding: 25px; position: fixed; left: 0; overflow-y: auto; z-index: 10; box-shadow: 2px 0 10px rgba(0,0,0,0.3); }
@@ -38,11 +38,11 @@ STYLE = """
 
     .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px; }
     .card { background: #ffffff; border: 1px solid #d1d8e0; padding: 25px; border-radius: 12px; text-decoration: none; text-align: center; color: #2d98da; font-weight: bold; transition: 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+    .card:hover { transform: translateY(-5px); border-color: #c0392b; }
 
-    .typing-text { line-height: 1.8; font-size: 18px; color: #444; background: #fffdf9; padding: 30px; border-left: 8px solid #c0392b; border-radius: 5px; white-space: pre-wrap; margin-bottom: 20px; min-height: 100px; }
+    .typing-text { line-height: 1.8; font-size: 18px; color: #444; background: #fffdf9; padding: 30px; border-left: 8px solid #c0392b; border-radius: 5px; white-space: pre-wrap; margin-bottom: 20px; text-align: justify; }
     .back-btn { display: inline-block; margin-top: 20px; padding: 12px 25px; background: #2c3e50; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; }
     
-    /* Gizli Veri Deposu */
     #hidden-data { display: none; }
 </style>
 
@@ -70,39 +70,34 @@ STYLE = """
         let pos = 0;
         let loop = setInterval(() => {
             if(!running) { clearInterval(loop); obs.remove(); return; }
-            pos += 6; obs.style.right = pos + 'px';
+            pos += 7; obs.style.right = pos + 'px';
             let pBottom = parseInt(window.getComputedStyle(document.getElementById('player')).getPropertyValue('bottom'));
-            let obsRight = pos;
-            if(obsRight > (container.offsetWidth - 75) && obsRight < (container.offsetWidth - 30) && pBottom < 30) { 
+            if(pos > (container.offsetWidth - 75) && pos < (container.offsetWidth - 30) && pBottom < 30) { 
                 running = false;
-                alert('Enflasyona yenildin! Skor: ' + score); 
+                alert('Ekonomik Kriz! Skorun: ' + score); 
                 location.reload(); 
             }
             if(pos > container.offsetWidth + 30) { clearInterval(loop); obs.remove(); score++; document.getElementById('score-num').innerText = score; }
         }, 20);
-        setTimeout(spawn, Math.random() * 1500 + 800);
+        setTimeout(spawn, Math.random() * 1200 + 600);
     }
 
-    // EN GARANTİ YAZI FONKSİYONU
     function startTyping() {
         const target = document.getElementById('target');
         const source = document.getElementById('hidden-text');
         if(!target || !source) return;
-        
         const text = source.innerText.trim();
         target.innerHTML = "";
         let i = 0;
-        
         function run() {
             if (i < text.length) {
                 target.innerHTML += text.charAt(i);
                 i++;
-                setTimeout(run, 15);
+                setTimeout(run, 12);
             }
         }
         run();
     }
-
     window.onload = startTyping;
 </script>
 """
@@ -122,21 +117,21 @@ def layout(content, long_text=""):
         </div>
         <div id="game-container" onclick="play()" ontouchstart="play()">
             <div id="score-board">SKOR: <span id="score-num">0</span></div>
-            <div id="msg" style="color:white; text-align:center; margin-top:60px; font-weight:bold;">BAŞLATMAK İÇİN TIKLA!</div>
+            <div id="msg" style="color:white; text-align:center; margin-top:60px; font-weight:bold;">ENFLASYON CANAVARI: BAŞLA</div>
             <div id="player"></div>
         </div>
     </div>
     """
     right = """
     <div class="sidebar-right">
-        <h3 style="border-bottom:2px solid #2c3e50;">📜 KISA ÖZETLER</h3>
-        <p><b>🇹🇷 Türkiye:</b> 1923'te küllerinden doğan ekonomi.</p>
-        <p><b>🕌 Osmanlı:</b> Cihan devletinin mali yükselişi.</p>
-        <p><b>🇩🇪 Almanya:</b> Hiperenflasyonun acı dersi.</p>
-        <p><b>🏛️ Roma:</b> Parası bozulan imparatorluğun sonu.</p>
+        <h3 style="border-bottom:2px solid #2c3e50;">📜 TARİHİ SÖZLÜK</h3>
+        <p><b>Duyun-u Umumiye:</b> Osmanlı'nın iflasının ilanı.</p>
+        <p><b>Hiperenflasyon:</b> Paranın kağıt parçasına dönüşü.</p>
+        <p><b>Denarius:</b> Roma'nın değerini kaybeden gümüşü.</p>
+        <p><b>Merkantilizm:</b> Fransa'nın altın biriktirme hırsı.</p>
+        <p><b>Marshall Planı:</b> Avrupa'nın yeniden inşası.</p>
     </div>
     """
-    # Gizli div içinde metni saklıyoruz ki JS oradan okusun
     hidden = f"<div id='hidden-data'><div id='hidden-text'>{long_text}</div></div>"
     return f"{STYLE} {left} {right} {hidden} <div class='main-content'>{content}</div>"
 
@@ -144,11 +139,14 @@ def layout(content, long_text=""):
 def home():
     content = """
     <div class="container">
-        <h1>🏛️ Dünya Tarih & Ekonomi Arşivi</h1>
+        <h1>🏛️ Küresel Tarih & Ekonomi Arşivi</h1>
+        <p style="text-align:center;">İmparatorlukların yükselişini ve çöküşünü tetikleyen ekonomik güçleri keşfedin.</p>
         <div class="grid">
             <a href="/turkiye" class="card">🇹🇷 MODERN TÜRKİYE</a>
             <a href="/osmanli" class="card">🕌 OSMANLI İMPARATORLUĞU</a>
-            <a href="/almanya" class="card">🇩🇪 WEIMAR ALMANYASI</a>
+            <a href="/weimar" class="card">🇩🇪 WEIMAR ALMANYASI</a>
+            <a href="/nazi" class="card">🪖 NAZİ ALMANYASI</a>
+            <a href="/fransa" class="card">🇫🇷 FRANSA EKONOMİSİ</a>
             <a href="/roma" class="card">🏛️ ANTİK ROMA</a>
         </div>
     </div>
@@ -157,25 +155,37 @@ def home():
 
 @app.route("/turkiye")
 def turkiye():
-    text = "TÜRKİYE CUMHURİYETİ: 1923 yılında ilan edilen Cumhuriyet, sadece siyasi değil aynı zamanda dev bir ekonomik devrimdir. İzmir İktisat Kongresi ile yerli üretim hedeflenmiş, Osmanlı'dan kalan borçlar onurlu bir şekilde ödenmiş ve devlet destekli sanayileşme ile Türkiye modern dünyanın bir parçası haline gelmiştir. 1923-1938 arası dönem, dünyanın en hızlı büyüyen ekonomilerinden biri olarak tarihe geçmiştir."
+    text = "TÜRKİYE CUMHURİYETİ (1923-Günümüz): Osmanlı'dan devralınan 161 milyon altın liralık devasa borç yüküne rağmen, Mustafa Kemal Atatürk önderliğinde 'Ekonomik Bağımsızlık' savaşı başlatıldı. 1923 İzmir İktisat Kongresi ile yerli üretim stratejisi belirlendi. Sümerbank, Etibank gibi kurumlarla sanayileşme hız kazandı. Cumhuriyet'in ilk 15 yılında dünya ortalamasının çok üzerinde bir büyüme hızı yakalandı. 1950 sonrası serbest piyasa geçişi, 1980'deki 24 Ocak kararları ve 2001 yapısal reformları Türkiye ekonomisinin modernleşme duraklarıdır."
     content = '<h2>🇹🇷 Modern Türkiye</h2><div id="target" class="typing-text"></div><a href="/" class="back-btn">← ANA SAYFA</a>'
     return layout(content, text)
 
 @app.route("/osmanli")
 def osmanli():
-    text = "OSMANLI İMPARATORLUĞU: 600 yılı aşkın süren bu devasa devlet, ekonomisini 'İaşe' ve 'Gelenekçilik' prensipleri üzerine kurmuştur. İstanbul'un fethiyle ticaret yollarını kontrol altına almış, ancak Coğrafi Keşifler ve sanayi devrimini yakalayamaması mali yapısını sarsmıştır. 1854'te başlayan dış borç süreci, 1881'de Duyun-u Umumiye'nin kurulmasıyla ekonomik egemenliğin yitirilmesine yol açmıştır."
+    text = "OSMANLI İMPARATORLUĞU: Kuruluş döneminde ticaret yollarını (İpek ve Baharat) ele geçirerek zenginleşen imparatorluk, 16. yüzyılda Amerika'dan Avrupa'ya akan gümüşün yarattığı enflasyonla (Fiyat Devrimi) sarsıldı. 1854 Kırım Savaşı ile başlayan dış borç sarmalı, 1875'te 'Ramazan Kararnamesi' ile devletin iflasını açıklamasına neden oldu. 1881'de kurulan Duyun-u Umumiye, devletin gelirlerine el koyan uluslararası bir idare olarak ekonomik bağımsızlığın sonunu temsil eder."
     content = '<h2>🕌 Osmanlı İmparatorluğu</h2><div id="target" class="typing-text"></div><a href="/" class="back-btn">← ANA SAYFA</a>'
     return layout(content, text)
 
-@app.route("/almanya")
-def almanya():
-    text = "WEIMAR ALMANYASI: 1. Dünya Savaşı sonrası Versay Antlaşması'nın getirdiği ağır tazminat yükü altında ezilen Almanya, tarihin en dramatik hiperenflasyon dönemini yaşamıştır. 1923 yılında kağıt para o kadar değersizleşmiştir ki, bir somun ekmek almak için el arabasıyla para taşınması gerekmiştir. Bu ekonomik yıkım, orta sınıfı bitirmiş ve halkın çaresizliği aşırı uç siyasi hareketlerin (Nazizm) güçlenmesine neden olmuştur."
+@app.route("/weimar")
+def weimar():
+    text = "WEIMAR ALMANYASI (1919-1923): 1. Dünya Savaşı sonrası Versay Antlaşması'nın getirdiği 132 milyar altın marklık tazminat, Almanya'yı tarihin en meşhur hiperenflasyonuna sürükledi. 1923'te bir ABD doları 4.2 trilyon marka eşitlendi. İşçiler maaşlarını günde iki kez alıyor ve parayı hemen harcamak için dükkanlara koşuyordu. Bu ekonomik travma, orta sınıfın birikimlerini yok ederek siyasi istikrarsızlığa ve demokrasinin çöküşüne giden yolu açmıştır."
     content = '<h2>🇩🇪 Weimar Almanyası</h2><div id="target" class="typing-text"></div><a href="/" class="back-btn">← ANA SAYFA</a>'
+    return layout(content, text)
+
+@app.route("/nazi")
+def nazi():
+    text = "NAZİ ALMANYASI (1933-1945): Hitler iktidara geldiğinde ekonomiyi 'Autarky' (Kendi kendine yetme) ve savaş hazırlığı üzerine kurdu. Hjalmar Schacht tarafından geliştirilen 'MEFO Bonoları' ile gizlice silahlanma finanse edildi. İşsizlik, devasa kamu projeleri (Otobanlar gibi) ve zorunlu askerlik ile kağıt üzerinde sıfıra indirildi. Ancak bu büyüme, fethedilen topraklardaki kaynakların yağmalanmasına ve zorunlu çalışmaya dayanıyordu. Savaşın sonuna gelindiğinde Alman ekonomisi tamamen yerle bir olmuş ve para birimi yerini takas sistemine bırakmıştır."
+    content = '<h2>🪖 Nazi Almanyası</h2><div id="target" class="typing-text"></div><a href="/" class="back-btn">← ANA SAYFA</a>'
+    return layout(content, text)
+
+@app.route("/fransa")
+def fransa():
+    text = "FRANSA EKONOMİSİ: 17. yüzyılda Jean-Baptiste Colbert liderliğinde geliştirilen 'Colbertizm' (Fransız Merkantilizmi), devletin ekonomiye sıkı müdahalesini ve ihracatın artırılmasını hedefledi. Ancak lüks harcamalar ve bitmek bilmeyen savaşlar, 1789 Fransız Devrimi'ni tetikleyen mali krize yol açtı. 2. Dünya Savaşı sonrası ise 'Dirigisme' modeliyle devlet planlaması öne çıktı. Bugün Fransa, yüksek tarımsal verimliliği, nükleer enerji yatırımları ve lüks tüketim ihracatıyla dünyanın en gelişmiş karma ekonomilerinden biri konumundadır."
+    content = '<h2>🇫🇷 Fransa Ekonomisi</h2><div id="target" class="typing-text"></div><a href="/" class="back-btn">← ANA SAYFA</a>'
     return layout(content, text)
 
 @app.route("/roma")
 def roma():
-    text = "ANTİK ROMA: Roma'nın çöküşü sadece askeri değil, aynı zamanda paranın saflığının bozulmasıyla gelen bir ekonomik faciadır. İmparatorlar masrafları karşılamak için gümüş Denarius'un içindeki gümüşü azaltıp yerine bakır koymuşlardır. Bu durum kontrol edilemez enflasyona ve ticaretin çökmesine yol açmıştır. Paranın değerini kaybetmesiyle halk şehirleri terk etmiş, feodalizmin temelleri bu dönemde atılmıştır."
+    text = "ANTİK ROMA: Roma'nın çöküşü, 'para sahteciliği' yapan imparatorların hikayesidir. İlk dönemlerde gümüş oranı %98 olan Denarius parası, 3. yüzyılda %5'in altına düşürüldü. Paranın değer kaybı kontrol edilemez bir enflasyona yol açtı. İmparator Diocletianus fiyatları sabitlemeye çalışsa da (Tavan Fiyat Kararnamesi) karaborsayı engelleyemedi. Ekonomik çöküş, ordunun finanse edilememesine, şehirlerin boşalmasına ve Avrupa'nın karanlık bir feodalizm çağına girmesine neden olmuştur."
     content = '<h2>🏛️ Antik Roma</h2><div id="target" class="typing-text"></div><a href="/" class="back-btn">← ANA SAYFA</a>'
     return layout(content, text)
 
