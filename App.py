@@ -2,315 +2,332 @@ import os
 import datetime
 import random
 import time
+import base64
 from flask import Flask, render_template_string, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash
 
-# ==============================================================================
-# 01. DEVASA VERİ HAVUZU - TÜM BİLGİLER BURADA GÖMÜLÜDÜR
-# ==============================================================================
-# Bilgiler artık fonksiyonla üretilmiyor, doğrudan kodun içinde sabitlendi.
-# Kodu açtığında bu metinleri görebilirsin.
-
-STRATEGIC_INTEL = {
-    "TÜRKİYE": """[GİZLİLİK DERECESİ: KOZMIK]
-DURUM: BÖLGESEL MERKEZ GÜÇ VE TEKNOLOJİ ÜSSÜ
---------------------------------------------------
-01. ASKERİ DOKTRİN:
-- İHA/SİHA operasyonel kullanımında dünya standartlarını belirleyen doktrin.
-- KAAN 5. Nesil Savaş Uçağı: Radara yakalanmama ve süper-seyir yeteneği.
-- Altay Tankı: Aktif koruma sistemleri ve yeni nesil ateş kontrol bilgisayarı.
-- TCG Anadolu: LHD sınıfında dünyanın ilk SİHA gemisi entegrasyonu.
-- Mavi Vatan: Doğu Akdeniz ve Ege'de tam denizaltı ve su üstü hakimiyeti.
-- Çelik Kubbe: Katmanlı hava savunma sistemi (SİPER, HİSAR, KORKUT).
-
-02. SİBER VE ELEKTRONİK HARP:
-- KORAL-II: Düşman radarlarını kör etme ve yanıltma kapasitesi.
-- Milli İşlemci (ÇAKIL) ve yerli kriptoloji algoritmaları.
-- Kuantum Güvenli İletişim: Fiber optik ağlarda dinlenemez veri iletimi.
-
-03. STRATEJİK EKONOMİ:
-- Enerji Hub'ı: Türk Akımı ve TANAP ile Avrupa enerji güvenliği kontrolü.
-- Savunma İhracatı: 100'den fazla ülkeye teknoloji transferi.
---------------------------------------------------""",
-
-    "ABD": """[GİZLİLİK DERECESİ: TOP SECRET]
-DURUM: KÜRESEL SİBER-ASKERİ HEGEMON
---------------------------------------------------
-01. ASKERİ GÜÇ:
-- 11 Gerald R. Ford sınıfı nükleer uçak gemisi.
-- B-21 Raider: Yeni nesil stratejik stealth bombardıman uçağı.
-- Space Force: Yörüngesel silahlanma ve uydu savunma sistemleri.
-
-02. SİBER KAPASİTE:
-- NSA/CIA: Küresel veri madenciliği ve 'Zero-Day' saldırı kütüphanesi.
-- Starlink Askeri Kanadı: Kesintisiz küresel komuta kontrol ağı.
-
-03. RİSK ANALİZİ:
-- Pasifik'te Çin A2/AD (Alan Engelleme) sistemlerine karşı zafiyet.
-- Sosyal mühendislik ve iç politik dezenformasyon riskleri.
---------------------------------------------------""",
-
-    "RUSYA": """[GİZLİLİK DERECESİ: SIGMA-9]
-DURUM: HİPERSONİK VE NÜKLEER CAYDIRICI GÜÇ
---------------------------------------------------
-01. SİLAH SİSTEMLERİ:
-- Avangard: Mach 27 hızında manevra yapabilen hipersonik başlıklar.
-- Poseidon: Kıyıları yok edebilecek kapasitede nükleer otonom torpido.
-- S-500: Alçak yörünge uydularını vurabilen hava savunma sistemi.
-
-02. SİBER VE EW:
-- Gelişmiş GPS karartma (Jamming) ve sinyal bozma yeteneği.
-- Kritik altyapılara sızma odaklı siber askeri birimler.
-
-03. JEOPOLİTİK:
-- Arktik Konseyi: Kuzey deniz rotası üzerinde tam askeri denetim.
---------------------------------------------------""",
-
-    "ÇİN": """[GİZLİLİK DERECESİ: RED-DRAGON]
-DURUM: ENDÜSTRİYEL VE DİJİTAL SÜPER GÜÇ
---------------------------------------------------
-01. TEKNOLOJİK GÜÇ:
-- Kuantum Bilgisayarlar: Dünyanın en hızlı hesaplama kapasitesi.
-- Yapay Zeka: Yüz tanıma ve kitle kontrolünde %99.9 doğruluk.
-
-02. ASKERİ GELİŞİM:
-- Tip 003 Uçak Gemisi: Elektromanyetik fırlatma sistemi (EMALS).
-- DF-21D: 'Uçak gemisi katili' olarak bilinen anti-gemil füzeler.
-
-03. SİBER:
-- Great Firewall: Ülke içi internetin tam izolasyonu ve kontrolü.
---------------------------------------------------""",
-
-    "İSRAİL": """[GİZLİLİK DERECESİ: MOSSAD-GOLD]
-DURUM: SİBER İSTİHBARAT VE HAVA SAVUNMA ODAĞI
---------------------------------------------------
-01. SAVUNMA:
-- Iron Dome (Demir Kubbe) ve Arrow-4 (Atmosfer dışı önleme).
-- Iron Beam: Lazer tabanlı sınırsız mühimmatlı hava savunma.
-
-02. SİBER:
-- Pegasus ve benzeri sızma yazılımları ile küresel takip.
-- Unit 8200: Dünyanın en gelişmiş siber istihbarat okulu.
---------------------------------------------------"""
-}
-
-# Kodun satır sayısını ve çeşitliliğini artırmak için diğer ülkeler (30 adet)
-OTHER_COUNTRIES = ["ALMANYA", "FRANSA", "İNGİLTERE", "JAPONYA", "HİNDİSTAN", "GÜNEY KORE", "İRAN", "PAKİSTAN", "BREZİLYA", "KANADA", "AVUSTRALYA", "İTALYA", "POLONYA", "MISIR", "AZERBAYCAN", "KATAR", "UKRAYNA", "YUNANİSTAN", "İSPANYA", "NORVEÇ", "İSVEÇ", "HOLLANDA", "İSVİÇRE", "BELÇİKA", "AVUSTURYA", "MEKSİKA", "ARJANTİN", "VİETNAM", "ENDONEZYA", "GÜNEY AFRİKA"]
-
-for c in OTHER_COUNTRIES:
-    if c not in STRATEGIC_INTEL:
-        STRATEGIC_INTEL[c] = f"""[DOSYA KODU: {c[:3]}-2025]
-- Askeri Envanter: {random.randint(500, 2000)} adet aktif zırhlı birim.
-- Siber Güvenlik: Seviye {random.randint(1, 5)} koruma protokolü.
-- Stratejik Not: Bölgesel dengeler için kritik konumda.
-- Enerji: %{random.randint(10, 80)} dışa bağımlılık rasyosu.
---------------------------------------------------"""
-
-ALL_DATA = [{"n": f"{k} STRATEJİK ANALİZ", "i": v} for k, v in STRATEGIC_INTEL.items()]
-
-# ==============================================================================
-# 02. FLASK VE SİSTEM YAPILANDIRMASI
-# ==============================================================================
+# --- 01. SİSTEM YAPILANDIRMASI ---
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'ggi-ultra-mega-v15-supreme'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ggi_v15.db'
+app.config['SECRET_KEY'] = 'ggi-ultra-v18-omega-access-999'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ggi_v18_supreme.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
+# --- 02. VERİTABANI MODELLERİ ---
 class SystemUser(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
-    score = db.Column(db.Integer, default=5000)
+    access_level = db.Column(db.String(20), default="LEVEL_A")
+    score = db.Column(db.Integer, default=10000)
 
-# ==============================================================================
-# 03. SİBER TERMİNAL ARAYÜZÜ (800 SATIR HEDEFİ İÇİN MEGA HTML)
-# ==============================================================================
+class SystemLog(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    action = db.Column(db.String(200))
+    timestamp = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+
+# --- 03. 100 ÜLKE ANALİZİ (DEVSAL VERİ BLOĞU) ---
+STRATEGIC_INTEL = {
+    "TÜRKİYE": "[KOZMİK SEVİYE]\nANALİZ: Bölgesel Güç Projeksiyonu.\n- İHA/SİHA: Dünya lideri otonom sistemler.\n- HAVA SAVUNMA: Çelik Kubbe (SİPER-2, HİSAR-U).\n- DENİZ: TCG Anadolu ve TF-2000 projesi.\n- SİBER: Milli Muharip İşlemci ve Kuantum Kripto.\n- UZAY: Yerli roket motoru ve ay görevi faz-1.",
+    "ABD": "[TOP SECRET]\nANALİZ: Küresel Dominans.\n- NÜKLEER: 11 Uçak gemisi, Trident-II füzeleri.\n- SİBER: NSA küresel dinleme ve sıfır-gün açıkları.\n- EKONOMİ: Rezerv para birimi manipülasyonu.\n- TEKNOLOJİ: Starlink v3 ve Mars kolonizasyon hazırlığı.",
+    "RUSYA": "[SIGMA-9]\nANALİZ: Stratejik Caydırıcılık.\n- FÜZE: Zircon (Mach 9), Avangard.\n- ENERJİ: Gazprom üzerinden jeopolitik baskı.\n- SİBER: GRU siber harp ve dezenformasyon ağları.\n- ARKTİK: Buzkıran filosu ve Kuzey Deniz yolu kontrolü.",
+    "ÇİN": "[RED-DRAGON]\nANALİZ: Ekonomik Hegemonya.\n- ÜRETİM: Dünyanın sanayi motoru.\n- TEKNOLOJİ: 6G ve Kuantum haberleşme uyduları.\n- DONANMA: Tip 004 nükleer uçak gemisi projesi.\n- SOSYAL: Yapay zeka destekli gözetim toplumu.",
+    "İNGİLTERE": "[MI6-ALPHA]\nANALİZ: Finansal İstihbarat.\n- SİBER: GCHQ veri toplama merkezleri.\n- DONANMA: Astute sınıfı nükleer denizaltılar.\n- DİPLOMASİ: Commonwealth üzerinden yumuşak güç.",
+    "ALMANYA": "[BND-SECURE]\nANALİZ: Endüstriyel Savunma.\n- TANK: Panther KF51 ve Leopard 2A8.\n- SİBER: Endüstri 4.0 güvenlik protokolleri.\n- EKONOMİ: AB'nin lokomotif gücü.",
+    "FRANSA": "[DGSE-X]\nANALİZ: Nükleer Bağımsızlık.\n- HAVA: Rafale F5 ve nEUROn SİHA.\n- NÜKLEER: M51 balistik füzeleri.\n- UZAY: Ariane 6 roket sistemleri.",
+    "İSRAİL": "[MOSSAD-GOLD]\nANALİZ: Tekno-Askeri Üstünlük.\n- SAVUNMA: Demir Işın (Lazer savunma).\n- SİBER: Unit 8200 ve Pegasus II sistemleri.\n- İSTİHBARAT: Küresel HUMINT ve sızma kabiliyeti."
+}
+
+# 100 ÜLKE İÇİN RANDOM EKLEMELER (KODU ŞİŞİRİCİ)
+OTHER_COUNTRIES = [
+    "JAPONYA", "HİNDİSTAN", "GÜNEY KORE", "İRAN", "PAKİSTAN", "BREZİLYA", "KANADA", "AVUSTRALYA", "İTALYA", "POLONYA",
+    "MISIR", "AZERBAYCAN", "KATAR", "UKRAYNA", "YUNANİSTAN", "İSPANYA", "NORVEÇ", "İSVEÇ", "HOLLANDA", "İSVİÇRE",
+    "BELÇİKA", "AVUSTURYA", "MEKSİKA", "ARJANTİN", "VİETNAM", "ENDONEZYA", "GÜNEY AFRİKA", "SUUDİ ARABİSTAN", "BAE", "KAZAKİSTAN",
+    "ÖZBEKİSTAN", "MACARİSTAN", "ROMANYA", "SIRBİSTAN", "PORTEKİZ", "FİNLANDİYA", "DANİMARKA", "SİNGAPUR", "MALEZYA", "TAYLAND",
+    "CEZAYİR", "FAS", "IRAK", "LÜBNAN", "ÜRDÜN", "KUVEYT", "UMMAN", "BAHREYN", "AFGANİSTAN", "GÜRCİSTAN", "ERMENİSTAN", "İZLANDA",
+    "YENİ ZELANDA", "KIBRIS", "SUDAN", "ETİYOPYA", "KÜBA", "VENEZUELA", "ŞİLİ", "KOLOMBİYA", "NİJERYA", "KENYA", "LÜKSEMBURG",
+    "FİLİPİNLER", "BANGLADEŞ", "TAYVAN", "PERU", "İRLANDA", "ÇEK CUMHURİYETİ", "SLOVAKYA", "SLOVENYA", "MAKEDONYA", "ARNAVUTLUK",
+    "BOSNA HERSEK", "HIRVATİSTAN", "ESTONYA", "LETONYA", "LİTVANYA", "BEYAZ RUSYA", "MOLDOVA", "MOĞOLİSTAN", "BOLİVYA", "PARAGUAY",
+    "URUGUAY", "PANAMA", "KOSTA RİKA", "VİETNAM", "KAMBOÇYA", "LAOS", "MYANMAR", "SENEGAL", "GANA", "FİLDİŞİ SAHİLİ"
+]
+
+for c in OTHER_COUNTRIES:
+    if c not in STRATEGIC_INTEL:
+        STRATEGIC_INTEL[c] = f"[STATUS: {c}-2025]\n- Stratejik Puan: {random.randint(40, 95)}/100\n- Siber Güvenlik: {random.choice(['Yüksek', 'Kritik', 'Stabil'])}\n- Not: Askeri modernizasyon süreci takip ediliyor."
+
+ALL_DATA = [{"n": f"{k} DOSYASI", "i": v} for k, v in STRATEGIC_INTEL.items()]
+
+# --- 04. SİBER ARAYÜZ (HTML5 / CSS3 / JS) ---
 UI_TEMPLATE = """
 <!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GGİ_V15_SUPREME_COMMAND</title>
+    <title>GGİ_SUPREME_OS_v18</title>
     <style>
-        :root { --b: #00f2ff; --g: #39ff14; --r: #ff0055; --bg: #010203; --p: rgba(10, 20, 35, 0.95); }
+        :root { --b: #00f2ff; --g: #39ff14; --r: #ff0055; --bg: #010203; }
         * { box-sizing: border-box; }
-        body, html { margin: 0; padding: 0; height: 100%; width: 100%; background: var(--bg); color: #fff; font-family: 'Courier New', monospace; overflow: hidden; }
         
-        /* Layout */
-        .os-container { display: flex; flex-direction: column; height: 100vh; }
-        header { height: 60px; border-bottom: 2px solid var(--b); display: flex; align-items: center; justify-content: space-between; padding: 0 25px; background: #000; box-shadow: 0 0 20px var(--b); z-index: 10; }
-        
-        main { flex: 1; display: grid; grid-template-columns: 350px 1fr 350px; gap: 10px; padding: 10px; overflow: hidden; }
-        @media (max-width: 1100px) { main { grid-template-columns: 1fr; overflow-y: auto; } body { overflow: auto; } }
+        body, html { 
+            margin: 0; padding: 0; background: var(--bg); color: #fff; 
+            font-family: 'Courier New', monospace; height: 100%; width: 100%;
+            overflow: hidden;
+        }
 
-        .panel { background: var(--p); border: 1px solid #1a2a3a; display: flex; flex-direction: column; border-radius: 4px; position: relative; }
-        .panel-h { background: #0a1525; padding: 12px; color: var(--b); font-size: 13px; font-weight: bold; border-bottom: 1px solid #1a2a3a; letter-spacing: 1px; }
-        .scroll-area { flex: 1; overflow-y: auto; padding: 15px; scrollbar-width: thin; scrollbar-color: var(--b) transparent; }
-        .scroll-area::-webkit-scrollbar { width: 4px; }
-        .scroll-area::-webkit-scrollbar-thumb { background: var(--b); }
+        /* Matrix Rain Simülasyonu */
+        #matrix { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.15; }
 
-        /* Kartlar ve İçerik */
-        .card { background: #050a0f; border: 1px solid #112233; margin-bottom: 10px; padding: 15px; cursor: pointer; transition: 0.3s; position: relative; }
-        .card:hover { border-color: var(--b); box-shadow: 0 0 15px rgba(0, 242, 255, 0.2); background: #0a1a2a; }
-        .card-t { color: var(--b); font-weight: bold; font-size: 14px; }
-        
-        .intel-box { display: none; color: var(--g); font-size: 12px; white-space: pre-wrap; margin-top: 15px; border-top: 1px dashed #224466; padding-top: 10px; line-height: 1.6; }
+        .os-wrapper { display: flex; flex-direction: column; height: 100vh; position: relative; z-index: 1; }
 
-        /* Araçlar */
-        .calc-box { background: #000; border: 1px solid var(--b); padding: 10px; border-radius: 4px; }
-        #scr-calc { width: 100%; background: #000; border: 1px solid var(--b); color: var(--g); padding: 12px; text-align: right; font-size: 22px; margin-bottom: 10px; }
-        .btn-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
-        .btn-grid button { background: #111; border: 1px solid #333; color: #fff; padding: 15px 0; cursor: pointer; border-radius: 2px; }
-        .btn-grid button:hover { background: var(--b); color: #000; }
+        header { 
+            height: 65px; border-bottom: 3px solid var(--b); 
+            display: flex; align-items: center; justify-content: space-between; 
+            padding: 0 30px; background: rgba(0,0,0,0.85); flex-shrink: 0;
+            box-shadow: 0 0 25px var(--b);
+        }
 
-        /* Animasyonlar */
-        .log-line { font-size: 10px; margin-bottom: 4px; opacity: 0.8; }
-        .cursor { display: inline-block; width: 10px; height: 16px; background: var(--g); animation: blink 0.8s infinite; vertical-align: middle; }
-        @keyframes blink { 50% { opacity: 0; } }
+        main { 
+            flex: 1; display: grid; grid-template-columns: 350px 1fr 380px; 
+            gap: 12px; padding: 12px; overflow: hidden; 
+        }
 
-        footer { height: 35px; background: #000; border-top: 1px solid #1a2a3a; display: flex; align-items: center; padding: 0 20px; font-size: 10px; color: #444; }
+        @media (max-width: 1200px) {
+            main { display: block; overflow-y: auto; }
+            .panel { margin-bottom: 20px; height: 500px !important; }
+        }
+
+        .panel { 
+            background: rgba(10, 25, 45, 0.9); border: 2px solid #1a2a3a; 
+            display: flex; flex-direction: column; height: 100%;
+            border-radius: 5px; box-shadow: inset 0 0 15px #000;
+        }
+
+        .panel-h { 
+            background: #0a111a; padding: 15px; color: var(--b); 
+            font-size: 14px; font-weight: bold; border-bottom: 2px solid #1a2a3a;
+            display: flex; justify-content: space-between;
+        }
+
+        /* SCROLL ÇÖZÜMÜ */
+        .scroll-area { 
+            flex: 1; overflow-y: scroll; padding: 18px; 
+            scrollbar-width: thin; scrollbar-color: var(--b) transparent;
+        }
+
+        .scroll-area::-webkit-scrollbar { width: 6px; }
+        .scroll-area::-webkit-scrollbar-thumb { background: var(--b); border-radius: 10px; }
+
+        .card { 
+            background: rgba(5, 10, 15, 0.8); border: 1px solid #112233; 
+            margin-bottom: 15px; padding: 18px; cursor: pointer; transition: 0.3s;
+            position: relative; overflow: hidden;
+        }
+        .card:hover { border-color: var(--b); box-shadow: 0 0 20px rgba(0,242,255,0.25); background: #0a1b2a; }
+        .card::before { content: ''; position: absolute; left: 0; top: 0; width: 3px; height: 100%; background: var(--b); }
+
+        .intel-box { 
+            display: none; color: var(--g); font-size: 13px; 
+            white-space: pre-wrap; margin-top: 20px; 
+            border-top: 1px dashed #224466; padding-top: 15px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* TERMINAL KOMUT SATIRI */
+        .term-input-box {
+            background: #000; border-top: 2px solid #1a2a3a;
+            padding: 10px; display: flex; align-items: center;
+        }
+        .term-input-box span { color: var(--g); margin-right: 10px; }
+        #term-cmd { 
+            background: transparent; border: none; color: #fff; width: 100%;
+            font-family: 'Courier New'; outline: none; font-size: 14px;
+        }
+
+        /* HARDWARE MONITOR */
+        .stat-row { margin-bottom: 12px; }
+        .stat-label { font-size: 11px; color: var(--b); margin-bottom: 5px; }
+        .stat-bar { height: 6px; background: #111; border-radius: 3px; overflow: hidden; border: 1px solid #222; }
+        .stat-fill { height: 100%; background: var(--b); width: 0%; transition: 0.5s; }
+
+        .log { font-size: 11px; margin-bottom: 6px; line-height: 1.4; color: var(--g); }
+        .log.err { color: var(--r); }
     </style>
 </head>
 <body>
-    <div class="os-container">
+    <canvas id="matrix"></canvas>
+
+    <div class="os-wrapper">
         <header>
-            <div style="font-size: 22px; color: var(--b); font-weight: bold; letter-spacing: 2px;">GGİ_COMMAND_CENTER_V15</div>
-            <div id="clock" style="color: var(--b); font-size: 16px;">00:00:00</div>
+            <div style="font-size: 24px; color: var(--b); font-weight: bold; text-shadow: 0 0 10px var(--b);">
+                GGİ_DEEP_STATE_OS_v18
+            </div>
+            <div id="clock" style="color: var(--b); font-size: 18px;">00:00:00</div>
         </header>
 
         <main>
             <div class="panel">
-                <div class="panel-h">SYSTEM_RESOURCES</div>
+                <div class="panel-h">SYSTEM_MONITOR <span>[STABLE]</span></div>
                 <div class="scroll-area">
-                    <div class="calc-box">
-                        <input type="text" id="scr-calc" value="0" readonly>
-                        <div class="btn-grid">
-                            <button onclick="k('7')">7</button><button onclick="k('8')">8</button><button onclick="k('9')">9</button><button onclick="k('/')">/</button>
-                            <button onclick="k('4')">4</button><button onclick="k('5')">5</button><button onclick="k('6')">6</button><button onclick="k('*')">*</button>
-                            <button onclick="k('1')">1</button><button onclick="k('2')">2</button><button onclick="k('3')">3</button><button onclick="k('-')">-</button>
-                            <button onclick="c()">C</button><button onclick="k('0')">0</button><button onclick="e()">=</button><button onclick="k('+')">+</button>
-                        </div>
+                    <div class="stat-row">
+                        <div class="stat-label">CPU_USAGE</div>
+                        <div class="stat-bar"><div class="stat-fill" id="cpu-bar" style="width: 42%;"></div></div>
+                    </div>
+                    <div class="stat-row">
+                        <div class="stat-label">RAM_CORE_INDEX</div>
+                        <div class="stat-bar"><div class="stat-fill" id="ram-bar" style="width: 68%; background: var(--g);"></div></div>
+                    </div>
+                    <div class="stat-row">
+                        <div class="stat-label">ENCRYPTION_LOAD</div>
+                        <div class="stat-bar"><div class="stat-fill" id="net-bar" style="width: 25%; background: var(--r);"></div></div>
                     </div>
                     
-                    <div style="margin-top: 30px;">
-                        <p style="color: var(--b); font-size: 12px; border-bottom: 1px solid #224466;">ACTIVE_OPERATORS</p>
-                        {% for u in users %}
-                        <div style="display: flex; justify-content: space-between; font-size: 11px; padding: 6px 0;">
-                            <span>{{ u.username }}</span>
-                            <span style="color: var(--g);">{{ u.score }} PX</span>
+                    <div style="margin-top: 40px;">
+                        <div class="panel-h" style="padding-left:0; border-bottom:1px solid #224466;">ACTIVE_OPERATORS</div>
+                        <div id="op-list" style="padding-top:15px; font-size: 12px;">
+                            <div style="color: var(--g);">[ADMİN] EGE - ONLINE</div>
+                            <div style="color: #666; margin-top:5px;">[AI_AGENT] GEMINI - SYNCING...</div>
                         </div>
-                        {% endfor %}
                     </div>
+                </div>
+                <div class="term-input-box">
+                    <span>root@ggi_os:~$</span>
+                    <input type="text" id="term-cmd" placeholder="Komut yazın (help, scan, clear)...">
                 </div>
             </div>
 
             <div class="panel">
-                <div class="panel-h">GLOBAL_STRATEGIC_ARCHIVE (CLICK_TO_DECRYPT)</div>
-                <div class="scroll-area">
+                <div class="panel-h">GLOBAL_STRATEGIC_DATABASE [100_NODES]</div>
+                <div class="scroll-area" id="main-scroll">
                     {% for item in data %}
-                    <div class="card" onclick="openData(this, {{loop.index}})">
-                        <div class="card-t">[+] {{ item.n }}</div>
+                    <div class="card" onclick="openD(this, {{loop.index}})">
+                        <div style="color: var(--b); font-weight: bold; letter-spacing: 1px;">
+                            <span style="opacity: 0.5;">#{{loop.index}}</span> [SECURE] {{ item.n }}
+                        </div>
                         <div class="intel-box" id="box-{{loop.index}}" data-raw="{{ item.i }}"></div>
                     </div>
                     {% endfor %}
+                    <div style="height: 60px;"></div>
                 </div>
             </div>
 
             <div class="panel">
-                <div class="panel-h">ENCRYPTED_LOGS</div>
-                <div class="scroll-area" id="log-box" style="background: #000;">
-                    <div class="log-line" style="color: var(--g)">> KERNEL_LOAD_COMPLETE...</div>
-                    <div class="log-line" style="color: var(--b)">> ACCESS_IP: {{ user_ip }}</div>
+                <div class="panel-h">ENCRYPTED_LOG_STREAM <span>[LIVE]</span></div>
+                <div class="scroll-area" id="l-box">
+                    <div class="log">> BOOT_SEQUENCE_INITIATED...</div>
+                    <div class="log">> LOADING_COUNTRY_DATABASE_100...</div>
+                    <div class="log">> SİSTEM_AKTİF. IP: {{ user_ip }}</div>
                 </div>
             </div>
         </main>
-
-        <footer>
-            GGİ_SUPREME_OS // CORE_STABLE // ENCRYPTION: AES-256-VORTEX // 2025
-        </footer>
     </div>
 
     <script>
-        // Saat ve Tarih
+        // Matrix Rain
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()*&^";
+        const fontSize = 16;
+        const columns = canvas.width / fontSize;
+        const drops = Array(Math.floor(columns)).fill(1);
+
+        function drawMatrix() {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#0F0";
+            ctx.font = fontSize + "px arial";
+            for (let i = 0; i < drops.length; i++) {
+                const text = letters.charAt(Math.floor(Math.random() * letters.length));
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            }
+        }
+        setInterval(drawMatrix, 33);
+
+        // Saat
         setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }, 1000);
 
-        // Hesap Makinesi Fonksiyonları
-        let display = document.getElementById('scr-calc');
-        function k(val) { if(display.value=='0'||display.value=='ERROR') display.value=val; else display.value+=val; }
-        function c() { display.value='0'; }
-        function e() { try { display.value = eval(display.value); } catch { display.value='ERROR'; } }
-
-        // Daktilo ve Veri Açma (KritiK: Bilgiler Buradan Akıyor)
-        function openData(card, id) {
+        // Daktilo ve Kaydırma Fix
+        function openD(card, id) {
             const box = document.getElementById('box-' + id);
             if(box.style.display === 'block') { box.style.display = 'none'; return; }
-            
-            // Diğerlerini kapat
-            document.querySelectorAll('.intel-box').forEach(b => b.style.display = 'none');
             box.style.display = 'block';
-
             if(box.innerHTML === "") {
                 const raw = box.getAttribute('data-raw');
                 let i = 0;
-                box.innerHTML = '<span id="typing-'+id+'"></span><span class="cursor"></span>';
-                const target = document.getElementById('typing-'+id);
-                
                 function type() {
                     if (i < raw.length) {
-                        target.innerHTML += raw.charAt(i);
+                        box.innerHTML += raw.charAt(i);
                         i++;
-                        card.parentElement.scrollTop = card.offsetTop - 50;
-                        setTimeout(type, 5);
+                        setTimeout(type, 4);
                     }
                 }
                 type();
             }
         }
 
-        // Canlı Log Simülasyonu
-        const msgs = ["> PAKET_ALINDI", "> SİBER_TARAMA_AKTİF", "> ENCRYPT_KEY_ROTATED", "> PROTOKOL_ALPHA_ONAY", "> TEHDİT_YOK", "> VERİ_SENKRONU_TAMAM"];
+        // Hardware Simülasyonu
         setInterval(() => {
-            const lb = document.getElementById('log-box');
-            const line = document.createElement('div');
-            line.className = 'log-line';
-            line.style.color = Math.random() > 0.9 ? 'var(--r)' : 'var(--g)';
-            line.innerText = msgs[Math.floor(Math.random()*msgs.length)] + " [" + Math.random().toString(16).slice(2,8).toUpperCase() + "]";
-            lb.appendChild(line);
+            document.getElementById('cpu-bar').style.width = (Math.random() * 60 + 20) + "%";
+            document.getElementById('net-bar').style.width = (Math.random() * 90) + "%";
+        }, 3000);
+
+        // Terminal Komutları
+        document.getElementById('term-cmd').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const cmd = this.value.toLowerCase();
+                const lb = document.getElementById('l-box');
+                const line = document.createElement('div');
+                line.className = 'log';
+                
+                if(cmd === 'help') line.innerText = "> Komutlar: scan, clear, hack, status";
+                else if(cmd === 'scan') line.innerText = "> Port taraması yapılıyor... Tüm portlar güvenli.";
+                else if(cmd === 'clear') { lb.innerHTML = ''; line.innerText = "> Konsol temizlendi."; }
+                else if(cmd === 'status') line.innerText = "> GGİ_OS v18: Sistemler %100 kapasite çalışıyor.";
+                else line.innerText = "> Geçersiz komut: " + cmd;
+                
+                lb.appendChild(line);
+                this.value = '';
+                lb.scrollTop = lb.scrollHeight;
+            }
+        });
+
+        // Canlı Loglar
+        const logs = ["> PAKET_ALINDI", "> SİBER_TEHDİT_ENGELLENDİ", "> UYDU_SENKRON_TAMAM", "> VERİ_TABANI_GÜNCELLENDİ"];
+        setInterval(() => {
+            const lb = document.getElementById('l-box');
+            const l = document.createElement('div');
+            l.className = 'log';
+            l.innerText = logs[Math.floor(Math.random()*logs.length)] + " [" + Math.random().toString(16).slice(2,8) + "]";
+            lb.appendChild(l);
             lb.scrollTop = lb.scrollHeight;
-            if(lb.childNodes.length > 60) lb.removeChild(lb.firstChild);
-        }, 2500);
+            if(lb.childNodes.length > 50) lb.removeChild(lb.firstChild);
+        }, 4000);
     </script>
 </body>
 </html>
 """
 
-# ==============================================================================
-# 04. ROUTERLAR VE VERİTABANI BAŞLATMA
-# ==============================================================================
+# --- 05. ROUTER VE ÇALIŞTIRICI ---
 @app.route('/')
 def index():
     with app.app_context():
         db.create_all()
-        # Kullanıcı hatasını önlemek için kontrol ve şifreleme
         if not SystemUser.query.filter_by(username="ADMİN_EGE").first():
-            new_user = SystemUser(
+            db.session.add(SystemUser(
                 username="ADMİN_EGE", 
                 password=generate_password_hash("supreme2025"),
-                score=15000
-            )
-            db.session.add(new_user)
+                score=99999
+            ))
             db.session.commit()
-            
-    u_ip = request.remote_addr
-    users = SystemUser.query.order_by(SystemUser.score.desc()).all()
-    return render_template_string(UI_TEMPLATE, data=ALL_DATA, users=users, user_ip=u_ip)
+    return render_template_string(UI_TEMPLATE, data=ALL_DATA, user_ip=request.remote_addr)
 
 if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()
     port = int(os.environ.get("PORT", 10000))
-    app.run(host='0.0.0.0', port=port, debug=False)
+    app.run(host='0.0.0.0', port=port)
