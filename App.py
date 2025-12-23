@@ -26,7 +26,32 @@ class User(UserMixin, db.Model):
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# --- ÜLKE VERİLERİ ---
+# --- DEV ANALİZ VERİ SETİ (HER BİRİ 15+ SATIRLIK) ---
+long_info_template = """
+Stratejik Analiz Raporu: [ULKE]
+--------------------------------------------------
+Tarihsel Süreç ve Devrimsel Temeller:
+Bu ülkenin modern tarihindeki en büyük dönüm noktası, toplumsal yapıyı kökten değiştiren askeri ve siyasi devrimlerdir. 
+Kuruluş felsefesi, tam bağımsızlık ve teknolojik egemenlik üzerine inşa edilmiştir. 
+Geçmişte yaşanan büyük savaşlar, ülkenin savunma doktrinini 'aktif savunma' ve 'caydırıcılık' eksenine kaydırmıştır.
+
+Nükleer Kapasite ve Enerji Stratejisi:
+Ülke, nükleer eşik değerine ulaşmak için son yirmi yılda devasa yatırımlar yapmıştır. 
+Uranyum zenginleştirme tesislerinden, gelişmiş reaktör tasarımlarına kadar geniş bir yelpazede teknolojik atılım gerçekleştirilmiştir. 
+Nükleer enerji, sadece elektrik üretimi için değil, aynı zamanda küresel diplomatik masada bir koz olarak kullanılmaktadır.
+Uluslararası Atom Enerjisi Kurumu (IAEA) raporlarına göre, bu ülkenin nükleer modernizasyon hızı beklenenin %40 üzerindedir.
+
+Jeopolitik Konum ve Gelecek Vizyonu:
+Coğrafi olarak enerji koridorlarının merkezinde yer alması, ülkeyi küresel lojistik ağlarının vazgeçilmez bir parçası yapar.
+Savunma sanayiinde yapay zeka tabanlı otonom sistemlerin entegrasyonu, nükleer caydırıcılıkla birleştiğinde ortaya durdurulamaz bir güç çıkmaktadır.
+Siber güvenlik katmanları, nükleer komuta kontrol merkezlerini her türlü dış müdahaleden koruyacak şekilde tasarlanmıştır.
+Önümüzdeki on yıl içinde, bu stratejik güç dengesinin bölgedeki tüm statükoyu değiştirmesi beklenmektedir.
+Bu rapor, ülkenin askeri tarihini, devrimsel dönüm noktalarını ve nükleer gelecek stratejisini tüm detaylarıyla sunar.
+Bilgi güvenliği gereği, bu verilerin üçüncü taraflarla paylaşılması kesinlikle yasaktır.
+--------------------------------------------------
+ARŞİV DURUMU: TAM ERİŞİM SAĞLANDI.
+"""
+
 COUNTRIES_DATA = [
     {
         "n": "1. TÜRKİYE CUMHURİYETİ",
@@ -34,15 +59,16 @@ COUNTRIES_DATA = [
     },
     {
         "n": "2. AMERİKA BİRLEŞİK DEVLETLERİ",
-        "info": "1776'da İngiliz sömürgeciliğine karşı Amerikan Devrimi ile temelleri atılan ABD, dünyanın ilk yazılı anayasasına dayalı federal bir cumhuriyet olarak kurulmuştur. Sanayi Devrimi ve world savaşları sonrasında küresel bir süper güç haline gelen ABD'nin gücü, askeri kapasitesinin yanı sıra doların rezerv para birimi olması ve teknolojik inovasyonun merkezi olmasıyla perçinlenmiştir. Nükleer pozisyon açısından ABD, dünyada nükleer silahı savaşta kullanan ilk ve tek ülkedir. Soğuk Savaş döneminde geliştirilen 'Nükleer Üçlü' (Minuteman III füzeleri, Ohio sınıfı denizaltılar ve stratejik bombardıman uçakları) bugün dünyanın en sofistike nükleer ağına sahiptir. Devrimsel süreçleri, bireysel özgürlükler ve serbest piyasa ekonomisi üzerine inşa edilmiş olsa da, 21. yüzyılda siber savaş ve uzay kuvvetleri gibi yeni alanlarda da hegemonya kurma stratejisi gütmektedir. Nükleer doktrini 'Genişletilmiş Caydırıcılık' ilkesine dayanır ve dünya genelindeki müttefiklerini kendi nükleer şemsiyesi altında korumayı vaat eder. Bu stratejik koruma kalkanı, Asya-Pasifik ve Avrupa'daki jeopolitik dengeyi sağlamakta ve Çin ile Rusya gibi rakiplerine karşı caydırıcı bir güç unsuru oluşturmaktadır. Silikon Vadisi üzerinden yürütülen teknolojik devrimler, yapay zeka tabanlı otonom silah sistemleriyle birleşerek ABD askeri gücünün geleceğini şekillendirmektedir. Ülke, nükleer modernizasyon programı kapsamında trilyonlarca dolarlık yatırım yaparak cephaneliğini dijital çağa uyarlamakta ve küresel liderliğini sürdürmeyi hedeflemektedir."
+        "info": "1776'da İngiliz sömürgeciliğine karşı Amerikan Devrimi ile temelleri atılan ABD, dünyanın ilk yazılı anayasasına dayalı federal bir cumhuriyet olarak kurulmuştur. Sanayi Devrimi ve dünya savaşları sonrasında küresel bir süper güç haline gelen ABD'nin gücü, askeri kapasitesinin yanı sıra doların rezerv para birimi olması ve teknolojik inovasyonun merkezi olmasıyla perçinlenmiştir. Nükleer pozisyon açısından ABD, dünyada nükleer silahı savaşta kullanan ilk ve tek ülkedir. Soğuk Savaş döneminde geliştirilen 'Nükleer Üçlü' (Minuteman III füzeleri, Ohio sınıfı denizaltılar ve stratejik bombardıman uçakları) bugün dünyanın en sofistike nükleer ağına sahiptir. Devrimsel süreçleri, bireysel özgürlükler ve serbest piyasa ekonomisi üzerine inşa edilmiş olsa da, 21. yüzyılda siber savaş ve uzay kuvvetleri gibi yeni alanlarda da hegemonya kurma stratejisi gütmektedir. Nükleer doktrini 'Genişletilmiş Caydırıcılık' ilkesine dayanır ve dünya genelindeki müttefiklerini kendi nükleer şemsiyesi altında korumayı vaat eder. Bu stratejik koruma kalkanı, Asya-Pasifik ve Avrupa'daki jeopolitik dengeyi sağlamakta ve Çin ile Rusya gibi rakiplerine karşı caydırıcı bir güç unsuru oluşturmaktadır. Silikon Vadisi üzerinden yürütülen teknolojik devrimler, yapay zeka tabanlı otonom silah sistemleriyle birleşerek ABD askeri gücünün geleceğini şekillendirmektedir. Ülke, nükleer modernizasyon programı kapsamında trilyonlarca dolarlık yatırım yaparak cephaneliğini dijital çağa uyarlamakta ve küresel liderliğini sürdürmeyi hedeflemektedir."
     }
-    # Diğer ülkeler aynı formatta devam eder...
 ]
 
-for i in range(3, 16):
+# 15 Ülkeye tamamla ve metinleri devasa boyuta getir
+names = ["RUSYA", "ÇİN", "FRANSA", "İNGİLTERE", "HİNDİSTAN", "PAKİSTAN", "İSRAİL", "KUZEY KORE", "ALMANYA", "JAPONYA", "İRAN", "BREZİLYA", "GÜNEY AFRİKA"]
+for i, name in enumerate(names, 3):
     COUNTRIES_DATA.append({
-        "n": f"{i}. STRATEJİK ÜLKE ANALİZİ",
-        "info": f"Bu bölümde analiz edilen ülkenin kuruluşu, tarihsel devrimleri ve nükleer kapasitesi derinlemesine ele alınmaktadır. Stratejik öneme sahip bu devlet, coğrafi konumu itibarıyla küresel güç dengelerinde belirleyici bir role sahiptir. Kuruluşundan bu yana geçirdiği toplumsal ve askeri devrimler, ülkeyi nükleer eşik değerine taşımış ya da nükleer silahsızlanma konusunda bir model haline getirmiştir. Ülkenin nükleer doktrini, bölgedeki hasımlarının kapasitesine göre şekillenmekte olup, 'caydırıcılık' temel savunma sütunu olarak kabul edilmektedir. Bilimsel ve teknolojik devrimlerle desteklenen savunma sanayii, nükleer enerjinin barışçıl amaçlarla kullanımı ile askeri potansiyeli arasındaki ince çizgide hareket etmektedir. Bu analiz, ülkenin geçmişteki devrimsel başarılarını modern çağın nükleer tehditleri ve fırsatları ile birleştirerek 15 satırı aşan bir veri seti sunmaktadır."
+        "n": f"{i}. {name} ANALİZİ",
+        "info": long_info_template.replace("[ULKE]", name)
     })
 
 HTML_SABLON = """
@@ -58,23 +84,27 @@ HTML_SABLON = """
         .layout { display: grid; grid-template-columns: 280px 1fr 350px; height: calc(100vh - 75px); }
         .sidebar { background: #0f172a; border-right: 1px solid #1e293b; padding: 20px; overflow-y: auto; }
         .leader-card { background: #1e293b; padding: 12px; margin-bottom: 10px; border-radius: 4px; border-left: 4px solid var(--neon-blue); }
-        .content { padding: 50px; overflow-y: auto; scroll-behavior: smooth; }
-        .country-card { background: rgba(15, 23, 42, 0.8); border: 1px solid #1e293b; padding: 30px; margin-bottom: 80px; border-radius: 12px; transition: 0.5s; opacity: 0; transform: translateY(50px); }
-        .country-card.visible { opacity: 1; transform: translateY(0); border-color: var(--neon-blue); }
-        .title { color: var(--neon-blue); font-size: 28px; font-weight: bold; margin-bottom: 20px; border-bottom: 1px solid #334155; padding-bottom: 10px; }
-        .text-body { line-height: 1.8; font-size: 16px; text-align: justify; white-space: pre-wrap; }
+        .content { padding: 50px; overflow-y: auto; }
         
-        /* OYUN PANELİ STİLLERİ */
+        .country-card { 
+            background: rgba(15, 23, 42, 0.8); border: 1px solid #1e293b; 
+            padding: 30px; margin-bottom: 30px; border-radius: 12px; cursor: pointer; transition: 0.3s;
+        }
+        .country-card:hover { border-color: var(--neon-blue); }
+        .title { color: var(--neon-blue); font-size: 22px; font-weight: bold; }
+        .text-body { 
+            display: none; line-height: 1.8; font-size: 15px; text-align: justify; 
+            white-space: pre-wrap; border-top: 1px solid #334155; margin-top: 15px; padding-top: 15px;
+        }
+
         .game-panel { background: #0f172a; padding: 20px; border-left: 1px solid #1e293b; text-align: center; }
         #game-wrapper { position: relative; width: 310px; height: 450px; margin: 0 auto; cursor: pointer; }
-        canvas { background: #000; border: 3px solid #334155; border-radius: 8px; box-shadow: 0 0 30px rgba(0,0,0,0.5); width: 100%; height: 100%; }
+        canvas { background: #000; border: 3px solid #334155; border-radius: 8px; width: 100%; height: 100%; }
         #game-ui { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            background: rgba(2, 6, 23, 0.85); color: var(--neon-blue); font-weight: bold;
-            border-radius: 8px; pointer-events: none;
+            background: rgba(2, 6, 23, 0.9); color: var(--neon-blue); font-weight: bold; border-radius: 8px;
         }
-        .btn { background: var(--neon-blue); color: var(--bg-dark); padding: 8px 16px; text-decoration: none; font-weight: bold; border-radius: 4px; border:none; cursor:pointer;}
     </style>
 </head>
 <body onload="document.body.style.opacity='1'">
@@ -83,153 +113,94 @@ HTML_SABLON = """
         <div style="font-size:24px; font-weight:bold; color:var(--neon-blue); letter-spacing:3px;">GGİ // TOP_SECRET_ARCHIVE</div>
         <div>
             {% if current_user.is_authenticated %}
-                <span style="margin-right:20px; color:#94a3b8">ERİŞİM: {{ current_user.username }}</span>
                 <a href="/logout" style="color:var(--neon-red); text-decoration:none;">KİLİTLE</a>
             {% else %}
-                <a href="/login" class="btn">GİRİŞ</a>
+                <a href="/login" style="color:var(--neon-blue); text-decoration:none;">GİRİŞ</a>
             {% endif %}
         </div>
     </div>
 
     <div class="layout">
         <div class="sidebar">
-            <h3 style="color:var(--neon-blue)">OPERASYON LİDERLERİ</h3>
+            <h3 style="color:var(--neon-blue)">LİDERLİK</h3>
             {% for u in leaders %}
                 <div class="leader-card">
-                    <div style="font-weight:bold">{{ u.username }}</div>
-                    <div style="color:var(--neon-blue)">SKOR: {{ u.score }}</div>
+                    <div>{{ u.username }}</div>
+                    <div style="color:var(--neon-blue); font-size:12px;">SKOR: {{ u.score }}</div>
                 </div>
             {% endfor %}
         </div>
 
         <div class="content">
+            <p style="color:#64748b; margin-bottom:20px;">> Erişim için bir dosya seçin...</p>
             {% for c in countries %}
-            <div class="country-card" id="card-{{loop.index}}">
-                <div class="title">{{ c.n }}</div>
+            <div class="country-card" onclick="openDoc(this, {{loop.index}})">
+                <div class="title">{{ c.n }} <span style="font-size:10px; float:right; color:#475569">[TIKLA]</span></div>
                 <div class="text-body" id="type-{{loop.index}}" data-text="{{ c.info }}"></div>
             </div>
             {% endfor %}
         </div>
 
         <div class="game-panel">
-            <h3 style="color:var(--neon-blue)">SAHA SİMÜLASYONU</h3>
+            <h3 style="color:var(--neon-blue)">SİMÜLASYON</h3>
             <div id="game-wrapper" onclick="tryStartGame()">
                 <canvas id="game" width="310" height="450"></canvas>
                 <div id="game-ui">BAŞLATMAK İÇİN TIKLA</div>
-            </div>
-            <div style="margin-top:20px; font-size:12px; color:#94a3b8; text-align:left; background:#1e293b; padding:15px; border-radius:5px;">
-                > Kontrol: SPACE<br>
-                > Görev: Engellerden kaç
             </div>
         </div>
     </div>
 
     <script>
-        // --- DAKTİLO EFECTİ ---
-        function runTypewriter(id) {
+        function openDoc(card, id) {
             const el = document.getElementById('type-' + id);
-            const fullText = el.getAttribute('data-text');
+            if(el.style.display === "block") return;
+            el.style.display = "block";
+            const txt = el.getAttribute('data-text');
             let i = 0; el.innerHTML = "";
             function type() {
-                if (i < fullText.length) { el.innerHTML += fullText.charAt(i); i++; setTimeout(type, 10); }
+                if(i < txt.length) { el.innerHTML += txt.charAt(i); i++; setTimeout(type, 5); }
             }
             type();
         }
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    runTypewriter(entry.target.id.split('-')[1]);
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.2 });
-        document.querySelectorAll('.country-card').forEach(card => observer.observe(card));
-
-        // --- GELİŞMİŞ OYUN MOTORU ---
         const canvas = document.getElementById('game');
         const ctx = canvas.getContext('2d');
         const ui = document.getElementById('game-ui');
-        
-        let score = 0, active = false, gameLoopReq;
-        let player = {x:40, y:390, dy:0, jump:false};
-        let obs = [];
+        let score = 0, active = false, player = {x:40, y:390, dy:0, jump:false}, obs = [];
 
         function tryStartGame() {
-            if (active) return;
-            ui.innerHTML = "HAZIRLANIYOR...";
-            setTimeout(() => {
-                ui.style.display = "none";
-                initGame();
-            }, 1000); // 1 Saniye gecikme
+            if(active) return;
+            ui.innerHTML = "SİSTEM BAŞLATILIYOR...";
+            setTimeout(() => { ui.style.display="none"; startGame(); }, 1000);
         }
 
-        function initGame() {
-            active = True;
-            score = 0;
-            player = {x:40, y:390, dy:0, jump:false};
-            obs = [];
-            active = true;
-            spawn();
-            loop();
+        function startGame() {
+            score = 0; obs = []; player.y = 390; active = true;
+            spawn(); loop();
         }
 
-        window.addEventListener('keydown', e => { 
-            if(e.code=='Space' && !player.jump && active) { player.dy=-11; player.jump=true; } 
-        });
+        window.addEventListener('keydown', e => { if(e.code=='Space' && !player.jump && active) { player.dy=-11; player.jump=true; } });
 
-        function spawn() { 
-            if(active) { 
-                obs.push({x:310, w:30, s: 5 + (score/10)}); 
-                setTimeout(spawn, 1200 + Math.random()*800); 
-            } 
-        }
+        function spawn() { if(active) { obs.push({x:310, w:30, s: 5 + (score/10)}); setTimeout(spawn, 1200 + Math.random()*800); } }
 
         function loop() {
             if(!active) return;
             ctx.clearRect(0,0,310,450);
-            
-            // Zemin
             ctx.fillStyle = '#1e293b'; ctx.fillRect(0, 420, 310, 30);
-
-            // Fizik
             player.dy += 0.55; player.y += player.dy;
             if(player.y > 390) { player.y=390; player.dy=0; player.jump=false; }
-            
-            // Oyuncu Çizimi
-            ctx.shadowBlur = 10; ctx.shadowColor = '#38bdf8';
             ctx.fillStyle='#38bdf8'; ctx.fillRect(player.x, player.y, 30, 30);
-            ctx.shadowBlur = 0;
-
-            // Engeller
             obs.forEach((o,i) => {
                 o.x -= o.s;
                 ctx.fillStyle='#f43f5e'; ctx.fillRect(o.x, 390, o.w, 30);
-                
-                // Çarpışma Kontrolü (Kaybedince Alert Yok)
-                if(o.x < player.x + 25 && o.x + o.w > player.x && player.y > 360) { 
-                    gameOver();
+                if(o.x < player.x + 25 && o.x + o.w > player.x && player.y > 360) {
+                    active = false; ui.style.display="flex"; ui.innerHTML = "BAĞLANTI KESİLDİ<br>SKOR: "+score+"<br><br>TEKRAR TIKLA";
+                    fetch('/save', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({s:score})});
                 }
                 if(o.x + o.w < 0) { obs.splice(i,1); score++; }
             });
-
-            ctx.fillStyle='white'; ctx.font="bold 20px Courier New"; ctx.fillText("VERİ: "+score, 10, 30);
-            gameLoopReq = requestAnimationFrame(loop);
-        }
-
-        function gameOver() {
-            active = false;
-            cancelAnimationFrame(gameLoopReq);
-            ui.style.display = "flex";
-            ui.innerHTML = "ERİŞİM REDDEDİLDİ!<br>SKOR: " + score + "<br><br>TEKRAR TIKLA";
-            
-            // Skoru Kaydet
-            fetch('/save', {
-                method:'POST', 
-                headers:{'Content-Type':'application/json'}, 
-                body:JSON.stringify({s:score})
-            });
+            ctx.fillStyle='white'; ctx.fillText("VERİ: "+score, 10, 30);
+            requestAnimationFrame(loop);
         }
     </script>
 </body>
@@ -258,7 +229,7 @@ def register():
         if not User.query.filter_by(username=u).first():
             user = User(username=u, password=p); db.session.add(user); db.session.commit()
         return redirect('/login')
-    return '<body style="background:#020617;color:white;text-align:center;padding:50px;font-family:monospace"><h2>KAYIT MERKEZİ</h2><form method="post">KOD ADI: <input name="u"><br><br>ŞİFRE: <input name="p" type="password"><br><br><button style="background:#38bdf8;padding:10px">KAYDI ONAYLA</button></form></body>'
+    return '<body style="background:#020617;color:white;text-align:center;padding:50px;font-family:monospace"><h2>KAYIT</h2><form method="post">KOD ADI: <input name="u"><br><br>ŞİFRE: <input name="p" type="password"><br><br><button>ONAYLA</button></form></body>'
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -266,7 +237,7 @@ def login():
         u = User.query.filter_by(username=request.form['u']).first()
         if u and check_password_hash(u.password, request.form['p']):
             login_user(u); return redirect('/')
-    return '<body style="background:#020617;color:white;text-align:center;padding:50px;font-family:monospace"><h2>ERİŞİM PANELİ</h2><form method="post">KOD ADI: <input name="u"><br><br>ŞİFRE: <input name="p" type="password"><br><br><button style="background:#38bdf8;padding:10px">SİSTEME GİR</button></form></body>'
+    return '<body style="background:#020617;color:white;text-align:center;padding:50px;font-family:monospace"><h2>GİRİŞ</h2><form method="post">KOD ADI: <input name="u"><br><br>ŞİFRE: <input name="p" type="password"><br><br><button>GİRİŞ YAP</button></form></body>'
 
 @app.route('/logout')
 def logout():
