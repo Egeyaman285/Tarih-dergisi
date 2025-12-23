@@ -2,6 +2,8 @@ import os
 import datetime
 import random
 import time
+import json
+import base64
 from flask import Flask, render_template_string, request, redirect, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
@@ -9,427 +11,454 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 # --- SİSTEM ÇEKİRDEK YAPILANDIRMASI ---
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'ggi-ultra-secure-2025-special-vortex-key-x800-mega-pro'
+app.config['SECRET_KEY'] = 'ggi-ultra-v12-vortex-888-omega-access-granted'
 
+# Veritabanı dosya yolu
 basedir = os.path.abspath(os.path.dirname(__file__))
-db_path = os.path.join(basedir, 'ggi.db')
+db_path = os.path.join(basedir, 'ggi_v12.db')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + db_path
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 
-# --- VERİTABANI MİMARİSİ ---
+# --- VERİTABANI MODELLERİ (GENİŞLETİLMİŞ) ---
 class User(UserMixin, db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(100), nullable=False)
     score = db.Column(db.Integer, default=0)
-    access_level = db.Column(db.String(20), default="LEVEL_1")
+    access_level = db.Column(db.String(30), default="LEVEL_A_SUPREME")
+    last_action = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
-class Visit(db.Model):
-    __tablename__ = 'visits'
+class SystemVisit(db.Model):
+    __tablename__ = 'system_visits'
     id = db.Column(db.Integer, primary_key=True)
     ip_address = db.Column(db.String(50))
+    agent = db.Column(db.String(300))
     timestamp = db.Column(db.DateTime, default=datetime.datetime.utcnow)
-    user_agent = db.Column(db.String(250))
 
-class SystemLog(db.Model):
-    __tablename__ = 'system_logs'
+class GlobalAlert(db.Model):
+    __tablename__ = 'alerts'
     id = db.Column(db.Integer, primary_key=True)
-    message = db.Column(db.String(500))
-    category = db.Column(db.String(50))
-    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    country = db.Column(db.String(100))
+    risk_level = db.Column(db.Integer) # 1-10
+    description = db.Column(db.String(500))
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# --- STRATEJİK ANALİZ MODÜLÜ (HER ÜLKE İÇİN 25+ SATIR ANALİZ) ---
-def get_mega_report(country_name):
+# --- DEVASA STRATEJİK ANALİZ MOTORU (HER ÜLKE 40+ SATIR) ---
+def get_mega_intelligence_report(name):
+    unique_id = base64.b16encode(name.encode()).decode()[:10]
     return f"""
-[GÜVENLİK PROTOKOLÜ: ADMİN_ACCESS_V9]
-======================================================================
-ANALİZ NESNESİ: {country_name} STRATEJİK VERİ PAKETİ
-DURUM: KRİTİK ANALİZ TAMAMLANIYOR...
-======================================================================
-01. JEOPOLİTİK VE KONVANSİYONEL KONUMLANDIRMA:
-- {country_name}, bölgesel güç projeksiyonunda merkez noktadadır.
-- Toprak bütünlüğü, 'Derin Strateji' doktrini ile muhafaza edilir.
-- Sınır hatları, 3. nesil termal otonom sensörlerle donatılmıştır.
-- Deniz yetki alanları, kıtasal sahanlık yasalarına göre izlenir.
-- Hava sahası, yapay zeka destekli önleme sistemleri ile korunur.
-- Lojistik ikmal hatları, yeraltı raylı sistemlerle yedeklenmiştir.
+[ERİŞİM SEVİYESİ: KOZMIK-TOP-SECRET]
+DOSYA REF: GGİ-INTEL-{unique_id}
+HEDEF BİRİM: {name} FEDERASYONU / DEVLETİ
+----------------------------------------------------------------------
+01. ASKERİ DOKTRİN VE CAYDIRICILIK ANALİZİ:
+- {name} savunma doktrini, 'Hibrit Savaş' ve 'Alan Engelleme' (A2/AD) üzerine kuruludur.
+- Toplam Tank Kuvveti: 5,450 (Aktif Koruma Sistemleri ile donatılmış).
+- Toplam Hava Gücü: 1,200+ (5. Nesil savaş uçakları ağırlıklı).
+- Nükleer Kapasite: 'Aktif Caydırıcılık' kapsamında 24/7 hazır bekletilmektedir.
+- Füze Envanteri: Hipersonik (Mach 7+) vuruş yeteneği onaylanmıştır.
+- Özel Operasyon Birimleri: 'Siyah Müfreze' seviyesinde 12 tabur mevcuttur.
+- Deniz Savunması: Otonom denizaltı dronları ve sonar engelleme ağları.
+- Lojistik: 48 saatlik genel seferberlik protokolü 'Alpha-Ready' modundadır.
 
-02. ASKERİ KAPASİTE VE CAYDIRICILIK ANALİZİ:
-- Savunma bütçesi, yıllık GSYİH oranında %5.4 stratejik pay alır.
-- Nükleer kapasite, 'Aktif Caydırıcılık' modundan tam hazır hale geldi.
-- Kara güçleri, kentsel savaş senaryoları için mobilize edilmiştir.
-- Donanma, fırkateyn sınıfı insansız deniz araçlarını devreye aldı.
-- Hava kuvvetleri, siber saldırılara dirençli link-16 sistemindedir.
-- Özel kuvvetler, hibrit operasyon yeteneği ile optimize edildi.
-- Anti-balistik füze kalkanı, %99.8 başarı oranı ile test edildi.
+02. SİBER KAPASİTE VE ELEKTRONİK HARP (EW):
+- Milli Güvenlik Duvarı: 256 katmanlı kuantum-kripto şifreleme.
+- Ofansif Siber Güç: Dakikada 10Tbps veri manipülasyon kapasitesi.
+- EMP Dayanıklılığı: Tüm askeri donanım Faraday kafesiyle izole edilmiştir.
+- Yapay Zeka Komuta Zinciri: Karar alma mekanizması %85 AI desteklidir.
+- İstihbarat Ağı: Küresel fiber optik kablo hatlarına fiziksel erişim.
+- Uydu Karartma: Alçak yörünge uydularını lazerle etkisiz hale getirme yeteneği.
+- Veri Merkezleri: 300 metre yer altında, sismik izolatörlü tesisler.
 
-03. TEKNOLOJİK SİBER SAVUNMA VE VERİ EGEMENLİĞİ:
-- Milli siber güvenlik duvarı, kuantum sonrası algoritmalara sahiptir.
-- Kritik altyapılar (Elektrik, Gaz), 'Black-Box' ağlarında saklanır.
-- Siber saldırı timleri, 'Proaktif İmha' yetkisiyle donatılmıştır.
-- Blockchain tabanlı veri merkezleri, kayıt güvenliğini garanti eder.
-- Yerli işletim sistemi çekirdeği, her 10 milisaniyede taranır.
-- Kriptoloji merkezi, asimetrik şifreleme ile veri koruması yapar.
-- Uzay tabanlı gözetleme uyduları, 15 cm çözünürlükle veri sağlar.
+03. EKONOMİK MANİPÜLASYON VE KAYNAK YÖNETİMİ:
+- Stratejik Rezervler: 20 yıllık nadir toprak elementleri stoku.
+- Enerji Portföyü: Toryum tabanlı yeni nesil reaktörler operasyoneldir.
+- Gıda Güvenliği: Dikey tarım ve genetik tohum bankası tam kapasite çalışmaktadır.
+- Finansal Siber Savunma: Swift dışı blokzincir tabanlı ödeme sistemi.
+- Dış Ticaret Dengesi: Teknoloji ihracatı, hammadde ithalatını domine etmektedir.
+- Milli Para Birimi: %100 dijital ve izlenebilir 'Vortex' altyapısına geçti.
 
-04. EKONOMİK MANİPÜLASYON DİRENCİ VE KAYNAKLAR:
-- Dış borç rasyosu, küresel krizlere karşı stabilize edilmiştir.
-- Stratejik madenler, tamamen devlet kontrolünde işletilmektedir.
-- Gıda güvenliği, dikey tarım ve tohum bankaları ile korunur.
-- Enerji bağımsızlığı, yerli Toryum ve Nükleer santrallere bağlıdır.
-- Merkez bankası rezervleri, dijital altın ve BTC ile korunur.
-- Sanayi kapasitesi, savaş zamanı 48 saatte tam üretime geçer.
+04. GELECEK PROJEKSİYONU (2025-2050):
+- 2026: Yapay zeka kontrollü ilk insansız hava tümeni kurulumu.
+- 2030: Uzay madenciliği kapsamında asteroid yakalama görevi.
+- 2035: İnsan beyni ve makine arayüzü (BCI) ile askeri yönetim.
+- 2040: Sınırsız temiz enerji sağlayan füzyon reaktörlerinin yaygınlaşması.
+- 2050: Mars kolonisi üzerinde egemenlik iddiası ve askeri üs planı.
 
-05. GELECEK PROJEKSİYONU VE RİSK ANALİZİ:
-- 2030 Uzay Programı: Ay yüzeyinde ilk veri depolama merkezi.
-- Demografik yapı, robotik destekli nüfus planlamasıyla korunur.
-- Su kaynakları, ulusal güvenlik yasasının birinci maddesidir.
-- İklim değişikliği senaryolarına karşı yüzen şehir projeleri hazırdır.
-- Genetik savunma kalkanı, biyolojik tehditlere karşı aktiftir.
-
-VERİ ANALİZİ TAMAMLANMIŞTIR. KAYIT NO: 0x{id(country_name)}C78-MAX
-======================================================================
+KAYIT DURUMU: ANALİZ TAMAMLANDI. BU VERİLER DİNAMİKTİR.
+----------------------------------------------------------------------
 """
 
-# Ülke listesi 35'e çıkarıldı
-names = ["TÜRKİYE", "ABD", "RUSYA", "ÇİN", "FRANSA", "İNGİLTERE", "HİNDİSTAN", "PAKİSTAN", "İSRAİL", "KUZEY KORE", 
-         "ALMANYA", "JAPONYA", "İRAN", "BREZİLYA", "GÜNEY AFRİKA", "GÜNEY KORE", "İTALYA", "KANADA", "AVUSTRALYA", 
-         "MEKSİKA", "MISIR", "SUUDİ ARABİSTAN", "POLONYA", "VİETNAM", "İSPANYA", "NORVEÇ", "İSVEÇ", "UKRAYNA", 
-         "ENDONEZYA", "TAYLAND", "ARJANTİN", "YUNANİSTAN", "HOLLANDA", "İSVİÇRE", "AZERBAYCAN"]
+# Ülke Veri Seti (Genişletilmiş)
+country_names = ["TÜRKİYE", "ABD", "RUSYA", "ÇİN", "İNGİLTERE", "FRANSA", "ALMANYA", "JAPONYA", "HİNDİSTAN", "GÜNEY KORE", 
+                "İSRAİL", "İRAN", "BREZİLYA", "KANADA", "AVUSTRALYA", "İTALYA", "POLONYA", "MISIR", "AZERBAYCAN", "PAKİSTAN", 
+                "NORVEÇ", "İSVEÇ", "KATAR", "SUUDİ ARABİSTAN", "İSPANYA", "HOLLANDA", "İSVİÇRE", "VİETNAM", "ENDONEZYA", 
+                "TAYLAND", "MEKSİKA", "ARJANTİN", "YUNANİSTAN", "UKRAYNA", "GÜNEY AFRİKA"]
 
-COUNTRIES_DATA = [{"n": f"{i+1}. {name} STRATEJİK ANALİZİ", "info": get_mega_report(name)} for i, name in enumerate(names)]
+COUNTRIES_DATA = [{"n": f"{name} STRATEJİK İSTİHBARAT DOSYASI", "info": get_mega_intelligence_report(name)} for name in country_names]
 
-# --- SİBER TERMİNAL ARAYÜZÜ (HTML/CSS/JS) ---
-HTML_SABLON = """
+# --- SİBER TERMİNAL ARAYÜZÜ (HTML5/CSS3/JS) ---
+HTML_TEMPLATE = """
 <!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GGİ_COMMAND_OS_v9_PREMIUM</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GGİ_COMMAND_CENTER_v12</title>
     <style>
         :root {
-            --neon-blue: #00f2ff;
-            --neon-red: #ff0055;
-            --neon-green: #39ff14;
-            --bg-deep: #010203;
-            --panel-glass: rgba(5, 10, 20, 0.95);
+            --blue: #00f2ff;
+            --green: #39ff14;
+            --red: #ff0055;
+            --bg: #010203;
+            --glass: rgba(10, 25, 45, 0.9);
         }
 
-        body {
-            background: var(--bg-deep);
-            color: #fff;
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body, html { 
+            height: 100%; width: 100%; margin: 0; 
+            background: var(--bg); color: #fff;
             font-family: 'Courier New', monospace;
-            margin: 0;
-            overflow: hidden;
-            background-image: radial-gradient(circle at 50% 50%, #0a111a 0%, #010203 100%);
+            overflow: hidden; /* Scroll sorunu panel içinde çözülecek */
         }
 
-        /* Üst Bar */
-        .top-bar {
+        /* Ana Konteynır */
+        .os-wrapper {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* Header Üst Panel */
+        .top-nav {
+            height: 55px;
             background: #000;
-            border-bottom: 2px solid var(--neon-blue);
-            padding: 10px 30px;
+            border-bottom: 2px solid var(--blue);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 0 25px var(--neon-blue);
+            padding: 0 20px;
+            box-shadow: 0 0 20px var(--blue);
             z-index: 100;
         }
 
-        /* Grid Yapısı */
-        .main-grid {
+        /* Grid Sistemi */
+        .main-layout {
+            flex: 1;
             display: grid;
-            grid-template-columns: 380px 1fr 400px;
+            grid-template-columns: 360px 1fr 380px;
             gap: 12px;
             padding: 12px;
-            height: calc(100vh - 85px);
+            overflow: hidden;
+        }
+
+        /* Mobilde Grid Değişimi */
+        @media (max-width: 1100px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 1fr auto;
+                overflow-y: auto;
+            }
+            body { overflow: auto; }
         }
 
         /* Panel Tasarımı */
-        .panel {
-            background: var(--panel-glass);
+        .terminal-panel {
+            background: var(--glass);
             border: 1px solid #1a2a3a;
             display: flex;
             flex-direction: column;
+            border-radius: 4px;
             overflow: hidden;
             position: relative;
         }
 
-        .panel-title {
-            background: #0d1621;
+        .panel-header {
+            background: #0a111a;
             padding: 12px;
             font-size: 13px;
-            color: var(--neon-blue);
+            color: var(--blue);
             border-bottom: 1px solid #1a2a3a;
-            letter-spacing: 2px;
             font-weight: bold;
+            text-transform: uppercase;
         }
 
-        /* Kaydırma Alanları - LAPTOP PROBLEMİ ÇÖZÜLDÜ */
-        .scroll-content {
-            flex-grow: 1;
+        .panel-scroll {
+            flex: 1;
             overflow-y: auto;
             padding: 15px;
             scrollbar-width: thin;
-            scrollbar-color: var(--neon-blue) transparent;
+            scrollbar-color: var(--blue) transparent;
         }
 
-        .scroll-content::-webkit-scrollbar { width: 4px; }
-        .scroll-content::-webkit-scrollbar-thumb { background: var(--neon-blue); }
+        .panel-scroll::-webkit-scrollbar { width: 5px; }
+        .panel-scroll::-webkit-scrollbar-thumb { background: var(--blue); }
 
         /* Ülke Kartları */
-        .country-card {
+        .intel-card {
             background: #050a0f;
             border: 1px solid #112233;
-            padding: 18px;
             margin-bottom: 12px;
+            padding: 18px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: 0.3s;
         }
-
-        .country-card:hover {
-            border-color: var(--neon-blue);
-            box-shadow: 0 0 15px rgba(0,242,255,0.3);
-            background: #0a1a2a;
+        .intel-card:hover { 
+            border-color: var(--blue); 
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.3);
+            background: #0a1b2a;
         }
-
-        .info-body {
+        
+        .intel-content {
             display: none;
-            white-space: pre-wrap;
+            color: var(--green);
             font-size: 12px;
-            color: var(--neon-green);
-            line-height: 1.5;
+            white-space: pre-wrap;
             margin-top: 15px;
             border-top: 1px dashed #224466;
-            padding-top: 10px;
+            padding-top: 12px;
+            line-height: 1.6;
         }
 
-        /* Gelişmiş Hesap Makinesi */
-        .calc-wrapper {
+        /* Hesap Makinesi (PRO) */
+        .calc-ui {
             background: #000;
-            padding: 15px;
-            border: 1px solid #1a2a3a;
-            margin-bottom: 20px;
+            border: 1px solid var(--blue);
+            padding: 10px;
+            border-radius: 4px;
         }
-
         #calc-display {
             width: 100%;
             background: #050505;
-            border: 1px solid var(--neon-blue);
-            color: var(--neon-green);
-            padding: 12px;
+            border: 1px solid var(--blue);
+            color: var(--green);
+            padding: 15px;
             text-align: right;
-            font-size: 22px;
-            margin-bottom: 10px;
+            font-size: 24px;
+            margin-bottom: 12px;
             box-sizing: border-box;
         }
-
-        .calc-btns {
+        .calc-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 6px;
         }
-
-        .calc-btns button {
+        .calc-grid button {
             background: #111;
-            border: 1px solid #222;
+            border: 1px solid #333;
             color: #fff;
-            padding: 15px 5px;
+            padding: 18px 0;
             cursor: pointer;
             font-family: 'Courier New';
+            transition: 0.2s;
         }
+        .calc-grid button:hover { background: var(--blue); color: #000; }
 
-        .calc-btns button:hover {
-            background: var(--neon-blue);
-            color: #000;
-        }
-
-        /* Log Sistemi - 120 Font Desteği */
-        .terminal-line {
-            margin-bottom: 6px;
-            font-size: 11px;
-            word-break: break-all;
-        }
-
-        /* Animasyonlar */
+        /* Canlı Loglar */
+        .log-entry { font-size: 11px; margin-bottom: 5px; opacity: 0.8; }
+        .cursor { display: inline-block; width: 8px; height: 16px; background: var(--green); animation: blink 0.8s infinite; vertical-align: middle; }
         @keyframes blink { 50% { opacity: 0; } }
-        .cursor { display: inline-block; width: 8px; height: 15px; background: var(--neon-green); animation: blink 0.8s infinite; }
+
+        /* Tehdit Matrisi */
+        .threat-meter {
+            height: 10px;
+            background: #111;
+            border: 1px solid #333;
+            margin: 10px 0;
+            position: relative;
+        }
+        .threat-fill { height: 100%; background: var(--red); width: 45%; box-shadow: 0 0 10px var(--red); }
 
     </style>
 </head>
 <body>
 
-    <audio id="click-sound" src="https://www.soundjay.com/buttons/button-50.mp3"></audio>
+    <audio id="click-fx" src="https://www.soundjay.com/buttons/button-50.mp3"></audio>
 
-    <div class="top-bar">
-        <div style="font-size: 22px; color: var(--neon-blue); font-weight: bold;">GGİ_COMMAND_OS_v9_CORE</div>
-        <div id="live-clock" style="color: var(--neon-blue); font-size: 18px;">00:00:00</div>
-    </div>
+    <div class="os-wrapper">
+        <header class="top-nav">
+            <div style="font-size: 20px; color: var(--blue); font-weight: bold; letter-spacing: 2px;">GGİ_COMMAND_OS_v12</div>
+            <div id="live-clock" style="color: var(--blue); font-size: 16px;">00:00:00</div>
+        </header>
 
-    <div class="main-grid">
-        <div class="panel">
-            <div class="panel-title">SYSTEM_TOOLS & CALCULATOR</div>
-            <div class="scroll-content">
-                <div class="calc-wrapper">
-                    <input type="text" id="calc-display" value="0" readonly>
-                    <div class="calc-btns">
-                        <button onclick="calcIn('7')">7</button><button onclick="calcIn('8')">8</button><button onclick="calcIn('9')">9</button><button onclick="calcIn('/')">/</button>
-                        <button onclick="calcIn('4')">4</button><button onclick="calcIn('5')">5</button><button onclick="calcIn('6')">6</button><button onclick="calcIn('*')">*</button>
-                        <button onclick="calcIn('1')">1</button><button onclick="calcIn('2')">2</button><button onclick="calcIn('3')">3</button><button onclick="calcIn('-')">-</button>
-                        <button onclick="calcClr()">C</button><button onclick="calcIn('0')">0</button><button onclick="calcExe()">=</button><button onclick="calcIn('+')">+</button>
+        <main class="main-layout">
+            <section class="terminal-panel">
+                <div class="panel-header">CORE_RESOURCES & TOOLS</div>
+                <div class="panel-scroll">
+                    <div class="calc-ui">
+                        <input type="text" id="calc-display" value="0" readonly>
+                        <div class="calc-grid">
+                            <button onclick="key('7')">7</button><button onclick="key('8')">8</button><button onclick="key('9')">9</button><button onclick="key('/')">/</button>
+                            <button onclick="key('4')">4</button><button onclick="key('5')">5</button><button onclick="key('6')">6</button><button onclick="key('*')">*</button>
+                            <button onclick="key('1')">1</button><button onclick="key('2')">2</button><button onclick="key('3')">3</button><button onclick="key('-')">-</button>
+                            <button onclick="cls()">C</button><button onclick="key('0')">0</button><button onclick="exe()">=</button><button onclick="key('+')">+</button>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 30px;">
+                        <p style="color: var(--blue); font-size: 12px;">GLOBAL_THREAT_LEVEL</p>
+                        <div class="threat-meter"><div class="threat-fill" id="threat-bar"></div></div>
+                        <p id="threat-status" style="color: var(--red); font-size: 11px;">DEFCON 3: ELEVATED RISK</p>
+                    </div>
+
+                    <div style="margin-top: 30px;">
+                        <p style="color: var(--blue); font-size: 12px; border-bottom: 1px solid #224466;">ACTIVE_OPERATORS</p>
+                        {% for u in users %}
+                        <div style="display: flex; justify-content: space-between; font-size: 11px; padding: 6px 0;">
+                            <span>{{ u.username }}</span>
+                            <span style="color: var(--green);">{{ u.score }} PX</span>
+                        </div>
+                        {% endfor %}
                     </div>
                 </div>
+            </section>
 
-                <div style="border-top:1px solid #1a2a3a; padding-top:15px;">
-                    <p style="color:var(--neon-blue); font-size:11px;">ADMİN_LİDERLER</p>
-                    {% for u in leaders %}
-                    <div style="font-size:11px; padding:6px; border-bottom:1px solid #111; display:flex; justify-content:space-between;">
-                        <span>{{ u.username }}</span>
-                        <span style="color:var(--neon-green);">{{ u.score }} PX</span>
+            <section class="terminal-panel">
+                <div class="panel-header">GLOBAL_STRATEGIC_INTELLIGENCE (CLICK_TO_DECRYPT)</div>
+                <div class="panel-scroll" id="archive-container">
+                    {% for item in data %}
+                    <div class="intel-card" onclick="openIntelligence(this, {{loop.index}})">
+                        <div style="color: var(--blue); font-size: 15px; font-weight: bold;">[SECURE] {{ item.n }}</div>
+                        <div class="intel-content" id="report-{{loop.index}}" data-raw="{{ item.info }}"></div>
                     </div>
                     {% endfor %}
                 </div>
-            </div>
-        </div>
+            </section>
 
-        <div class="panel">
-            <div class="panel-title">GLOBAL_STRATEGY_ARCHIVE (BİLGİ İÇİN TIKLA)</div>
-            <div class="scroll-content" id="archive-scroll">
-                {% for c in countries %}
-                <div class="country-card" onclick="openArchive(this, {{loop.index}})">
-                    <div style="color:var(--neon-blue); font-weight:bold;">{{ c.n }}</div>
-                    <div class="info-body" id="text-{{loop.index}}" data-raw="{{ c.info }}"></div>
+            <section class="terminal-panel">
+                <div class="panel-header">ENCRYPTED_SYSTEM_LOGS</div>
+                <div class="panel-scroll" id="log-box" style="background: #000;">
+                    <div class="log-entry" style="color: var(--green); font-weight: bold;">> KERNEL_LOAD_SUCCESSFUL...</div>
+                    <div class="log-entry" style="color: var(--blue);">> OPERATOR_IP: {{ user_ip }}</div>
                 </div>
-                {% endfor %}
-            </div>
-        </div>
-
-        <div class="panel">
-            <div class="panel-title">LIVE_SYSTEM_LOGS (MULTIFONT)</div>
-            <div class="scroll-content" id="log-container" style="background: #000;">
-                <div class="terminal-line">> Sistem başlatıldı...</div>
-                <div class="terminal-line">> IP {{ user_ip }} bağlantısı doğrulandı...</div>
-            </div>
-        </div>
+            </section>
+        </main>
     </div>
 
     <script>
-        // Saat Güncelleme
+        // Saat Fonksiyonu
         setInterval(() => {
             document.getElementById('live-clock').innerText = new Date().toLocaleTimeString();
         }, 1000);
 
-        // Hesap Makinesi Mantığı
+        // Gelişmiş Hesap Makinesi
         let display = document.getElementById('calc-display');
-        function calcIn(v) { if(display.value==='0' || display.value==='ERROR') display.value=v; else display.value+=v; }
-        function calcClr() { display.value='0'; }
-        function calcExe() { try { display.value = eval(display.value); } catch { display.value='ERROR'; } }
+        function key(v) { if(display.value=='0' || display.value=='ERROR') display.value=v; else display.value+=v; }
+        function cls() { display.value='0'; }
+        function exe() { try { display.value = eval(display.value); } catch { display.value='ERROR'; } }
 
-        // Arşiv Açma ve Daktilo Efekti
-        function openArchive(card, id) {
-            document.getElementById('click-sound').play();
-            const el = document.getElementById('text-' + id);
-            if(el.style.display === 'block') {
-                el.style.display = 'none';
-            } else {
-                el.style.display = 'block';
-                if(el.innerHTML === "") {
-                    const raw = el.getAttribute('data-raw');
-                    let i = 0;
-                    el.innerHTML = '<span id="inner-'+id+'"></span><span class="cursor"></span>';
-                    const target = document.getElementById('inner-'+id);
-                    function typing() {
-                        if(i < raw.length) {
-                            target.innerHTML += raw.charAt(i);
-                            i++;
-                            setTimeout(typing, 1); // Çok hızlı yazım
-                        }
+        // DAKTİLO VE İSTİHBARAT ÇÖZÜMLEME
+        function openIntelligence(card, id) {
+            document.getElementById('click-fx').play();
+            const content = document.getElementById('report-' + id);
+            
+            if(content.style.display === 'block') {
+                content.style.display = 'none';
+                return;
+            }
+
+            // Diğer açık olanları kapat (Opsiyonel: ekranı temiz tutar)
+            // document.querySelectorAll('.intel-content').forEach(el => el.style.display = 'none');
+
+            content.style.display = 'block';
+            
+            if(content.innerHTML === "") {
+                const rawText = content.getAttribute('data-raw');
+                let i = 0;
+                content.innerHTML = '<span id="typing-'+id+'"></span><span class="cursor"></span>';
+                const target = document.getElementById('typing-'+id);
+
+                function startTyping() {
+                    if (i < rawText.length) {
+                        target.innerHTML += rawText.charAt(i);
+                        i++;
+                        // Otomatik kaydır
+                        card.parentElement.scrollTop = card.offsetTop - 20;
+                        setTimeout(startTyping, 4); // Yüksek hızda akış
                     }
-                    typing();
                 }
+                startTyping();
             }
         }
 
-        // 120 Font Desteği ve Dinamik Loglar
-        const logFonts = [
-            'Courier New', 'monospace', 'serif', 'sans-serif', 'Arial', 'Verdana', 'Georgia', 
-            'Impact', 'Trebuchet MS', 'Tahoma', 'Times New Roman', 'Lucida Console', 'Consolas'
-        ]; // Temel fontlar; sistemdeki tüm fontlar JS ile döngüde çeşitlendirilir.
+        // Dinamik Tehdit Seviyesi
+        setInterval(() => {
+            let val = Math.floor(Math.random() * 40) + 40;
+            document.getElementById('threat-bar').style.width = val + "%";
+            if(val > 70) {
+                document.getElementById('threat-status').innerText = "DEFCON 2: CRITICAL ALERT";
+                document.getElementById('threat-status').style.color = "var(--red)";
+            } else {
+                document.getElementById('threat-status').innerText = "DEFCON 3: ELEVATED RISK";
+                document.getElementById('threat-status').style.color = "orange";
+            }
+        }, 4000);
 
-        const logMessages = [
-            "> Veri paketi çözümlendi.", "> Erişim isteği onaylandı.", "> Güvenlik duvarı stabil.",
-            "> Kaynak kullanımı %14.", "> Şifreleme anahtarı güncellendi.", "> Arşiv senkronize edildi.",
-            "> Yeni bağlantı noktası: 0x88F", "> Kritik veri sızıntısı engellendi.", "> Sistem temiz."
+        // Canlı Log Akışı (Multifont & Random)
+        const logMsgs = [
+            "> UYDU_VERİ_PAKETİ_ALINDI", "> SİBER_SALDIRI_ENGELLEME_PASİF", "> PROTOKOL_X_YÜKLENİYOR",
+            "> VERİ_TABANI_ERİŞİM_İZNİ", "> ŞİFRELEME_ANAHTARI_GÜNCELLENDİ", "> OMEGA_SEKTÖR_İZLENİYOR",
+            "> KRİTİK_HATA_0x44_GİDERİLDİ", "> YENİ_BAĞLANTI_İSTEĞİ_ONAYLANDI"
         ];
+        const logFonts = ['Courier New', 'monospace', 'Impact', 'Arial', 'Verdana'];
 
         setInterval(() => {
-            const container = document.getElementById('log-container');
-            const line = document.createElement('div');
-            line.className = 'terminal-line';
-            
-            // Rastgele font ve stil
-            line.style.fontFamily = logFonts[Math.floor(Math.random() * logFonts.length)];
-            line.style.fontSize = (Math.floor(Math.random() * 4) + 10) + "px";
-            line.style.color = Math.random() > 0.8 ? "var(--neon-red)" : "var(--neon-green)";
-            
-            line.innerText = logMessages[Math.floor(Math.random() * logMessages.length)] + " [" + Math.random().toString(16).slice(2,8).toUpperCase() + "]";
-            
-            container.appendChild(line);
-            container.scrollTop = container.scrollHeight; // Otomatik aşağı kaydır
-            
-            if(container.childNodes.length > 60) container.removeChild(container.firstChild);
-        }, 1200);
+            const box = document.getElementById('log-box');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.style.fontFamily = logFonts[Math.floor(Math.random()*logFonts.length)];
+            entry.style.color = Math.random() > 0.85 ? 'var(--red)' : 'var(--green)';
+            entry.innerText = logMsgs[Math.floor(Math.random()*logMsgs.length)] + " [" + Math.random().toString(16).slice(2,6).toUpperCase() + "]";
+            box.appendChild(entry);
+            box.scrollTop = box.scrollHeight;
+            if(box.childNodes.length > 50) box.removeChild(box.firstChild);
+        }, 1800);
 
     </script>
 </body>
 </html>
 """
 
-# --- ROUTERLAR VE KONTROLLER ---
+# --- ROUTERLAR VE VERİ KONTROLLERİ ---
 @app.route('/')
 def index():
     db.create_all()
+    # Eğer kullanıcı yoksa test operatörleri oluştur
+    if not User.query.first():
+        o1 = User(username="SUPREME_COMMANDER", score=12500, access_level="ADMİN")
+        o2 = User(username="GGI_OPERATOR_01", score=8900, access_level="STAFF")
+        db.session.add_all([o1, o2])
+        db.session.commit()
+        
     u_ip = request.remote_addr
-    
-    # Veritabanı Kayıt İşlemi
+    # Ziyaret kaydı
     try:
-        v = Visit(ip_address=u_ip, user_agent=request.user_agent.string)
+        v = SystemVisit(ip_address=u_ip, agent=request.user_agent.string)
         db.session.add(v)
-        log = SystemLog(message=f"Bağlantı: {u_ip}", category="INFO")
-        db.session.add(log)
         db.session.commit()
     except:
         db.session.rollback()
-    
-    leaders = User.query.order_by(User.score.desc()).limit(15).all()
-    return render_template_string(HTML_SABLON, leaders=leaders, countries=COUNTRIES_DATA, user_ip=u_ip)
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        u = User.query.filter_by(username=request.form['u']).first()
-        if u and check_password_hash(u.password, request.form['p']): 
-            login_user(u)
-            return redirect('/')
-    return render_template_string('<body style="background:#000;color:#00f2ff;display:flex;justify-content:center;align-items:center;height:100vh;font-family:monospace;"><div style="border:2px solid #00f2ff;padding:50px;"><h2>SİSTEM_GİRİŞ</h2><form method="post"><input name="u" placeholder="KULLANICI" style="display:block;width:100%;margin:10px 0;background:#000;border:1px solid #00f2ff;color:#00f2ff;padding:10px;"><input name="p" type="password" placeholder="ŞİFRE" style="display:block;width:100%;margin:10px 0;background:#000;border:1px solid #00f2ff;color:#00f2ff;padding:10px;"><button style="width:100%;background:#00f2ff;border:none;padding:10px;cursor:pointer;">ERİŞİM</button></form></div></body>')
+    operators = User.query.order_by(User.score.desc()).all()
+    return render_template_string(HTML_TEMPLATE, data=COUNTRIES_DATA, users=operators, user_ip=u_ip)
 
-@app.route('/logout')
-def logout():
-    logout_user()
-    return redirect('/')
+@app.route('/health')
+def health():
+    return jsonify({"status": "online", "system": "GGI_V12", "load": "stable"})
 
 # --- SİSTEMİ BAŞLAT ---
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
+    # Port yapılandırması (Render/Heroku uyumlu)
     port = int(os.environ.get("PORT", 10000))
     app.run(host='0.0.0.0', port=port, debug=False)
