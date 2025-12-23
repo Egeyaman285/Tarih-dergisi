@@ -26,7 +26,7 @@ class User(UserMixin, db.Model):
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# --- HER ÜLKE İÇİN GARANTİLENMİŞ 15+ SATIRLIK ANALİZ ŞABLONU ---
+# --- HER ÜLKE İÇİN GARANTİLENMİŞ 15+ SATIRLIK ANALİZ ŞABLONU (BOZULMADI) ---
 def get_long_info(country_name):
     return f"""
 [GİZLİLİK DERECESİ: ÇOK GİZLİ] - ANALİZ: {country_name}
@@ -76,7 +76,7 @@ HTML_SABLON = """
     <title>GGİ STRATEJİK ARŞİV</title>
     <style>
         :root { --neon-blue: #38bdf8; --neon-red: #f43f5e; --bg-dark: #020617; }
-        body { background: var(--bg-dark); color: #e2e8f0; font-family: 'Courier New', Courier, monospace; margin: 0; }
+        body { background: var(--bg-dark); color: #e2e8f0; font-family: 'Courier New', Courier, monospace; margin: 0; overflow-x: hidden; }
         .nav { background: #0f172a; padding: 15px; border-bottom: 2px solid var(--neon-blue); display: flex; justify-content: space-between; align-items: center; position: sticky; top:0; z-index:100; }
         
         .layout { display: grid; grid-template-columns: 280px 1fr 350px; min-height: 100vh; }
@@ -93,16 +93,22 @@ HTML_SABLON = """
         canvas { background: #000; border: 2px solid #334155; border-radius: 8px; width: 100%; height: 100%; }
         #game-ui { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(2, 6, 23, 0.9); color: var(--neon-blue); display: flex; align-items: center; justify-content: center; text-align: center; padding: 20px; font-weight: bold; border-radius: 8px; }
 
+        /* MOBİL GİRİŞ OPTİMİZASYONU */
+        .auth-container { max-width: 400px; margin: 50px auto; padding: 20px; background: #0f172a; border: 1px solid var(--neon-blue); border-radius: 8px; text-align: center; }
+        .auth-input { width: 90%; padding: 12px; margin: 10px 0; background: #020617; border: 1px solid #334155; color: white; border-radius: 4px; }
+        
         @media (max-width: 1024px) {
             .layout { grid-template-columns: 1fr; }
             .sidebar { order: 2; border:none; border-top: 1px solid #334155; }
             .content { order: 1; }
             .game-panel { order: 3; border:none; border-top: 1px solid #334155; padding-bottom: 80px; }
         }
-        .btn { background: var(--neon-blue); color: #000; padding: 8px 15px; text-decoration: none; border-radius: 4px; font-weight: bold; font-size: 12px; }
+        .btn { background: var(--neon-blue); color: #000; padding: 8px 15px; text-decoration: none; border-radius: 4px; font-weight: bold; font-size: 12px; border: none; cursor: pointer; }
     </style>
 </head>
 <body>
+
+    <audio id="tickSound" src="https://www.soundjay.com/buttons/button-50.mp3" preload="auto"></audio>
 
     <div class="nav">
         <div style="color:var(--neon-blue); font-weight:bold; letter-spacing:2px;">GGİ // ARŞİV</div>
@@ -125,10 +131,10 @@ HTML_SABLON = """
 
         <div class="content">
             <div style="margin-bottom:20px; padding:10px; background:#0f172a; border-left:3px solid var(--neon-blue); font-size:12px; color:#94a3b8;">
-                > SİSTEM MESAJI: Dosyaları okumak için ilgili ülkeye tıklayın. Veriler 15 satırlık derin analiz içerir.
+                > SİSTEM MESAJI: Dosyaları okumak veya kapatmak için tıklayın. Veriler derin analiz içerir.
             </div>
             {% for c in countries %}
-            <div class="country-card" onclick="openArchive(this, {{loop.index}})">
+            <div class="country-card" onclick="toggleArchive(this, {{loop.index}})">
                 <div class="title">{{ c.n }}</div>
                 <div class="text-body" id="type-{{loop.index}}" data-text="{{ c.info }}"></div>
             </div>
@@ -145,18 +151,36 @@ HTML_SABLON = """
     </div>
 
     <script>
-        function openArchive(card, id) {
-            const el = document.getElementById('type-' + id);
-            if(el.style.display === "block") return;
-            el.style.display = "block";
-            const fullText = el.getAttribute('data-text');
-            let i = 0; el.innerHTML = "";
-            function type() {
-                if (i < fullText.length) { el.innerHTML += fullText.charAt(i); i++; setTimeout(type, 3); }
-            }
-            type();
+        function playTick() {
+            const sound = document.getElementById('tickSound');
+            sound.currentTime = 0;
+            sound.play();
         }
 
+        function toggleArchive(card, id) {
+            const el = document.getElementById('type-' + id);
+            playTick(); // Tıklama sesi
+
+            if(el.style.display === "block") {
+                el.style.display = "none"; // Açıksa kapat
+            } else {
+                el.style.display = "block"; // Kapalıysa aç ve yazdır
+                const fullText = el.getAttribute('data-text');
+                if(el.innerHTML === "") { // Sadece ilk kez tıklandığında yazma efekti
+                    let i = 0;
+                    function type() {
+                        if (i < fullText.length) { 
+                            el.innerHTML += fullText.charAt(i); 
+                            i++; 
+                            setTimeout(type, 3); 
+                        }
+                    }
+                    type();
+                }
+            }
+        }
+
+        // Oyun kodları aynen korunmuştur...
         const canvas = document.getElementById('game');
         const ctx = canvas.getContext('2d');
         const ui = document.getElementById('game-ui');
@@ -168,11 +192,8 @@ HTML_SABLON = """
         }
 
         window.addEventListener('keydown', e => { if(e.code=='Space') gameInput(); });
-
         function startGame() { score = 0; obs = []; player.y = 290; active = true; spawn(); loop(); }
-
         function spawn() { if(active) { obs.push({x:310, w:25, s: 4 + (score/15)}); setTimeout(spawn, 1300 + Math.random()*700); } }
-
         function loop() {
             if(!active) return;
             ctx.clearRect(0,0,310,350);
@@ -197,7 +218,6 @@ HTML_SABLON = """
 </html>
 """
 
-# ... Flask yönlendirmeleri (Register, Login, Save) bir öncekiyle aynı ...
 @app.route('/')
 def index():
     db.create_all()
@@ -213,6 +233,7 @@ def save():
         db.session.commit()
     return '', 204
 
+# --- MOBİL OPTİMİZE EDİLMİŞ GİRİŞ/KAYIT TASARIMI ---
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -220,7 +241,18 @@ def register():
         if not User.query.filter_by(username=u).first():
             user = User(username=u, password=p); db.session.add(user); db.session.commit()
         return redirect('/login')
-    return '<body style="background:#020617;color:white;text-align:center;padding:50px;font-family:monospace"><h2>KAYIT MERKEZİ</h2><form method="post">KOD ADI: <input name="u"><br><br>ŞİFRE: <input name="p" type="password"><br><br><button>KAYDI ONAYLA</button></form></body>'
+    return render_template_string('''
+        <body style="background:#020617;color:white;font-family:monospace;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;">
+            <div style="width:90%;max-width:350px;padding:30px;border:2px solid #38bdf8;border-radius:15px;text-align:center;">
+                <h2 style="color:#38bdf8;">KAYIT MERKEZİ</h2>
+                <form method="post">
+                    <input name="u" placeholder="KOD ADI" style="width:100%;padding:12px;margin:10px 0;background:#0f172a;border:1px solid #1e293b;color:white;border-radius:5px;">
+                    <input name="p" type="password" placeholder="ŞİFRE" style="width:100%;padding:12px;margin:10px 0;background:#0f172a;border:1px solid #1e293b;color:white;border-radius:5px;">
+                    <button style="width:100%;padding:15px;margin-top:20px;background:#38bdf8;border:none;border-radius:5px;font-weight:bold;cursor:pointer;">KAYDI ONAYLA</button>
+                </form>
+            </div>
+        </body>
+    ''')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -228,7 +260,18 @@ def login():
         u = User.query.filter_by(username=request.form['u']).first()
         if u and check_password_hash(u.password, request.form['p']):
             login_user(u); return redirect('/')
-    return '<body style="background:#020617;color:white;text-align:center;padding:50px;font-family:monospace"><h2>GİRİŞ PANELİ</h2><form method="post">KOD ADI: <input name="u"><br><br>ŞİFRE: <input name="p" type="password"><br><br><button>SİSTEME GİR</button></form></body>'
+    return render_template_string('''
+        <body style="background:#020617;color:white;font-family:monospace;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;">
+            <div style="width:90%;max-width:350px;padding:30px;border:2px solid #38bdf8;border-radius:15px;text-align:center;">
+                <h2 style="color:#38bdf8;">GİRİŞ PANELİ</h2>
+                <form method="post">
+                    <input name="u" placeholder="KOD ADI" style="width:100%;padding:12px;margin:10px 0;background:#0f172a;border:1px solid #1e293b;color:white;border-radius:5px;">
+                    <input name="p" type="password" placeholder="ŞİFRE" style="width:100%;padding:12px;margin:10px 0;background:#0f172a;border:1px solid #1e293b;color:white;border-radius:5px;">
+                    <button style="width:100%;padding:15px;margin-top:20px;background:#38bdf8;border:none;border-radius:5px;font-weight:bold;cursor:pointer;">SİSTEME GİR</button>
+                </form>
+            </div>
+        </body>
+    ''')
 
 @app.route('/logout')
 def logout():
