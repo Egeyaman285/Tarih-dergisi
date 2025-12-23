@@ -1,100 +1,70 @@
-from flask import Flask, render_template, redirect, url_for, flash, request
+import os
+from flask import Flask, render_template_string, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-import os
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'ggi-gizli-anahtar'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ggi_arsiv.db'
 
-# Güvenlik için SECRET_KEY gerekli
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'cokgizlibirkey') 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///site.db') # Veritabanı
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
-login_manager.login_view = 'login' # Giriş yapılmamışsa yönlendirilecek sayfa
+login_manager.login_view = 'login'
 
-# Kullanıcı Modeli (Veritabanı Tablosu)
+# --- MODELLER ---
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(20), unique=True, nullable=False)
-    password = db.Column(db.String(120), nullable=False)
-    high_score = db.Column(db.Integer, default=0) # Kullanıcının en yüksek skoru
+    username = db.Column(db.String(50), unique=True, nullable=False)
+    password = db.Column(db.String(100), nullable=False)
+    score = db.Column(db.Integer, default=0)
 
-# Kullanıcı yükleyici (Flask-Login için zorunlu)
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# --- ROUTES (Sayfalar) ---
+# --- HTML ŞABLONU (Tek Parça) ---
+HTML_TEMPLATE = """
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GGİ - Genç Girişimci</title>
+    <style>
+        body { background: #121212; color: white; font-family: sans-serif; margin: 0; }
+        .nav { background: #1f1f1f; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 24px; font-weight: bold; color: #00ff88; }
+        .container { display: flex; padding: 20px; gap: 20px; }
+        .game-side { flex: 2; background: #1f1f1f; padding: 20px; border-radius: 10px; text-align: center; }
+        .leaderboard { flex: 1; background: #1f1f1f; padding: 20px; border-radius: 10px; }
+        canvas { background: #333; border: 2px solid #00ff88; display: block; margin: 0 auto; }
+        .btn { background: #00ff88; color: black; padding: 10px; text-decoration: none; border-radius: 5px; border:none; cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <div class="logo">GGİ - Genç Girişimci</div>
+        <div>
+            {% if current_user.is_authenticated %}
+                <span>Hoş geldin, {{ current_user.username }}!</span> | <a href="/logout" style="color:white">Çıkış</a>
+            {% else %}
+                <a href="/login" style="color:white">Giriş Yap</a> | <a href="/register" style="color:white">Kayıt Ol</a>
+            {% endif %}
+        </div>
+    </div>
 
-@app.before_first_request
-def create_tables():
-    db.create_all() # Uygulama ilk çalıştığında veritabanı tablolarını oluştur
-
-@app.route('/')
-def index():
-    # Ana sayfa: GGİ logosu, oyun ve skor tablosu için iskelet
-    top_scores = User.query.order_by(User.high_score.desc()).limit(10).all()
-    return render_template('index.html', top_scores=top_scores)
-
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    if current_user.is_authenticated:
-        return redirect(url_for('index'))
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
-        hashed_password = generate_password_hash(password, method='sha256')
+    <div class="container">
+        <div class="game-side">
+            <h2>Engellerden Atla! (Boşluk Tuşu)</h2>
+            <canvas id="gameCanvas" width="600" height="300"></canvas>
+        </div>
         
-        new_user = User(username=username, password=hashed_password)
-        try:
-            db.session.add(new_user)
-            db.session.commit()
-            flash('Hesabınız başarıyla oluşturuldu! Giriş yapabilirsiniz.', 'success')
-            return redirect(url_for('login'))
-        except:
-            flash('Bu kullanıcı adı zaten alınmış!', 'danger')
-    return render_template('register.html')
+        <div class="leaderboard">
+            <h3>🏆 En İyi 10 (Liderler)</h3>
+            {% for user in leaders %}
+                <p>{{ loop.index }}. {{ user.username }} - <b>{{ user.score }}</b></p>
+            {% endfor %}
+        </div>
+    </div>
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if current_user.is_authenticated:
-        return redirect(url_for('index'))
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
-        user = User.query.filter_by(username=username).first()
-        
-        if user and check_password_hash(user.password, password):
-            login_user(user)
-            return redirect(url_for('index'))
-        else:
-            flash('Giriş başarısız. Kullanıcı adı veya şifre hatalı.', 'danger')
-    return render_template('login.html')
-
-@app.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    return redirect(url_for('index'))
-
-@app.route('/settings')
-@login_required
-def settings():
-    # Ayarlar sayfası (şu an boş, sonra eklenecek)
-    return render_template('settings.html')
-
-@app.route('/submit_score', methods=['POST'])
-@login_required
-def submit_score():
-    score = int(request.form.get('score'))
-    if score > current_user.high_score:
-        current_user.high_score = score
-        db.session.commit()
-        flash('Yeni yüksek skorunuz kaydedildi!', 'success')
-    return redirect(url_for('index'))
-
-# --- Uygulamayı Çalıştır ---
-if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port, debug=True) # debug=True sadece geliştirme aşamasında kullanılır)
+    <script>
+        const canvas =
