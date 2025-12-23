@@ -1,251 +1,224 @@
-
 from flask import Flask
+import random
 import os
 
 app = Flask(__name__)
 
-# --- STİL VE TASARIM (350 SATIR HEDEFİ İÇİN DETAYLANDIRILDI) ---
-STYLE = """
+# ==================================================
+# TÜM ÜLKELER
+# ==================================================
+COUNTRIES = [
+    "turkiye", "abd", "cin", "rusya", "japonya", "almanya",
+    "ingiltere", "fransa", "italya", "ispanya",
+    "misir", "iran", "hindistan", "guney_kore",
+    "brezilya", "kanada", "avustralya", "meksika",
+    "pakistan", "arjantin"
+]
+
+# ==================================================
+# HER ÜLKE İÇİN 50+ SATIR GERÇEK TARİH ŞABLONU
+# ==================================================
+BASE_50_LINES = [
+    "1. Coğrafi konum ve doğal sınırlar",
+    "2. İlk insan yerleşimleri",
+    "3. Antik çağ toplulukları",
+    "4. Tarımın başlaması",
+    "5. İlk şehirleşme süreci",
+    "6. Kabile ve aşiret düzeni",
+    "7. Erken yönetim biçimleri",
+    "8. İnanç sistemlerinin oluşumu",
+    "9. Kültürel kimliğin temelleri",
+    "10. Antik savaşlar",
+    "11. Ticaret yollarının gelişimi",
+    "12. Orta çağ siyasi yapıları",
+    "13. Krallıklar ve imparatorluklar",
+    "14. Feodal sistem",
+    "15. Din ve devlet ilişkisi",
+    "16. Büyük salgınların etkisi",
+    "17. Rönesans ve reform etkileri",
+    "18. Bilimsel gelişmeler",
+    "19. Keşifler çağı",
+    "20. Kolonyal etkiler",
+    "21. Halk ayaklanmaları",
+    "22. Milliyetçilik akımları",
+    "23. Bağımsızlık mücadeleleri",
+    "24. İlk anayasalar",
+    "25. Devrimci hareketler",
+    "26. Sanayi devrimi",
+    "27. İşçi sınıfının doğuşu",
+    "28. Sosyal hakların gelişimi",
+    "29. Modern eğitim sistemi",
+    "30. I. Dünya Savaşı etkileri",
+    "31. II. Dünya Savaşı etkileri",
+    "32. Siyasi rejim değişimleri",
+    "33. Soğuk savaş dönemi",
+    "34. Askeri bloklaşmalar",
+    "35. Ekonomik kalkınma planları",
+    "36. Teknolojik dönüşüm",
+    "37. Dijital çağ",
+    "38. Medya ve propaganda",
+    "39. Kültürel küreselleşme",
+    "40. Göç hareketleri",
+    "41. Nüfus yapısındaki değişim",
+    "42. Kadın hakları hareketleri",
+    "43. Gençlik hareketleri",
+    "44. Demokratikleşme adımları",
+    "45. Anayasal reformlar",
+    "46. Çevresel sorunlar",
+    "47. Enerji politikaları",
+    "48. Bölgesel ilişkiler",
+    "49. Güncel siyasi durum",
+    "50. Gelecek projeksiyonları"
+]
+
+def generate_country_text(country):
+    header = f"{country.upper()} TARİHSEL GELİŞİM VE DEVRİMLER"
+    lines = [header] + BASE_50_LINES
+    return "\n".join(lines)
+
+DATA = {c: generate_country_text(c) for c in COUNTRIES}
+
+# ==================================================
+# HTML + CSS + JS
+# ==================================================
+def layout(content, hidden_text=""):
+    return f"""
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>GGI Tarih Arşivi</title>
 <style>
-    :root { 
-        --bg-color: #f0f2f5; 
-        --text-color: #333; 
-        --cont-bg: white; 
-        --accent: #e74c3c; 
-        --dark-accent: #c0392b; 
-        --sidebar-bg: #1a1a2e; 
-    }
-    .dark-mode { 
-        --bg-color: #0f0f1b; 
-        --text-color: #e0e0e0; 
-        --cont-bg: #16213e; 
-        --accent: #f1c40f; 
-        --dark-accent: #d4ac0d; 
-    }
-
-    body {
-        font-family: 'Segoe UI', Arial, sans-serif;
-        background-color: var(--bg-color);
-        margin: 0;
-        display: flex;
-        flex-direction: row;
-        color: var(--text-color);
-        min-height: 100vh;
-        transition: 0.3s;
-        overflow-x: hidden;
-    }
-
-    .sidebar-left {
-        width: 320px;
-        background: var(--sidebar-bg);
-        color: white;
-        height: 100vh;
-        padding: 25px;
-        position: fixed;
-        left: 0;
-        overflow-y: auto;
-        z-index: 1000;
-        border-right: 4px solid var(--accent);
-        box-shadow: 5px 0 15px rgba(0,0,0,0.5);
-    }
-
-    .ggi-header { text-align: center; margin-bottom: 30px; }
-
-    .ggi-logo {
-        width: 70px;
-        height: 70px;
-        background: linear-gradient(135deg, var(--accent), var(--dark-accent));
-        border-radius: 15px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 900;
-        font-size: 24px;
-        color: white;
-        margin: 0 auto 10px auto;
-        border: 2px solid rgba(255,255,255,0.2);
-    }
-
-    .sidebar-right {
-        width: 220px;
-        background: #0f3460;
-        color: white;
-        height: 100vh;
-        padding: 25px;
-        position: fixed;
-        right: 0;
-        border-left: 4px solid var(--accent);
-        z-index: 1000;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .stat-box {
-        background: rgba(255,255,255,0.05);
-        padding: 15px;
-        border-radius: 12px;
-        margin-bottom: 20px;
-        border: 1px solid rgba(255,255,255,0.1);
-        text-align: center;
-        transition: 0.3s;
-    }
-
-    .stat-val {
-        font-size: 26px;
-        font-weight: bold;
-        color: var(--accent);
-        display: block;
-    }
-
-    .stat-title {
-        font-size: 11px;
-        text-transform: uppercase;
-        color: #8e9aaf;
-    }
-
-    .live-indicator {
-        height: 10px;
-        width: 10px;
-        background-color: #2ecc71;
-        border-radius: 50%;
-        display: inline-block;
-        margin-right: 8px;
-        animation: pulse-anim 1.5s infinite;
-    }
-
-    @keyframes pulse-anim {
-        0% { transform: scale(0.95); opacity: 0.7; }
-        50% { transform: scale(1.1); opacity: 1; }
-        100% { transform: scale(0.95); opacity: 0.7; }
-    }
-
-    .main-content {
-        margin-left: 320px;
-        margin-right: 220px;
-        padding: 60px;
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        min-height: 100vh;
-    }
-
-    .container {
-        background: var(--cont-bg);
-        padding: 50px;
-        border-radius: 20px;
-        box-shadow: 0 15px 40px rgba(0,0,0,0.15);
-        width: 100%;
-        max-width: 1000px;
-        margin-bottom: 100px;
-    }
-
-    h1 {
-        font-size: 32px;
-        color: var(--accent);
-        text-align: center;
-        border-bottom: 3px solid var(--accent);
-        padding-bottom: 10px;
-    }
-
-    .country-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-        gap: 15px;
-        margin-top: 30px;
-    }
-
-    .card {
-        padding: 20px;
-        color: white;
-        text-decoration: none;
-        border-radius: 12px;
-        text-align: center;
-        font-weight: bold;
-        transition: 0.3s;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 60px;
-    }
-
-    .card:hover {
-        transform: translateY(-5px);
-        filter: brightness(1.2);
-    }
-
-    .typing-text {
-        line-height: 2;
-        font-size: 17px;
-        background: rgba(0,0,0,0.02);
-        padding: 40px;
-        border-left: 8px solid var(--accent);
-        border-radius: 10px;
-        white-space: pre-wrap;
-        color: var(--text-color);
-        text-align: justify;
-    }
+body {{
+    margin:0;
+    font-family:Arial;
+    display:flex;
+    background:#f2f2f2;
+}}
+.left {{
+    width:260px;
+    background:#1a1a2e;
+    color:white;
+    padding:20px;
+}}
+.right {{
+    width:240px;
+    background:#0f3460;
+    color:white;
+    padding:20px;
+}}
+.main {{
+    flex:1;
+    padding:40px;
+}}
+.card {{
+    background:#34495e;
+    color:white;
+    padding:15px;
+    margin:10px;
+    border-radius:10px;
+    text-decoration:none;
+    display:inline-block;
+    width:160px;
+    text-align:center;
+}}
+.card:hover {{ background:#2c3e50; }}
+#text {{
+    background:white;
+    padding:30px;
+    border-left:6px solid #e74c3c;
+    min-height:300px;
+    white-space:pre-wrap;
+    line-height:1.7;
+}}
+.small {{ font-size:11px; opacity:0.8; }}
 </style>
 
 <script>
-function initSystem() {
-    let v = localStorage.getItem('ggi_v_count') || 48291;
-    v = parseInt(v) + 1;
-    localStorage.setItem('ggi_v_count', v);
-    document.getElementById('v-count').innerText = v.toLocaleString();
+function animateLines(text) {{
+    const lines = text.split("\\n");
+    const target = document.getElementById("text");
+    target.innerHTML = "";
+    let i = 0;
 
-    function updateActive() {
-        let active = Math.floor(Math.random() * (50 - 20 + 1)) + 20;
-        document.getElementById('active-users').innerText = active;
-    }
+    function addLine() {{
+        if (i >= lines.length) return;
+        const div = document.createElement("div");
+        div.textContent = lines[i];
+        div.style.opacity = 0;
+        target.appendChild(div);
+        setTimeout(() => {{
+            div.style.transition = "opacity 0.4s";
+            div.style.opacity = 1;
+        }}, 20);
+        i++;
+        setTimeout(addLine, 80);
+    }}
+    addLine();
+}}
 
-    updateActive();
-    setInterval(updateActive, 3000);
-}
-
-function toggleTheme() {
-    document.body.classList.toggle('dark-mode');
-}
-
-window.onload = initSystem;
+window.onload = function() {{
+    const hidden = document.getElementById("hidden");
+    if (hidden) animateLines(hidden.innerText.trim());
+};
 </script>
+</head>
+
+<body>
+
+<div class="left">
+    <h2>GGI</h2>
+    <p>Genç Girişimci v3.5</p>
+    <p class="small">
+    Bu site bilgilendirme amaçlıdır.<br>
+    Hiçbir ülkenin, ideolojinin veya
+    örgütün tarafı değildir.
+    </p>
+</div>
+
+<div class="main">
+{content}
+<div id="hidden" style="display:none;">{hidden_text}</div>
+</div>
+
+<div class="right">
+    <b>Ayarlar</b><br><br>
+    Admin: Ege<br>
+    Yaş: 12<br>
+    Dil: Python<br>
+    Altyapı: GitHub + Render
+</div>
+
+</body>
+</html>
 """
 
-data = {
-    "turkiye": "TÜRKİYE ANALİZİ",
-    "abd": "ABD ANALİZİ",
-    "nazi": "NAZİ DÖNEMİ ANALİZİ",
-    "cin": "ÇİN ANALİZİ"
-}
-
-def layout(content, long_text=""):
-    left = "<div class='sidebar-left'><div class='ggi-header'><div class='ggi-logo'>GGI</div><b>GENÇ GİRİŞİMCİ v3.5</b></div></div>"
-    right = """
-    <div class="sidebar-right">
-        <div class="stat-box">
-            <span class="stat-title">Toplam Giriş</span>
-            <span id="v-count" class="stat-val">...</span>
-        </div>
-        <div class="stat-box">
-            <span class="stat-title"><span class="live-indicator"></span>Aktif</span>
-            <span id="active-users" class="stat-val">...</span>
-        </div>
-    </div>
-    """
-    hidden = f"<div id='hidden-source' style='display:none;'>{long_text}</div>"
-    return f"{STYLE}{left}{right}{hidden}<div class='main-content'>{content}</div>"
-
+# ==================================================
+# ROUTES
+# ==================================================
 @app.route("/")
 def home():
-    content = "<div class='container'><h1>GGI TARİH ARŞİVİ</h1></div>"
-    return layout(content)
+    selected = random.sample(COUNTRIES, 15)
+    cards = "".join(
+        f'<a class="card" href="/{c}">{c.upper()}</a>'
+        for c in selected
+    )
+    return layout("<h1>GGI TARİH ARŞİVİ</h1>" + cards)
 
 @app.route("/<country>")
-def show(country):
-    if country in data:
-        content = f"<div class='container'><h1>{country.upper()}</h1><div class='typing-text'>{data[country]}</div></div>"
-        return layout(content)
-    return home()
+def country(country):
+    if country not in DATA:
+        return home()
+    content = f"""
+    <h1>{country.upper()}</h1>
+    <div id="text"></div>
+    <br>
+    <a class="card" href="/">← Geri</a>
+    """
+    return layout(content, DATA[country])
 
+# ==================================================
+# RUN
+# ==================================================
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
