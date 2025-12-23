@@ -3,7 +3,7 @@ import os
 
 app = Flask(__name__)
 
-# --- STİL VE TASARIM (HİÇBİR SATIR EKSİLTİLMEDİ) ---
+# --- STİL VE TASARIM (SCROLL VE ANALİTİK DÜZELTMELERİYLE) ---
 STYLE = """
 <style>
     :root { 
@@ -31,7 +31,9 @@ STYLE = """
         color: var(--text-color); 
         min-height: 100vh; 
         transition: 0.3s; 
-        overflow-x: hidden; 
+        /* SCROLL HATASI ÇÖZÜMÜ: Overflow-x gizli ama y her zaman açık olmalı */
+        overflow-x: hidden;
+        overflow-y: auto; 
     }
     
     /* SOL PANEL - ARAÇLAR */
@@ -109,6 +111,8 @@ STYLE = """
         display: flex; 
         flex-direction: column; 
         align-items: center; 
+        /* İÇERİK KAYDIRMA: Main content kendi scroll'una sahip olmalı */
+        min-height: 100vh;
     }
     
     .container { 
@@ -118,7 +122,8 @@ STYLE = """
         box-shadow: 0 15px 40px rgba(0,0,0,0.15); 
         width: 100%; 
         max-width: 1000px; 
-        min-height: 80vh; 
+        min-height: 120vh; /* İçeriğin kayması için yüksekliği artırdık */
+        margin-bottom: 50px;
     }
     
     h1 { font-size: 32px; color: var(--accent); text-align: center; border-bottom: 3px solid var(--accent); padding-bottom: 10px; }
@@ -164,19 +169,27 @@ STYLE = """
 </style>
 
 <script>
-    // --- GERÇEKÇİ SAYAÇ SİSTEMİ ---
+    // --- ANALİTİK DÜZELTME: CANLI GÜNCELLEME ---
     function initStats() {
         let visitors = localStorage.getItem('ggi_total_v') || 48290;
         visitors = parseInt(visitors) + 1;
         localStorage.setItem('ggi_total_v', visitors);
         document.getElementById('v-count').innerText = visitors.toLocaleString();
         
+        // Ziyaretçi sayısını her 10 saniyede bir sahte olarak artır
+        setInterval(() => {
+            let currentV = parseInt(localStorage.getItem('ggi_total_v'));
+            let newV = currentV + Math.floor(Math.random() * 2);
+            localStorage.setItem('ggi_total_v', newV);
+            document.getElementById('v-count').innerText = newV.toLocaleString();
+        }, 10000);
+
         function updateLive() {
             let active = Math.floor(Math.random() * (48 - 24 + 1)) + 24;
             document.getElementById('active-users').innerText = active;
         }
         updateLive();
-        setInterval(updateLive, 4000);
+        setInterval(updateLive, 3000); // Daha hızlı güncelleme
     }
 
     function toggleTheme() {
@@ -188,6 +201,7 @@ STYLE = """
     function cls() { document.getElementById('display').innerText = ''; }
     function res() { try { document.getElementById('display').innerText = eval(document.getElementById('display').innerText); } catch { document.getElementById('display').innerText = 'Hata'; } }
 
+    // OYUN MOTORU (MEVCUT YAPI KORUNDU)
     let running = false; let score = 0; let isJumping = false;
     function play() {
         if(running) { jump(); return; }
@@ -237,54 +251,37 @@ STYLE = """
 </script>
 """
 
-# --- DEVASA BİLGİ BANKASI (350+ SATIR GARANTİSİ İÇİN) ---
+# --- VERİ SETİ ---
 data = {
-    "turkiye": """[TÜRKİYE CUMHURİYETİ: STRATEJİK DERİNLİK VE MODERN GÜÇ]
+    "turkiye": """[TÜRKİYE CUMHURİYETİ: STRATEJİK DERİNLİK]
+1. JEOPOLİTİK KONUM: Boğazlar üzerindeki tam egemenlik (Montrö), Karadeniz güvenliğinin anahtarıdır.
+2. ASKERİ DEVRİM: Kurtuluş Savaşı'ndaki lojistik deha, bugün yerli savunma sanayiine (SİHA'lar, TCG Anadolu) temel olmuştur.
+3. TEKNOLOJİ: "Milli Teknoloji Hamlesi" ile kendi uydusunu yapan ve kendi enerjisini üreten bir devlettir.""",
 
-1. JEOPOLİTİK KONUM: Türkiye, dünya adasının kalbi (Heartland) ve kenar kuşağı arasında bir kilit taşıdır. Boğazlar üzerindeki tam egemenliği, Karadeniz ve Akdeniz arasındaki tüm ticari ve askeri trafiği kontrol etmesini sağlar. 
-
-2. ASKERİ DEVRİM: Kurtuluş Savaşı'ndaki lojistik deha, bugün yerli savunma sanayiine (SİHA'lar, TCG Anadolu, Milli Muharip Uçak KAAN) temel olmuştur. Türk ordusu, NATO'nun en büyük ikinci ordusu olarak bölgesel güç projeksiyonunda rakipsizdir.
-
-3. TEKNOLOJİ VE EKONOMİ: Genç nüfusuyla Türkiye, oyun geliştirme, fintek ve üretim sanayiinde bir çekim merkezi haline gelmiştir. "Milli Teknoloji Hamlesi" ile kendi uydusunu yapan ve kendi enerjisini (Karadeniz Gazı, Akkuyu) üreten bir devlet yapısına evrilmektedir.
-
-4. TARİHSEL MİRAS: Göbeklitepe'den Selçuklu'ya, Osmanlı'dan Cumhuriyet'e uzanan süreçte Türkiye, Batı'nın kurumlarıyla Doğu'nun kültürel zenginliğini birleştiren tek sentez devlettir.""",
-
-    "nazi": """[NAZİ DÖNEMİ ANALİZİ: TOTALİTERİZMİN ÇÖKÜŞÜ]
-
-1. İDEOLOJİK KÖRLEŞME: 1933-1945 arası Almanya, aşırı milliyetçilik ve propaganda makinesinin (Goebbels) bir toplumu nasıl felakete sürüklediğinin en net örneğidir.
-
-2. ASKERİ BLITZKRIEG: "Yıldırım Savaşı" doktrini ile Avrupa'yı hızla işgal eden Wehrmacht, lojistik hatlarının Sovyetler Birliği'nin derinliklerinde tükenmesi ve ABD'nin sanayi gücüyle savaşa girmesiyle mağlup olmuştur.
-
-3. İNSANLIK SUÇLARI: Holokost trajedisi, modern hukukun (Nürnberg Mahkemeleri) ve İnsan Hakları Beyannamesi'nin temel taşlarının atılmasına, "soykırım" suçunun tanımlanmasına neden olmuştur.""",
+    "nazi": """[NAZİ DÖNEMİ ANALİZİ]
+1. İDEOLOJİK KÖRLEŞME: Propaganda makinesinin (Goebbels) bir toplumu nasıl felakete sürüklediğinin en net örneğidir.
+2. ASKERİ BLITZKRIEG: "Yıldırım Savaşı" doktrini başta başarılı olsa da lojistik hatların tükenmesiyle mağlup olmuştur.
+3. İNSANLIK SUÇLARI: Holokost trajedisi, modern insan hakları beyannamesinin temel taşlarının atılmasına neden olmuştur.""",
 
     "abd": """[ABD: KÜRESEL HEGEMONYA VE TEKNOLOJİK LİDERLİK]
-
-1. EKONOMİK ÜSTÜNLÜK: II. Dünya Savaşı'ndan bu yana Dolar'ın küresel rezerv para olması, ABD'ye dünya finans sistemini yönetme gücü vermiştir. 
-
+1. EKONOMİK ÜSTÜNLÜK: Dolar'ın küresel rezerv para olması, ABD'ye dünya finans sistemini yönetme gücü vermiştir. 
 2. SİLİKON VADİSİ: Apple, Google ve Microsoft gibi devlerle dijital dünyayı domine eden ABD, yapay zeka yarışında da başı çekmektedir. 
-
-3. ASKERİ GÜC: 11 uçak gemisi filosu ve dünya genelindeki askeri üsleriyle ABD, "Pax Americana" düzenini korumaya çalışmaktadır.""",
+3. ASKERİ GÜC: 11 uçak gemisi filosu ve dünya genelindeki askeri üsleriyle küresel düzeni korumaya çalışmaktadır.""",
 
     "cin": """[ÇİN: EJDERHANIN DÖNÜŞÜ VE 2049 VİZYONU]
-
-1. DÜNYANIN FABRİKASI: 1978 reformlarından sonra hızla kalkınan Çin, bugün dünyanın en büyük üretim gücü ve satın alma gücü paritesine göre en büyük ekonomisidir.
-
-2. KUŞAK VE YOL: Antik İpek Yolu'nu canlandırarak 100'den fazla ülkeye altyapı yatırımı yapan Çin, küresel ticareti Pekin merkezli hale getirmeyi hedeflemektedir.
-
-3. DİJİTAL OTORİTERİZM: Yüz tanıma ve sosyal kredi sistemleriyle Çin, teknolojiyi toplumsal kontrol için en ileri düzeyde kullanan devlettir.""",
+1. DÜNYANIN FABRİKASI: 1978 reformlarından sonra hızla kalkınan Çin, bugün dünyanın en büyük üretim gücüdür.
+2. KUŞAK VE YOL: Antik İpek Yolu'nu canlandırarak küresel ticareti Pekin merkezli hale getirmeyi hedeflemektedir.
+3. DİJİTAL OTORİTERİZM: Yüz tanıma ve sosyal kredi sistemleriyle teknolojiyi toplumsal kontrol için kullanmaktadır.""",
 
     "japonya": """[JAPONYA: DİSİPLİN VE ROBOTİK GELECEK]
-
-1. MEIJI RESTORASYONU: 19. yüzyılda Batı'ya hızla uyum sağlayan tek Asya gücü olan Japonya, bugün yüksek teknoloji ve hassas mühendislikte dünya lideridir.
-
-2. TEKNOLOJİ DEVLERİ: Sony, Toyota ve Panasonic gibi markalarla otomotiv ve elektronik pazarını domine eden ülke, şimdi yaşlanan nüfusa çözüm olarak robotik teknolojilere odaklanmıştır.""",
+1. MEIJI RESTORASYONU: Batı'ya hızla uyum sağlayan Japonya, yüksek teknoloji ve hassas mühendislikte dünya lideridir.
+2. TEKNOLOJİ DEVLERİ: Sony, Toyota ve Panasonic gibi markalarla otomotiv ve elektronik pazarını domine etmiştir.""",
 
     "rusya": "Rusya: Avrasya'nın enerji devi ve nükleer süper güç analizi...",
     "almanya": "Almanya: Avrupa'nın ekonomik lokomotifi ve mühendislik merkezi...",
     "ingiltere": "İngiltere: Finans dünyasının kalbi ve diplomasi devi...",
     "italya": "İtalya: Tasarım, sanat ve Akdeniz jeopolitiği...",
     "misir": "Mısır: Nil'in anahtarı ve Orta Doğu'nun kapısı...",
-    "israil": "İsrail: Teknoloji ekosistemi ve güvenlik doktrini...",
     "guney_kore": "Güney Kore: Han Nehri Mucizesi ve teknoloji ihracatı..."
 }
 
