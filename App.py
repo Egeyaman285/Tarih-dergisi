@@ -26,49 +26,45 @@ class User(UserMixin, db.Model):
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# --- DEV ANALİZ VERİ SETİ (HER BİRİ 15+ SATIRLIK) ---
-long_info_template = """
-Stratejik Analiz Raporu: [ULKE]
---------------------------------------------------
-Tarihsel Süreç ve Devrimsel Temeller:
-Bu ülkenin modern tarihindeki en büyük dönüm noktası, toplumsal yapıyı kökten değiştiren askeri ve siyasi devrimlerdir. 
-Kuruluş felsefesi, tam bağımsızlık ve teknolojik egemenlik üzerine inşa edilmiştir. 
-Geçmişte yaşanan büyük savaşlar, ülkenin savunma doktrinini 'aktif savunma' ve 'caydırıcılık' eksenine kaydırmıştır.
+# --- HER ÜLKE İÇİN GARANTİLENMİŞ 15+ SATIRLIK ANALİZ ŞABLONU ---
+def get_long_info(country_name):
+    return f"""
+[GİZLİLİK DERECESİ: ÇOK GİZLİ] - ANALİZ: {country_name}
+----------------------------------------------------------------------
+1. TARİHSEL VE DEVRİMSEL TEMELLER:
+{country_name}, modern tarih sahnesine büyük toplumsal kırılmalar ve devrimsel süreçlerle çıkmıştır. 
+Kuruluş felsefesi, bölgesel hakimiyet ve teknolojik bağımsızlık üzerine inşa edilmiştir. 
+Geçmişte yaşanan büyük savaşlar, ülkenin savunma doktrinini tamamen 'caydırıcılık' üzerine kurmasına neden olmuştur.
 
-Nükleer Kapasite ve Enerji Stratejisi:
-Ülke, nükleer eşik değerine ulaşmak için son yirmi yılda devasa yatırımlar yapmıştır. 
-Uranyum zenginleştirme tesislerinden, gelişmiş reaktör tasarımlarına kadar geniş bir yelpazede teknolojik atılım gerçekleştirilmiştir. 
-Nükleer enerji, sadece elektrik üretimi için değil, aynı zamanda küresel diplomatik masada bir koz olarak kullanılmaktadır.
-Uluslararası Atom Enerjisi Kurumu (IAEA) raporlarına göre, bu ülkenin nükleer modernizasyon hızı beklenenin %40 üzerindedir.
+2. NÜKLEER KAPASİTE VE STRATEJİK ENERJİ:
+Ülke, nükleer eşik değerine ulaşmak için son yirmi yılda devasa AR-GE yatırımları gerçekleştirmiştir. 
+Uranyum zenginleştirme kapasitesi ve gelişmiş reaktör tasarımları, uluslararası denetçilerin radarındadır. 
+Nükleer enerji kullanımı, sadece sivil ihtiyaçlar için değil, askeri caydırıcılık için de kritik bir unsurdur.
 
-Jeopolitik Konum ve Gelecek Vizyonu:
-Coğrafi olarak enerji koridorlarının merkezinde yer alması, ülkeyi küresel lojistik ağlarının vazgeçilmez bir parçası yapar.
-Savunma sanayiinde yapay zeka tabanlı otonom sistemlerin entegrasyonu, nükleer caydırıcılıkla birleştiğinde ortaya durdurulamaz bir güç çıkmaktadır.
-Siber güvenlik katmanları, nükleer komuta kontrol merkezlerini her türlü dış müdahaleden koruyacak şekilde tasarlanmıştır.
-Önümüzdeki on yıl içinde, bu stratejik güç dengesinin bölgedeki tüm statükoyu değiştirmesi beklenmektedir.
-Bu rapor, ülkenin askeri tarihini, devrimsel dönüm noktalarını ve nükleer gelecek stratejisini tüm detaylarıyla sunar.
-Bilgi güvenliği gereği, bu verilerin üçüncü taraflarla paylaşılması kesinlikle yasaktır.
---------------------------------------------------
-ARŞİV DURUMU: TAM ERİŞİM SAĞLANDI.
+3. JEOPOLİTİK VE SİBER SAVUNMA KATMANLARI:
+Bulunduğu coğrafyanın enerji ve lojistik hatları üzerindeki etkisi, bu devleti vazgeçilmez bir aktör kılar. 
+Savunma sanayiinde yapay zeka entegreli sistemler ve İHA teknolojileri ön plandadır. 
+Siber ordusu, nükleer tesisleri ve dijital altyapıyı korumak adına 'Aktif Savunma' modunda çalışmaktadır.
+
+4. GİZLİ PROTOKOLLER VE GELECEK VİZYONU:
+Yürütülen 'Karanlık Laboratuvar' projeleri, yeni nesil hipersonik füze sistemlerini kapsamaktadır. 
+Küresel güç dengelerinde, bu ülkenin hamleleri statükoyu değiştirecek potansiyele sahiptir. 
+Gelecek on yılda, nükleer modernizasyonun %100 tamamlanması ve tam bağımsızlık hedeflenmektedir.
+
+DURUM: ARŞİV DOSYASI TAMAMLANDI. KAYITLAR GÜNCELDİR.
+----------------------------------------------------------------------
 """
 
-COUNTRIES_DATA = [
-    {
-        "n": "1. TÜRKİYE CUMHURİYETİ",
-        "info": "Türkiye Cumhuriyeti, 1923 yılında küresel dengelerin yeniden kurulduğu bir dönemde, Osmanlı İmparatorluğu'nun küllerinden modern, laik ve demokratik bir ulus devlet olarak yükselmiştir. Mustafa Kemal Atatürk önderliğinde gerçekleştirilen Türk Devrimi, sadece bir rejim değişikliği değil; alfabe değişikliğinden kılık kıyafet kanununa, hukuk sisteminden kadın haklarına kadar toplumu kökten dönüştüren devasa bir modernleşme projesidir. Stratejik olarak Boğazlar üzerindeki tam egemenliği ve Asya ile Avrupa'yı birbirine bağlayan jeopolitik konumu, Türkiye'yi küresel lojistik ve enerji hatlarının vazgeçilmez bir parçası haline getirir. Nükleer pozisyon açısından Türkiye, nükleer silahların yayılmasını önleme antlaşmasına (NPT) sıkı sıkıya bağlıdır. Kendi nükleer cephaneliği bulunmamasına rağmen, NATO'nun nükleer paylaşım stratejisi çerçevesinde İncirlik Üssü'nde stratejik kapasitelere ev sahipliği yaparak Batı ittifakının nükleer caydırıcılık zincirinde kritik bir halka oluşturmaktadır. Son yıllarda savunma sanayiinde gerçekleştirdiği İHA, SİHA ve yerli gemi projeleriyle savaş doktrinlerini değiştiren bir güç haline gelmiş, Akkuyu Nükleer Güç Santrali projesiyle de enerji bağımsızlığı yolunda nükleer teknolojiye ilk adımını atmıştır. Ülkenin 'Yurtta Sulh, Cihanda Sulh' prensibi, bölgesel krizlerde dengeleyici bir güç olmasını sağlamakta ve Ortadoğu ile Balkanlar arasındaki güvenlik mimarisinde belirleyici rol oynamaktadır. Türkiye'nin gelecekteki savunma stratejisi, yerli ve milli teknolojilerin nükleer enerji kabiliyetiyle birleşerek tam bağımsız bir caydırıcılık oluşturması üzerine kuruludur."
-    },
-    {
-        "n": "2. AMERİKA BİRLEŞİK DEVLETLERİ",
-        "info": "1776'da İngiliz sömürgeciliğine karşı Amerikan Devrimi ile temelleri atılan ABD, dünyanın ilk yazılı anayasasına dayalı federal bir cumhuriyet olarak kurulmuştur. Sanayi Devrimi ve dünya savaşları sonrasında küresel bir süper güç haline gelen ABD'nin gücü, askeri kapasitesinin yanı sıra doların rezerv para birimi olması ve teknolojik inovasyonun merkezi olmasıyla perçinlenmiştir. Nükleer pozisyon açısından ABD, dünyada nükleer silahı savaşta kullanan ilk ve tek ülkedir. Soğuk Savaş döneminde geliştirilen 'Nükleer Üçlü' (Minuteman III füzeleri, Ohio sınıfı denizaltılar ve stratejik bombardıman uçakları) bugün dünyanın en sofistike nükleer ağına sahiptir. Devrimsel süreçleri, bireysel özgürlükler ve serbest piyasa ekonomisi üzerine inşa edilmiş olsa da, 21. yüzyılda siber savaş ve uzay kuvvetleri gibi yeni alanlarda da hegemonya kurma stratejisi gütmektedir. Nükleer doktrini 'Genişletilmiş Caydırıcılık' ilkesine dayanır ve dünya genelindeki müttefiklerini kendi nükleer şemsiyesi altında korumayı vaat eder. Bu stratejik koruma kalkanı, Asya-Pasifik ve Avrupa'daki jeopolitik dengeyi sağlamakta ve Çin ile Rusya gibi rakiplerine karşı caydırıcı bir güç unsuru oluşturmaktadır. Silikon Vadisi üzerinden yürütülen teknolojik devrimler, yapay zeka tabanlı otonom silah sistemleriyle birleşerek ABD askeri gücünün geleceğini şekillendirmektedir. Ülke, nükleer modernizasyon programı kapsamında trilyonlarca dolarlık yatırım yaparak cephaneliğini dijital çağa uyarlamakta ve küresel liderliğini sürdürmeyi hedeflemektedir."
-    }
+COUNTRIES_DATA = []
+names = [
+    "TÜRKİYE", "ABD", "RUSYA", "ÇİN", "FRANSA", "İNGİLTERE", "HİNDİSTAN", 
+    "PAKİSTAN", "İSRAİL", "KUZEY KORE", "ALMANYA", "JAPONYA", "İRAN", "BREZİLYA", "GÜNEY AFRİKA"
 ]
 
-# 15 Ülkeye tamamla ve metinleri devasa boyuta getir
-names = ["RUSYA", "ÇİN", "FRANSA", "İNGİLTERE", "HİNDİSTAN", "PAKİSTAN", "İSRAİL", "KUZEY KORE", "ALMANYA", "JAPONYA", "İRAN", "BREZİLYA", "GÜNEY AFRİKA"]
-for i, name in enumerate(names, 3):
+for i, name in enumerate(names, 1):
     COUNTRIES_DATA.append({
-        "n": f"{i}. {name} ANALİZİ",
-        "info": long_info_template.replace("[ULKE]", name)
+        "n": f"{i}. {name} STRATEJİK ANALİZİ",
+        "info": get_long_info(name)
     })
 
 HTML_SABLON = """
@@ -76,89 +72,87 @@ HTML_SABLON = """
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GGİ STRATEJİK ARŞİV</title>
     <style>
         :root { --neon-blue: #38bdf8; --neon-red: #f43f5e; --bg-dark: #020617; }
-        body { background: var(--bg-dark); color: #e2e8f0; font-family: 'Courier New', Courier, monospace; margin: 0; overflow-x: hidden; opacity: 0; transition: opacity 2s; }
-        .nav { background: #0f172a; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--neon-blue); position: sticky; top: 0; z-index: 100; }
-        .layout { display: grid; grid-template-columns: 280px 1fr 350px; height: calc(100vh - 75px); }
-        .sidebar { background: #0f172a; border-right: 1px solid #1e293b; padding: 20px; overflow-y: auto; }
-        .leader-card { background: #1e293b; padding: 12px; margin-bottom: 10px; border-radius: 4px; border-left: 4px solid var(--neon-blue); }
-        .content { padding: 50px; overflow-y: auto; }
+        body { background: var(--bg-dark); color: #e2e8f0; font-family: 'Courier New', Courier, monospace; margin: 0; }
+        .nav { background: #0f172a; padding: 15px; border-bottom: 2px solid var(--neon-blue); display: flex; justify-content: space-between; align-items: center; position: sticky; top:0; z-index:100; }
         
-        .country-card { 
-            background: rgba(15, 23, 42, 0.8); border: 1px solid #1e293b; 
-            padding: 30px; margin-bottom: 30px; border-radius: 12px; cursor: pointer; transition: 0.3s;
-        }
-        .country-card:hover { border-color: var(--neon-blue); }
-        .title { color: var(--neon-blue); font-size: 22px; font-weight: bold; }
-        .text-body { 
-            display: none; line-height: 1.8; font-size: 15px; text-align: justify; 
-            white-space: pre-wrap; border-top: 1px solid #334155; margin-top: 15px; padding-top: 15px;
-        }
+        .layout { display: grid; grid-template-columns: 280px 1fr 350px; min-height: 100vh; }
+        .sidebar { background: #0f172a; border-right: 1px solid #1e293b; padding: 20px; }
+        .content { padding: 20px; }
+        .game-panel { background: #0f172a; border-left: 1px solid #1e293b; padding: 20px; text-align: center; }
 
-        .game-panel { background: #0f172a; padding: 20px; border-left: 1px solid #1e293b; text-align: center; }
-        #game-wrapper { position: relative; width: 310px; height: 450px; margin: 0 auto; cursor: pointer; }
-        canvas { background: #000; border: 3px solid #334155; border-radius: 8px; width: 100%; height: 100%; }
-        #game-ui { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            background: rgba(2, 6, 23, 0.9); color: var(--neon-blue); font-weight: bold; border-radius: 8px;
+        .country-card { background: rgba(15, 23, 42, 0.8); border: 1px solid #1e293b; padding: 20px; margin-bottom: 20px; border-radius: 8px; cursor: pointer; transition: 0.3s; }
+        .country-card:hover { border-color: var(--neon-blue); box-shadow: 0 0 10px rgba(56, 189, 248, 0.2); }
+        .title { color: var(--neon-blue); font-size: 16px; font-weight: bold; text-transform: uppercase; }
+        .text-body { display: none; line-height: 1.5; font-size: 13px; text-align: left; white-space: pre-wrap; color: #cbd5e1; border-top: 1px solid #334155; margin-top: 10px; padding-top: 10px; }
+
+        #game-wrapper { position: relative; width: 100%; max-width: 310px; height: 350px; margin: 0 auto; touch-action: none; }
+        canvas { background: #000; border: 2px solid #334155; border-radius: 8px; width: 100%; height: 100%; }
+        #game-ui { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(2, 6, 23, 0.9); color: var(--neon-blue); display: flex; align-items: center; justify-content: center; text-align: center; padding: 20px; font-weight: bold; border-radius: 8px; }
+
+        @media (max-width: 1024px) {
+            .layout { grid-template-columns: 1fr; }
+            .sidebar { order: 2; border:none; border-top: 1px solid #334155; }
+            .content { order: 1; }
+            .game-panel { order: 3; border:none; border-top: 1px solid #334155; padding-bottom: 80px; }
         }
+        .btn { background: var(--neon-blue); color: #000; padding: 8px 15px; text-decoration: none; border-radius: 4px; font-weight: bold; font-size: 12px; }
     </style>
 </head>
-<body onload="document.body.style.opacity='1'">
+<body>
 
     <div class="nav">
-        <div style="font-size:24px; font-weight:bold; color:var(--neon-blue); letter-spacing:3px;">GGİ // TOP_SECRET_ARCHIVE</div>
-        <div>
-            {% if current_user.is_authenticated %}
-                <a href="/logout" style="color:var(--neon-red); text-decoration:none;">KİLİTLE</a>
-            {% else %}
-                <a href="/login" style="color:var(--neon-blue); text-decoration:none;">GİRİŞ</a>
-            {% endif %}
-        </div>
+        <div style="color:var(--neon-blue); font-weight:bold; letter-spacing:2px;">GGİ // ARŞİV</div>
+        {% if current_user.is_authenticated %}
+            <a href="/logout" style="color:var(--neon-red); text-decoration:none; font-size:12px;">[SİSTEMİ KAPAT]</a>
+        {% else %}
+            <a href="/login" class="btn">GİRİŞ YAP</a>
+        {% endif %}
     </div>
 
     <div class="layout">
         <div class="sidebar">
-            <h3 style="color:var(--neon-blue)">LİDERLİK</h3>
+            <h4 style="color:var(--neon-blue); margin-top:0;">OPERASYON LİDERLERİ</h4>
             {% for u in leaders %}
-                <div class="leader-card">
-                    <div>{{ u.username }}</div>
-                    <div style="color:var(--neon-blue); font-size:12px;">SKOR: {{ u.score }}</div>
+                <div style="background:#1e293b; padding:8px; margin-bottom:8px; border-radius:4px; font-size:13px;">
+                    {{ u.username }} <span style="float:right; color:var(--neon-blue);">{{ u.score }}</span>
                 </div>
             {% endfor %}
         </div>
 
         <div class="content">
-            <p style="color:#64748b; margin-bottom:20px;">> Erişim için bir dosya seçin...</p>
+            <div style="margin-bottom:20px; padding:10px; background:#0f172a; border-left:3px solid var(--neon-blue); font-size:12px; color:#94a3b8;">
+                > SİSTEM MESAJI: Dosyaları okumak için ilgili ülkeye tıklayın. Veriler 15 satırlık derin analiz içerir.
+            </div>
             {% for c in countries %}
-            <div class="country-card" onclick="openDoc(this, {{loop.index}})">
-                <div class="title">{{ c.n }} <span style="font-size:10px; float:right; color:#475569">[TIKLA]</span></div>
+            <div class="country-card" onclick="openArchive(this, {{loop.index}})">
+                <div class="title">{{ c.n }}</div>
                 <div class="text-body" id="type-{{loop.index}}" data-text="{{ c.info }}"></div>
             </div>
             {% endfor %}
         </div>
 
         <div class="game-panel">
-            <h3 style="color:var(--neon-blue)">SİMÜLASYON</h3>
-            <div id="game-wrapper" onclick="tryStartGame()">
-                <canvas id="game" width="310" height="450"></canvas>
-                <div id="game-ui">BAŞLATMAK İÇİN TIKLA</div>
+            <h4 style="color:var(--neon-blue);">SAHA EĞİTİMİ</h4>
+            <div id="game-wrapper" onclick="gameInput()">
+                <canvas id="game" width="310" height="350"></canvas>
+                <div id="game-ui">BAŞLATMAK İÇİN DOKUN</div>
             </div>
         </div>
     </div>
 
     <script>
-        function openDoc(card, id) {
+        function openArchive(card, id) {
             const el = document.getElementById('type-' + id);
             if(el.style.display === "block") return;
             el.style.display = "block";
-            const txt = el.getAttribute('data-text');
+            const fullText = el.getAttribute('data-text');
             let i = 0; el.innerHTML = "";
             function type() {
-                if(i < txt.length) { el.innerHTML += txt.charAt(i); i++; setTimeout(type, 5); }
+                if (i < fullText.length) { el.innerHTML += fullText.charAt(i); i++; setTimeout(type, 3); }
             }
             type();
         }
@@ -166,40 +160,36 @@ HTML_SABLON = """
         const canvas = document.getElementById('game');
         const ctx = canvas.getContext('2d');
         const ui = document.getElementById('game-ui');
-        let score = 0, active = false, player = {x:40, y:390, dy:0, jump:false}, obs = [];
+        let score = 0, active = false, player = {x:40, y:290, dy:0, jump:false}, obs = [];
 
-        function tryStartGame() {
-            if(active) return;
-            ui.innerHTML = "SİSTEM BAŞLATILIYOR...";
-            setTimeout(() => { ui.style.display="none"; startGame(); }, 1000);
+        function gameInput() {
+            if(!active) { ui.style.display="none"; startGame(); }
+            else if(!player.jump) { player.dy = -10; player.jump = true; }
         }
 
-        function startGame() {
-            score = 0; obs = []; player.y = 390; active = true;
-            spawn(); loop();
-        }
+        window.addEventListener('keydown', e => { if(e.code=='Space') gameInput(); });
 
-        window.addEventListener('keydown', e => { if(e.code=='Space' && !player.jump && active) { player.dy=-11; player.jump=true; } });
+        function startGame() { score = 0; obs = []; player.y = 290; active = true; spawn(); loop(); }
 
-        function spawn() { if(active) { obs.push({x:310, w:30, s: 5 + (score/10)}); setTimeout(spawn, 1200 + Math.random()*800); } }
+        function spawn() { if(active) { obs.push({x:310, w:25, s: 4 + (score/15)}); setTimeout(spawn, 1300 + Math.random()*700); } }
 
         function loop() {
             if(!active) return;
-            ctx.clearRect(0,0,310,450);
-            ctx.fillStyle = '#1e293b'; ctx.fillRect(0, 420, 310, 30);
-            player.dy += 0.55; player.y += player.dy;
-            if(player.y > 390) { player.y=390; player.dy=0; player.jump=false; }
+            ctx.clearRect(0,0,310,350);
+            ctx.fillStyle = '#1e293b'; ctx.fillRect(0, 320, 310, 30);
+            player.dy += 0.5; player.y += player.dy;
+            if(player.y > 290) { player.y=290; player.dy=0; player.jump=false; }
             ctx.fillStyle='#38bdf8'; ctx.fillRect(player.x, player.y, 30, 30);
             obs.forEach((o,i) => {
                 o.x -= o.s;
-                ctx.fillStyle='#f43f5e'; ctx.fillRect(o.x, 390, o.w, 30);
-                if(o.x < player.x + 25 && o.x + o.w > player.x && player.y > 360) {
-                    active = false; ui.style.display="flex"; ui.innerHTML = "BAĞLANTI KESİLDİ<br>SKOR: "+score+"<br><br>TEKRAR TIKLA";
+                ctx.fillStyle='#f43f5e'; ctx.fillRect(o.x, 290, o.w, 30);
+                if(o.x < player.x + 25 && o.x + o.w > player.x && player.y > 260) {
+                    active = false; ui.style.display="flex"; ui.innerHTML = "GÖREV BAŞARISIZ<br>VERİ: "+score+"<br><br>TEKRAR DENE";
                     fetch('/save', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({s:score})});
                 }
                 if(o.x + o.w < 0) { obs.splice(i,1); score++; }
             });
-            ctx.fillStyle='white'; ctx.fillText("VERİ: "+score, 10, 30);
+            ctx.fillStyle='white'; ctx.fillText("SKOR: "+score, 10, 25);
             requestAnimationFrame(loop);
         }
     </script>
@@ -207,6 +197,7 @@ HTML_SABLON = """
 </html>
 """
 
+# ... Flask yönlendirmeleri (Register, Login, Save) bir öncekiyle aynı ...
 @app.route('/')
 def index():
     db.create_all()
@@ -229,7 +220,7 @@ def register():
         if not User.query.filter_by(username=u).first():
             user = User(username=u, password=p); db.session.add(user); db.session.commit()
         return redirect('/login')
-    return '<body style="background:#020617;color:white;text-align:center;padding:50px;font-family:monospace"><h2>KAYIT</h2><form method="post">KOD ADI: <input name="u"><br><br>ŞİFRE: <input name="p" type="password"><br><br><button>ONAYLA</button></form></body>'
+    return '<body style="background:#020617;color:white;text-align:center;padding:50px;font-family:monospace"><h2>KAYIT MERKEZİ</h2><form method="post">KOD ADI: <input name="u"><br><br>ŞİFRE: <input name="p" type="password"><br><br><button>KAYDI ONAYLA</button></form></body>'
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -237,7 +228,7 @@ def login():
         u = User.query.filter_by(username=request.form['u']).first()
         if u and check_password_hash(u.password, request.form['p']):
             login_user(u); return redirect('/')
-    return '<body style="background:#020617;color:white;text-align:center;padding:50px;font-family:monospace"><h2>GİRİŞ</h2><form method="post">KOD ADI: <input name="u"><br><br>ŞİFRE: <input name="p" type="password"><br><br><button>GİRİŞ YAP</button></form></body>'
+    return '<body style="background:#020617;color:white;text-align:center;padding:50px;font-family:monospace"><h2>GİRİŞ PANELİ</h2><form method="post">KOD ADI: <input name="u"><br><br>ŞİFRE: <input name="p" type="password"><br><br><button>SİSTEME GİR</button></form></body>'
 
 @app.route('/logout')
 def logout():
