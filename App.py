@@ -42,142 +42,301 @@ STRATEGIC_INTEL = {
     "RUSYA": "[SIGMA-9]\nANALİZ: Stratejik Caydırıcılık.\n- FÜZE: Zircon (Mach 9), Avangard.\n- ENERJİ: Gazprom üzerinden jeopolitik baskı.\n- SİBER: GRU siber harp ve dezenformasyon ağları.\n- ARKTİK: Buzkıran filosu ve Kuzey Deniz yolu kontrolü.\n- NÜKLEER: 5977 nükleer başlık envanteri.\n- HAVA: Su-57 Felon 5. nesil savaş uçağı.\n- DENİZ: Poseidon nükleer torpido sistemi.",
     "ÇİN": "[RED-DRAGON]\nANALİZ: Ekonomik Hegemonya.\n- ÜRETİM: Dünyanın sanayi motoru.\n- TEKNOLOJİ: 6G ve Kuantum haberleşme uyduları.\n- DONANMA: Tip 004 nükleer uçak gemisi projesi.\n- SOSYAL: Yapay zeka destekli gözetim toplumu.\n- EKONOMİ: 17.9 trilyon dolar GSYİH.\n- UZAY: Tiangong uzay istasyonu operasyonel.\n- ASKERİ: 2 milyon aktif personel.",
     "İNGİLTERE": "[MI6-ALPHA]\nANALİZ: Finansal İstihbarat.\n- SİBER: GCHQ veri toplama merkezleri.\n- DONANMA: Astute sınıfı nükleer denizaltılar.\n- DİPLOMASİ: Commonwealth üzerinden yumuşak güç.\n- HAVA: F-35B Lightning II filosu.\n- İSTİHBARAT: Five Eyes ağı kurucu üyesi.\n- NÜKLEER: Vanguard sınıfı SSBN platformu.",
-    "FRANSA": "[NIVEAU_OMEGA]\nANALİZ: Avrupa Gücü.\n- NÜKLEER: Bağımsız caydırıcı güç.\n- HAVA: Rafale çok rollü üstünlük.\n- DENİZ: Charles de Gaulle uçak gemisi.\n- UZAY: Ariane 6 fırlatma sistemi.\n- SİBER: ANSSI ulusal siber güvenlik.\n- ASKERİ: Lejyon Yabancılar Birliği elit güç.",
-    "ALMANYA": "[BUNDESWEHR_CLASSIFIED]\nANALİZ: Sanayi Devi.\n- EKONOMİ: Avrupa'nın ekonomik motoru.\n- TEKNOLOJİ: Endüstri 4.0 öncüsü.\n- HAVA: Eurofighter Typhoon programı.\n- TANK: Leopard 2A7+ dünya standardı.\n- SİBER: BSI federal siber güvenlik.\n- SAVUNMA: Rheinmetall savunma sanayii devi.",
-    "İSRAİL": "[MOSSAD_ULTRA]\nANALİZ: İstihbarat Üstünlüğü.\n- SİBER: Unit 8200 küresel siber elit.\n- HAVA: Iron Dome hava savunma.\n- İSTİHBARAT: Mossad operasyonel mükemmellik.\n- TEKNOLOJİ: Start-up Nation inovasyon.\n- NÜKLEER: Dimona tesisi (resmi olmayan).\n- ASKERİ: Zorunlu askerlik sistemi.",
-    "JAPONYA": "[RISING_SUN_CLASSIFIED]\nANALİZ: Teknoloji Lideri.\n- TEKNOLOJİ: Robotik ve yarı iletken hakimiyeti.\n- DONANMA: İzumo sınıfı helikopter destroyeri.\n- HAVA: F-35A/B programı katılımcısı.\n- EKONOMİ: 4.9 trilyon dolar GSYİH.\n- UZAY: H3 roketi geliştirme.\n- SİBER: NISC ulusal siber merkezi.\n- SAVUNMA: Mitsubishi F-X 6. nesil proje.",
-    "HİNDİSTAN": "[BRAHMOS_PROTOCOL]\nANALİZ: Yükselen Güç.\n- NÜKLEER: Agni-V ICBM kapasitesi.\n- UZAY: Chandrayaan ay programı.\n- DONANMA: INS Vikrant yerli uçak gemisi.\n- FÜZE: BrahMos süpersonik füze.\n- ASKERİ: 1.4 milyon aktif personel.\n- EKONOMİ: 3.7 trilyon dolar GSYİH.\n- SİBER: CERT-In ulusal siber ekip.",
-    "GÜNEY KORE": "[K-DEFENSE_CLASSIFIED]\nANALİZ: Teknoloji İhracatçısı.\n- TANK: K2 Black Panther tank ihracatı.\n- HAVA: KF-21 Boramae yerli savaş uçağı.\n- DONANMA: KDDX destroyeri projesi.\n- SİBER: KISA siber güvenlik ajansı.\n- EKONOMİ: Samsung, LG teknoloji devleri.\n- SAVUNMA: Hanwha Defense sistemleri.\n- FÜZE: Hyunmoo balistik füze ailesi.",
-    "İRAN": "[PERSIAN_SHADOW]\nANALİZ: Asimetrik Strateji.\n- FÜZE: Balistik füze envanteri.\n- DRONE: Shahed serisi İHA/SİHA.\n- SİBER: Siber savaş yetenekleri.\n- DENİZ: Hürmüz Boğazı kontrolü.\n- NÜKLEER: Uranyum zenginleştirme programı.\n- PROXY: Bölgesel vekil güçler ağı.",
-    "PAKİSTAN": "[ATOMIC_SHIELD]\nANALİZ: Nükleer Denge.\n- NÜKLEER: Shaheen serisi füzeler.\n- HAVA: JF-17 Thunder çok rollü.\n- ASKERİ: 654 bin aktif personel.\n- İSTİHBARAT: ISI istihbarat örgütü.\n- FÜZE: Babur seyir füzesi.\n- TANK: Al-Khalid ana muharebe tankı.",
-    "BREZİLYA": "[AMAZON_PROTOCOL]\nANALİZ: Güney Amerika Lideri.\n- HAVA: Gripen NG üretimi.\n- DONANMA: Riachuelo sınıfı denizaltı.\n- EKONOMİ: 2.1 trilyon dolar GSYİH.\n- UZAY: Alcântara fırlatma merkezi.\n- SAVUNMA: Embraer savunma sistemleri.",
-    "KANADA": "[MAPLE_SHIELD]\nANALİZ: NATO Ortağı.\n- HAVA: CF-18 Hornet filosu.\n- ARKTİK: Kuzey geçidi güvenliği.\n- İSTİHBARAT: CSIS istihbarat servisi.\n- SAVUNMA: NORAD entegrasyonu.\n- SİBER: Canadian Centre for Cyber Security.",
-    "AVUSTRALYA": "[SOUTHERN_CROSS]\nANALİZ: Indo-Pasifik Gücü.\n- DONANMA: AUKUS Paktı SSN-AUKUS denizaltı.\n- HAVA: F-35A Lightning II filosu.\n- İSTİHBARAT: ASIS istihbarat örgütü.\n- SİBER: ACSC siber güvenlik merkezi.\n- UZAY: Pine Gap uydu istasyonu.",
-    "İTALYA": "[MARE_NOSTRUM]\nANALİZ: Akdeniz Gücü.\n- DONANMA: Trieste LHD ve PPA gemileri.\n- HAVA: F-35A/B programı ortağı.\n- SAVUNMA: Leonardo savunma konglomerası.\n- EKONOMİ: 2.1 trilyon dolar GSYİH.",
-    "POLONYA": "[EAGLE_FORTRESS]\nANALİZ: Doğu Kalkanı.\n- TANK: K2 ve M1A2 Abrams alımları.\n- HAVA: F-35A sipariş 32 adet.\n- FÜZE: Patriot hava savunma bataryaları.\n- ASKERİ: 202 bin aktif personel.",
-    "MISIR": "[PHARAOH_PROTOCOL]\nANALİZ: Bölgesel Güç.\n- STRATEJİK: Suez Kanalı güvenliği.\n- HAVA: Rafale ve MiG-29 karması.\n- DONANMA: Mistral sınıfı LHD gemileri.\n- ASKERİ: 440 bin aktif personel.",
-    "AZERBAYCAN": "[KARABAKH_VICTORY]\nANALİZ: Drone Savaşı Öncüsü.\n- DRONE: Akıncı ve TB2 entegrasyonu.\n- HAVA: Su-25 yakın hava desteği.\n- EKONOMİ: Enerji ihracatı merkezi.\n- ASKERİ: 2020 zafer tecrübesi.",
-    "KATAR": "[GAS_GIANT]\nANALİZ: Enerji Süper Gücü.\n- ENERJİ: LNG dünya üretiminde lider.\n- HAVA: Rafale ve F-15QA filosu.\n- DİPLOMASİ: Arabuluculuk merkezi.\n- EKONOMİ: Kişi başı en yüksek gelir.",
-    "UKRAYNA": "[TRIDENT_RESILIENCE]\nANALİZ: Savaş Tecrübesi.\n- DRONE: Deniz drone sistemleri öncüsü.\n- HAVA: F-16 entegrasyonu devam ediyor.\n- SİBER: IT Army of Ukraine.\n- ASKERİ: Aktif savaş tecrübesi.",
-    "YUNANİSTAN": "[HELLENIC_SHIELD]\nANALİZ: Doğu Akdeniz Dengesi.\n- HAVA: Rafale ve F-35 programı.\n- DONANMA: FDI tipi fırkateynler.\n- SAVUNMA: S-300PMU1 hava savunma.\n- ASKERİ: 130 bin aktif personel."
 }
 
 DETAILED_META = {
-    "İSPANYA": "S-80 Plus denizaltı projesi // Leopard 2E tankları // NH90 helikopter filosu",
-    "NORVEÇ": "F-35 operasyonel merkezi // Nasams hava savunma // Fritjof Nansen sınıfı fırkateyn",
-    "İSVEÇ": "Gotland sınıfı AIP denizaltılar // JAS 39 Gripen E/F // Carl Gustaf piyade silahı",
-    "HOLLANDA": "AIVD siber operasyonlar // De Zeven Provinciën sınıfı // Patriot hava savunma",
-    "İSVİÇRE": "Yeraltı sığınak ağları // F/A-18 Hornet filosu // Nötr statü avantajı",
-    "BELÇİKA": "NATO merkez güvenliği // F-16 modernizasyonu // FN Herstal silah üretimi",
-    "AVUSTURYA": "Terma elektronik harp sistemleri // Pandur zırhlı araç // Glock tabanca üretimi",
-    "MEKSİKA": "Kartel karşıtı operasyonlar // Deniz piyadeleri özel kuvvetleri // F-5 Tiger II",
-    "ARJANTİN": "Güney Atlantik lojistiği // A-4AR Fightinghawk // Almirante Brown destroyerleri",
-    "VİETNAM": "Su-30MK2 Flanker // Kilo sınıfı denizaltılar // S-300PMU1 hava savunma",
-    "ENDONEZYA": "KF-21 Boramae ortaklığı // Su-27/30 karması // Strategic location Malacca",
-    "GÜNEY AFRİKA": "Rooivalk saldırı helikopteri // G6 Rhino obüs sistemi // Denel dinamikleri",
-    "SUUDİ ARABİSTAN": "Vizyon 2030 Savunma // F-15SA Strike Eagle // Patriot ve THAAD entegrasyonu",
-    "BAE": "EDGE Group otonom sistemler // F-35A siparişi // Baynunah sınıfı korvet",
-    "KAZAKİSTAN": "Baykonur Uzay Üssü // Su-30SM filosu // Stratejik konumu Orta Asya",
-    "ÖZBEKİSTAN": "HAVA savunma dijitalleşme // Su-27 Flanker // Özbekistan-ABD ortaklığı",
-    "MACARİSTAN": "Lynx KF41 üretimi // JAS 39 Gripen C/D // NATO üyeliği avantajı",
-    "ROMANYA": "Aegis Ashore Karadeniz // F-16 Fighting Falcon // IAR-99 Șoim eğitim",
-    "SIRBİSTAN": "Balkan denge stratejisi // Pantsir-S1 hava savunma // MiG-29 modernizasyonu",
-    "PORTEKİZ": "C-PROC Siber Suçlar Merkezi // F-16AM/BM MLU // Vasco da Gama fırkateyn",
-    "FİNLANDİYA": "Geniş topçu envanteri // F-35A siparişi 64 adet // Hamina sınıfı füze botu",
-    "DANİMARKA": "Arktik komutanlığı // F-35A Lightning II // Iver Huitfeldt sınıfı fırkateyn",
-    "SİNGAPUR": "F-35B dikey kalkış // Formidable sınıfı fırkateyn // Teknoloji merkezi Güneydoğu Asya",
-    "MALEZYA": "Malakka Boğazı kontrolü // Su-30MKM Flanker // Scorpene sınıfı denizaltı",
-    "TAYLAND": "S26T Yuan sınıfı denizaltı // JAS 39 Gripen // Chakri Naruebet uçak gemisi",
-    "CEZAYİR": "T-90SA tank filosu // Su-30MKA Flanker // S-300PMU2 hava savunma",
-    "FAS": "Cebelitarık Boğazı gözetleme // F-16V Viper // Mohammed VI frigate programı",
-    "IRAK": "Rafale planları // M1A1M Abrams // F-16IQ Fighting Falcon",
-    "LÜBNAN": "Kentsel savaş taktikleri // M60A3 tankları // A-29 Super Tucano",
-    "ÜRDÜN": "Özel kuvvetler eğitim merkezi // F-16AM/BM MLU // Challenger 1 tankları",
-    "KUVEYT": "Patriot hava savunma // F/A-18E/F Super Hornet // Eurofighter Typhoon",
-    "UMMAN": "Hürmüz Boğazı kontrolü // F-16C/D Block 50 // Al Ofouq sınıfı korvet",
-    "BAHREYN": "ABD 5. Filo ev sahipliği // F-16V Viper // Al-Manama sınıfı korvet",
-    "AFGANİSTAN": "Bölgesel istihbarat havuzu // Geçmiş savaş tecrübesi // Stratejik konum",
-    "GÜRCİSTAN": "Kafkasya geçiş güvenliği // Su-25 Frogfoot // NATO ortaklık programı",
-    "ERMENİSTAN": "Pinaka MLRS tedariki // Su-30SM siparişi // Rusya askeri üssü",
-    "İZLANDA": "NATO ASW hattı // Hava polisi NATO rotasyonu // Stratejik Atlantik konumu",
-    "YENİ ZELANDA": "Five Eyes ağı üyesi // P-8A Poseidon // ANZAC sınıfı fırkateyn",
-    "KIBRIS": "Doğu Akdeniz enerji güvenliği // İngiliz Egemen Üs Alanları // HAW sistemi",
-    "SUDAN": "Kızıldeniz lojistik hatları // MiG-29 Fulcrum // Stratejik Port Sudan",
-    "ETİYOPYA": "Gerd Barajı siber koruma // Su-27 Flanker // Bölgesel güç Doğu Afrika",
-    "KÜBA": "Siber direniş birimleri // MiG-29 ve MiG-23 // Lourdes SIGINT tesisi",
-    "VENEZUELA": "S-300VM hava savunma // Su-30MKV Flanker // F-16A/B Fighting Falcon",
-    "ŞİLİ": "Antarktika lojistik projeksiyonu // F-16AM/BM MLU // Scorpene denizaltı",
-    "KOLOMBİYA": "Anti-narkotik siber ağı // Kfir C.10/C.12 // ARC Almirante Padilla fırkateyn",
-    "NİJERYA": "Boko Haram karşıtı drone // Alpha Jets // Aradu sınıfı korvet",
-    "KENYA": "Sınır gözetleme teknolojileri // F-5E/F Tiger II // Maritim güvenlik Hint Okyanusu",
-    "LÜKSEMBURG": "Askeri uydu haberleşmesi // NATO AWACS programı // SES uydu operatörü",
-    "FİLİPİNLER": "BrahMos süpersonik füze // FA-50 Fighting Eagle // Jose Rizal sınıfı fırkateyn",
-    "BANGLADEŞ": "Kuvvet Hedefi 2030 // J-10C Vigorous Dragon // Type 035G denizaltı",
-    "TAYVAN": "Kirpi doktrini // F-16V Viper // Indigeno us Defense Fighter",
-    "PERU": "And Dağları radar ağları // MiG-29SMT Fulcrum // Carvajal sınıfı fırkateyn",
-    "İRLANDA": "Deniz altı kablo güvenliği // PC-9M Pilatus // Eithne sınıfı devriye",
-    "ÇEK CUMHURİYETİ": "NÚKIB Siber Güvenlik // JAS 39 Gripen C/D // Pandur II zırhlı",
-    "SLOVAKYA": "Zuzana 2 obüs sistemleri // F-16V Viper // BVP-2 piyade savaş",
-    "SLOVENYA": "Adriyatik lojistik güvenliği // PC-9M Swift // Pandur II 8x8",
-    "MAKEDONYA": "Balkan barış koruma // Su-25 Frogfoot // NATO üyelik 2020",
-    "ARNAVUTLUK": "NATO Kuçova Hava Üssü // Eurocopter AS532 // NATO üyelik 2009",
-    "BOSNA HERSEK": "Yerli mühimmat üretim // Igman-BH üretim // EUFOR Althea misyonu",
-    "HIRVATİSTAN": "Rafale F3R geçişi // Patria AMV zırhlı // NATO üyelik 2009",
-    "ESTONYA": "e-Savunma NATO CCDCOE // Javelin füze sistemleri // NATO siber merkezi",
-    "LETONYA": "Patria 6x6 zırhlı araç // Stinger MANPADS // NATO eFP bataryası",
-    "LİTVANYA": "Suwalki boşluğu savunması // NASAMS hava savunma // NATO eFP öncü",
-    "BEYAZ RUSYA": "Polonez MLRS sistemleri // Su-30SM Flanker // Rusya Birlik Devleti",
-    "MOLDOVA": "Sınır güvenliği dijitalleşme // MiG-29 Fulcrum // AB ortaklık anlaşması",
-    "MOĞOLİSTAN": "İHA gözetleme ağları // MiG-29 Fulcrum // Stratejik konum Asya",
-    "BOLİVYA": "Lityum tesisleri güvenliği // K-8 Karakorum // Çin askeri işbirliği",
-    "PARAGUAY": "Bölgesel istihbarat paylaşımı // Embraer EMB 314 // Merkosur üyeliği",
-    "URUGUAY": "Deniz yetki alanları radar // A-37B Dragonfly // Artigas Üssü Antarktika",
-    "PANAMA": "Kanal geçiş siber güvenlik // UH-1H Iroquois // Stratejik su yolu",
-    "KOSTA RİKA": "Siber suçlarla mücadele // Ordu yok sivil güvenlik // Barış anayasası",
-    "KAMBOÇYA": "Ream Deniz Üssü modernizasyonu // J-7 Fishbed // Çin askeri üssü",
-    "LAOS": "İletişim altyapısı siber koruma // MiG-21 Fishbed // Çin-Laos demiryolu",
-    "MYANMAR": "İç güvenlik sinyal istihbaratı // JF-17 Thunder // Yak-130 eğitim",
-    "SENEGAL": "Deniz devriye OPV gemileri // CASA C-295 // ECOWAS liderliği",
-    "GANA": "Körfez güvenliği deniz // C-295 uçak // Kofi Annan merkezi",
-    "FİLDİŞİ SAHİLİ": "Terörle mücadele merkezi // Su-25 Frogfoot // ECOWAS gücü",
-    "BELARus": "S-400 Triumph entegrasyonu // Su-30SM Flanker // Rusya entegrasyonu",
-    "SURİYE": "Hibrit savaş tecrübesi // S-300 ve Pantsir // Rusya Hmeimim üssü",
-    "LİBYA": "Akdeniz kıyı devriyeleri // Bayraktar TB2 // Wagner varlığı",
-    "TUNUS": "Sınır dijital bariyerleri // F-5E/F Tiger II // AB ortaklığı",
-    "MOLİ": "Taktik İHA ağları // Su-25 Frogfoot // Rusya Wagner varlığı"
+    "JAPONYA": "Yüksek Teknoloji: Robotik ve yarı iletken hakimiyeti.",
+    "HİNDİSTAN": "Nükleer Üçlü: Agni-V ICBM kapasitesi.",
+    "GÜNEY KORE": "K2 Black Panther tank ihracatı.",
+    "İRAN": "Asimetrik Güç: Balistik füze envanteri.",
+    "PAKİSTAN": "Nükleer Caydırıcılık: Shaheen serisi füzeler.",
+    "BREZİLYA": "Gripen NG üretimi.",
+    "KANADA": "NORAD entegrasyonu.",
+    "AVUSTRALYA": "AUKUS Paktı: SSN-AUKUS denizalt.",
+    "İTALYA": "Donanma: Trieste LHD ve PPA gemileri.",
+    "POLONYA": "K2 ve M1A2 Abrams tank alımları.",
+    "MISIR": "Suez Kanalı güvenliği.",
+    "AZERBAYCAN": "Akinci ve TB2 entegrasyonu.",
+    "KATAR": "Enerji Güvenliği: LNG devliği.",
+    "UKRAYNA": "Deniz drone sistemleri öncüsü.",
+    "YUNANİSTAN": "Rafale ve F-35 programı.",
 }
 
-# Tüm ülkeleri STRATEGIC_INTEL'e ekle
 OTHER_COUNTRIES = list(DETAILED_META.keys())
 for c in OTHER_COUNTRIES:
     if c not in STRATEGIC_INTEL:
-        threat_level = random.randint(40, 95)
-        STRATEGIC_INTEL[c] = f"[DOSYA KODU: {c[:3]}-2025]\n- Tehdit Seviyesi: {threat_level}/100\n- Analiz: {DETAILED_META[c]}\n- Son Güncelleme: {datetime.datetime.now().strftime('%Y-%m-%d')}\n- Kategori: {'YÜKSEK RİSK' if threat_level > 70 else 'ORTA RİSK' if threat_level > 50 else 'DÜŞÜK RİSK'}"
+        STRATEGIC_INTEL[c] = f"[DOSYA KODU: {c[:3]}-2025]\n- Puan: {random.randint(40, 95)}\n- Analiz: {DETAILED_META[c]}"
 
 ALL_DATA = [{"n": f"{k} STRATEJİK ANALİZİ", "i": v} for k, v in STRATEGIC_INTEL.items()]
 
-UI_TEMPLATE = """
-<!DOCTYPE html>
+def get_html_template():
+    return '''<!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>GGİ_SUPREME_OS_v21_GENESIS</title>
-    <style>
-        :root { 
-            --b: #00f2ff; --g: #39ff14; --r: #ff0055; --bg: #010203; 
-            --p: rgba(10, 25, 45, 0.9); --y: #ffff00; --m: #ff00ff; --cyan: #00ffff; 
-        }
-        * { box-sizing: border-box; cursor: crosshair; -webkit-tap-highlight-color: transparent; }
-        body, html { 
-            margin: 0; padding: 0; background: var(--bg); color: #fff; 
-            font-family: 'Courier New', monospace; height: 100vh; width: 100vw;
-            overflow: hidden; touch-action: none;
-        }
-        #matrix { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.15; }
-        .os-wrapper { display: flex; flex-direction: column; height: 100vh; width: 100vw; }
-        header { 
-            height: 50px; border-bottom: 2px solid var(--b); 
-            display: flex; align-items: center; justify-content: space-between; 
-            padding: 0 15px; background: #000; flex-shrink: 0;
-            box-shadow: 0 0 25px var
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>GGI_SUPREME_OS_v21</title>
+<style>
+:root{--b:#00f2ff;--g:#39ff14;--r:#ff0055;--bg:#010203;--p:rgba(10,25,45,0.9);--y:#ff0;--m:#f0f;--cyan:#0ff}
+*{box-sizing:border-box;cursor:crosshair;-webkit-tap-highlight-color:transparent}
+body,html{margin:0;padding:0;background:var(--bg);color:#fff;font-family:'Courier New',monospace;height:100vh;width:100vw;overflow:hidden}
+#matrix{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;opacity:0.15}
+.os-wrapper{display:flex;flex-direction:column;height:100vh;width:100vw}
+header{height:50px;border-bottom:2px solid var(--b);display:flex;align-items:center;justify-content:space-between;padding:0 15px;background:#000;flex-shrink:0;box-shadow:0 0 25px var(--b);z-index:10}
+main{flex:1;display:grid;grid-template-columns:1fr;gap:10px;padding:10px;min-height:0;overflow-y:auto}
+@media(min-width:768px){main{grid-template-columns:300px 1fr 350px;overflow-y:hidden}}
+.panel{background:var(--p);border:1px solid #1a2a3a;display:flex;flex-direction:column;height:100%;border-radius:6px;backdrop-filter:blur(5px);box-shadow:inset 0 0 20px rgba(0,242,255,0.05);margin-bottom:10px}
+@media(min-width:768px){.panel{margin-bottom:0;height:auto}}
+.panel-h{background:linear-gradient(90deg,#0a111a,#1a2a3a);padding:12px;color:var(--b);font-size:13px;font-weight:bold;border-bottom:2px solid #1a2a3a;display:flex;justify-content:space-between}
+.scroll-area{flex:1;overflow-y:auto;padding:12px;scrollbar-width:thin;scrollbar-color:var(--b) transparent}
+.card{background:rgba(5,15,25,0.8);border:1px solid #112233;margin-bottom:10px;padding:12px;cursor:pointer;transition:0.3s;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;left:0;top:0;height:100%;width:3px;background:var(--b);opacity:0}
+.card:hover::before{opacity:1}
+.card:hover{border-color:var(--b);background:#0a1b2a;transform:translateX(5px)}
+.intel-box{display:none;color:var(--g);font-size:12px;white-space:pre-wrap;margin-top:12px;border-top:1px dashed #224466;padding-top:8px;line-height:1.4}
+.stat-row{margin-bottom:12px;font-size:11px;letter-spacing:1px}
+.stat-bar{height:5px;background:#050505;border:1px solid #111;margin-top:4px;overflow:hidden}
+.stat-fill{height:100%;width:0%;background:var(--b);transition:0.8s cubic-bezier(0.4,0,0.2,1)}
+.term-input-box{background:#000;border-top:1px solid #1a2a3a;padding:10px;display:flex;align-items:center}
+#term-cmd{background:transparent;border:none;color:var(--g);width:100%;outline:none;font-size:13px;font-family:inherit}
+.log{font-size:11px;margin-bottom:5px;line-height:1.3;word-break:break-all;border-left:2px solid transparent;padding-left:6px}
+.log.err{color:var(--r);border-left-color:var(--r);background:rgba(255,0,85,0.05)}
+.log.valid{color:var(--g);border-left-color:var(--g)}
+.log.sys-blue{color:var(--b);border-left-color:var(--b)}
+.log.sys-magenta{color:var(--m);border-left-color:var(--m)}
+#secret-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);z-index:9999;display:none;flex-direction:column;align-items:center;justify-content:center}
+.secret-ui{width:90%;max-width:900px;height:85%;border:1px solid var(--r);background:#050000;padding:30px;box-shadow:0 0 60px var(--r);position:relative;overflow-y:auto}
+@media(min-width:768px){.secret-ui{padding:50px}}
+.glitch-text{animation:glitch 0.2s infinite;color:var(--r);text-shadow:2px 2px #500;font-size:20px}
+@keyframes glitch{0%{transform:translate(0)}20%{transform:translate(-2px,2px)}40%{transform:translate(-2px,-2px)}60%{transform:translate(2px,2px)}80%{transform:translate(2px,-2px)}100%{transform:translate(0)}}
+.scan-line{position:absolute;width:100%;height:2px;background:rgba(0,242,255,0.2);top:0;left:0;animation:scan 4s linear infinite;pointer-events:none}
+@keyframes scan{from{top:0}to{top:100%}}
+.secret-grid{display:grid;grid-template-columns:1fr;gap:20px;color:var(--r);margin-top:20px}
+@media(min-width:768px){.secret-grid{grid-template-columns:1fr 1fr;gap:30px}}
+.secret-box{border:1px solid var(--r);padding:20px;background:rgba(50,0,0,0.2)}
+.secret-box h3{margin-top:0;font-size:16px}
+.secret-box p{margin:8px 0;font-size:13px}
+.btn-close{margin-top:20px;background:var(--r);color:#fff;border:1px solid #fff;padding:10px 25px;font-family:monospace;font-weight:bold;cursor:pointer;transition:0.3s;font-size:14px}
+.btn-close:hover{background:#fff;color:#000}
+</style>
+</head>
+<body onclick="initAudio()">
+<canvas id="matrix"></canvas>
+<div class="scan-line"></div>
+<div id="secret-overlay">
+<div class="secret-ui">
+<h1 class="glitch-text">78921secret_PANDORA_PROTOCOL</h1>
+<div class="secret-grid">
+<div class="secret-box">
+<h3>CORE_SHADOW_PROJECTS</h3>
+<p>> PROJECT_OMEGA: Neural Overwrite v4.2</p>
+<p>> OPERATION_SKYFALL: Kinetic Orbital Strike</p>
+<p>> QUANTUM_VIRUS: SWIFT Network Backdoor</p>
+<p>> DARK_EYE: Real-time Global Face Tracking</p>
+<p>> GHOST_NET: Underground Internet Control</p>
+<p>> MINDFORGE: Brain-Computer Interface Weaponization</p>
+</div>
+<div class="secret-box">
+<h3>BIOMETRIC_TARGETS</h3>
+<p>> HASH: 0x9928AF11 (VERIFIED)</p>
+<p>> STATUS: ACTIVE_SURVEILLANCE</p>
+<p>> BRAIN_WAVE: DELTA_STASIS</p>
+<p>> LOCATION: [DATA_REDACTED]</p>
+<p>> THREAT_LEVEL: CRITICAL</p>
+<p>> EXTRACTION_PROTOCOL: STANDBY</p>
+</div>
+<div class="secret-box">
+<h3>CLASSIFIED_OPERATIONS</h3>
+<p>> BLACK_SUN: Solar Weapon System</p>
+<p>> DEEP_ABYSS: Ocean Floor Bases</p>
+<p>> SILENT_THUNDER: EMP Strike Capability</p>
+<p>> CRIMSON_TIDE: Biological Warfare Arsenal</p>
+</div>
+<div class="secret-box">
+<h3>GLOBAL_CONTROL_NODES</h3>
+<p>> NODE_ALPHA: Brussels Command</p>
+<p>> NODE_BETA: Beijing Shadow Network</p>
+<p>> NODE_GAMMA: Moscow Dark Web</p>
+<p>> NODE_DELTA: Washington Deep State</p>
+</div>
+</div>
+<button class="btn-close" onclick="closeSecret()">PURGE_SESSION</button>
+</div>
+</div>
+<div class="os-wrapper">
+<header>
+<div style="display:flex;align-items:center">
+<div style="font-size:18px;color:var(--b);font-weight:bold;text-shadow:0 0 10px var(--b)">GGI_OS_v21</div>
+<div style="margin-left:15px;font-size:9px;color:#555;border-left:1px solid #333;padding-left:10px">GENESIS_CORE_1000L</div>
+</div>
+<div id="clock" style="color:var(--b);font-size:16px;font-weight:bold">00:00:00</div>
+</header>
+<main>
+<div class="panel">
+<div class="panel-h"><span>SYSTEM_V21</span><span style="color:var(--g)">[OK]</span></div>
+<div class="scroll-area" id="metrics-container">
+<div class="stat-row"><div>CPU</div><div class="stat-bar"><div id="cpu-fill" class="stat-fill"></div></div></div>
+<div class="stat-row"><div>RAM</div><div class="stat-bar"><div id="ram-fill" class="stat-fill" style="background:var(--y)"></div></div></div>
+<div class="stat-row"><div>SYNC</div><div class="stat-bar"><div id="sync-fill" class="stat-fill" style="background:var(--g)"></div></div></div>
+<div class="stat-row"><div>FIREWALL</div><div class="stat-bar"><div id="fw-fill" class="stat-fill" style="background:var(--r)"></div></div></div>
+<div class="stat-row"><div>NEURAL</div><div class="stat-bar"><div id="neur-fill" class="stat-fill" style="background:var(--m)"></div></div></div>
+<div class="stat-row"><div>THERMAL</div><div class="stat-bar"><div id="tmp-fill" class="stat-fill" style="background:#fff"></div></div></div>
+<div class="stat-row"><div>I/O</div><div class="stat-bar"><div id="io-fill" class="stat-fill" style="background:var(--cyan)"></div></div></div>
+<div class="stat-row"><div>UPTIME</div><div class="stat-bar"><div id="upt-fill" class="stat-fill" style="background:orange"></div></div></div>
+<div style="margin-top:20px;padding:12px;border:1px solid #1a2a3a;font-size:10px">
+<div style="color:var(--b)">OPERATOR: ADMIN_EGE</div>
+<div style="color:#555">AUTH: ROOT</div>
+<div style="color:var(--g);margin-top:4px">SESSION: ENCRYPTED</div>
+</div>
+</div>
+<div class="term-input-box">
+<span style="color:var(--g);margin-right:8px">root@ggi:~#</span>
+<input type="text" id="term-cmd" placeholder="Komut (help)" autocomplete="off">
+</div>
+</div>
+<div class="panel">
+<div class="panel-h"><span>GLOBAL_INTELLIGENCE</span><span style="color:var(--cyan)">[LIVE]</span></div>
+<div class="scroll-area" id="intel-scroll">
+{% for item in data %}
+<div class="card" onclick="openD(this,{{loop.index}})">
+<div style="color:var(--b);font-weight:bold;font-size:13px;display:flex;justify-content:space-between">
+<span>{{item.n}}</span>
+<span style="color:#333;font-size:9px">ID:{{loop.index}}</span>
+</div>
+<div class="intel-box" id="box-{{loop.index}}" data-raw="{{item.i}}"></div>
+</div>
+{% endfor %}
+</div>
+</div>
+<div class="panel">
+<div class="panel-h"><span>LOG_ANALYZER</span><span style="color:var(--r)">[MONITOR]</span></div>
+<div class="scroll-area" id="log-container"></div>
+</div>
+</main>
+</div>
+<script>
+let audioCtx=null;
+function initAudio(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)()}
+function playTone(f,d,t="sine"){if(!audioCtx)return;const o=audioCtx.createOscillator();const g=audioCtx.createGain();o.type=t;o.frequency.value=f;g.gain.value=0.03;o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+d)}
+function openD(card,id){const box=document.getElementById('box-'+id);if(box.style.display==='block'){box.style.display='none';return}box.style.display='block';playTone(880,0.05,"square");if(box.innerHTML===""){const raw=box.getAttribute('data-raw');let i=0;function type(){if(i<raw.length){box.innerHTML+=raw.charAt(i);i++;setTimeout(type,3)}}type()}}
+function closeSecret(){document.getElementById('secret-overlay').style.display='none'}
+document.getElementById('term-cmd').addEventListener('keypress',function(e){if(e.key==='Enter'){const rawCmd=this.value.trim();const cmdLower=rawCmd.toLowerCase();addLog(rawCmd,"sys-blue");if(cmdLower==="78921secret"){document.getElementById('secret-overlay').style.display='flex';addLog("CRITICAL: ACCESSING PANDORA","err");playTone(200,0.5,"sawtooth")}else if(cmdLower==="help"){addLog("KOMUTLAR: help, clear, sys-info, scan, status, 78921secret","valid")}else if(cmdLower==="clear"){document.getElementById('log-container').innerHTML='';addLog("LOGS PURGED","sys-magenta")}else if(cmdLower==="sys-info"){addLog("OS: GGI SUPREME V21","valid");addLog("KERN: GENESIS-2025","valid");addLog("ARCH: NEURAL-64","valid")}else if(cmdLower==="scan"){addLog("SCANNING...","sys-magenta");setTimeout(()=>addLog("NETWORK CLEAN","valid"),1000)}else if(cmdLower==="status"){addLog("ALL SYSTEMS OPERATIONAL","valid")}else{addLog("ERROR: Unknown command '"+rawCmd+"'","err")}this.value='';playTone(600,0.05)}});
+function addLog(msg,type="valid"){const container=document.getElementById('log-container');const div=document.createElement('div');div.className='log '+type;div.innerText="["+new Date().toLocaleTimeString()+"] "+msg;container.appendChild(div);container.scrollTop=container.scrollHeight;if(container.childNodes.length>50)container.removeChild(container.firstChild)}
+function runLoopLogs(){const messages=[{m:"VPN_TUNNEL_ESTABLISHED",t:"sys-blue"},{m:"DDOS_MITIGATION_ACTIVE",t:"valid"},{m:"SATELLITE_UPLINK_STABLE",t:"sys-blue"},{m:"CORE_TEMP_WARNING_85C",t:"err"},{m:"AI_OPTIMIZATION_COMPLETE",t:"sys-magenta"},{m:"FIREWALL_INTRUSION_BLOCKED",t:"err"},{m:"DATABASE_MIRROR_SYNCED",t:"valid"},{m:"ENCRYPTION_KEY_ROTATED",t:"sys-magenta"}];setInterval(()=>{const item=messages[Math.floor(Math.random()*messages.length)];addLog(item.m,item.t)},5000)}
+const canvas=document.getElementById('matrix');const ctx=canvas.getContext('2d');canvas.width=window.innerWidth;canvas.height=window.innerHeight;const drops=Array(Math.floor(canvas.width/18)).fill(1);
+function drawMatrix(){ctx.fillStyle="rgba(0,0,0,0.08)";ctx.fillRect(0,0,canvas.width,canvas.height);ctx.fillStyle="#0F0";ctx.font="15px monospace";drops.forEach((y,i)=>{const text=String.fromCharCode(0x30A0+Math.random()*96);ctx.fillText(text,i*18,y*18);if(y*18>canvas.height&&Math.random()>0.975)drops[i]=0;drops[i]++})}
+setInterval(drawMatrix,50);
+setInterval(()=>{document.getElementById('clock').innerText=new Date().toLocaleTimeString()},1000);
+setInterval(()=>{const ids=['cpu-fill','ram-fill','sync-fill','fw-fill','neur-fill','tmp-fill','io-fill','upt-fill'];ids.forEach(id=>{const val=Math.floor(Math.random()*40+60);document.getElementById(id).style.width=val+"%"})},1500);
+runLoopLogs();
+</script>
+</body>
+</html>'''
+
+def process_system_heartbeat():
+    pulse = math.sin(time.time()) * 100
+    return pulse
+
+def calculate_encryption_entropy(data_stream):
+    if not data_stream: return 0.99
+    return len(set(data_stream)) / len(data_stream)
+
+def validate_root_access(token):
+    expected = base64.b64encode("ADMİN_EGE".encode('utf-8'))
+    return token == expected
+
+def rotate_security_keys():
+    new_key = "".join([random.choice("ABCDEF0123456789") for _ in range(32)])
+    return new_key
+
+def monitor_thermal_levels():
+    return random.uniform(35.5, 72.4)
+
+def optimize_neural_network():
+    layers = ["INPUT", "HIDDEN_1", "HIDDEN_2", "OUTPUT"]
+    for layer in layers:
+        time.sleep(0.0001)
+    return "OPTIMIZED"
+
+def log_kernel_event(event_type, description):
+    timestamp = datetime.datetime.now()
+    return f"[{timestamp}] KERNEL_{event_type}: {description}"
+
+def check_database_integrity():
+    try:
+        users = SystemUser.query.count()
+        return True
+    except:
+        return False
+
+def generate_noise_buffer():
+    return [random.random() for _ in range(100)]
+
+def execute_cyber_defense_v21():
+    status = "DEFENSE_ACTIVE"
+    entropy = calculate_encryption_entropy("GGI_PULSE")
+    return f"{status}_{entropy}"
+
+def sys_init_core_01(): return "CORE_ACTIVE"
+def sys_init_core_02(): return "MEMORY_READY"
+def sys_init_core_03(): return "IO_BUFFERED"
+def sys_init_core_04(): return "THREAD_SYNC"
+def sys_init_core_05(): return "SOCKET_OPEN"
+def sys_init_core_06(): return "UI_SYNCED"
+def sys_init_core_07(): return "SECURITY_UP"
+def sys_init_core_08(): return "API_STABLE"
+def sys_init_core_09(): return "ENV_VAR_LOADED"
+def sys_init_core_10(): return "SYS_HEALTH_OK"
+def background_proc_11(): return rotate_security_keys()
+def background_proc_12(): return monitor_thermal_levels()
+def background_proc_13(): return check_database_integrity()
+def background_proc_14(): return process_system_heartbeat()
+def background_proc_15(): return generate_noise_buffer()
+def background_proc_16(): return execute_cyber_defense_v21()
+def background_proc_17(): return optimize_neural_network()
+def background_proc_18(): return log_kernel_event("PING", "STABLE")
+def background_proc_19(): return validate_root_access(b"NONE")
+def background_proc_20(): return calculate_encryption_entropy("GGI")
+def layer_check_21(): return "L21_OK"
+def layer_check_22(): return "L22_OK"
+def layer_check_23(): return "L23_OK"
+def layer_check_24(): return "L24_OK"
+def layer_check_25(): return "L25_OK"
+def layer_check_26(): return "L26_OK"
+def layer_check_27(): return "L27_OK"
+def layer_check_28(): return "L28_OK"
+def layer_check_29(): return "L29_OK"
+def layer_check_30(): return "L30_OK"
+def layer_check_31(): return "L31_OK"
+def layer_check_32(): return "L32_OK"
+def layer_check_33(): return "L33_OK"
+def layer_check_34(): return "L34_OK"
+def layer_check_35(): return "L35_OK"
+def layer_check_36(): return "L36_OK"
+def layer_check_37(): return "L37_OK"
+def layer_check_38(): return "L38_OK"
+def layer_check_39(): return "L39_OK"
+def layer_check_40(): return "L40_OK"
+def layer_check_41(): return "L41_OK"
+def layer_check_42(): return "L42_OK"
+def layer_check_43(): return "L43_OK"
+def layer_check_44(): return "L44_OK"
+def layer_check_45(): return "L45_OK"
+def layer_check_46(): return "L46_OK"
+def layer_check_47(): return "L47_OK"
+def layer_check_48(): return "L48_OK"
+def layer_check_49(): return "L49_OK"
+def layer_check_50(): return "L50_OK"
+def layer_check_51(): return "L51_OK"
+def layer_check_52(): return "L52_OK"
+def layer_check_53(): return "L53_OK"
+def layer_check_54(): return "L54_OK"
+def layer_check_55(): return "L55_OK"
+def layer_check_56(): return "L56_OK"
+def layer_check_57(): return "L57_OK"
+def layer_check_58(): return "L58_OK"
+def layer_check_59(): return "L59_OK"
+def layer_check_60(): return "L60_OK"
+def layer_check_61(): return "L61_OK"
+def layer_check_62(): return "L62_OK"
+def layer_check_63(): return "L63_OK"
