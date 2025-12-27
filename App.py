@@ -25,7 +25,7 @@ UI_TEMPLATE = """
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>GGI_OS_v4_FINAL_SOUND</title>
+    <title>GGI_OS_v4.5_FINAL</title>
     <style>
         :root{--b:#00f2ff;--g:#39ff14;--r:#f05;--bg:#010203;--p:rgba(10,25,45,0.98)}
         *{box-sizing:border-box;margin:0;padding:0;font-family:'Courier New',monospace}
@@ -69,8 +69,8 @@ UI_TEMPLATE = """
 
     <div id="login-screen">
         <h2 style="color:var(--r);margin-bottom:20px">GGI SUPREME SECURITY ACCESS</h2>
-        <input type="password" id="pass-input" placeholder="ŞİFREYİ GİRİN" maxlength="5" autofocus>
-        <p id="login-msg" style="margin-top:15px;color:gray">GİRİŞ İÇİN 78921 GEREKLİ</p>
+        <input type="password" id="pass-input" placeholder="78921" maxlength="5" autofocus>
+        <p id="login-msg" style="margin-top:15px;color:gray">YETKİLENDİRME BEKLENİYOR...</p>
     </div>
 
     <header>
@@ -96,7 +96,7 @@ UI_TEMPLATE = """
             <div id="term-out" class="scroll">Sistem Aktif. Komut Bekleniyor...</div>
             <div class="cmd-line">
                 <span style="color:var(--g)">root@ggi:~$ </span>
-                <input type="text" id="term-cmd" autocomplete="off" placeholder="help yazın...">
+                <input type="text" id="term-cmd" autocomplete="off" placeholder="help...">
             </div>
         </div>
 
@@ -134,9 +134,8 @@ UI_TEMPLATE = """
             }
         });
 
-        // "Diriridiri" Ses Fonksiyonu (Harf Başına)
         function playHarfSesi() {
-            let s = sndType.cloneNode(); // Her harf için yeni bir kopya oluşturur
+            let s = sndType.cloneNode();
             s.volume = 0.15;
             s.play();
         }
@@ -148,7 +147,6 @@ UI_TEMPLATE = """
             function type() {
                 if (i < text.length) {
                     element.innerHTML += text.charAt(i);
-                    // Harf boşluk veya yeni satır değilse sesi patlat
                     if(text.charAt(i) !== " " && text.charAt(i) !== "\\n") {
                         playHarfSesi();
                     }
@@ -186,7 +184,7 @@ UI_TEMPLATE = """
                     sndAlarm.play();
                     document.getElementById('scr-secret').style.display = 'flex';
                 } else if (cmd === 'help') {
-                    out.innerHTML += "<div>- help, status, clear, 78921secretfiles, earthquake_forecast, threat_matrix, system_override</div>";
+                    out.innerHTML += "<div>- help, status, clear, 78921secretfiles, threat_matrix, system_override</div>";
                 } else if (cmd === 'clear') { out.innerHTML = ""; }
                 else { out.innerHTML += "<div style='color:var(--r)'>GEÇERSİZ YETKİ KODU.</div>"; }
                 this.value = "";
@@ -201,21 +199,25 @@ UI_TEMPLATE = """
 
         function startLiveFeed() {
             const feed = document.getElementById('feed-out');
-            const logs = [
-                "[SİBER] Türkiye Kuantum Kalkanı Aktif.",
-                "[UYDU] KA-22 Karadeniz üzerinde sabitlendi.",
-                "[LOG] DNS trafiğinde anomal saptandı.",
-                "[SYS] Şifreleme anahtarları güncellendi."
-            ];
+            const logs = ["[SİBER] Kalkan Aktif.", "[UYDU] Takip Başladı.", "[LOG] Şifreler Güncellendi."];
             setInterval(() => {
                 const log = logs[Math.floor(Math.random()*logs.length)];
-                feed.innerHTML += `<div style="margin-bottom:5px; border-bottom:1px solid #112233; padding-bottom:3px">> ${log}</div>`;
+                feed.innerHTML += `<div>> ${log}</div>`;
                 feed.scrollTop = feed.scrollHeight;
-                if(feed.children.length > 20) feed.removeChild(feed.firstChild);
-            }, 4000);
+            }, 5000);
         }
 
         setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }, 1000);
     </script>
 </body>
 </html>
+"""
+
+@app.route('/')
+def index():
+    return render_template_string(UI_TEMPLATE, data=MAIN_COUNTRIES, secret_db=SECRET_DB)
+
+if __name__ == '__main__':
+    # Render ve diğer platformlar için en sağlıklı port ayarı
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host='0.0.0.0', port=port)
