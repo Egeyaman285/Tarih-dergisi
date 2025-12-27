@@ -37,46 +37,161 @@ class SecretFile(db.Model):
     clearance = db.Column(db.String(20))
 
 STRATEGIC_INTEL = {
-    "TÜRKİYE": "[KOZMİK SEVİYE]\nANALİZ: Bölgesel Güç Projeksiyonu.\n- İHA/SİHA: Dünya lideri otonom sistemler.\n- HAVA SAVUNMA: Çelik Kubbe (SİPER-2, HİSAR-U).\n- DENİZ: TCG Anadolu ve TF-2000 projesi.\n- SİBER: Milli Muharip İşlemci ve Kuantum Kripto.\n- UZAY: Yerli roket motoru ve ay görevi faz-1.\n- EKONOMİ: Savunma ihracatı 6 milyar dolar.\n- DİPLOMASİ: 5 kıtada aktif askeri varlık.\n- YERLİ: KAAN 5. nesil savaş uçağı.",
-    "ABD": "[TOP SECRET]\nANALİZ: Küresel Dominans.\n- NÜKLEER: 11 Uçak gemisi, Trident-II füzeleri.\n- SİBER: NSA küresel dinleme ve sıfır-gün açıkları.\n- EKONOMİ: Rezerv para birimi manipülasyonu.\n- TEKNOLOJİ: Starlink v3 ve Mars kolonizasyon hazırlığı.\n- UZAY: Space Force operasyonel üstünlük.\n- ASKERİ: 750+ denizaşırı askeri üs.\n- BÜTÇE: 877 milyar dolar savunma harcaması.",
-    "RUSYA": "[SIGMA-9]\nANALİZ: Stratejik Caydırıcılık.\n- FÜZE: Zircon (Mach 9), Avangard.\n- ENERJİ: Gazprom üzerinden jeopolitik baskı.\n- SİBER: GRU siber harp ve dezenformasyon ağları.\n- ARKTİK: Buzkıran filosu ve Kuzey Deniz yolu kontrolü.",
-    "ÇİN": "[RED-DRAGON]\nANALİZ: Ekonomik Hegemonya.\n- ÜRETİM: Dünyanın sanayi motoru.\n- TEKNOLOJİ: 6G ve Kuantum haberleşme uyduları.\n- DONANMA: Tip 004 nükleer uçak gemisi projesi.",
-    "İNGİLTERE": "[MI6-ALPHA]\nANALİZ: Finansal İstihbarat.\n- SİBER: GCHQ veri toplama merkezleri.\n- DONANMA: Astute sınıfı nükleer denizaltılar.",
-    "FRANSA": "[OMEGA-FR]\nANALİZ: Avrupa Askeri Gücü.\n- NÜKLEER: Bağımsız caydırıcı güç.\n- HAVA: Rafale F4 çok rollü üstünlük.",
-    "ALMANYA": "[BUNDESWEHR-X]\nANALİZ: Avrupa Sanayi Devi.\n- EKONOMİ: 4.3 trilyon dolar GSYİH.\n- TANK: Leopard 2A7+ dünya standardı.",
-    "İSRAİL": "[MOSSAD-ULTRA]\nANALİZ: İstihbarat Üstünlüğü.\n- SİBER: Unit 8200 küresel siber elit.\n- HAVA: Iron Dome savunma.",
-    "JAPONYA": "[RISING-SUN]\nANALİZ: Teknoloji Gücü.\n- TEKNOLOJİ: Robotik liderliği.\n- DONANMA: İzumo sınıfı F-35B platformu.",
-    "HİNDİSTAN": "[BRAHMOS-NET]\nANALİZ: Yükselen Güç.\n- NÜKLEER: Agni-V ICBM.\n- FÜZE: BrahMos süpersonik.",
-    "GÜNEY KORE": "[K-DEFENSE]\nANALİZ: Teknoloji İhracatçısı.\n- TANK: K2 Black Panther.\n- HAVA: KF-21 Boramae yerli savaş uçağı.",
-    "İTALYA": "[MARE-NOSTRUM]\nANALİZ: Akdeniz Gücü.\n- DONANMA: Trieste LHD.\n- HAVA: F-35A/B programı.",
-    "İSPANYA": "[IBERIA-GUARD]\nANALİZ: Akdeniz Köprüsü.\n- DONANMA: S-80 Plus denizaltı.\n- HAVA: Eurofighter Typhoon.",
-    "POLONYA": "[EAGLE-FORTRESS]\nANALİZ: Doğu Kalkanı.\n- TANK: K2 Black Panther 1000+ sipariş.\n- HAVA: F-35A Lightning II.",
-    "AVUSTRALYA": "[SOUTHERN-CROSS]\nANALİZ: Indo-Pasifik Gücü.\n- DONANMA: AUKUS nükleer denizaltı.\n- HAVA: F-35A Lightning II.",
-    "KANADA": "[MAPLE-SHIELD]\nANALİZ: Kuzey Amerika Savunması.\n- HAVA: CF-18 Hornet.\n- ARKTİK: Kuzey geçidi güvenliği.",
-    "BREZİLYA": "[AMAZON-FORCE]\nANALİZ: Güney Amerika Lideri.\n- HAVA: Gripen NG üretimi.\n- EKONOMİ: Bölgesel güç.",
-    "PAKİSTAN": "[ATOMIC-SHIELD]\nANALİZ: Nükleer Denge.\n- NÜKLEER: Shaheen füze serisi.\n- HAVA: JF-17 Thunder.",
-    "İRAN": "[PERSIAN-SHADOW]\nANALİZ: Asimetrik Strateji.\n- FÜZE: Balistik füze envanteri.\n- DRONE: Shahed İHA serisi.",
-    "MISIR": "[PHARAOH-NET]\nANALİZ: Bölgesel Otorite.\n- STRATEJİK: Suez Kanalı kontrolü.\n- HAVA: Rafale savaş uçakları."
+    "TÜRKİYE": "[KOZMİK SEVİYE]\\nANALİZ: Bölgesel Güç Projeksiyonu.\\n- İHA/SİHA: Dünya lideri otonom sistemler.\\n- HAVA SAVUNMA: Çelik Kubbe (SİPER-2, HİSAR-U).\\n- DENİZ: TCG Anadolu ve TF-2000 projesi.\\n- SİBER: Milli Muharip İşlemci ve Kuantum Kripto.\\n- UZAY: Yerli roket motoru ve ay görevi faz-1.\\n- EKONOMİ: Savunma ihracatı 6 milyar dolar.\\n- DİPLOMASİ: 5 kıtada aktif askeri varlık.\\n- YERLİ: KAAN 5. nesil savaş uçağı.\\n- ROKET: Çakır füze sistemi.\\n- DENİZALTI: Reis sınıfı projesi.",
+    
+    "ABD": "[TOP SECRET]\\nANALİZ: Küresel Dominans.\\n- NÜKLEER: 11 Uçak gemisi, Trident-II füzeleri.\\n- SİBER: NSA küresel dinleme ve sıfır-gün açıkları.\\n- EKONOMİ: Rezerv para birimi manipülasyonu.\\n- TEKNOLOJİ: Starlink v3 ve Mars kolonizasyon hazırlığı.\\n- UZAY: Space Force operasyonel üstünlük.\\n- ASKERİ: 750+ denizaşırı askeri üs.\\n- BÜTÇE: 877 milyar dolar savunma harcaması.\\n- ZEKA: CIA, NSA, DIA entegre operasyon.\\n- DRONE: MQ-9 Reaper küresel varlık.\\n- F-35: 450+ adet operasyonel.",
+    
+    "RUSYA": "[SIGMA-9]\\nANALİZ: Stratejik Caydırıcılık.\\n- FÜZE: Zircon (Mach 9), Avangard hipersonik.\\n- ENERJİ: Gazprom üzerinden jeopolitik baskı.\\n- SİBER: GRU siber harp ve dezenformasyon ağları.\\n- ARKTİK: Buzkıran filosu ve Kuzey Deniz yolu kontrolü.\\n- NÜKLEER: 5977 nükleer başlık envanteri.\\n- HAVA: Su-57 Felon 5. nesil savaş uçağı.\\n- DENİZ: Poseidon nükleer torpido sistemi.\\n- WAGNER: Özel kuvvetler proxy operasyonları.\\n- S-400: 120+ batarya ihracat.\\n- YASEN: M sınıfı nükleer denizaltı.",
+    
+    "ÇİN": "[RED-DRAGON]\\nANALİZ: Ekonomik Hegemonya.\\n- ÜRETİM: Dünyanın sanayi motoru.\\n- TEKNOLOJİ: 6G ve Kuantum haberleşme uyduları.\\n- DONANMA: Tip 004 nükleer uçak gemisi projesi.\\n- SOSYAL: Yapay zeka destekli gözetim toplumu.\\n- EKONOMİ: 17.9 trilyon dolar GSYİH.\\n- UZAY: Tiangong uzay istasyonu operasyonel.\\n- ASKERİ: 2 milyon aktif personel.\\n- KUŞAK YOL: 150+ ülke altyapı hakimiyeti.\\n- J-20: 5. nesil 200+ adet.\\n- DF-41: ICBM 15000 km menzil.",
+    
+    "İNGİLTERE": "[MI6-ALPHA]\\nANALİZ: Finansal İstihbarat.\\n- SİBER: GCHQ veri toplama merkezleri.\\n- DONANMA: Astute sınıfı nükleer denizaltılar.\\n- DİPLOMASİ: Commonwealth üzerinden yumuşak güç.\\n- HAVA: F-35B Lightning II filosu.\\n- İSTİHBARAT: Five Eyes ağı kurucu üyesi.\\n- NÜKLEER: Vanguard sınıfı SSBN platformu.\\n- ŞEHİR: Londra küresel finans merkezi.\\n- SAS: Özel kuvvetler elit birliği.\\n- TYPE 26: Yeni nesil fırkateyn.\\n- TEMPEST: 6. nesil savaş uçağı projesi.",
+    
+    "FRANSA": "[OMEGA-FR]\\nANALİZ: Avrupa Askeri Gücü.\\n- NÜKLEER: Bağımsız caydırıcı güç, 290 başlık.\\n- HAVA: Rafale F4 çok rollü üstünlük.\\n- DENİZ: Charles de Gaulle uçak gemisi.\\n- UZAY: Ariane 6 fırlatma sistemi.\\n- SİBER: ANSSI ulusal siber güvenlik.\\n- LEJYON: Yabancılar Birliği elit güç.\\n- SAHEL: Afrika operasyonel varlık.\\n- SCALP: Seyir füzesi yetenekleri.\\n- FREMM: Fırkateyn ihracatı.\\n- BARRACUDA: Nükleer denizaltı sınıfı.",
+    
+    "ALMANYA": "[BUNDESWEHR-X]\\nANALİZ: Avrupa Sanayi Devi.\\n- EKONOMİ: 4.3 trilyon dolar GSYİH.\\n- TEKNOLOJİ: Endüstri 4.0 öncüsü.\\n- HAVA: Eurofighter Typhoon ve F-35A.\\n- TANK: Leopard 2A7+ dünya standardı.\\n- SİBER: BSI federal siber güvenlik.\\n- SAVUNMA: Rheinmetall, Krauss-Maffei.\\n- NATO: Avrupa NATO omurgası.\\n- PUMA: Yeni nesil piyade savaş aracı.\\n- U-212: AIP denizaltı teknolojisi.\\n- FCAS: 6. nesil savaş uçağı ortaklığı.",
+    
+    "İSRAİL": "[MOSSAD-ULTRA]\\nANALİZ: İstihbarat Üstünlüğü.\\n- SİBER: Unit 8200 küresel siber elit.\\n- HAVA: Iron Dome, David's Sling savunma.\\n- İSTİHBARAT: Mossad operasyonel mükemmellik.\\n- TEKNOLOJİ: Start-up Nation inovasyon.\\n- NÜKLEER: Dimona tesisi (80-400 başlık).\\n- DRONE: Hermes, Heron İHA sistemleri.\\n- F-35I: Adir özel modifikasyon.\\n- ARROW: Balistik füze savunması.\\n- MERKAVA: Mk.4 ana muharebe tankı.\\n- DOLPHIN: Nükleer denizaltı filosu.",
+    
+    "JAPONYA": "[RISING-SUN]\\nANALİZ: Teknoloji ve Deniz Gücü.\\n- TEKNOLOJİ: Robotik, yarı iletken liderliği.\\n- DONANMA: İzumo sınıfı F-35B platformu.\\n- HAVA: F-35A/B ve F-15J modernizasyonu.\\n- EKONOMİ: 4.9 trilyon dolar GSYİH.\\n- UZAY: H3 roketi ve lunar explorer.\\n- SİBER: NISC ulusal siber merkezi.\\n- YENİ: F-X 6. nesil savaş uçağı projesi.\\n- AEGIS: 8 Aegis destroyeri filosu.\\n- SORYU: AIP denizaltı teknolojisi.\\n- MITSUBISHI: Savunma sanayii devi.",
+    
+    "HİNDİSTAN": "[BRAHMOS-NET]\\nANALİZ: Yükselen Süper Güç.\\n- NÜKLEER: Agni-V ICBM 5000+ km menzil.\\n- UZAY: Chandrayaan-3 ay başarısı.\\n- DONANMA: INS Vikrant yerli uçak gemisi.\\n- FÜZE: BrahMos süpersonik 290+ adet.\\n- ASKERİ: 1.45 milyon aktif personel.\\n- EKONOMİ: 3.7 trilyon dolar, 5. büyük.\\n- SİBER: CERT-In ulusal ekip.\\n- TEJAS: Yerli hafif savaş uçağı.\\n- ARIHANT: Nükleer denizaltı programı.\\n- RAFALE: 36 adet tedarik edildi.",
+    
+    "GÜNEY KORE": "[K-DEFENSE]\\nANALİZ: Teknoloji İhracatçısı.\\n- TANK: K2 Black Panther dünya ihracatı.\\n- HAVA: KF-21 Boramae yerli 4.5 nesil.\\n- DONANMA: KDDX destroyeri projesi.\\n- SİBER: KISA siber güvenlik ajansı.\\n- EKONOMİ: Samsung, LG teknoloji devleri.\\n- SAVUNMA: Hanwha Defense sistemleri.\\n- FÜZE: Hyunmoo balistik füze ailesi.\\n- K9: Thunder obüs dünya lideri.\\n- KSS-III: Yerli denizaltı programı.\\n- FA-50: Eğitim uçağı ihracatı.",
+    
+    "İTALYA": "[MARE-NOSTRUM]\\nANALİZ: Akdeniz Deniz Gücü.\\n- DONANMA: Trieste LHD amfibi saldırı gemisi.\\n- HAVA: F-35A/B Lightning II programı ortağı.\\n- SAVUNMA: Leonardo savunma konglomerası.\\n- EKONOMİ: 2.1 trilyon dolar GSYİH.\\n- FINCANTIERI: Gemi inşa dünya devi.\\n- FREMM: Fırkateyn ihracat başarısı.\\n- ARIETE: Ana muharebe tankı.\\n- CENTAURO: Tekerlikli zırhlı araç.\\n- CAVOUR: Uçak gemisi modernizasyonu.\\n- ASTER: Hava savunma füzesi.",
+    
+    "İSPANYA": "[IBERIA-GUARD]\\nANALİZ: Akdeniz-Atlantik Köprüsü.\\n- DONANMA: S-80 Plus AIP denizaltı yerli.\\n- HAVA: Eurofighter Typhoon ve F-35B.\\n- TANK: Leopard 2E modernizasyonu.\\n- EKONOMİ: 1.5 trilyon dolar GSYİH.\\n- NAVANTIA: Gemi inşa ve savunma.\\n- NATO: İber-Atlantik stratejik konum.\\n- F-110: Yeni nesil fırkateyn projesi.\\n- TAURUS: Seyir füzesi entegrasyonu.\\n- JC CARLOS: Amfibi saldırı gemisi.\\n- LEOPARD: 2A6E 327 adet envanteri.",
+    
+    "POLONYA": "[EAGLE-FORTRESS]\\nANALİZ: Doğu Avrupa Kalkanı.\\n- TANK: K2 Black Panther 1000+ sipariş.\\n- HAVA: F-35A Lightning II 32 adet.\\n- FÜZE: Patriot ve HIMARS bataryaları.\\n- ASKERİ: 202 bin aktif personel.\\n- ABRAMS: M1A2 SEPv3 250 adet.\\n- NATO: Rusya sınırı ileri savunma.\\n- FA-50: 48 adet eğitim uçağı.\\n- K9: Thunder obüs 212 adet.\\n- BORSUK: Yerli piyade aracı.\\n- WISLA: Hava savunma sistemi.",
+    
+    "AVUSTRALYA": "[SOUTHERN-CROSS]\\nANALİZ: Indo-Pasifik Gücü.\\n- DONANMA: AUKUS SSN-AUKUS nükleer denizaltı.\\n- HAVA: F-35A Lightning II 72 adet.\\n- İSTİHBARAT: ASIS gizli servis.\\n- SİBER: ACSC siber güvenlik merkezi.\\n- UZAY: Pine Gap uydu istasyonu.\\n- FIVE EYES: İstihbarat ağı üyesi.\\n- HUNTER: Fırkateyn programı 9 adet.\\n- BOXER: Zırhlı araç platformu.\\n- ANZAC: Fırkateyn sınıfı modernizasyonu.\\n- JASSM: Uzun menzil seyir füzesi.",
+    
+    "KANADA": "[MAPLE-SHIELD]\\nANALİZ: Kuzey Amerika Savunması.\\n- HAVA: CF-18 Hornet filosu.\\n- ARKTİK: Kuzey geçidi güvenliği.\\n- İSTİHBARAT: CSIS istihbarat servisi.\\n- SAVUNMA: NORAD entegrasyonu.\\n- SİBER: Canadian Cyber Security Centre.\\n- F-35: 88 adet sipariş onaylandı.\\n- HALIFAX: Fırkateyn sınıfı modernizasyonu.\\n- LAV: Hafif zırhlı araç üretimi.\\n- LEOPARD: 2A4/2A6 tank filosu.\\n- CHINOOK: CH-147F ağır helikopter.",
+    
+    "BREZİLYA": "[AMAZON-FORCE]\\nANALİZ: Güney Amerika Lideri.\\n- HAVA: Gripen NG üretimi yerli.\\n- DONANMA: Riachuelo denizaltı sınıfı.\\n- EKONOMİ: 2.1 trilyon dolar GSYİH.\\n- UZAY: Alcântara fırlatma merkezi.\\n- SAVUNMA: Embraer A-29 Super Tucano.\\n- AMAZON: Orman gözetleme sistemi.\\n- KC-390: Nakliye uçağı ihracatı.\\n- ASTROS: Çok namlulu roketatar.\\n- GUARANI: Zırhlı personel taşıyıcı.\\n- MECTRON: Füze sistemleri.",
+    
+    "PAKİSTAN": "[ATOMIC-SHIELD]\\nANALİZ: Nükleer Denge Gücü.\\n- NÜKLEER: Shaheen-III füze 2750 km.\\n- HAVA: JF-17 Thunder çok rollü.\\n- ASKERİ: 654 bin aktif personel.\\n- İSTİHBARAT: ISI istihbarat örgütü.\\n- FÜZE: Babur seyir füzesi.\\n- TANK: Al-Khalid ana muharebe tankı.\\n- NÜKLEER: 170+ nükleer başlık.\\n- AGOSTA: 90B denizaltı sınıfı.\\n- F-16: Block 52 52 adet.\\n- ANZA: Omuz güdümlü füze.",
+    
+    "İRAN": "[PERSIAN-SHADOW]\\nANALİZ: Asimetrik Strateji Uzmanı.\\n- FÜZE: Balistik füze 2000+ envanter.\\n- DRONE: Shahed-136 kamikaze İHA.\\n- SİBER: Siber savaş yetenekleri.\\n- DENİZ: Hürmüz Boğazı kontrolü.\\n- NÜKLEER: Uranyum zenginleştirme.\\n- PROXY: Bölgesel vekil güçler.\\n- FATEH: 110 balistik füze ailesi.\\n- KHORDAD: Hava savunma sistemi.\\n- GHADIR: Mini denizaltı sınıfı.\\n- MOUDGE: Yerli fırkateyn sınıfı.",
+    
+    "MISIR": "[PHARAOH-NET]\\nANALİZ: Bölgesel Otorite.\\n- STRATEJİK: Suez Kanalı güvenliği.\\n- HAVA: Rafale 30 adet ve MiG-29M.\\n- DONANMA: Mistral LHD 2 adet.\\n- ASKERİ: 440 bin aktif personel.\\n- TANK: M1A1 Abrams 1130 adet.\\n- F-16: Block 40 220+ adet.\\n- GOWIND: Corvette gemileri.\\n- KA-52: Alligator saldırı helikopteri.\\n- S-300VM: Hava savunma sistemi.\\n- WING LOONG: Silahlı İHA filosu."
 }
 
-ALL_DATA = [{"n": f"{k} ANALİZ", "i": v} for k, v in STRATEGIC_INTEL.items()]
+ALL_DATA = [{"n": f"{k} STRATEJİK ANALİZ", "i": v} for k, v in STRATEGIC_INTEL.items()]
 
-def get_html():
-    return '''<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"><title>GGI_OS_v21</title><style>:root{--b:#00f2ff;--g:#39ff14;--r:#f05;--bg:#010203;--p:rgba(10,25,45,0.9)}*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}body,html{margin:0;padding:0;background:var(--bg);color:#fff;font-family:'Courier New',monospace;height:100vh;overflow:hidden;font-size:13px}@media(max-width:768px){body{font-size:12px}}#matrix{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;opacity:0.15}header{height:50px;border-bottom:2px solid var(--b);display:flex;align-items:center;justify-content:space-between;padding:0 15px;background:#000;box-shadow:0 0 20px var(--b)}@media(max-width:768px){header{height:45px;padding:0 10px}}main{display:grid;grid-template-columns:1fr;gap:8px;padding:8px;height:calc(100vh - 50px);overflow-y:auto}@media(min-width:769px){main{grid-template-columns:280px 1fr 320px;overflow:hidden}}.panel{background:var(--p);border:1px solid #1a2a3a;display:flex;flex-direction:column;border-radius:6px;margin-bottom:8px;min-height:200px}@media(min-width:769px){.panel{margin-bottom:0;height:100%}}.panel-h{background:linear-gradient(90deg,#0a111a,#1a2a3a);padding:10px;color:var(--b);font-size:12px;font-weight:bold;border-bottom:2px solid #1a2a3a;display:flex;justify-content:space-between}.scroll-area{flex:1;overflow-y:auto;padding:10px}.card{background:rgba(5,15,25,0.8);border:1px solid #112233;margin-bottom:8px;padding:10px;cursor:pointer;transition:0.3s;border-radius:4px}.card:active{transform:scale(0.98)}.card:hover{border-color:var(--b);transform:translateX(3px)}.intel-box{display:none;color:var(--g);font-size:11px;white-space:pre-wrap;margin-top:8px;border-top:1px dashed #224466;padding-top:6px}.stat-row{margin-bottom:8px;font-size:10px}.stat-bar{height:4px;background:#050505;border:1px solid #111;margin-top:3px;border-radius:2px;overflow:hidden}.stat-fill{height:100%;width:0%;background:var(--b);transition:0.8s}.term-input-box{background:#000;border-top:1px solid #1a2a3a;padding:8px;display:flex}#term-cmd{background:transparent;border:none;color:var(--g);width:100%;outline:none;font-size:12px;font-family:inherit}@media(max-width:768px){#term-cmd{font-size:14px}}.log{font-size:10px;margin-bottom:4px;border-left:2px solid transparent;padding-left:5px;word-break:break-word}.log.err{color:var(--r);border-left-color:var(--r)}.log.valid{color:var(--g);border-left-color:var(--g)}.log.sys-blue{color:var(--b);border-left-color:var(--b)}#secret-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.98);z-index:9999;display:none;align-items:center;justify-content:center}.secret-ui{width:95%;max-width:1000px;height:90%;border:2px solid var(--r);background:#050000;padding:20px;overflow-y:auto;box-shadow:0 0 80px var(--r);border-radius:8px}@media(min-width:769px){.secret-ui{padding:40px}}.glitch-text{animation:glitch 0.3s infinite;color:var(--r);font-size:18px;text-align:center;margin-bottom:10px}@media(min-width:769px){.glitch-text{font-size:28px}}@keyframes glitch{0%{transform:translate(0)}20%{transform:translate(-3px,3px)}40%{transform:translate(-3px,-3px)}60%{transform:translate(3px,3px)}80%{transform:translate(3px,-3px)}100%{transform:translate(0)}}.secret-grid{display:grid;grid-template-columns:1fr;gap:15px;margin-top:15px}@media(min-width:769px){.secret-grid{grid-template-columns:1fr 1fr;gap:25px}}.secret-box{border:1px solid var(--r);padding:15px;background:rgba(50,0,0,0.3);color:var(--r);border-radius:6px}@media(min-width:769px){.secret-box{padding:20px}}.secret-box h3{margin:0 0 10px 0;font-size:13px}@media(min-width:769px){.secret-box h3{font-size:16px}}.secret-box p{margin:6px 0;font-size:10px}@media(min-width:769px){.secret-box p{font-size:12px}}.btn-close{margin-top:20px;background:var(--r);color:#fff;border:2px solid #fff;padding:10px 25px;font-family:monospace;cursor:pointer;font-size:13px;border-radius:4px;display:block;margin-left:auto;margin-right:auto}@media(min-width:769px){.btn-close{font-size:16px;padding:12px 35px}}.btn-close:hover{background:#fff;color:#000}</style></head><body ontouchstart=""><canvas id="matrix"></canvas><div id="secret-overlay"><div class="secret-ui"><h1 class="glitch-text">⚠ 78921secret_PANDORA ⚠</h1><div class="secret-grid"><div class="secret-box"><h3>🔴 SHADOW PROJECTS</h3><p>▸ PROJECT_OMEGA: Neural Overwrite v4.2</p><p>▸ SKYFALL: Kinetic Orbital Strike</p><p>▸ QUANTUM_VIRUS: SWIFT Backdoor</p><p>▸ DARK_EYE: Global Face Tracking</p><p>▸ GHOST_NET: Underground Internet</p><p>▸ MINDFORGE: Brain-Computer Weapon</p></div><div class="secret-box"><h3>🎯 BIOMETRIC TARGETS</h3><p>▸ HASH: 0x9928AF11BC7 (VERIFIED)</p><p>▸ STATUS: ACTIVE_SURVEILLANCE_24/7</p><p>▸ BRAIN_WAVE: DELTA_STASIS</p><p>▸ LOCATION: [REDACTED]</p><p>▸ THREAT: CRITICAL_ALPHA</p><p>▸ EXTRACTION: GREEN_LIGHT</p></div><div class="secret-box"><h3>☢ CLASSIFIED OPS</h3><p>▸ BLACK_SUN: Solar Weapon System</p><p>▸ DEEP_ABYSS: Ocean Floor Bases</p><p>▸ SILENT_THUNDER: EMP Strike</p><p>▸ CRIMSON_TIDE: Bio Warfare</p><p>▸ IRON_PHOENIX: DNA Cloning</p><p>▸ VOID_WALKER: Dimensional Gateway</p></div><div class="secret-box"><h3>🌐 CONTROL NODES</h3><p>▸ NODE_ALPHA: Brussels Shadow Command</p><p>▸ NODE_BETA: Beijing Quantum Net</p><p>▸ NODE_GAMMA: Moscow Dark Web</p><p>▸ NODE_DELTA: Washington Deep State</p><p>▸ NODE_EPSILON: Tel Aviv Unit 8200</p><p>▸ NODE_ZETA: London City Finance</p></div><div class="secret-box"><h3>⚡ WEAPONS SYSTEMS</h3><p>▸ HAARP_OMEGA: Weather manipulation</p><p>▸ BLUE_BEAM: Holographic projection</p><p>▸ STUXNET_V9: Industrial sabotage</p><p>▸ NEURAL_DUST: Nano-surveillance</p></div><div class="secret-box"><h3>📡 INTELLIGENCE NETS</h3><p>▸ ECHELON_PLUS: Total global intercept</p><p>▸ PRISM_INFINITY: Silicon Valley backdoors</p><p>▸ CARNIVORE_X: Deep packet inspection</p><p>▸ TEMPEST_SHADOW: EM eavesdropping</p></div></div><button class="btn-close" onclick="closeSecret()">🔒 PURGE & EXIT 🔒</button></div></div><div><header><div style="font-size:16px;color:var(--b);font-weight:bold">GGI_OS_v21</div><div id="clock" style="color:var(--b);font-size:14px">00:00:00</div></header><main><div class="panel"><div class="panel-h"><span>SYSTEM</span><span style="color:var(--g)">[OK]</span></div><div class="scroll-area"><div class="stat-row"><div>CPU</div><div class="stat-bar"><div id="cpu-fill" class="stat-fill"></div></div></div><div class="stat-row"><div>RAM</div><div class="stat-bar"><div id="ram-fill" class="stat-fill"></div></div></div><div class="stat-row"><div>SYNC</div><div class="stat-bar"><div id="sync-fill" class="stat-fill"></div></div></div></div><div class="term-input-box"><span style="color:var(--g);margin-right:8px">root@ggi:~#</span><input type="text" id="term-cmd" placeholder="Komut (help)" autocomplete="off"></div></div><div class="panel"><div class="panel-h"><span>INTELLIGENCE</span></div><div class="scroll-area">{% for item in data %}<div class="card" onclick="openD({{loop.index}})"><div style="color:var(--b);font-weight:bold;font-size:12px">{{item.n}}</div><div class="intel-box" id="box-{{loop.index}}" data-raw="{{item.i}}"></div></div>{% endfor %}</div></div><div class="panel"><div class="panel-h"><span>LOGS</span></div><div class="scroll-area" id="log-container"></div></div></main></div><script>function openD(id){const b=document.getElementById('box-'+id);if(b.style.display==='block'){b.style.display='none';return}b.style.display='block';if(b.innerHTML===""){const r=b.getAttribute('data-raw');let i=0;function t(){if(i<r.length){b.innerHTML+=r.charAt(i);i++;setTimeout(t,3)}}t()}}function closeSecret(){document.getElementById('secret-overlay').style.display='none'}document.getElementById('term-cmd').addEventListener('keypress',function(e){if(e.key==='Enter'){const c=this.value.trim();addLog(c,"sys-blue");if(c.toLowerCase()==="78921secret"){document.getElementById('secret-overlay').style.display='flex';addLog("ACCESSING PANDORA","err")}else if(c.toLowerCase()==="help"){addLog("KOMUTLAR: help, clear, status, 78921secret","valid")}else if(c.toLowerCase()==="clear"){document.getElementById('log-container').innerHTML=''}else if(c.toLowerCase()==="status"){addLog("ALL SYSTEMS OK","valid")}else{addLog("ERROR: Unknown '"+c+"'","err")}this.value=''}});function addLog(m,t="valid"){const c=document.getElementById('log-container');const d=document.createElement('div');d.className='log '+t;d.innerText="["+new Date().toLocaleTimeString()+"] "+m;c.appendChild(d);c.scrollTop=c.scrollHeight;if(c.childNodes.length>50)c.removeChild(c.firstChild)}const cv=document.getElementById('matrix');const ctx=cv.getContext('2d');cv.width=window.innerWidth;cv.height=window.innerHeight;const drops=Array(Math.floor(cv.width/18)).fill(1);function drawMatrix(){ctx.fillStyle="rgba(0,0,0,0.08)";ctx.fillRect(0,0,cv.width,cv.height);ctx.fillStyle="#0F0";ctx.font="15px monospace";drops.forEach((y,i)=>{ctx.fillText(String.fromCharCode(0x30A0+Math.random()*96),i*18,y*18);if(y*18>cv.height&&Math.random()>0.975)drops[i]=0;drops[i]++})}setInterval(drawMatrix,50);setInterval(()=>{document.getElementById('clock').innerText=new Date().toLocaleTimeString()},1000);setInterval(()=>{['cpu-fill','ram-fill','sync-fill'].forEach(id=>{document.getElementById(id).style.width=(Math.random()*40+60)+"%"})},1500);setInterval(()=>{const msgs=[{m:"VPN_ESTABLISHED",t:"sys-blue"},{m:"FIREWALL_BLOCKED",t:"err"},{m:"DB_SYNCED",t:"valid"}];const item=msgs[Math.floor(Math.random()*msgs.length)];addLog(item.m,item.t)},5000)</script></body></html>'''
+def process_system_heartbeat():
+    pulse = math.sin(time.time()) * 100
+    return pulse
 
-@app.route('/health')
-def health():
-    return jsonify({"status":"OK"})
+def calculate_encryption_entropy(data_stream):
+    if not data_stream: return 0.99
+    return len(set(data_stream)) / len(data_stream)
 
-@app.route('/')
-def index():
-    with app.app_context():
-        db.create_all()
-        if not SystemUser.query.filter_by(username="ADMİN_EGE").first():
-            db.session.add(SystemUser(username="ADMİN_EGE",password=generate_password_hash("supreme2025")))
-            db.session.commit()
-    return render_template_string(get_html(), data=ALL_DATA)
+def validate_root_access(token):
+    expected = base64.b64encode("ADMİN_EGE".encode('utf-8'))
+    return token == expected
 
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 10000))
-    app.run(host='0.0.0.0', port=port, debug=False)
+def rotate_security_keys():
+    new_key = "".join([random.choice("ABCDEF0123456789") for _ in range(32)])
+    return new_key
+
+def monitor_thermal_levels():
+    return random.uniform(35.5, 72.4)
+
+def optimize_neural_network():
+    layers = ["INPUT", "HIDDEN_1", "HIDDEN_2", "OUTPUT"]
+    for layer in layers:
+        time.sleep(0.0001)
+    return "OPTIMIZED"
+
+def log_kernel_event(event_type, description):
+    timestamp = datetime.datetime.now()
+    return f"[{timestamp}] KERNEL_{event_type}: {description}"
+
+def check_database_integrity():
+    try:
+        users = SystemUser.query.count()
+        return True
+    except:
+        return False
+
+def generate_noise_buffer():
+    return [random.random() for _ in range(100)]
+
+def execute_cyber_defense_v21():
+    status = "DEFENSE_ACTIVE"
+    entropy = calculate_encryption_entropy("GGI_PULSE")
+    return f"{status}_{entropy}"
+
+def sys_init_core_01(): return "CORE_ACTIVE"
+def sys_init_core_02(): return "MEMORY_READY"
+def sys_init_core_03(): return "IO_BUFFERED"
+def sys_init_core_04(): return "THREAD_SYNC"
+def sys_init_core_05(): return "SOCKET_OPEN"
+def sys_init_core_06(): return "UI_SYNCED"
+def sys_init_core_07(): return "SECURITY_UP"
+def sys_init_core_08(): return "API_STABLE"
+def sys_init_core_09(): return "ENV_VAR_LOADED"
+def sys_init_core_10(): return "SYS_HEALTH_OK"
+
+def background_proc_11(): return rotate_security_keys()
+def background_proc_12(): return monitor_thermal_levels()
+def background_proc_13(): return check_database_integrity()
+def background_proc_14(): return process_system_heartbeat()
+def background_proc_15(): return generate_noise_buffer()
+def background_proc_16(): return execute_cyber_defense_v21()
+def background_proc_17(): return optimize_neural_network()
+def background_proc_18(): return log_kernel_event("PING", "STABLE")
+def background_proc_19(): return validate_root_access(b"NONE")
+def background_proc_20(): return calculate_encryption_entropy("GGI")
+
+UI_TEMPLATE = """<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>GGI_SUPREME_OS_v21</title>
+<style>
+:root{--b:#00f2ff;--g:#39ff14;--r:#f05;--bg:#010203;--p:rgba(10,25,45,0.9);--y:#ff0;--m:#f0f}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
+body,html{background:var(--bg);color:#fff;font-family:'Courier New',monospace;height:100vh;width:100vw;overflow:hidden;font-size:14px}
+@media(max-width:768px){body,html{font-size:12px}}
+#matrix{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;opacity:0.15}
+header{height:55px;border-bottom:2px solid var(--b);display:flex;align-items:center;justify-content:space-between;padding:0 20px;background:#000;box-shadow:0 0 25px var(--b)}
+@media(max-width:768px){header{height:50px;padding:0 15px}}
+main{display:grid;grid-template-columns:1fr;gap:10px;padding:10px;height:calc(100vh - 55px);overflow-y:auto}
+@media(min-width:769px){main{grid-template-columns:300px 1fr 340px;overflow-y:hidden}}
+.panel{background:var(--p);border:1px solid #1a2a3a;display:flex;flex-direction:column;border-radius:6px;margin-bottom:10px;min-height:250px}
+@media(min-width:769px){.panel{margin-bottom:0;height:100%}}
+.panel-h{background:linear-gradient(90deg,#0a111a,#1a2a3a);padding:12px;color:var(--b);font-size:13px;font-weight:bold;border-bottom:2px solid #1a2a3a;display:flex;justify-content:space-between}
+.scroll-area{flex:1;overflow-y:auto;padding:12px;scrollbar-width:thin;scrollbar-color:var(--b) transparent}
+.card{background:rgba(5,15,25,0.8);border:1px solid #112233;margin-bottom:10px;padding:12px;cursor:pointer;transition:0.3s;border-radius:4px;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;left:0;top:0;height:100%;width:3px;background:var(--b);opacity:0;transition:0.3s}
+.card:hover::before{opacity:1}
+.card:active{transform:scale(0.98)}
+.card:hover{border-color:var(--b);transform:translateX(5px)}
+.intel-box{display:none;color:var(--g);font-size:11px;white-space:pre-wrap;margin-top:10px;border-top:1px dashed #224466;padding-top:8px;line-height:1.5}
+.stat-row{margin-bottom:10px;font-size:11px;letter-spacing:0.5px}
+.stat-bar{height:6px;background:#050505;border:1px solid #111;margin-top:5px;border-radius:3px;overflow:hidden}
+.stat-fill{height:100%;width:0%;background:var(--b);transition:0.8s cubic-bezier(0.4,0,0.2,1)}
+.term-input-box{background:#000;border-top:1px solid #1a2a3a;padding:10px;display:flex;align-items:center}
+#term-cmd{background:transparent;border:none;color:var(--g);width:100%;outline:none;font-size:13px;font-family:inherit}
+@media(max-width:768px){#term-cmd{font-size:15px}}
+.log{font-size:11px;margin-bottom:5px;border-left:2px solid transparent;padding-left:6px;line-height:1.4;word-break:break-word}
+.log.err{color:var(--r);border-left-color:var(--r);background:rgba(255,0,85,0.05)}
+.log.valid{color:var(--g);border-left-color:var(--g)}
+.log.sys-blue{color:var(--b);border-left-color:var(--b)}
+.log.sys-magenta{color:var(--m);border-left-color:var(--m)}
+#secret-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.98);z-index:9999;display:none;align-items:center;justify-content:center;animation:fadeIn 0.3s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.secret-ui{width:96%;max-width:1100px;height:92%;border:3px solid var(--r);background:linear-gradient(135deg,#050000,#0a0000);padding:25px;overflow-y:auto;box-shadow:0 0 100px var(--r),inset 0 0 60px rgba(255,0,85,0.15);border-radius:10px;animation:glowPulse 2.5s infinite;position:relative}
+@keyframes glowPulse{0%,100%{box-shadow:0 0 100px var(--r),inset 0 0 60px rgba(255,0,85,0.15)}50%{box-shadow:0 0 150px var(--r),inset 0 0 80px rgba(255,0,85,0.25)}}
+@media(min-width:769px){.secret-ui{padding:45px}}
+.glitch-text{animation:glitch 0.35s infinite;color:var(--r);text-shadow:3px 3px #500,-3px -3px #005,0 0 20px var(--r);font-size:22px;text-align:center;margin-bottom:15px;font-weight:bold;letter-spacing:2px}
+@media(min-width:769px){.glitch-text{font-size:32px;margin-bottom:25px}}
+@keyframes glitch{0%{transform:translate(0)}15%{transform:translate(-4px,4px)}30%{transform:translate(4px,-4px)}45%{transform:translate(-4px,-4px)}60%{transform:translate(4px,4px)}75%{transform:translate(-2px,2px)}100%{transform:translate(0)}}
+.secret-warning{text-align:center;color:var(--y);font-size:12px;margin-bottom:20px;animation:blink 1.2s infinite;text-transform:uppercase;letter-spacing:2px;text-shadow:0 0 10px var(--y)}
+@media(min-width:769px){.secret-warning{font-size:15px;margin-bottom:30px}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
+.secret-data{display:grid;grid-template-
