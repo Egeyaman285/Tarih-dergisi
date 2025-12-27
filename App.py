@@ -31,7 +31,7 @@ STRATEGIC_INTEL = {
 }
 
 SECRET_INTEL_DB = {
-    "NAZI_REICH_ARCHIVE": "KRİTİK DOSYA\\n━━━━━━━━━━━━━━━━\\n1. Nükleer Program: Vemork Ağır Su Tesisi\\n2. Die Glocke: Anti-yerçekimi test verileri\\n3. V2 Roket: İleri füze teknolojisi\\n4. Wolfsschanze: Kozmik frekans iletimi\\n5. Antarktika Base 211: Gizli lojistik\\n━━━━━━━━━━━━━━━━\\n⚠ DOSYA SINIFLANDIRMASI: OMEGA-9"
+    "☢ NAZI_REICH_ARCHIVE": "🔴 ULTRA SECRET DOSYA\\n━━━━━━━━━━━━━━━━━━━━━━\\n1. Nükleer Program: Vemork Ağır Su Reaktörü\\n2. Die Glocke Projesi: Anti-yerçekimi teknolojisi\\n3. V2 Füze Sistemi: Uzun menzilli balistik füze\\n4. Wolfsschanze Karargahı: Kozmik frekans iletimi\\n5. Antarktika Base 211: Gizli denizaltı üssü\\n6. Ahnenerbe Okült Araştırmaları: Paranormal silahlar\\n7. Wunderwaffe Programları: Mucize silah geliştirme\\n━━━━━━━━━━━━━━━━━━━━━━\\n⚠ SINIFLANDIRMA: OMEGA-9 KOZMIK\\n⚠ ERİŞİM: YALNIZCA FÜHRER ONAYIYLA"
 }
 
 COUNTRY_NAMES = ["ARNAVUTLUK", "CİBUTİ", "EKVADOR", "ETİYOPYA", "FAS", "FİJİ", "GANA", "GUATEMALA", "HAİTİ", "HIRVATİSTAN",
@@ -47,12 +47,13 @@ COUNTRY_NAMES = ["ARNAVUTLUK", "CİBUTİ", "EKVADOR", "ETİYOPYA", "FAS", "FİJ�
 
 for i, name in enumerate(COUNTRY_NAMES[:95], start=1):
     threat = random.randint(35, 98)
-    SECRET_INTEL_DB[name] = (
-        f"Tehdit Seviyesi: %{threat}\\n"
-        f"Teknoloji: {random.choice(['Nükleer', 'Kuantum', 'Biyolojik', 'Siber'])}\\n"
-        f"Doktrin: {random.choice(['Yıldırım Saldırı', 'Asimetrik', 'Hibrit', 'Siber Felç'])}\\n"
-        f"İstihbarat: {'KRİTİK' if threat > 70 else 'ORTA' if threat > 50 else 'DÜŞÜK'}\\n"
-        f"Statü: {random.choice(['Aktif İzleme', 'Pasif Gözetim', 'Operasyonel Hazır'])}"
+    SECRET_INTEL_DB[f"⚡ {name}"] = (
+        f"📊 Tehdit Seviyesi: %{threat}\\n"
+        f"🔬 Teknoloji: {random.choice(['Nükleer', 'Kuantum', 'Biyolojik', 'Siber', 'Plazma'])}\\n"
+        f"⚔️ Doktrin: {random.choice(['Yıldırım Saldırı', 'Asimetrik Savaş', 'Hibrit Taktik', 'Siber Felç', 'Derin Darbe'])}\\n"
+        f"📡 İstihbarat: {'🔴 KRİTİK' if threat > 70 else '🟡 ORTA' if threat > 50 else '🟢 DÜŞÜK'}\\n"
+        f"🎯 Statü: {random.choice(['Aktif İzleme', 'Pasif Gözetim', 'Operasyonel Hazır', 'Devre Dışı'])}\\n"
+        f"🛡️ Savunma: {random.choice(['Güçlü', 'Orta', 'Zayıf', 'Yoktur'])}"
     )
 
 @app.route('/')
@@ -86,22 +87,23 @@ main{display:flex;height:calc(100vh - 50px);padding:10px;gap:10px}
 .scroll-area{flex:1;overflow-y:auto;padding:10px}
 .card{background:rgba(0,0,0,0.4);border:1px solid #112233;margin-bottom:8px;padding:15px;cursor:pointer;transition:0.3s;border-radius:4px}
 .card:hover{border-color:var(--b);transform:translateX(5px)}
-.intel-box{color:var(--g);font-size:11px;white-space:pre-wrap;margin-top:8px;display:none;border-left:2px solid var(--g);padding-left:10px}
+.intel-box{color:var(--g);font-size:11px;white-space:pre-wrap;margin-top:8px;display:none;border-left:2px solid var(--g);padding-left:10px;line-height:1.5}
 .cmd-line{display:flex;padding:10px;background:#050a10;border-top:1px solid #224466}
 .cmd-line span{color:var(--g);margin-right:8px}
 #term-cmd{background:transparent;border:none;color:var(--g);flex:1;outline:none;font-family:inherit;font-size:13px}
 #secret-screen{position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,#1a0000,#4a0000);z-index:9999;display:none;flex-direction:column;padding:20px;overflow-y:auto}
 .secret-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px;flex-wrap:wrap}
-.nuclear-icon{font-size:60px;animation:pulse 1.5s infinite,shake 0.5s infinite;text-shadow:0 0 30px #ff0}
-@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
-@keyframes shake{0%{transform:translate(0)}25%{transform:translate(-2px,2px)}50%{transform:translate(2px,-2px)}75%{transform:translate(-2px,-2px)}100%{transform:translate(0)}}
-.secret-title{font-size:28px;color:#fff;text-shadow:0 0 20px var(--r)}
-.btn-close{background:#000;color:#fff;border:3px solid #f00;padding:12px 30px;cursor:pointer;font-size:14px;font-weight:bold;font-family:inherit;border-radius:6px}
-.secret-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:15px}
+.nuclear-icon{font-size:60px;animation:pulse 1.5s infinite,shake 0.5s infinite;text-shadow:0 0 30px #ff0,0 0 60px #f00}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.2);opacity:0.8}}
+@keyframes shake{0%{transform:translate(0,0) rotate(0deg)}25%{transform:translate(-2px,2px) rotate(-1deg)}50%{transform:translate(2px,-2px) rotate(1deg)}75%{transform:translate(-2px,-2px) rotate(-1deg)}100%{transform:translate(0,0) rotate(0deg)}}
+.secret-title{font-size:28px;color:#fff;text-shadow:0 0 20px var(--r),2px 2px 8px #000;font-weight:bold;letter-spacing:2px}
+.btn-close{background:linear-gradient(135deg,#000,#500);color:#fff;border:3px solid #f00;padding:12px 30px;cursor:pointer;font-size:14px;font-weight:bold;font-family:inherit;border-radius:6px;box-shadow:0 0 30px rgba(255,0,0,0.5);transition:0.3s}
+.btn-close:hover{background:linear-gradient(135deg,#500,#f00);transform:scale(1.05)}
+.secret-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:15px;padding-bottom:50px}
 @media(max-width:768px){.secret-grid{grid-template-columns:1fr}}
-.secret-item{border:2px solid rgba(255,0,0,0.5);background:rgba(0,0,0,0.8);padding:15px;cursor:pointer;border-radius:6px;transition:0.3s}
-.secret-item:hover{border-color:var(--r);transform:translateY(-5px)}
-.secret-intel-box{color:var(--g);font-size:11px;white-space:pre-wrap;margin-top:10px;display:none;border-top:1px dashed rgba(255,0,0,0.5);padding-top:10px}
+.secret-item{border:2px solid rgba(255,0,0,0.5);background:rgba(0,0,0,0.8);padding:15px;cursor:pointer;border-radius:6px;transition:0.3s;min-height:80px}
+.secret-item:hover{border-color:var(--r);box-shadow:0 0 30px rgba(255,0,0,0.4);transform:translateY(-3px)}
+.secret-intel-box{color:var(--g);font-size:11px;white-space:pre-wrap;margin-top:10px;display:none;border-top:1px dashed rgba(255,0,0,0.5);padding-top:10px;line-height:1.6}
 </style>
 </head>
 <body>
@@ -111,13 +113,13 @@ main{display:flex;height:calc(100vh - 50px);padding:10px;gap:10px}
 <div class="nuclear-icon">☢</div>
 <div class="secret-title">GGİ KOZMİK ARŞİV</div>
 </div>
-<button class="btn-close" onclick="document.getElementById('secret-screen').style.display='none'">ÇIKIŞ</button>
+<button class="btn-close" onclick="document.getElementById('secret-screen').style.display='none'">🔒 ÇIKIŞ 🔒</button>
 </div>
 <div class="secret-grid">
 {% for c, d in secret_db.items() %}
-<div class="secret-item" onclick="runSecretType(this, '{{ d|replace("'", "\\\\'") }}')">
-<strong>{{ c }}</strong>
-<div class="secret-intel-box"></div>
+<div class="secret-item" onclick="runSecretType(this)">
+<strong style="font-size:13px;color:#ff0">{{ c }}</strong>
+<div class="secret-intel-box" data-content="{{ d|replace('"', '&quot;')|replace("'", '&#39;') }}"></div>
 </div>
 {% endfor %}
 </div>
@@ -127,17 +129,17 @@ main{display:flex;height:calc(100vh - 50px);padding:10px;gap:10px}
 <div class="panel-logs"><div class="panel-h">LOGS</div><div class="scroll-area" id="logs"></div></div>
 <div class="panel-main"><div class="panel-h">INTEL ANALİZ</div><div class="scroll-area">
 {% for n, i in data.items() %}
-<div class="card" onclick="runMainType(this, '{{ i|replace("'", "\\\\'") }}')"><strong>{{ n }}</strong><div class="intel-box"></div></div>
+<div class="card" onclick="runMainType(this)"><strong>{{ n }}</strong><div class="intel-box" data-content="{{ i|replace('"', '&quot;')|replace("'", '&#39;') }}"></div></div>
 {% endfor %}
 </div></div>
-<div class="panel-term"><div class="panel-h">TERMİNAL</div><div id="history" style="flex:1;overflow-y:auto;padding:10px;background:#000"></div><div class="cmd-line"><span>root@ggi:~$</span><input type="text" id="term-cmd" autofocus></div></div>
+<div class="panel-term"><div class="panel-h">TERMİNAL</div><div id="history" style="flex:1;overflow-y:auto;padding:10px;background:#000;font-size:11px;color:#888"></div><div class="cmd-line"><span>root@ggi:~$</span><input type="text" id="term-cmd" autofocus></div></div>
 </main>
 <script>
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 function sfx(f,d){try{const o=audioCtx.createOscillator();const g=audioCtx.createGain();o.frequency.value=f;g.gain.value=0.02;o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+d)}catch(e){}}
 async function daktilo(text,el){el.style.display="block";el.innerHTML="";const lines=text.split('\\n');for(let line of lines){let d=document.createElement('div');el.appendChild(d);for(let c of line){d.innerHTML+=c;sfx(1300,0.02);await new Promise(r=>setTimeout(r,15))}}}
-function runMainType(card,text){const box=card.querySelector('.intel-box');if(box.style.display==="block")box.style.display="none";else daktilo(text,box)}
-function runSecretType(item,text){const box=item.querySelector('.secret-intel-box');if(box.style.display==="block")box.style.display="none";else{sfx(400,0.1);daktilo(text,box)}}
+function runMainType(card){const box=card.querySelector('.intel-box');if(box.style.display==="block"){box.style.display="none"}else{const text=box.getAttribute('data-content');daktilo(text,box)}}
+function runSecretType(item){const box=item.querySelector('.secret-intel-box');if(box.style.display==="block"){box.style.display="none"}else{sfx(400,0.1);const text=box.getAttribute('data-content');daktilo(text,box)}}
 document.getElementById('term-cmd').addEventListener('keypress',(e)=>{if(e.key==='Enter'){const v=e.target.value.trim();if(v==='78921secretfiles'){document.getElementById('secret-screen').style.display='flex';sfx(100,0.6)}e.target.value=""}});
 setInterval(()=>{const l=document.createElement('div');l.style.fontSize='10px';l.style.color='var(--g)';l.innerText=`[${new Date().toLocaleTimeString()}] HEARTBEAT_${Math.random().toString(36).substr(2,5).toUpperCase()}`;const logs=document.getElementById('logs');logs.insertBefore(l,logs.firstChild);if(logs.children.length>50)logs.removeChild(logs.lastChild)},3000);
 setInterval(()=>{document.getElementById('clock').innerText=new Date().toLocaleTimeString()},1000);
