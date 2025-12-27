@@ -4,7 +4,7 @@ from flask import Flask, render_template_string
 
 app = Flask(__name__)
 
-# === VERİ SETİ ===
+# === VERİ SETİ (Genişletilmiş) ===
 MAIN_COUNTRIES = {
     "TÜRKİYE": "🇹🇷 KOZMİK SEVİYE\n▸ İHA/SİHA: Global liderlik.\n▸ HAVA: KAAN 5. Nesil entegrasyonu.\n▸ SİBER: AZRA kuantum işlemci.\n▸ DENİZ: Mavi Vatan doktrini.\n▸ UZAY: Yerli roket motoru testi.\n▸ FÜZE: Tayfun 1000km+ menzil.\n▸ RADAR: EİRS Erken ihbar sistemi.\n▸ TANK: Altay seri üretim fazı.\n▸ YAZILIM: Havelsan ADVENT ağ desteği.\n▸ OPERASYON: Sınır ötesi dijital kalkan.",
     "ABD": "🇺🇸 TOP SECRET\n▸ NÜKLEER: 11 Uçak gemisi grubu.\n▸ SİBER: NSA küresel veri madenciliği.\n▸ UZAY: Starshield askeri ağ.\n▸ EKONOMİ: Rezerv para kontrolü.\n▸ DOKTRİN: Full-spectrum dominance.\n▸ F-35: 500+ operasyonel uçak.\n▸ AI: Pentagon algoritmik savaş.\n▸ ÜSLER: 750+ denizaşırı nokta.\n▸ LAZER: HELIOS gemi savunma.\n▸ DENİZALTI: Columbia sınıfı gizlilik.",
@@ -15,9 +15,9 @@ MAIN_COUNTRIES = {
 others = ["ALMANYA", "İNGİLTERE", "FRANSA", "İSRAİL", "JAPONYA", "G.KORE", "POLONYA", "PAKİSTAN", "İRAN", "MISIR", "BREZİLYA", "İSPANYA", "İTALYA", "YUNANİSTAN", "UKRAYNA", "HİNDİSTAN", "İSVEÇ", "NORVEÇ", "KANADA", "AVUSTRALYA", "AZERBAYCAN"]
 for c in others:
     if c not in MAIN_COUNTRIES:
-        MAIN_COUNTRIES[c] = f"🌐 STRATEJİK VERİ\n▸ Statü: Aktif\n▸ Tehdit: %{random.randint(10,90)}\n▸ Teknoloji: Üst Düzey\n▸ Savunma: Modernize\n▸ İstihbarat: Tam\n▸ Ekonomi: Stabil\n▸ Siber: Korumalı\n▸ Doktrin: Savunma\n▸ Nükleer: {random.choice(['Var', 'Yok'])}\n▸ Operasyon: Bölgesel"
+        MAIN_COUNTRIES[c] = f"🌐 STRATEJİK VERİ\n▸ Statü: Aktif\n▸ Tehdit: %{random.randint(10,90)}\n▸ Teknoloji: Üst Düzey\n▸ Savunma: Modernize\n▸ İstihbarat: Tam\n▸ Ekonomi: Stabil\n▸ Siber: Korumalı\n▸ Doktrin: Savunma\n▸ Nükleer: {random.choice(['Var', 'Yok'])}\n▸ Operasyon: Bölgesel\n▸ Gözlem: 24/7"
 
-SECRET_DB = {k: [f"☢ PROTOKOL: {random.randint(1000,9999)}", f"☣ BİYOLOJİK: Seviye 4", f"🛰 UYDU: Takipte", f"💻 SİBER: Sızıldı", f"🗝 ANAHTAR: Kuantum", f"🛑 STATÜ: KRİTİK", f"🧬 PROJE: X-Alpha", f"🌑 ÜS: Bölge {random.randint(1,10)}", f"⚡ ENERJİ: Antimadde", f"💀 RİSK: OMEGA"] for k in MAIN_COUNTRIES.keys()}
+SECRET_DB = {k: [f"☢ PROTOKOL: {random.randint(1000,9999)}", f"☣ BİYOLOJİK: Seviye 4", f"🛰 UYDU: Takipte", f"💻 SİBER: Sızıldı", f"🗝 ANAHTAR: Kuantum", f"🛑 STATÜ: KRİTİK", f"🧬 PROJE: X-Alpha", f"🌑 ÜS: Bölge {random.randint(1,10)}", f"⚡ ENERJİ: Antimadde", f"💀 RİSK: OMEGA"] for k in list(MAIN_COUNTRIES.keys()) + ["KIBRIS", "İSVİÇRE", "KATAR"]}
 
 UI_TEMPLATE = """
 <!DOCTYPE html>
@@ -25,23 +25,24 @@ UI_TEMPLATE = """
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>GGI_SUPREME_OS_v4</title>
+    <title>GGI_OS_v4_FINAL</title>
     <style>
         :root{--b:#00f2ff;--g:#39ff14;--r:#f05;--bg:#010203;--p:rgba(10,25,45,0.98)}
         *{box-sizing:border-box;margin:0;padding:0;font-family:'Courier New',monospace}
         body{background:var(--bg);color:#fff;height:100vh;overflow:hidden;font-size:12px}
         
-        /* Login Screen */
+        /* LOGIN PANEL */
         #login-screen{position:fixed;inset:0;background:#000;z-index:10000;display:flex;flex-direction:column;align-items:center;justify-content:center}
         #pass-input{background:transparent;border:1px solid var(--b);color:var(--b);padding:10px;text-align:center;font-size:20px;outline:none;box-shadow:0 0 10px var(--b)}
 
         header{height:50px;border-bottom:1px solid var(--b);display:flex;align-items:center;justify-content:space-between;padding:0 20px;background:#000}
         main{display:grid;grid-template-columns: 1fr 350px 300px;height:calc(100vh - 50px);padding:10px;gap:10px}
         
+        /* RESPONSIVE OPTIMIZATION */
         @media (max-width: 1024px) {
             main { grid-template-columns: 1fr; overflow-y: auto; height: auto; }
             body { overflow-y: auto; }
-            #term-panel, #feed-panel { height: 400px; }
+            #term-panel, #feed-panel { height: 400px; margin-top:10px}
         }
 
         .panel{border:1px solid #224466;background:var(--p);display:flex;flex-direction:column;overflow:hidden}
@@ -49,15 +50,15 @@ UI_TEMPLATE = """
         .scroll{flex:1;overflow-y:auto;padding:10px;scrollbar-width:thin}
         
         .card{background:rgba(0,0,0,0.4);border:1px solid #112233;margin-bottom:8px;padding:12px;cursor:pointer}
-        .card:hover{border-color:var(--b)}
-        .intel-box{color:var(--g);font-size:11px;white-space:pre-wrap;margin-top:8px;display:none;border-left:2px solid var(--g);padding-left:10px;min-height:100px}
+        .card:hover{border-color:var(--b);background:rgba(0,242,255,0.05)}
+        .intel-box{color:var(--g);font-size:11px;white-space:pre-wrap;margin-top:8px;display:none;border-left:2px solid var(--g);padding-left:10px}
 
         #term-out, #feed-out{font-size:11px;color:var(--g);line-height:1.4}
         .cmd-line{display:flex;padding:10px;background:#050a10;border-top:1px solid #224466}
         input{background:transparent;border:none;color:var(--g);flex:1;outline:none}
 
         .overlay{position:fixed;inset:0;background:#000;z-index:9999;display:none;flex-direction:column;padding:20px;overflow-y:auto}
-        .secret-country-btn{border:1px solid var(--r);padding:10px;margin:3px;color:var(--r);cursor:pointer;display:inline-block;font-size:10px}
+        .secret-country-btn{border:1px solid var(--r);padding:10px;margin:3px;color:var(--r);cursor:pointer;display:inline-block;font-size:10px;transition:0.3s}
         .secret-country-btn:hover{background:var(--r);color:#fff}
         .nuke-icon{animation:blink 1s infinite; color:var(--r)}
         @keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
@@ -66,24 +67,25 @@ UI_TEMPLATE = """
 <body>
     <audio id="snd-type"><source src="https://www.soundjay.com/communication/sounds/typewriter-key-1.mp3" type="audio/mpeg"></audio>
     <audio id="snd-alarm"><source src="https://www.soundjay.com/mechanical/sounds/alarm-clock-01.mp3" type="audio/mpeg"></audio>
+    <audio id="snd-click"><source src="https://www.soundjay.com/buttons/sounds/button-50.mp3" type="audio/mpeg"></audio>
 
     <div id="login-screen">
-        <h2 style="color:var(--r);margin-bottom:20px">GGI SUPREME SECURITY</h2>
-        <input type="password" id="pass-input" placeholder="ENTER CODE" maxlength="5">
-        <p id="login-msg" style="margin-top:15px;color:gray">Yetki Gerekiyor...</p>
+        <h2 style="color:var(--r);margin-bottom:20px">GGI SUPREME SECURITY ACCESS</h2>
+        <input type="password" id="pass-input" placeholder="ŞİFREYİ GİRİN" maxlength="5" autofocus>
+        <p id="login-msg" style="margin-top:15px;color:gray">GİRİŞ İÇİN 78921 GEREKLİ</p>
     </div>
 
     <header>
-        <div style="color:var(--b)">GGI_OS_v4 // SECURE_LINE</div>
+        <div style="color:var(--b)">GGI_OS_v4.5 // SECURE_LINE</div>
         <div id="clock">00:00:00</div>
     </header>
 
     <main>
         <div class="panel">
-            <div class="panel-h">STRATEJİK VERİ MERKEZİ</div>
+            <div class="panel-h">STRATEJİK ANALİZ (25 ÜLKE)</div>
             <div class="scroll">
                 {% for country, info in data.items() %}
-                <div class="card" onclick="runTypewriterMain(this, `{{ info }}`)">
+                <div class="card" onclick="runMainDaktilo(this, `{{ info }}`)">
                     <strong>{{ country }}</strong>
                     <div class="intel-box"></div>
                 </div>
@@ -93,61 +95,64 @@ UI_TEMPLATE = """
 
         <div class="panel" id="term-panel">
             <div class="panel-h">COMMAND TERMINAL</div>
-            <div id="term-out" class="scroll">Sistem Aktif. Giriş bekleniyor...</div>
+            <div id="term-out" class="scroll">Sistem Aktif. Komut Bekleniyor...</div>
             <div class="cmd-line">
                 <span style="color:var(--g)">root@ggi:~$ </span>
-                <input type="text" id="term-cmd" autocomplete="off">
+                <input type="text" id="term-cmd" autocomplete="off" placeholder="help yazın...">
             </div>
         </div>
 
         <div class="panel" id="feed-panel">
-            <div class="panel-h">LIVE INTEL FEED</div>
+            <div class="panel-h">LIVE INTELLIGENCE LOGS</div>
             <div id="feed-out" class="scroll"></div>
         </div>
     </main>
 
     <div id="scr-secret" class="overlay">
-        <h2 style="color:var(--r);text-align:center">GİZLİ ARŞİV <span class="nuke-icon">☢</span></h2>
+        <h2 style="color:var(--r);text-align:center">KOZMİK GİZLİ ARŞİV <span class="nuke-icon">☢</span></h2>
         <div id="secret-btns" style="margin-top:20px;text-align:center">
             {% for country in secret_db.keys() %}
-            <div class="secret-country-btn" onclick="loadSecretData('{{ country }}')">{{ country }}</div>
+            <div class="secret-country-btn" onclick="runSecretDaktilo('{{ country }}')">{{ country }}</div>
             {% endfor %}
         </div>
-        <div id="stream-output" style="color:var(--g);margin-top:30px;white-space:pre-wrap;padding:20px;border:1px dashed var(--r)"></div>
-        <button onclick="closeSecret()" style="margin-top:20px;background:red;color:#fff;border:none;padding:10px;width:100%">OTURUMU KAPAT</button>
+        <div id="stream-output" style="color:var(--g);margin-top:30px;white-space:pre-wrap;padding:20px;border:1px dashed var(--r);min-height:200px"></div>
+        <button onclick="closeSecret()" style="margin-top:20px;background:red;color:#fff;border:none;padding:15px;width:100%;cursor:pointer">SİSTEMDEN ÇIK</button>
     </div>
 
     <script>
         const secretStore = {{ secret_db|tojson }};
         const sndType = document.getElementById('snd-type');
         const sndAlarm = document.getElementById('snd-alarm');
+        const sndClick = document.getElementById('snd-click');
 
-        // Login Logic
+        // Şifre Giriş Kontrolü
         document.getElementById('pass-input').addEventListener('input', function(e) {
             if(this.value === '78921') {
                 document.getElementById('login-screen').style.display = 'none';
                 startLiveFeed();
             } else if(this.value.length === 5) {
-                document.getElementById('login-msg').innerText = "YANLIŞ ŞİFRE!";
-                document.getElementById('login-msg').style.color = "red";
                 this.value = "";
+                document.getElementById('login-msg').innerText = "HATALI ŞİFRE!";
+                document.getElementById('login-msg').style.color = "red";
             }
         });
 
-        function playKeySound() {
+        // "Didiridiri" Daktilo Sesi Senkronizasyonu
+        function playTypeSound() {
             let s = sndType.cloneNode();
             s.volume = 0.15;
             s.play();
         }
 
-        function daktiloEff(text, element, speed = 10) {
+        function daktiloExecution(text, element, speed = 15) {
             element.innerHTML = "";
             element.style.display = "block";
             let i = 0;
             function type() {
                 if (i < text.length) {
                     element.innerHTML += text.charAt(i);
-                    if(text.charAt(i) !== " " && text.charAt(i) !== "\\n") playKeySound();
+                    // Ses her karakterde veya hızda çalar
+                    if(text.charAt(i) !== " " && text.charAt(i) !== "\\n") playTypeSound();
                     i++;
                     setTimeout(type, speed);
                 }
@@ -155,32 +160,51 @@ UI_TEMPLATE = """
             type();
         }
 
-        function runTypewriterMain(card, info) {
+        // Ana Menü Tıklama ve Daktilo
+        function runMainDaktilo(card, info) {
+            sndClick.play();
             const box = card.querySelector('.intel-box');
             if(box.style.display === "block") {
                 box.style.display = "none";
             } else {
-                daktiloEff(info, box);
+                daktiloExecution(info, box);
             }
         }
 
-        function loadSecretData(country) {
+        // Gizli Arşiv Tıklama ve Daktilo
+        function runSecretDaktilo(country) {
+            sndClick.play();
             const output = document.getElementById('stream-output');
             const data = secretStore[country].join('\\n');
-            daktiloEff(`[DECRYPTING: ${country}]\\n-------------------\\n` + data, output, 20);
+            daktiloExecution(`[ERİŞİM ONAYLANDI: ${country}]\\n------------------------------\\n` + data, output, 25);
         }
 
-        // Terminal
+        // Terminal Komutları
         document.getElementById('term-cmd').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 const cmd = this.value.toLowerCase().trim();
                 const out = document.getElementById('term-out');
-                out.innerHTML += `<div>> ${cmd}</div>`;
+                out.innerHTML += `<div><span style="color:#fff">> ${cmd}</span></div>`;
+                
                 if (cmd === '78921secretfiles') {
                     sndAlarm.play();
                     document.getElementById('scr-secret').style.display = 'flex';
-                } else if(cmd === 'clear') { out.innerHTML = ""; }
-                else { out.innerHTML += "<div style='color:red'>ERİŞİM REDDEDİLDİ.</div>"; }
+                } else if (cmd === 'earthquake_forecast') {
+                    out.innerHTML += "<div style='color:orange'>Sismik sensörler taranıyor... %94 risk saptandı.</div>";
+                } else if (cmd === 'threat_matrix') {
+                    out.innerHTML += "<div style='color:red'>DEFCON 2: Siber saldırı tespit edildi (IP: 104.22.x.x)</div>";
+                } else if (cmd === 'system_override') {
+                    document.body.style.opacity = "0.2";
+                    setTimeout(() => document.body.style.opacity = "1", 500);
+                    out.innerHTML += "<div>Sistem yeniden yapılandırıldı.</div>";
+                } else if (cmd === 'help') {
+                    out.innerHTML += "<div>- help<br>- status<br>- clear<br>- 78921secretfiles<br>- earthquake_forecast<br>- threat_matrix<br>- system_override</div>";
+                } else if (cmd === 'clear') {
+                    out.innerHTML = "";
+                } else {
+                    out.innerHTML += "<div style='color:var(--r)'>GEÇERSİZ YETKİ KODU.</div>";
+                }
+                
                 this.value = "";
                 out.scrollTop = out.scrollHeight;
             }
@@ -191,23 +215,23 @@ UI_TEMPLATE = """
             sndAlarm.pause();
         }
 
-        // Live Feed Simulation
+        // Sağ Panel Canlı Akış
         function startLiveFeed() {
             const feed = document.getElementById('feed-out');
             const logs = [
-                "[INFO] Global DNS Traffic Spike detected.",
-                "[WARN] Brute force attempt from 192.168.x.x",
-                "[INTEL] Satellite KA-78 repositioned.",
-                "[SİBER] Türkiye Quantum Shield: Active.",
-                "[SYS] Encryption keys rotated.",
-                "[ALERT] Deep sea fiber cable vibration."
+                "[SİBER] Türkiye Kuantum Kalkanı Aktif.",
+                "[UYDU] KA-22 Karadeniz üzerinde sabitlendi.",
+                "[LOG] DNS trafiğinde anomal saptandı.",
+                "[INTEL] Bölge 5'te hareketlilik gözlendi.",
+                "[SYS] Şifreleme anahtarları güncellendi.",
+                "[ALERT] Fiber hatlarda frekans bozulması."
             ];
             setInterval(() => {
                 const log = logs[Math.floor(Math.random()*logs.length)];
-                feed.innerHTML += `<div style="margin-bottom:5px; border-bottom:1px solid #112233">> ${log}</div>`;
+                feed.innerHTML += `<div style="margin-bottom:5px; border-bottom:1px solid #112233; padding-bottom:3px">> ${log}</div>`;
                 feed.scrollTop = feed.scrollHeight;
-                if(feed.children.length > 20) feed.removeChild(feed.firstChild);
-            }, 3000);
+                if(feed.children.length > 25) feed.removeChild(feed.firstChild);
+            }, 4000);
         }
 
         setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }, 1000);
@@ -221,4 +245,6 @@ def index():
     return render_template_string(UI_TEMPLATE, data=MAIN_COUNTRIES, secret_db=SECRET_DB)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 10000)))
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host='0.0.0.0', port=port)
+    
