@@ -4,7 +4,7 @@ from flask import Flask, render_template_string
 
 app = Flask(__name__)
 
-# === VERİ SETİ (Genişletilmiş) ===
+# === VERİ SETİ ===
 MAIN_COUNTRIES = {
     "TÜRKİYE": "🇹🇷 KOZMİK SEVİYE\n▸ İHA/SİHA: Global liderlik.\n▸ HAVA: KAAN 5. Nesil entegrasyonu.\n▸ SİBER: AZRA kuantum işlemci.\n▸ DENİZ: Mavi Vatan doktrini.\n▸ UZAY: Yerli roket motoru testi.\n▸ FÜZE: Tayfun 1000km+ menzil.\n▸ RADAR: EİRS Erken ihbar sistemi.\n▸ TANK: Altay seri üretim fazı.\n▸ YAZILIM: Havelsan ADVENT ağ desteği.\n▸ OPERASYON: Sınır ötesi dijital kalkan.",
     "ABD": "🇺🇸 TOP SECRET\n▸ NÜKLEER: 11 Uçak gemisi grubu.\n▸ SİBER: NSA küresel veri madenciliği.\n▸ UZAY: Starshield askeri ağ.\n▸ EKONOMİ: Rezerv para kontrolü.\n▸ DOKTRİN: Full-spectrum dominance.\n▸ F-35: 500+ operasyonel uçak.\n▸ AI: Pentagon algoritmik savaş.\n▸ ÜSLER: 750+ denizaşırı nokta.\n▸ LAZER: HELIOS gemi savunma.\n▸ DENİZALTI: Columbia sınıfı gizlilik.",
@@ -25,20 +25,18 @@ UI_TEMPLATE = """
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>GGI_OS_v4_FINAL</title>
+    <title>GGI_OS_v4_FINAL_SOUND</title>
     <style>
         :root{--b:#00f2ff;--g:#39ff14;--r:#f05;--bg:#010203;--p:rgba(10,25,45,0.98)}
         *{box-sizing:border-box;margin:0;padding:0;font-family:'Courier New',monospace}
         body{background:var(--bg);color:#fff;height:100vh;overflow:hidden;font-size:12px}
         
-        /* LOGIN PANEL */
         #login-screen{position:fixed;inset:0;background:#000;z-index:10000;display:flex;flex-direction:column;align-items:center;justify-content:center}
         #pass-input{background:transparent;border:1px solid var(--b);color:var(--b);padding:10px;text-align:center;font-size:20px;outline:none;box-shadow:0 0 10px var(--b)}
 
         header{height:50px;border-bottom:1px solid var(--b);display:flex;align-items:center;justify-content:space-between;padding:0 20px;background:#000}
         main{display:grid;grid-template-columns: 1fr 350px 300px;height:calc(100vh - 50px);padding:10px;gap:10px}
         
-        /* RESPONSIVE OPTIMIZATION */
         @media (max-width: 1024px) {
             main { grid-template-columns: 1fr; overflow-y: auto; height: auto; }
             body { overflow-y: auto; }
@@ -125,7 +123,6 @@ UI_TEMPLATE = """
         const sndAlarm = document.getElementById('snd-alarm');
         const sndClick = document.getElementById('snd-click');
 
-        // Şifre Giriş Kontrolü
         document.getElementById('pass-input').addEventListener('input', function(e) {
             if(this.value === '78921') {
                 document.getElementById('login-screen').style.display = 'none';
@@ -137,9 +134,9 @@ UI_TEMPLATE = """
             }
         });
 
-        // "Didiridiri" Daktilo Sesi Senkronizasyonu
-        function playTypeSound() {
-            let s = sndType.cloneNode();
+        // "Diriridiri" Ses Fonksiyonu (Harf Başına)
+        function playHarfSesi() {
+            let s = sndType.cloneNode(); // Her harf için yeni bir kopya oluşturur
             s.volume = 0.15;
             s.play();
         }
@@ -151,8 +148,10 @@ UI_TEMPLATE = """
             function type() {
                 if (i < text.length) {
                     element.innerHTML += text.charAt(i);
-                    // Ses her karakterde veya hızda çalar
-                    if(text.charAt(i) !== " " && text.charAt(i) !== "\\n") playTypeSound();
+                    // Harf boşluk veya yeni satır değilse sesi patlat
+                    if(text.charAt(i) !== " " && text.charAt(i) !== "\\n") {
+                        playHarfSesi();
+                    }
                     i++;
                     setTimeout(type, speed);
                 }
@@ -160,26 +159,23 @@ UI_TEMPLATE = """
             type();
         }
 
-        // Ana Menü Tıklama ve Daktilo
         function runMainDaktilo(card, info) {
             sndClick.play();
             const box = card.querySelector('.intel-box');
             if(box.style.display === "block") {
                 box.style.display = "none";
             } else {
-                daktiloExecution(info, box);
+                daktiloExecution(info, box, 12);
             }
         }
 
-        // Gizli Arşiv Tıklama ve Daktilo
         function runSecretDaktilo(country) {
             sndClick.play();
             const output = document.getElementById('stream-output');
             const data = secretStore[country].join('\\n');
-            daktiloExecution(`[ERİŞİM ONAYLANDI: ${country}]\\n------------------------------\\n` + data, output, 25);
+            daktiloExecution(`[ERİŞİM ONAYLANDI: ${country}]\\n------------------------------\\n` + data, output, 20);
         }
 
-        // Terminal Komutları
         document.getElementById('term-cmd').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 const cmd = this.value.toLowerCase().trim();
@@ -189,22 +185,10 @@ UI_TEMPLATE = """
                 if (cmd === '78921secretfiles') {
                     sndAlarm.play();
                     document.getElementById('scr-secret').style.display = 'flex';
-                } else if (cmd === 'earthquake_forecast') {
-                    out.innerHTML += "<div style='color:orange'>Sismik sensörler taranıyor... %94 risk saptandı.</div>";
-                } else if (cmd === 'threat_matrix') {
-                    out.innerHTML += "<div style='color:red'>DEFCON 2: Siber saldırı tespit edildi (IP: 104.22.x.x)</div>";
-                } else if (cmd === 'system_override') {
-                    document.body.style.opacity = "0.2";
-                    setTimeout(() => document.body.style.opacity = "1", 500);
-                    out.innerHTML += "<div>Sistem yeniden yapılandırıldı.</div>";
                 } else if (cmd === 'help') {
-                    out.innerHTML += "<div>- help<br>- status<br>- clear<br>- 78921secretfiles<br>- earthquake_forecast<br>- threat_matrix<br>- system_override</div>";
-                } else if (cmd === 'clear') {
-                    out.innerHTML = "";
-                } else {
-                    out.innerHTML += "<div style='color:var(--r)'>GEÇERSİZ YETKİ KODU.</div>";
-                }
-                
+                    out.innerHTML += "<div>- help, status, clear, 78921secretfiles, earthquake_forecast, threat_matrix, system_override</div>";
+                } else if (cmd === 'clear') { out.innerHTML = ""; }
+                else { out.innerHTML += "<div style='color:var(--r)'>GEÇERSİZ YETKİ KODU.</div>"; }
                 this.value = "";
                 out.scrollTop = out.scrollHeight;
             }
@@ -215,22 +199,19 @@ UI_TEMPLATE = """
             sndAlarm.pause();
         }
 
-        // Sağ Panel Canlı Akış
         function startLiveFeed() {
             const feed = document.getElementById('feed-out');
             const logs = [
                 "[SİBER] Türkiye Kuantum Kalkanı Aktif.",
                 "[UYDU] KA-22 Karadeniz üzerinde sabitlendi.",
                 "[LOG] DNS trafiğinde anomal saptandı.",
-                "[INTEL] Bölge 5'te hareketlilik gözlendi.",
-                "[SYS] Şifreleme anahtarları güncellendi.",
-                "[ALERT] Fiber hatlarda frekans bozulması."
+                "[SYS] Şifreleme anahtarları güncellendi."
             ];
             setInterval(() => {
                 const log = logs[Math.floor(Math.random()*logs.length)];
                 feed.innerHTML += `<div style="margin-bottom:5px; border-bottom:1px solid #112233; padding-bottom:3px">> ${log}</div>`;
                 feed.scrollTop = feed.scrollHeight;
-                if(feed.children.length > 25) feed.removeChild(feed.firstChild);
+                if(feed.children.length > 20) feed.removeChild(feed.firstChild);
             }, 4000);
         }
 
@@ -238,13 +219,3 @@ UI_TEMPLATE = """
     </script>
 </body>
 </html>
-"""
-
-@app.route('/')
-def index():
-    return render_template_string(UI_TEMPLATE, data=MAIN_COUNTRIES, secret_db=SECRET_DB)
-
-if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 10000))
-    app.run(host='0.0.0.0', port=port)
-    
