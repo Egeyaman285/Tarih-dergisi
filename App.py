@@ -50,13 +50,6 @@ UI_TEMPLATE = """
         *{box-sizing:border-box;margin:0;padding:0;font-family:'Courier New',monospace}
         body{background:var(--bg);color:#fff;height:100vh;overflow:hidden;font-size:12px}
         
-        @media screen and (orientation: portrait) and (max-width: 768px) {
-            body::before {
-                content: "⚠ YATAY MODA GEÇİN ⚠";
-                position: fixed; inset: 0; background: #000; display: flex; align-items: center; justify-content: center; z-index: 99999; font-size: 20px; color: var(--r); animation: blink 1s infinite;
-            }
-        }
-
         #cookie-banner{position:fixed;bottom:0;left:0;right:0;background:#000;border-top:2px solid var(--b);padding:15px;z-index:10001;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap}
         #cookie-banner button{background:var(--b);color:#000;border:none;padding:10px 20px;cursor:pointer;font-weight:bold;margin:5px}
         
@@ -68,12 +61,6 @@ UI_TEMPLATE = """
         header{height:50px;border-bottom:1px solid var(--b);display:flex;align-items:center;justify-content:space-between;padding:0 20px;background:#000}
         main{display:grid;grid-template-columns:1fr 350px 300px;height:calc(100vh - 50px);padding:10px;gap:10px}
         
-        @media (max-width:1024px){
-            main{grid-template-columns:1fr;overflow-y:auto;height:auto}
-            body{overflow-y:auto}
-            #term-panel,#feed-panel{height:400px;margin-top:10px}
-        }
-
         .panel{border:1px solid #224466;background:var(--p);display:flex;flex-direction:column;overflow:hidden}
         .panel-h{background:#0a111a;padding:10px;color:var(--b);font-size:11px;border-bottom:1px solid #224466;font-weight:bold;text-transform:uppercase}
         .scroll{flex:1;overflow-y:auto;padding:10px;scrollbar-width:thin}
@@ -87,43 +74,35 @@ UI_TEMPLATE = """
         input{background:transparent;border:none;color:var(--g);flex:1;outline:none}
 
         .overlay{position:fixed;inset:0;background:#000;z-index:9999;display:none;flex-direction:column;padding:20px;overflow-y:auto}
-        .secret-country-btn{border:1px solid var(--r);padding:10px;margin:3px;color:var(--r);cursor:pointer;display:inline-block;font-size:10px;transition:0.3s}
-        .nuke-icon{animation:blink 1s infinite;color:var(--r)}
-        @keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
+        .secret-country-btn{border:1px solid var(--r);padding:10px;margin:3px;color:var(--r);cursor:pointer;display:inline-block;font-size:10px}
 
-        #matrix-screen{position:fixed;inset:0;background:#000;z-index:9998;display:none;overflow:hidden}
-        .matrix-column{position:absolute;top:-100%;font-size:14px;color:var(--g);text-shadow:0 0 5px var(--g);white-space:pre;line-height:1.2}
-
-        /* NÜKLEER SİMÜLASYON FIX */
-        #world-map{
-            width:100%; height:450px; 
-            background: url('https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg') no-repeat center; 
-            background-size: cover;
-            position:relative; cursor:crosshair; border:1px solid var(--b);
-            background-color: #051015;
-            filter: brightness(0.7) contrast(1.2) sepia(0.5) hue-rotate(140deg);
+        /* NÜKLEER SİMÜLASYON VE HARİTA STİLİ */
+        #map-container {
+            width: 100%;
+            height: 450px;
+            background: #050a10;
+            position: relative;
+            border: 1px solid var(--b);
+            overflow: hidden;
+            cursor: crosshair;
         }
+        #world-svg { width: 100%; height: 100%; fill: #1a2a3a; stroke: var(--b); stroke-width: 0.5; }
         .target-dot{position:absolute;width:12px;height:12px;background:var(--r);border-radius:50%;box-shadow:0 0 15px var(--r);transform:translate(-50%,-50%);animation:blink 0.5s infinite;z-index:10}
         .explosion{position:absolute;border-radius:50%;background:rgba(255,100,0,0.5);border:2px solid orange;transform:translate(-50%,-50%);animation:grow 2.5s forwards;z-index:5}
         @keyframes grow{from{width:0;height:0;opacity:1}to{width:400px;height:400px;opacity:0}}
 
-        .weapon-select { display: flex; gap: 10px; margin-bottom: 10px; justify-content: center; }
-        .weapon-btn { background: #112233; border: 1px solid var(--b); color: var(--b); padding: 5px 15px; cursor: pointer; font-size: 10px; }
-        .weapon-btn.active { background: var(--r); color: white; border-color: white; }
+        #matrix-screen{position:fixed;inset:0;background:#000;z-index:9998;display:none;overflow:hidden}
+        .matrix-column{position:absolute;top:-100%;font-size:14px;color:var(--g);text-shadow:0 0 5px var(--g);white-space:pre;line-height:1.2}
+
+        .weapon-btn { background: #112233; border: 1px solid var(--b); color: var(--b); padding: 8px; cursor: pointer; font-size: 11px; margin: 2px; }
+        .weapon-btn.active { background: var(--r); color: white; }
+        @keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
     </style>
 </head>
 <body>
     <audio id="snd-click" src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio>
     <audio id="snd-nuke" src="https://www.soundjay.com/mechanical/sounds/explosion-01.mp3"></audio>
     <audio id="snd-alarm" src="https://www.soundjay.com/mechanical/sounds/alarm-clock-01.mp3" loop></audio>
-
-    <div id="cookie-banner" style="display:none">
-        <div style="color:#fff;font-size:12px">🔒 Bu site IP erişimi ve çerezler kullanır. Devam etmek için izin verin.</div>
-        <div>
-            <button onclick="acceptCookies()">KABUL ET</button>
-            <button onclick="rejectCookies()" style="background:var(--r);color:#fff">REDDET</button>
-        </div>
-    </div>
 
     <div id="ip-display">
         <div>📡 IP: {{ user_ip }}</div>
@@ -133,7 +112,6 @@ UI_TEMPLATE = """
     <div id="login-screen">
         <h2 style="color:var(--r);margin-bottom:20px">GGI SUPREME SECURITY ACCESS</h2>
         <input type="password" id="pass-input" placeholder="78921" maxlength="5" autofocus>
-        <p id="login-msg" style="margin-top:15px;color:gray">YETKİLENDİRME BEKLENİYOR...</p>
     </div>
 
     <header>
@@ -143,7 +121,7 @@ UI_TEMPLATE = """
 
     <main>
         <div class="panel">
-            <div class="panel-h">STRATEJİK ANALİZ (GENİŞLETİLMİŞ)</div>
+            <div class="panel-h">STRATEJİK ANALİZ (KÜRESEL)</div>
             <div class="scroll">
                 {% for country,info in data.items() %}
                 <div class="card" onclick="playSound('snd-click');runMainDaktilo(this,`{{info}}`)">
@@ -170,46 +148,50 @@ UI_TEMPLATE = """
     </main>
 
     <div id="scr-nuke" class="overlay">
-        <h2 style="color:var(--r);text-align:center">NUCLEAR STRIKE SIMULATION v2.0</h2>
-        <p style="text-align:center;color:#666;margin:5px">Silah Seçin, Hedef Belirleyin ve 'LAUNCH' Onayı Verin</p>
-        
-        <div class="weapon-select">
+        <h2 style="color:var(--r);text-align:center">NUCLEAR STRIKE COMMAND v2.0</h2>
+        <div style="text-align:center; margin:10px;">
             <button class="weapon-btn active" onclick="setWeapon('Nuke', this)">☢ ATOM BOMBASI</button>
             <button class="weapon-btn" onclick="setWeapon('AirStrike', this)">✈ UÇAK FİLOSU</button>
             <button class="weapon-btn" onclick="setWeapon('Drone', this)">🛸 İHA SALDIRISI</button>
         </div>
 
-        <div id="world-map" onclick="setTarget(event)"></div>
-        
+        <div id="map-container" onclick="setTarget(event)">
+            <svg id="world-svg" viewBox="0 0 1000 500">
+                <path d="M150,150 L250,150 L300,100 L400,120 L500,100 L650,120 L800,150 L900,200 L850,350 L700,450 L500,400 L300,450 L100,350 Z" />
+                <circle cx="530" cy="180" r="10" fill="red" /> <text x="510" y="165" fill="white" font-size="12">AVRASYA</text>
+                <text x="200" y="250" fill="white" font-size="12">AMERİKA</text>
+                <text x="800" y="250" fill="white" font-size="12">ASYA</text>
+            </svg>
+        </div>
+
         <div style="margin-top:15px;display:grid;grid-template-columns:1fr 1fr;gap:15px">
             <div class="panel" style="height:150px">
-                <div class="panel-h">STRATEJİK HEDEFLER (ÖNERİLEN)</div>
-                <div class="scroll" id="nuke-targets" style="font-size:10px;color:orange">
-                    * TÜRKİYE: Ankara-Kuzey (Yeraltı Sığınakları)<br>
-                    * ABD: Cheyenne Mountain (NORAD HQ)<br>
-                    * RUSYA: Yamantau Dağı Komuta Merkezi<br>
-                    * ÇİN: Hainan Denizaltı Üssü<br>
-                    * İSRAİL: Dimona Reaktörü
+                <div class="panel-h">HEDEFLER</div>
+                <div class="scroll" style="font-size:10px;color:orange">
+                    * TÜRKİYE: Ankara HQ<br>
+                    * ABD: NORAD<br>
+                    * RUSYA: Yamantau<br>
+                    * ÇİN: Hainan
                 </div>
             </div>
             <div class="panel" style="height:150px">
-                <div class="panel-h">HASAR RAPORU</div>
+                <div class="panel-h">DURUM</div>
                 <div class="scroll" id="nuke-damage" style="color:var(--r)"></div>
             </div>
         </div>
-        <button id="launch-btn" onclick="launchNuke()" style="background:var(--r);color:#fff;border:none;padding:15px;margin-top:10px;cursor:pointer;font-weight:bold;font-size:16px">FÜZEYİ ATEŞLE (CONFIRM LAUNCH)</button>
-        <button onclick="closeNuke()" style="background:#333;color:#fff;border:none;padding:10px;margin-top:10px;cursor:pointer">SİMÜLASYONU KAPAT</button>
+        <button id="launch-btn" onclick="launchNuke()" style="background:var(--r);color:#fff;border:none;padding:15px;margin-top:10px;cursor:pointer;font-weight:bold">ATEŞLE</button>
+        <button onclick="closeNuke()" style="background:#333;color:#fff;border:none;padding:10px;margin-top:10px;cursor:pointer">KAPAT</button>
     </div>
 
     <div id="scr-secret" class="overlay">
-        <h2 style="color:var(--r);text-align:center">KOZMİK GİZLİ ARŞİV <span class="nuke-icon">☢</span></h2>
-        <div id="secret-btns" style="margin-top:20px;text-align:center">
+        <h2 style="color:var(--r);text-align:center">KOZMİK ARŞİV</h2>
+        <div id="secret-btns" style="text-align:center">
             {% for country in secret_db.keys() %}
-            <div class="secret-country-btn" onclick="playSound('snd-click');runSecretDaktilo('{{country}}')">{{country}}</div>
+            <div class="secret-country-btn" onclick="runSecretDaktilo('{{country}}')">{{country}}</div>
             {% endfor %}
         </div>
-        <div id="stream-output" style="color:var(--g);margin-top:30px;white-space:pre-wrap;padding:20px;border:1px dashed var(--r);min-height:200px"></div>
-        <button onclick="closeSecret()" style="margin-top:20px;background:red;color:#fff;border:none;padding:15px;width:100%;cursor:pointer">SİSTEMDEN ÇIK</button>
+        <div id="stream-output" style="color:var(--g);margin-top:20px;white-space:pre-wrap;padding:10px;border:1px dashed var(--r);min-height:200px"></div>
+        <button onclick="closeSecret()" style="background:red;color:#fff;border:none;padding:15px;width:100%;cursor:pointer">ÇIKIŞ</button>
     </div>
 
     <div id="matrix-screen"></div>
@@ -232,7 +214,7 @@ UI_TEMPLATE = """
         }
 
         function setTarget(e){
-            const map = document.getElementById('world-map');
+            const map = document.getElementById('map-container');
             const rect = map.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
@@ -240,46 +222,35 @@ UI_TEMPLATE = """
             document.querySelectorAll('.target-dot').forEach(d=>d.remove());
             const dot = document.createElement('div');
             dot.className = 'target-dot';
-            dot.style.left = (x / rect.width * 100) + '%';
-            dot.style.top = (y / rect.height * 100) + '%';
+            dot.style.left = x + 'px';
+            dot.style.top = y + 'px';
             map.appendChild(dot);
-            currentTarget = {x: (x / rect.width * 100), y: (y / rect.height * 100)};
+            currentTarget = {x, y};
             playSound('snd-click');
         }
 
         function launchNuke(){
-            if(!currentTarget) return alert("HEDEF SEÇİLMEDİ!");
+            if(!currentTarget) return alert("HEDEF SEÇİN!");
             playSound('snd-nuke');
             playSound('snd-alarm');
             
-            const map = document.getElementById('world-map');
+            const map = document.getElementById('map-container');
             const exp = document.createElement('div');
             exp.className = 'explosion';
-            exp.style.left = currentTarget.x + '%';
-            exp.style.top = currentTarget.y + '%';
+            exp.style.left = currentTarget.x + 'px';
+            exp.style.top = currentTarget.y + 'px';
             map.appendChild(exp);
 
             const dmg = document.getElementById('nuke-damage');
-            dmg.innerHTML += `<div>☢ [${selectedWeapon}] SALDIRISI GERÇEKLEŞTİ: [%${Math.floor(currentTarget.x)}, %${Math.floor(currentTarget.y)}]</div>`;
-            dmg.innerHTML += `<div style="color:white">▸ Durum: Hedef İmha Edildi<br>▸ Tahmini Kayıp: ${Math.floor(Math.random()*5+1)} Milyon<br>▸ Radyasyon: ${selectedWeapon==='Nuke'?'Kritik':'Minimum'}</div>`;
+            dmg.innerHTML += `<div>[${selectedWeapon.toUpperCase()}] HEDEF VURULDU.</div>`;
             dmg.scrollTop = dmg.scrollHeight;
-
             setTimeout(()=> { document.getElementById('snd-alarm').pause(); }, 3000);
         }
 
         function closeNuke(){ document.getElementById('scr-nuke').style.display='none'; }
 
-        let cookiesAccepted=localStorage.getItem('cookies_accepted');
-        if(!cookiesAccepted) document.getElementById('cookie-banner').style.display='flex';
-
-        function acceptCookies(){ localStorage.setItem('cookies_accepted','true'); document.getElementById('cookie-banner').style.display='none'; }
-        function rejectCookies(){ document.body.innerHTML='<div style="color:red;padding:50px">ERİŞİM REDDEDİLDİ</div>'; }
-
         document.getElementById('pass-input').addEventListener('input',function(e){
-            if(this.value==='78921'){
-                document.getElementById('login-screen').style.display='none';
-                startLiveFeed();
-            }
+            if(this.value==='78921') document.getElementById('login-screen').style.display='none';
         });
 
         function daktiloExecution(text,element,speed=15){
@@ -299,8 +270,7 @@ UI_TEMPLATE = """
 
         function runSecretDaktilo(country){
             const output=document.getElementById('stream-output');
-            const data=secretStore[country].join('\\n');
-            daktiloExecution(`[ERİŞİM: ${country}]\\n━━━━━━━━━━━━━━━━\\n`+data,output,20);
+            daktiloExecution(`[ERİŞİM: ${country}]\\n━━━━━━━━━━━━━━━━\\n`+secretStore[country].join('\\n'),output,20);
         }
 
         function showMatrixScreen(data){
@@ -319,7 +289,7 @@ UI_TEMPLATE = """
         }
 
         const CMD_RESPONSES={
-            'matrix_flow':()=>showMatrixScreen(['NÜKLEER FÜZE AKTIF','SİBER SALDIRI','ACCESS DENIED','SYSTEM OVERLOAD']),
+            'matrix_flow':()=>showMatrixScreen(['☢ FÜZE KODLARI','SİBER SALDIRI','ERİŞİM ONAYLANDI']),
             'bombsimulation':()=>{ document.getElementById('scr-nuke').style.display='flex'; }
         };
 
@@ -329,22 +299,13 @@ UI_TEMPLATE = """
                 const out=document.getElementById('term-out');
                 out.innerHTML+=`<div><span style="color:#fff">> ${cmd}</span></div>`;
                 if(cmd==='78921secretfiles') document.getElementById('scr-secret').style.display='flex';
-                else if(cmd==='help') out.innerHTML+="<div>help, clear, status, matrix_flow, bombsimulation, 78921secretfiles</div>";
-                else if(cmd==='clear') out.innerHTML="";
+                else if(cmd==='help') out.innerHTML+="<div>help, status, matrix_flow, bombsimulation, 78921secretfiles</div>";
                 else if(CMD_RESPONSES[cmd]) CMD_RESPONSES[cmd]();
-                else out.innerHTML+="<div style='color:var(--r)'>GEÇERSİZ</div>";
                 this.value=""; out.scrollTop=out.scrollHeight;
             }
         });
 
         function closeSecret(){ document.getElementById('scr-secret').style.display='none'; }
-        function startLiveFeed(){
-            const feed=document.getElementById('feed-out');
-            setInterval(()=>{
-                feed.innerHTML+=`<div style='color:var(--g)'>> [LOG] Veri Akışı Stabil</div>`;
-                feed.scrollTop=feed.scrollHeight;
-            },3000);
-        }
         setInterval(()=>{document.getElementById('clock').innerText=new Date().toLocaleTimeString()},1000);
     </script>
 </body>
