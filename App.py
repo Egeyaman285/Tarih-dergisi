@@ -4,23 +4,22 @@ from flask import Flask, render_template_string, request
 
 app = Flask(__name__)
 
-# === VERİ SETİ ===
+# === GENİŞLETİLMİŞ VERİ SETİ (+5 Satır Bilgi Eklendi) ===
 MAIN_COUNTRIES = {
-    "TÜRKİYE": "🇹🇷 KOZMİK SEVİYE\n▸ İHA/SİHA: Global liderlik.\n▸ HAVA: KAAN 5. Nesil entegrasyonu.\n▸ SİBER: AZRA kuantum işlemci.\n▸ DENİZ: Mavi Vatan doktrini.\n▸ UZAY: Yerli roket motoru testi.\n▸ FÜZE: Tayfun 1000km+ menzil.\n▸ RADAR: EİRS Erken ihbar sistemi.\n▸ TANK: Altay seri üretim fazı.\n▸ YAZILIM: Havelsan ADVENT ağ desteği.\n▸ OPERASYON: Sınır ötesi dijital kalkan.",
-    "ABD": "🇺🇸 TOP SECRET\n▸ NÜKLEER: 11 Uçak gemisi grubu.\n▸ SİBER: NSA küresel veri madenciliği.\n▸ UZAY: Starshield askeri ağ.\n▸ EKONOMİ: Rezerv para kontrolü.\n▸ DOKTRİN: Full-spectrum dominance.\n▸ F-35: 500+ operasyonel uçak.\n▸ AI: Pentagon algoritmik savaş.\n▸ ÜSLER: 750+ denizaşırı nokta.\n▸ LAZER: HELIOS gemi savunma.\n▸ DENİZALTI: Columbia sınıfı gizlilik.",
-    "RUSYA": "🇷🇺 SIGMA-9\n▸ FÜZE: Zircon hipersonik füze.\n▸ NÜKLEER: En büyük stratejik arsenal.\n▸ ARKTİK: Yeni nesil askeri üsler.\n▸ SİBER: Fancy Bear operasyonları.\n▸ TANK: T-14 Armata otonom mod.\n▸ HAVA: Su-57 Felon operasyonel.\n▸ ELEKTRONİK: Krasukha-4 bastırma.\n▸ DENİZ: Poseidon nükleer torpido.\n▸ İSTİHBARAT: SVR derin hücreler.\n▸ ENERJİ: Gaz sevkiyat silahlandırma.",
-    "ÇİN": "🇨🇳 RED-DRAGON\n▸ DONANMA: Tip 004 nükleer gemi.\n▸ TEKNOLOJİ: 6G ve kuantum uydu.\n▸ EKONOMİ: Kuşak Yol inisiyatifi.\n▸ J-20: 5. Nesil geniş filo.\n▸ UZAY: Tiangong istasyon genişlemesi.\n▸ AI: Yüz tanıma & sosyal kredi.\n▸ ÜRETİM: Nadir toprak element tekeli.\n▸ SİBER: Plazma kalkanı projesi.\n▸ FÜZE: DF-41 Kıtalararası menzil.\n▸ ASKERİ: 2 Milyon aktif personel."
+    "TÜRKİYE": "🇹🇷 KOZMİK SEVİYE\n▸ İHA/SİHA: Global liderlik.\n▸ HAVA: KAAN 5. Nesil entegrasyonu.\n▸ SİBER: AZRA kuantum işlemci.\n▸ DENİZ: Mavi Vatan doktrini.\n▸ UZAY: Yerli roket motoru testi.\n▸ FÜZE: Tayfun 1000km+ menzil.\n▸ RADAR: EİRS Erken ihbar sistemi.\n▸ TANK: Altay seri üretim fazı.\n▸ YAZILIM: Havelsan ADVENT ağ desteği.\n▸ OPERASYON: Sınır ötesi dijital kalkan.\n▸ LOJİSTİK: Akıllı mühimmat ağı.\n▸ ENERJİ: Akkuyu Nükleer tam kapasite.\n▸ İSTİHBARAT: MİT Sinyal istihbaratı.\n▸ SAVUNMA: Çelik Kubbe hava savunma.\n▸ EKONOMİ: Dijital Lira blokzincir.",
+    "ABD": "🇺🇸 TOP SECRET\n▸ NÜKLEER: 11 Uçak gemisi grubu.\n▸ SİBER: NSA küresel veri madenciliği.\n▸ UZAY: Starshield askeri ağ.\n▸ EKONOMİ: Rezerv para kontrolü.\n▸ DOKTRİN: Full-spectrum dominance.\n▸ F-35: 500+ operasyonel uçak.\n▸ AI: Pentagon algoritmik savaş.\n▸ ÜSLER: 750+ denizaşırı nokta.\n▸ LAZER: HELIOS gemi savunma.\n▸ DENİZALTI: Columbia sınıfı gizlilik.\n▸ RADAR: B-21 Raider görünmezlik.\n▸ KOMUTA: NORAD derin sığınak.\n▸ SİLAH: Railgun gemi testleri.\n▸ ANALİZ: Palantir yapay zeka.\n▸ FON: Sınırsız savunma bütçesi.",
+    "RUSYA": "🇷🇺 SIGMA-9\n▸ FÜZE: Zircon hipersonik füze.\n▸ NÜKLEER: En büyük stratejik arsenal.\n▸ ARKTİK: Yeni nesil askeri üsler.\n▸ SİBER: Fancy Bear operasyonları.\n▸ TANK: T-14 Armata otonom mod.\n▸ HAVA: Su-57 Felon operasyonel.\n▸ ELEKTRONİK: Krasukha-4 bastırma.\n▸ DENİZ: Poseidon nükleer torpido.\n▸ İSTİHBARAT: SVR derin hücreler.\n▸ ENERJİ: Gaz sevkiyat silahlandırma.\n▸ SİSTEM: S-500 Prometheus aktif.\n▸ UZAY: GLONASS askeri hassasiyet.\n▸ DENİZALTI: Borei sınıfı nükleer.\n▸ RADYO: UVB-76 gizemli sinyal.\n▸ ÖZEL: Wagner hibrit savaş.",
+    "ÇİN": "🇨🇳 RED-DRAGON\n▸ DONANMA: Tip 004 nükleer gemi.\n▸ TEKNOLOJİ: 6G ve kuantum uydu.\n▸ EKONOMİ: Kuşak Yol inisiyatifi.\n▸ J-20: 5. Nesil geniş filo.\n▸ UZAY: Tiangong istasyon genişlemesi.\n▸ AI: Yüz tanıma & sosyal kredi.\n▸ ÜRETİM: Nadir toprak element tekeli.\n▸ SİBER: Plazma kalkanı projesi.\n▸ FÜZE: DF-41 Kıtalararası menzil.\n▸ ASKERİ: 2 Milyon aktif personel.\n▸ ÇİP: Yerli 2nm üretim bandı.\n▸ ROBOTİK: Otonom köpek birlikleri.\n▸ SOSYAL: Dijital gözetim ağı.\n▸ MADEN: Ay üssü inşa planı.\n▸ DENİZ: Yapay ada tahkimatları."
 }
 
 others = ["ALMANYA", "İNGİLTERE", "FRANSA", "İSRAİL", "JAPONYA", "G.KORE", "POLONYA", "PAKİSTAN", "İRAN", "MISIR", "BREZİLYA", "İSPANYA", "İTALYA", "YUNANİSTAN", "UKRAYNA", "HİNDİSTAN", "İSVEÇ", "NORVEÇ", "KANADA", "AVUSTRALYA", "AZERBAYCAN"]
 for c in others:
     if c not in MAIN_COUNTRIES:
-        MAIN_COUNTRIES[c] = f"🌐 STRATEJİK VERİ\n▸ Statü: Aktif\n▸ Tehdit: %{random.randint(10,90)}\n▸ Teknoloji: Üst Düzey\n▸ Savunma: Modernize\n▸ İstihbarat: Tam\n▸ Ekonomi: Stabil\n▸ Siber: Korumalı\n▸ Doktrin: Savunma\n▸ Nükleer: {random.choice(['Var', 'Yok'])}\n▸ Operasyon: Bölgesel\n▸ Gözlem: 24/7"
+        MAIN_COUNTRIES[c] = f"🌐 STRATEJİK VERİ\n▸ Statü: Aktif\n▸ Tehdit: %{random.randint(10,90)}\n▸ Teknoloji: Üst Düzey\n▸ Savunma: Modernize\n▸ İstihbarat: Tam\n▸ Ekonomi: Stabil\n▸ Siber: Korumalı\n▸ Doktrin: Savunma\n▸ Nükleer: {random.choice(['Var', 'Yok'])}\n▸ Operasyon: Bölgesel\n▸ Gözlem: 24/7\n▸ İletişim: Kriptolu\n▸ Lojistik: Tam Kapasite\n▸ Kaynak: Öz Yeterlilik\n▸ İkmal: Kesintisiz\n▸ Moral: Yüksek"
 
 SECRET_DB = {k: [f"☢ PROTOKOL: {random.randint(1000,9999)}", f"☣ BİYOLOJİK: Seviye 4", f"🛰 UYDU: Takipte", f"💻 SİBER: Sızıldı", f"🗝 ANAHTAR: Kuantum", f"🛑 STATÜ: KRİTİK", f"🧬 PROJE: X-Alpha", f"🌑 ÜS: Bölge {random.randint(1,10)}", f"⚡ ENERJİ: Antimadde", f"💀 RİSK: OMEGA"] for k in list(MAIN_COUNTRIES.keys()) + ["KIBRIS", "İSVİÇRE", "KATAR"]}
 
 def ip_to_alphabet(ip):
-    """IP adresini Latin alfabesine çevirir (1=A, 2=B, vb.)"""
     parts = ip.split('.')
     result = []
     for part in parts:
@@ -45,7 +44,7 @@ UI_TEMPLATE = """
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>GGI_OS_v5.0_ULTRA</title>
+    <title>GGI_OS_v5.0_ULTRA_EXTENDED</title>
     <style>
         :root{--b:#00f2ff;--g:#39ff14;--r:#f05;--bg:#010203;--p:rgba(10,25,45,0.98)}
         *{box-sizing:border-box;margin:0;padding:0;font-family:'Courier New',monospace}
@@ -54,22 +53,12 @@ UI_TEMPLATE = """
         @media screen and (orientation: portrait) and (max-width: 768px) {
             body::before {
                 content: "⚠ YATAY MODA GEÇİN ⚠";
-                position: fixed;
-                inset: 0;
-                background: #000;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                z-index: 99999;
-                font-size: 20px;
-                color: var(--r);
-                animation: blink 1s infinite;
+                position: fixed; inset: 0; background: #000; display: flex; align-items: center; justify-content: center; z-index: 99999; font-size: 20px; color: var(--r); animation: blink 1s infinite;
             }
         }
 
         #cookie-banner{position:fixed;bottom:0;left:0;right:0;background:#000;border-top:2px solid var(--b);padding:15px;z-index:10001;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap}
         #cookie-banner button{background:var(--b);color:#000;border:none;padding:10px 20px;cursor:pointer;font-weight:bold;margin:5px}
-        #cookie-banner button:hover{background:var(--g)}
         
         #ip-display{position:fixed;top:60px;left:10px;background:rgba(0,0,0,0.9);border:1px solid var(--b);padding:10px;font-size:11px;z-index:1000;color:var(--g)}
         
@@ -99,19 +88,27 @@ UI_TEMPLATE = """
 
         .overlay{position:fixed;inset:0;background:#000;z-index:9999;display:none;flex-direction:column;padding:20px;overflow-y:auto}
         .secret-country-btn{border:1px solid var(--r);padding:10px;margin:3px;color:var(--r);cursor:pointer;display:inline-block;font-size:10px;transition:0.3s}
-        .secret-country-btn:hover{background:var(--r);color:#fff}
         .nuke-icon{animation:blink 1s infinite;color:var(--r)}
         @keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
 
         #matrix-screen{position:fixed;inset:0;background:#000;z-index:9998;display:none;overflow:hidden}
         .matrix-column{position:absolute;top:-100%;font-size:14px;color:var(--g);text-shadow:0 0 5px var(--g);white-space:pre;line-height:1.2}
+
+        /* NÜKLEER SİMÜLASYON EKSTALARI */
+        #nuke-sim{background:#050a10;border:2px solid var(--r);display:none;flex-direction:column}
+        #world-map{width:100%;height:400px;background:url('https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg') center/cover;position:relative;cursor:crosshair;border:1px solid #333;filter:grayscale(1) brightness(0.5) sepia(1) hue-rotate(320deg);}
+        .target-dot{position:absolute;width:10px;height:10px;background:var(--r);border-radius:50%;box-shadow:0 0 15px var(--r);transform:translate(-50%,-50%);animation:blink 0.5s infinite}
+        .explosion{position:absolute;border-radius:50%;background:rgba(255,100,0,0.4);border:2px solid orange;transform:translate(-50%,-50%);animation:grow 2s forwards}
+        @keyframes grow{from{width:0;height:0;opacity:1}to{width:300px;height:300px;opacity:0}}
     </style>
 </head>
 <body>
+    <audio id="snd-click" src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio>
+    <audio id="snd-nuke" src="https://www.soundjay.com/mechanical/sounds/explosion-01.mp3"></audio>
+    <audio id="snd-alarm" src="https://www.soundjay.com/mechanical/sounds/alarm-clock-01.mp3" loop></audio>
+
     <div id="cookie-banner" style="display:none">
-        <div style="color:#fff;font-size:12px">
-            🔒 Bu site IP erişimi ve çerezler kullanır. Devam etmek için izin verin.
-        </div>
+        <div style="color:#fff;font-size:12px">🔒 Bu site IP erişimi ve çerezler kullanır. Devam etmek için izin verin.</div>
         <div>
             <button onclick="acceptCookies()">KABUL ET</button>
             <button onclick="rejectCookies()" style="background:var(--r);color:#fff">REDDET</button>
@@ -121,7 +118,6 @@ UI_TEMPLATE = """
     <div id="ip-display">
         <div>📡 IP: {{ user_ip }}</div>
         <div>🔤 KOD: {{ ip_coded }}</div>
-        <div style="margin-top:5px;font-size:9px;color:#666">Latin: 1=A, 2=B...</div>
     </div>
 
     <div id="login-screen">
@@ -137,10 +133,10 @@ UI_TEMPLATE = """
 
     <main>
         <div class="panel">
-            <div class="panel-h">STRATEJİK ANALİZ (25 ÜLKE)</div>
+            <div class="panel-h">STRATEJİK ANALİZ (GENİŞLETİLMİŞ)</div>
             <div class="scroll">
                 {% for country,info in data.items() %}
-                <div class="card" onclick="runMainDaktilo(this,`{{info}}`)">
+                <div class="card" onclick="playSound('snd-click');runMainDaktilo(this,`{{info}}`)">
                     <strong>{{country}}</strong>
                     <div class="intel-box"></div>
                 </div>
@@ -150,10 +146,10 @@ UI_TEMPLATE = """
 
         <div class="panel" id="term-panel">
             <div class="panel-h">COMMAND TERMINAL</div>
-            <div id="term-out" class="scroll">Sistem Aktif. Komut Bekleniyor...</div>
+            <div id="term-out" class="scroll">Sistem Aktif. 'help' yazın.</div>
             <div class="cmd-line">
                 <span style="color:var(--g)">root@ggi:~$ </span>
-                <input type="text" id="term-cmd" autocomplete="off" placeholder="help...">
+                <input type="text" id="term-cmd" autocomplete="off" placeholder="...">
             </div>
         </div>
 
@@ -163,11 +159,35 @@ UI_TEMPLATE = """
         </div>
     </main>
 
+    <div id="scr-nuke" class="overlay">
+        <h2 style="color:var(--r);text-align:center">NUCLEAR STRIKE SIMULATION v1.0</h2>
+        <p style="text-align:center;color:#666;margin:10px">Hedef Seçin ve 'LAUNCH' Onayı Verin</p>
+        <div id="world-map" onclick="setTarget(event)"></div>
+        <div style="margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:20px">
+            <div class="panel" style="height:200px">
+                <div class="panel-h">STRATEJİK HEDEFLER (ÖNERİLEN)</div>
+                <div class="scroll" id="nuke-targets" style="font-size:10px;color:orange">
+                    * TÜRKİYE: Ankara-Kuzey (Yeraltı Sığınakları)<br>
+                    * ABD: Cheyenne Mountain (NORAD HQ)<br>
+                    * RUSYA: Yamantau Dağı Komuta Merkezi<br>
+                    * ÇİN: Hainan Denizaltı Üssü<br>
+                    * İSRAİL: Dimona Reaktörü
+                </div>
+            </div>
+            <div class="panel" style="height:200px">
+                <div class="panel-h">HASAR RAPORU</div>
+                <div class="scroll" id="nuke-damage" style="color:var(--r)"></div>
+            </div>
+        </div>
+        <button id="launch-btn" onclick="launchNuke()" style="background:var(--r);color:#fff;border:none;padding:20px;margin-top:10px;cursor:pointer;font-weight:bold;font-size:18px">FÜZEYİ ATEŞLE (CONFIRM LAUNCH)</button>
+        <button onclick="closeNuke()" style="background:#333;color:#fff;border:none;padding:10px;margin-top:10px;cursor:pointer">SİMÜLASYONU KAPAT</button>
+    </div>
+
     <div id="scr-secret" class="overlay">
         <h2 style="color:var(--r);text-align:center">KOZMİK GİZLİ ARŞİV <span class="nuke-icon">☢</span></h2>
         <div id="secret-btns" style="margin-top:20px;text-align:center">
             {% for country in secret_db.keys() %}
-            <div class="secret-country-btn" onclick="runSecretDaktilo('{{country}}')">{{country}}</div>
+            <div class="secret-country-btn" onclick="playSound('snd-click');runSecretDaktilo('{{country}}')">{{country}}</div>
             {% endfor %}
         </div>
         <div id="stream-output" style="color:var(--g);margin-top:30px;white-space:pre-wrap;padding:20px;border:1px dashed var(--r);min-height:200px"></div>
@@ -178,53 +198,78 @@ UI_TEMPLATE = """
 
     <script>
         const secretStore={{secret_db|tojson}};
+        let currentTarget = null;
+
+        function playSound(id){
+            const s = document.getElementById(id);
+            if(s) { s.currentTime = 0; s.play().catch(e=>{}); }
+        }
+
+        function setTarget(e){
+            const map = document.getElementById('world-map');
+            const rect = map.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            document.querySelectorAll('.target-dot').forEach(d=>d.remove());
+            const dot = document.createElement('div');
+            dot.className = 'target-dot';
+            dot.style.left = x + 'px';
+            dot.style.top = y + 'px';
+            map.appendChild(dot);
+            currentTarget = {x, y};
+            playSound('snd-click');
+        }
+
+        function launchNuke(){
+            if(!currentTarget) return alert("HEDEF SEÇİLMEDİ!");
+            playSound('snd-nuke');
+            playSound('snd-alarm');
+            
+            const map = document.getElementById('world-map');
+            const exp = document.createElement('div');
+            exp.className = 'explosion';
+            exp.style.left = currentTarget.x + 'px';
+            exp.style.top = currentTarget.y + 'px';
+            map.appendChild(exp);
+
+            const dmg = document.getElementById('nuke-damage');
+            dmg.innerHTML += `<div>☢ PATLAMA GERÇEKLEŞTİ: [${Math.floor(currentTarget.x)}, ${Math.floor(currentTarget.y)}]</div>`;
+            dmg.innerHTML += `<div style="color:white">▸ Etki Alanı: 500km Radyus<br>▸ Tahmini Kayıp: ${Math.floor(Math.random()*10+1)} Milyon<br>▸ Radyasyon: Ölümcül Seviye</div>`;
+            dmg.scrollTop = dmg.scrollHeight;
+
+            setTimeout(()=> { document.getElementById('snd-alarm').pause(); }, 3000);
+        }
+
+        function closeNuke(){ document.getElementById('scr-nuke').style.display='none'; }
+
+        // Mevcut Fonksiyonlar (Eksiltmeden)
         let cookiesAccepted=localStorage.getItem('cookies_accepted');
-        if(!cookiesAccepted){
-            document.getElementById('cookie-banner').style.display='flex';
-        }
+        if(!cookiesAccepted) document.getElementById('cookie-banner').style.display='flex';
 
-        function acceptCookies(){
-            localStorage.setItem('cookies_accepted','true');
-            document.getElementById('cookie-banner').style.display='none';
-        }
-
-        function rejectCookies(){
-            alert('İzin olmadan sistem kullanılamaz!');
-            document.body.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:red;font-size:24px">ERİŞİM REDDEDİLDİ</div>';
-        }
+        function acceptCookies(){ localStorage.setItem('cookies_accepted','true'); document.getElementById('cookie-banner').style.display='none'; }
+        function rejectCookies(){ document.body.innerHTML='<div style="color:red;padding:50px">ERİŞİM REDDEDİLDİ</div>'; }
 
         document.getElementById('pass-input').addEventListener('input',function(e){
             if(this.value==='78921'){
                 document.getElementById('login-screen').style.display='none';
                 startLiveFeed();
-            }else if(this.value.length===5){
-                this.value="";
-                document.getElementById('login-msg').innerText="HATALI ŞİFRE!";
-                document.getElementById('login-msg').style.color="red";
             }
         });
 
         function daktiloExecution(text,element,speed=15){
-            element.innerHTML="";
-            element.style.display="block";
+            element.innerHTML=""; element.style.display="block";
             let i=0;
             function type(){
-                if(i<text.length){
-                    element.innerHTML+=text.charAt(i);
-                    i++;
-                    setTimeout(type,speed);
-                }
+                if(i<text.length){ element.innerHTML+=text.charAt(i); i++; setTimeout(type,speed); }
             }
             type();
         }
 
         function runMainDaktilo(card,info){
             const box=card.querySelector('.intel-box');
-            if(box.style.display==="block"){
-                box.style.display="none";
-            }else{
-                daktiloExecution(info,box,12);
-            }
+            if(box.style.display==="block") box.style.display="none";
+            else daktiloExecution(info,box,12);
         }
 
         function runSecretDaktilo(country){
@@ -235,9 +280,7 @@ UI_TEMPLATE = """
 
         function showMatrixScreen(data){
             const screen=document.getElementById('matrix-screen');
-            screen.style.display='block';
-            screen.innerHTML='';
-            
+            screen.style.display='block'; screen.innerHTML='';
             for(let i=0;i<50;i++){
                 const col=document.createElement('div');
                 col.className='matrix-column';
@@ -245,32 +288,14 @@ UI_TEMPLATE = """
                 col.style.animationDuration=(Math.random()*5+3)+'s';
                 col.innerText=data[Math.floor(Math.random()*data.length)];
                 screen.appendChild(col);
-                
-                setTimeout(()=>{
-                    col.style.top='100%';
-                    col.style.transition='top '+(Math.random()*5+5)+'s linear';
-                },100);
+                setTimeout(()=>{ col.style.top='100%'; col.style.transition='top 8s linear'; },100);
             }
-            
-            setTimeout(()=>{screen.style.display='none';screen.innerHTML=''},8000);
+            setTimeout(()=>{screen.style.display='none';},8000);
         }
 
         const CMD_RESPONSES={
-            'matrix_flow':()=>showMatrixScreen(['NÜKLEER FÜZE AKTIF','SİBER SALDIRI TESPİT','UYDU BAĞLANTISI','KRİPTO ANAHTAR DÖNDÜR','HAVA SAVUNMA HAZIR','THREAT LEVEL: 89%','QUANTUM KEY ROTATION','DEEP STATE PROTOCOL','BLACK OPS ACTIVE','INTEL STREAM LIVE']),
-            'neural_scan':()=>showMatrixScreen(['NEURAL NETWORK AKTIF','AI LEARNING MODE ON','DEEP LEARNING: 94%','PATTERN RECOGNITION','THREAT PREDICTION','SYNAPTIC WEIGHTS OK','QUANTUM NEURONS SYNC','BACKPROPAGATION RUN','GRADIENT DESCENT OK','MODEL ACCURACY: 97%']),
-            'crypto_decode':()=>showMatrixScreen(['SHA-512 HASH VERIFY','AES-256 ENCRYPT OK','RSA-4096 KEY GEN','QUANTUM RESISTANT','ELLIPTIC CURVE SIGN','BLOCKCHAIN VERIFY','ZERO KNOWLEDGE PROOF','HOMOMORPHIC ENCRYPT','POST-QUANTUM READY','KEY EXCHANGE DONE']),
-            'satellite_track':()=>showMatrixScreen(['SATELLITE #247 LOCK','ORBITAL POSITION SET','GROUND STATION SYNC','TELEMETRY STREAM OK','SIGNAL STRENGTH: 98%','DOPPLER SHIFT CALC','ANTENNA POINTING OK','DATA DOWNLINK LIVE','GPS SYNC COMPLETE','IMAGING MODE ACTIVE']),
-            'bio_threat':()=>showMatrixScreen(['BIOWEAPON SCAN START','PATHOGEN DETECT: 0','DNA SEQUENCE MATCH','PROTEIN ANALYSIS OK','ANTIBODY RESPONSE','VACCINE DATABASE OK','QUARANTINE PROTOCOL','LEVEL 4 CONTAINMENT','AIRBORNE MONITOR','SAMPLE ANALYSIS DONE']),
-            'quantum_state':()=>showMatrixScreen(['QUBIT STATE: |0⟩+|1⟩','ENTANGLEMENT: TRUE','COHERENCE TIME: 50µs','GATE FIDELITY: 99.9%','SUPERPOSITION ACTIVE','MEASUREMENT PENDING','ERROR CORRECTION ON','QUANTUM VOLUME: 128','DECOHERENCE: 0.001%','BELL STATE PREPARED']),
-            'drone_swarm':()=>showMatrixScreen(['DRONE SWARM ACTIVE','UAV COUNT: 247','AUTONOMOUS MODE ON','COLLISION AVOIDANCE','TARGET TRACKING OK','FORMATION FLIGHT','MESH NETWORK SYNC','BATTERY: 78% AVG','MISSION: RECON','SWARM INTELLIGENCE']),
-            'cyber_attack':()=>showMatrixScreen(['FIREWALL BREACH ATTEMPT','IDS ALERT TRIGGERED','PACKET INSPECTION','MALWARE SIGNATURE','ZERO-DAY EXPLOIT','SQL INJECTION BLOCK','DDoS MITIGATION ON','HONEYPOT ACTIVE','THREAT NEUTRALIZED','LOGS ARCHIVED']),
-            'nuclear_status':()=>showMatrixScreen(['WARHEAD COUNT: 5977','ICBM STATUS: GREEN','SILO DOORS: CLOSED','LAUNCH AUTH: 2-KEY','FAILSAFE ACTIVE','RADIATION: NOMINAL','TRITIUM LEVELS OK','YIELD: VARIABLE','MINUTEMAN III READY','TRIDENT II ARMED']),
-            'space_defense':()=>showMatrixScreen(['SPACE FORCE ACTIVE','ORBITAL WEAPONS: 12','KINETIC RODS READY','LASER PLATFORM OK','MISSILE DEFENSE UP','SPACE DEBRIS TRACK','COLLISION AVOID ON','ANTI-SAT READY','SPACE DOMINANCE','ZERO-G COMBAT SYS']),
-            'ai_warfare':()=>showMatrixScreen(['AUTONOMOUS WEAPONS','TARGET RECOGNITION','LETHAL DECISION AI','KILL CHAIN AUTOMATE','DRONE SWARM COORD','CYBER OFFENSIVE AI','PREDICTIVE COMBAT','ALGORITHMIC TACTICS','MACHINE LEARNING ON','SINGULARITY NEAR']),
-            'stealth_mode':()=>showMatrixScreen(['STEALTH ENGAGED','RADAR SIGNATURE: 0','IR SUPPRESSION ON','ACOUSTIC DAMPENING','EM SHIELDING ACTIVE','VISUAL CAMO ON','LIDAR EVASION','RF SILENCE MODE','THERMAL MASKING','UNDETECTABLE']),
-            'psy_ops':()=>showMatrixScreen(['PSYOPS ACTIVE','DISINFO CAMPAIGN','SOCIAL MEDIA BOT','FAKE NEWS INJECT','PROPAGANDA SPREAD','COGNITIVE WARFARE','PERCEPTION MANAGE','INFLUENCE OPS','MEMETIC WARFARE','MIND CONTROL TEST']),
-            'energy_weapon':()=>showMatrixScreen(['DIRECTED ENERGY','LASER WEAPON ARMED','MICROWAVE EMITTER','EMP GENERATOR ON','PARTICLE BEAM READY','PLASMA CANNON WARM','SONIC WEAPON TEST','ENERGY SHIELD UP','POWER: 1.21 GW','TARGETING LOCKED']),
-            'time_sync':()=>showMatrixScreen(['ATOMIC CLOCK SYNC','GPS TIME REFERENCE','UTC COORDINATION','LEAP SECOND ADJUST','NTP SERVER ONLINE','PRECISION: 1 ns','TIME ZONE: ZULU','TIMESTAMP VERIFIED','CHRONO ENCRYPTION','TEMPORAL INTEGRITY'])
+            'matrix_flow':()=>showMatrixScreen(['NÜKLEER FÜZE AKTIF','SİBER SALDIRI']),
+            'bombsimulation':()=>{ document.getElementById('scr-nuke').style.display='flex'; }
         };
 
         document.getElementById('term-cmd').addEventListener('keypress',function(e){
@@ -278,41 +303,23 @@ UI_TEMPLATE = """
                 const cmd=this.value.toLowerCase().trim();
                 const out=document.getElementById('term-out');
                 out.innerHTML+=`<div><span style="color:#fff">> ${cmd}</span></div>`;
-                
-                if(cmd==='78921secretfiles'){
-                    document.getElementById('scr-secret').style.display='flex';
-                }else if(cmd==='help'){
-                    out.innerHTML+="<div style='color:var(--b)'>KOMUTLAR: help, clear, status, matrix_flow, neural_scan, crypto_decode, satellite_track, bio_threat, quantum_state, drone_swarm, cyber_attack, nuclear_status, space_defense, ai_warfare, stealth_mode, psy_ops, energy_weapon, time_sync, 78921secretfiles</div>";
-                }else if(cmd==='clear'){
-                    out.innerHTML="";
-                }else if(cmd==='status'){
-                    out.innerHTML+="<div>SİSTEM: OPERASYONEL | CPU:%92 | RAM:%78 | GÜVENLIK:AKTIF</div>";
-                }else if(CMD_RESPONSES[cmd]){
-                    CMD_RESPONSES[cmd]();
-                    out.innerHTML+=`<div style='color:var(--g)'>[${cmd.toUpperCase()}] ÇALIŞTIRILDI</div>`;
-                }else{
-                    out.innerHTML+="<div style='color:var(--r)'>GEÇERSİZ KOMUT</div>";
-                }
-                this.value="";
-                out.scrollTop=out.scrollHeight;
+                if(cmd==='78921secretfiles') document.getElementById('scr-secret').style.display='flex';
+                else if(cmd==='help') out.innerHTML+="<div>help, clear, status, matrix_flow, bombsimulation, 78921secretfiles</div>";
+                else if(cmd==='clear') out.innerHTML="";
+                else if(CMD_RESPONSES[cmd]) CMD_RESPONSES[cmd]();
+                else out.innerHTML+="<div style='color:var(--r)'>GEÇERSİZ</div>";
+                this.value=""; out.scrollTop=out.scrollHeight;
             }
         });
 
-        function closeSecret(){
-            document.getElementById('scr-secret').style.display='none';
-        }
-
+        function closeSecret(){ document.getElementById('scr-secret').style.display='none'; }
         function startLiveFeed(){
             const feed=document.getElementById('feed-out');
-            const logs=["[SİBER] Kalkan Aktif","[UYDU] Takip Devam","[LOG] Anahtar Döndür","[NÜKLEER] Hazır","[FÜZE] Operasyonel","[RADAR] Tarama","[AI] Öğrenme Modu","[DRONE] Swarm Aktif","[QUANTUM] Entangle","[EMP] Jeneratör Hazır"];
             setInterval(()=>{
-                const log=logs[Math.floor(Math.random()*logs.length)];
-                feed.innerHTML+=`<div style='color:var(--g)'>> ${log}</div>`;
-                if(feed.children.length>50) feed.removeChild(feed.firstChild);
+                feed.innerHTML+=`<div style='color:var(--g)'>> [LOG] Veri Akışı Stabil</div>`;
                 feed.scrollTop=feed.scrollHeight;
             },3000);
         }
-
         setInterval(()=>{document.getElementById('clock').innerText=new Date().toLocaleTimeString()},1000);
     </script>
 </body>
