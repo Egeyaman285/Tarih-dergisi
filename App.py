@@ -4,12 +4,12 @@ from flask import Flask, render_template_string, request
 
 app = Flask(__name__)
 
-# === GENİŞLETİLMİŞ VERİ SETİ (+5 Satır Bilgi Eklendi) ===
+# === TÜM VERİ SETİ (Orijinal + 5 Satır Ek Bilgi) ===
 MAIN_COUNTRIES = {
-    "TÜRKİYE": "🇹🇷 KOZMİK SEVİYE\n▸ İHA/SİHA: Global liderlik.\n▸ HAVA: KAAN 5. Nesil entegrasyonu.\n▸ SİBER: AZRA kuantum işlemci.\n▸ DENİZ: Mavi Vatan doktrini.\n▸ UZAY: Yerli roket motoru testi.\n▸ FÜZE: Tayfun 1000km+ menzil.\n▸ RADAR: EİRS Erken ihbar sistemi.\n▸ TANK: Altay seri üretim fazı.\n▸ YAZILIM: Havelsan ADVENT ağ desteği.\n▸ OPERASYON: Sınır ötesi dijital kalkan.\n▸ LOJİSTİK: Akıllı mühimmat ağı.\n▸ ENERJİ: Akkuyu Nükleer tam kapasite.\n▸ İSTİHBARAT: MİT Sinyal istihbaratı.\n▸ SAVUNMA: Çelik Kubbe hava savunma.\n▸ EKONOMİ: Dijital Lira blokzincir.",
-    "ABD": "🇺🇸 TOP SECRET\n▸ NÜKLEER: 11 Uçak gemisi grubu.\n▸ SİBER: NSA küresel veri madenciliği.\n▸ UZAY: Starshield askeri ağ.\n▸ EKONOMİ: Rezerv para kontrolü.\n▸ DOKTRİN: Full-spectrum dominance.\n▸ F-35: 500+ operasyonel uçak.\n▸ AI: Pentagon algoritmik savaş.\n▸ ÜSLER: 750+ denizaşırı nokta.\n▸ LAZER: HELIOS gemi savunma.\n▸ DENİZALTI: Columbia sınıfı gizlilik.\n▸ RADAR: B-21 Raider görünmezlik.\n▸ KOMUTA: NORAD derin sığınak.\n▸ SİLAH: Railgun gemi testleri.\n▸ ANALİZ: Palantir yapay zeka.\n▸ FON: Sınırsız savunma bütçesi.",
-    "RUSYA": "🇷🇺 SIGMA-9\n▸ FÜZE: Zircon hipersonik füze.\n▸ NÜKLEER: En büyük stratejik arsenal.\n▸ ARKTİK: Yeni nesil askeri üsler.\n▸ SİBER: Fancy Bear operasyonları.\n▸ TANK: T-14 Armata otonom mod.\n▸ HAVA: Su-57 Felon operasyonel.\n▸ ELEKTRONİK: Krasukha-4 bastırma.\n▸ DENİZ: Poseidon nükleer torpido.\n▸ İSTİHBARAT: SVR derin hücreler.\n▸ ENERJİ: Gaz sevkiyat silahlandırma.\n▸ SİSTEM: S-500 Prometheus aktif.\n▸ UZAY: GLONASS askeri hassasiyet.\n▸ DENİZALTI: Borei sınıfı nükleer.\n▸ RADYO: UVB-76 gizemli sinyal.\n▸ ÖZEL: Wagner hibrit savaş.",
-    "ÇİN": "🇨🇳 RED-DRAGON\n▸ DONANMA: Tip 004 nükleer gemi.\n▸ TEKNOLOJİ: 6G ve kuantum uydu.\n▸ EKONOMİ: Kuşak Yol inisiyatifi.\n▸ J-20: 5. Nesil geniş filo.\n▸ UZAY: Tiangong istasyon genişlemesi.\n▸ AI: Yüz tanıma & sosyal kredi.\n▸ ÜRETİM: Nadir toprak element tekeli.\n▸ SİBER: Plazma kalkanı projesi.\n▸ FÜZE: DF-41 Kıtalararası menzil.\n▸ ASKERİ: 2 Milyon aktif personel.\n▸ ÇİP: Yerli 2nm üretim bandı.\n▸ ROBOTİK: Otonom köpek birlikleri.\n▸ SOSYAL: Dijital gözetim ağı.\n▸ MADEN: Ay üssü inşa planı.\n▸ DENİZ: Yapay ada tahkimatları."
+    "TÜRKİYE": "🇹🇷 KOZMİK SEVİYE\n▸ İHA/SİHA: Global liderlik.\n▸ HAVA: KAAN 5. Nesil entegrasyonu.\n▸ SİBER: AZRA kuantum işlemci.\n▸ DENİZ: Mavi Vatan doktrini.\n▸ UZAY: Yerli roket motoru testi.\n▸ FÜZE: Tayfun 1000km+ menzil.\n▸ RADAR: EİRS Erken ihbar sistemi.\n▸ TANK: Altay seri üretim fazı.\n▸ YAZILIM: Havelsan ADVENT ağ desteği.\n▸ OPERASYON: Sınır ötesi dijital kalkan.\n▸ LOJİSTİK: Akıllı mühimmat ağı.\n▸ ENERJİ: Akkuyu Nükleer tam kapasite.\n▸ İSTİHBARAT: MİT Sinyal istihbaratı.\n▸ SAVUNMA: Çelik Kubbe hava savunma.\n▸ EKONOMİ: Dijital Lira blokzincir.\n▸ DOCTRINE: Network-centric warfare.\n▸ QUANTUM: Yerli atomik saat projesi.\n▸ GLOBAL: TCG Anadolu Amfibi güç.\n▸ AI: Baykar otonom sürü zekası.\n▸ SPACE: Ay misyonu roket motoru.",
+    "ABD": "🇺🇸 TOP SECRET\n▸ NÜKLEER: 11 Uçak gemisi grubu.\n▸ SİBER: NSA küresel veri madenciliği.\n▸ UZAY: Starshield askeri ağ.\n▸ EKONOMİ: Rezerv para kontrolü.\n▸ DOKTRİN: Full-spectrum dominance.\n▸ F-35: 500+ operasyonel uçak.\n▸ AI: Pentagon algoritmik savaş.\n▸ ÜSLER: 750+ denizaşırı nokta.\n▸ LAZER: HELIOS gemi savunma.\n▸ DENİZALTI: Columbia sınıfı gizlilik.\n▸ RADAR: B-21 Raider görünmezlik.\n▸ KOMUTA: NORAD derin sığınak.\n▸ SİLAH: Railgun gemi testleri.\n▸ ANALİZ: Palantir yapay zeka.\n▸ FON: Sınırsız savunma bütçesi.\n▸ GLOBAL: Prompt Global Strike.\n▸ TECH: Silicon Valley askeri Ar-Ge.\n▸ INTEL: CIA derin veri analitiği.\n▸ FINANCE: FED dolar hegemonyası.\n▸ SPACE: Space Force orbital savunma.",
+    "RUSYA": "🇷🇺 SIGMA-9\n▸ FÜZE: Zircon hipersonik füze.\n▸ NÜKLEER: En büyük stratejik arsenal.\n▸ ARKTİK: Yeni nesil askeri üsler.\n▸ SİBER: Fancy Bear operasyonları.\n▸ TANK: T-14 Armata otonom mod.\n▸ HAVA: Su-57 Felon operasyonel.\n▸ ELEKTRONİK: Krasukha-4 bastırma.\n▸ DENİZ: Poseidon nükleer torpido.\n▸ İSTİHBARAT: SVR derin hücreler.\n▸ ENERJİ: Gaz sevkiyat silahlandırma.\n▸ SİSTEM: S-500 Prometheus aktif.\n▸ UZAY: GLONASS askeri hassasiyet.\n▸ DENİZALTI: Borei sınıfı nükleer.\n▸ RADYO: UVB-76 gizemli sinyal.\n▸ ÖZEL: Wagner hibrit savaş.\n▸ HYPERSONIC: Avangard süzülme aracı.\n▸ UNDERWATER: Yasen-M nükleer bot.\n▸ PROPAGANDA: Küresel dezenformasyon.\n▸ RESOURCES: Sibirya hammadde.\n▸ DEFENSE: A-135 füze kalkanı.",
+    "ÇİN": "🇨🇳 RED-DRAGON\n▸ DONANMA: Tip 004 nükleer gemi.\n▸ TEKNOLOJİ: 6G ve kuantum uydu.\n▸ EKONOMİ: Kuşak Yol inisiyatifi.\n▸ J-20: 5. Nesil geniş filo.\n▸ UZAY: Tiangong istasyon genişlemesi.\n▸ AI: Yüz tanıma & sosyal kredi.\n▸ ÜRETİM: Nadir toprak element tekeli.\n▸ SİBER: Plazma kalkanı projesi.\n▸ FÜZE: DF-41 Kıtalararası menzil.\n▸ ASKERİ: 2 Milyon aktif personel.\n▸ ÇİP: Yerli 2nm üretim bandı.\n▸ ROBOTİK: Otonom köpek birlikleri.\n▸ SOSYAL: Dijital gözetim ağı.\n▸ MADEN: Ay üssü inşa planı.\n▸ DENİZ: Yapay ada tahkimatları.\n▸ NAVAL: Güney Çin Denizi kontrolü.\n▸ INFRA: Hızlı tren askeri lojistik.\n▸ CHIPS: SMIC yerli litografi.\n▸ DRONES: Wing Loong sürü saldırı.\n▸ QUANTUM: Jiuzhang hesaplama gücü."
 }
 
 others = ["ALMANYA", "İNGİLTERE", "FRANSA", "İSRAİL", "JAPONYA", "G.KORE", "POLONYA", "PAKİSTAN", "İRAN", "MISIR", "BREZİLYA", "İSPANYA", "İTALYA", "YUNANİSTAN", "UKRAYNA", "HİNDİSTAN", "İSVEÇ", "NORVEÇ", "KANADA", "AVUSTRALYA", "AZERBAYCAN"]
@@ -94,12 +94,22 @@ UI_TEMPLATE = """
         #matrix-screen{position:fixed;inset:0;background:#000;z-index:9998;display:none;overflow:hidden}
         .matrix-column{position:absolute;top:-100%;font-size:14px;color:var(--g);text-shadow:0 0 5px var(--g);white-space:pre;line-height:1.2}
 
-        /* NÜKLEER SİMÜLASYON EKSTALARI */
-        #nuke-sim{background:#050a10;border:2px solid var(--r);display:none;flex-direction:column}
-        #world-map{width:100%;height:400px;background:url('https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg') center/cover;position:relative;cursor:crosshair;border:1px solid #333;filter:grayscale(1) brightness(0.5) sepia(1) hue-rotate(320deg);}
-        .target-dot{position:absolute;width:10px;height:10px;background:var(--r);border-radius:50%;box-shadow:0 0 15px var(--r);transform:translate(-50%,-50%);animation:blink 0.5s infinite}
-        .explosion{position:absolute;border-radius:50%;background:rgba(255,100,0,0.4);border:2px solid orange;transform:translate(-50%,-50%);animation:grow 2s forwards}
-        @keyframes grow{from{width:0;height:0;opacity:1}to{width:300px;height:300px;opacity:0}}
+        /* NÜKLEER SİMÜLASYON FIX */
+        #world-map{
+            width:100%; height:450px; 
+            background: url('https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg') no-repeat center; 
+            background-size: cover;
+            position:relative; cursor:crosshair; border:1px solid var(--b);
+            background-color: #051015;
+            filter: brightness(0.7) contrast(1.2) sepia(0.5) hue-rotate(140deg);
+        }
+        .target-dot{position:absolute;width:12px;height:12px;background:var(--r);border-radius:50%;box-shadow:0 0 15px var(--r);transform:translate(-50%,-50%);animation:blink 0.5s infinite;z-index:10}
+        .explosion{position:absolute;border-radius:50%;background:rgba(255,100,0,0.5);border:2px solid orange;transform:translate(-50%,-50%);animation:grow 2.5s forwards;z-index:5}
+        @keyframes grow{from{width:0;height:0;opacity:1}to{width:400px;height:400px;opacity:0}}
+
+        .weapon-select { display: flex; gap: 10px; margin-bottom: 10px; justify-content: center; }
+        .weapon-btn { background: #112233; border: 1px solid var(--b); color: var(--b); padding: 5px 15px; cursor: pointer; font-size: 10px; }
+        .weapon-btn.active { background: var(--r); color: white; border-color: white; }
     </style>
 </head>
 <body>
@@ -160,11 +170,19 @@ UI_TEMPLATE = """
     </main>
 
     <div id="scr-nuke" class="overlay">
-        <h2 style="color:var(--r);text-align:center">NUCLEAR STRIKE SIMULATION v1.0</h2>
-        <p style="text-align:center;color:#666;margin:10px">Hedef Seçin ve 'LAUNCH' Onayı Verin</p>
+        <h2 style="color:var(--r);text-align:center">NUCLEAR STRIKE SIMULATION v2.0</h2>
+        <p style="text-align:center;color:#666;margin:5px">Silah Seçin, Hedef Belirleyin ve 'LAUNCH' Onayı Verin</p>
+        
+        <div class="weapon-select">
+            <button class="weapon-btn active" onclick="setWeapon('Nuke', this)">☢ ATOM BOMBASI</button>
+            <button class="weapon-btn" onclick="setWeapon('AirStrike', this)">✈ UÇAK FİLOSU</button>
+            <button class="weapon-btn" onclick="setWeapon('Drone', this)">🛸 İHA SALDIRISI</button>
+        </div>
+
         <div id="world-map" onclick="setTarget(event)"></div>
-        <div style="margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:20px">
-            <div class="panel" style="height:200px">
+        
+        <div style="margin-top:15px;display:grid;grid-template-columns:1fr 1fr;gap:15px">
+            <div class="panel" style="height:150px">
                 <div class="panel-h">STRATEJİK HEDEFLER (ÖNERİLEN)</div>
                 <div class="scroll" id="nuke-targets" style="font-size:10px;color:orange">
                     * TÜRKİYE: Ankara-Kuzey (Yeraltı Sığınakları)<br>
@@ -174,12 +192,12 @@ UI_TEMPLATE = """
                     * İSRAİL: Dimona Reaktörü
                 </div>
             </div>
-            <div class="panel" style="height:200px">
+            <div class="panel" style="height:150px">
                 <div class="panel-h">HASAR RAPORU</div>
                 <div class="scroll" id="nuke-damage" style="color:var(--r)"></div>
             </div>
         </div>
-        <button id="launch-btn" onclick="launchNuke()" style="background:var(--r);color:#fff;border:none;padding:20px;margin-top:10px;cursor:pointer;font-weight:bold;font-size:18px">FÜZEYİ ATEŞLE (CONFIRM LAUNCH)</button>
+        <button id="launch-btn" onclick="launchNuke()" style="background:var(--r);color:#fff;border:none;padding:15px;margin-top:10px;cursor:pointer;font-weight:bold;font-size:16px">FÜZEYİ ATEŞLE (CONFIRM LAUNCH)</button>
         <button onclick="closeNuke()" style="background:#333;color:#fff;border:none;padding:10px;margin-top:10px;cursor:pointer">SİMÜLASYONU KAPAT</button>
     </div>
 
@@ -199,10 +217,18 @@ UI_TEMPLATE = """
     <script>
         const secretStore={{secret_db|tojson}};
         let currentTarget = null;
+        let selectedWeapon = 'Nuke';
 
         function playSound(id){
             const s = document.getElementById(id);
             if(s) { s.currentTime = 0; s.play().catch(e=>{}); }
+        }
+
+        function setWeapon(type, btn) {
+            selectedWeapon = type;
+            document.querySelectorAll('.weapon-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            playSound('snd-click');
         }
 
         function setTarget(e){
@@ -214,10 +240,10 @@ UI_TEMPLATE = """
             document.querySelectorAll('.target-dot').forEach(d=>d.remove());
             const dot = document.createElement('div');
             dot.className = 'target-dot';
-            dot.style.left = x + 'px';
-            dot.style.top = y + 'px';
+            dot.style.left = (x / rect.width * 100) + '%';
+            dot.style.top = (y / rect.height * 100) + '%';
             map.appendChild(dot);
-            currentTarget = {x, y};
+            currentTarget = {x: (x / rect.width * 100), y: (y / rect.height * 100)};
             playSound('snd-click');
         }
 
@@ -229,13 +255,13 @@ UI_TEMPLATE = """
             const map = document.getElementById('world-map');
             const exp = document.createElement('div');
             exp.className = 'explosion';
-            exp.style.left = currentTarget.x + 'px';
-            exp.style.top = currentTarget.y + 'px';
+            exp.style.left = currentTarget.x + '%';
+            exp.style.top = currentTarget.y + '%';
             map.appendChild(exp);
 
             const dmg = document.getElementById('nuke-damage');
-            dmg.innerHTML += `<div>☢ PATLAMA GERÇEKLEŞTİ: [${Math.floor(currentTarget.x)}, ${Math.floor(currentTarget.y)}]</div>`;
-            dmg.innerHTML += `<div style="color:white">▸ Etki Alanı: 500km Radyus<br>▸ Tahmini Kayıp: ${Math.floor(Math.random()*10+1)} Milyon<br>▸ Radyasyon: Ölümcül Seviye</div>`;
+            dmg.innerHTML += `<div>☢ [${selectedWeapon}] SALDIRISI GERÇEKLEŞTİ: [%${Math.floor(currentTarget.x)}, %${Math.floor(currentTarget.y)}]</div>`;
+            dmg.innerHTML += `<div style="color:white">▸ Durum: Hedef İmha Edildi<br>▸ Tahmini Kayıp: ${Math.floor(Math.random()*5+1)} Milyon<br>▸ Radyasyon: ${selectedWeapon==='Nuke'?'Kritik':'Minimum'}</div>`;
             dmg.scrollTop = dmg.scrollHeight;
 
             setTimeout(()=> { document.getElementById('snd-alarm').pause(); }, 3000);
@@ -243,7 +269,6 @@ UI_TEMPLATE = """
 
         function closeNuke(){ document.getElementById('scr-nuke').style.display='none'; }
 
-        // Mevcut Fonksiyonlar (Eksiltmeden)
         let cookiesAccepted=localStorage.getItem('cookies_accepted');
         if(!cookiesAccepted) document.getElementById('cookie-banner').style.display='flex';
 
@@ -294,7 +319,7 @@ UI_TEMPLATE = """
         }
 
         const CMD_RESPONSES={
-            'matrix_flow':()=>showMatrixScreen(['NÜKLEER FÜZE AKTIF','SİBER SALDIRI']),
+            'matrix_flow':()=>showMatrixScreen(['NÜKLEER FÜZE AKTIF','SİBER SALDIRI','ACCESS DENIED','SYSTEM OVERLOAD']),
             'bombsimulation':()=>{ document.getElementById('scr-nuke').style.display='flex'; }
         };
 
