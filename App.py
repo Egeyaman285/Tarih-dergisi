@@ -19,6 +19,35 @@ for c in others:
     if c not in MAIN_COUNTRIES:
         MAIN_COUNTRIES[c] = f"🌐 STRATEJİK VERİ\n▸ Statü: Aktif\n▸ Tehdit: %{random.randint(10,90)}\n▸ Teknoloji: Üst Düzey\n▸ Savunma: Modernize\n▸ İstihbarat: Tam\n▸ Ekonomi: Stabil\n▸ Siber: Korumalı\n▸ Doktrin: Savunma\n▸ Nükleer: {random.choice(['Var', 'Yok'])}\n▸ Operasyon: Bölgesel\n▸ Gözlem: 24/7"
 
+# Ülke güvenlik kodları (her ülke için benzersiz kod)
+COUNTRY_CODES = {
+    "TÜRKİYE": "78921",  # Ana şifre olarak da kullanılıyor
+    "ABD": "911US2024",
+    "RUSYA": "007RU007",
+    "ÇİN": "886CNXI",
+    "ALMANYA": "491DE55",
+    "İNGİLTERE": "44UK007",
+    "FRANSA": "33FRANCE",
+    "İSRAİL": "972ILMOSSAD",
+    "JAPONYA": "81JPNINJA",
+    "G.KORE": "82KOREA1",
+    "POLONYA": "48PLNATO",
+    "PAKİSTAN": "92PKISI",
+    "İRAN": "98IRIRGC",
+    "MISIR": "20EGYPT1",
+    "BREZİLYA": "55BRAMZN",
+    "İSPANYA": "34ES007",
+    "İTALYA": "39ITMAFIA",
+    "YUNANİSTAN": "30GRS300",
+    "UKRAYNA": "380UAF",
+    "HİNDİSTAN": "91INMODI",
+    "İSVEÇ": "46SENATO",
+    "NORVEÇ": "47NONATO",
+    "KANADA": "1CANADA",
+    "AVUSTRALYA": "61AUSKGB",
+    "AZERBAYCAN": "994AZERI"
+}
+
 SECRET_DB = {k: [f"☢ PROTOKOL: {random.randint(1000,9999)}", f"☣ BİYOLOJİK: Seviye 4", f"🛰 UYDU: Takipte", f"💻 SİBER: Sızıldı", f"🗝 ANAHTAR: Kuantum", f"🛑 STATÜ: KRİTİK", f"🧬 PROJE: X-Alpha", f"🌑 ÜS: Bölge {random.randint(1,10)}", f"⚡ ENERJİ: Antimadde", f"💀 RİSK: OMEGA"] for k in list(MAIN_COUNTRIES.keys()) + ["KIBRIS", "İSVİÇRE", "KATAR"]}
 
 # === GENİŞLETİLMİŞ VERİ TABANI ===
@@ -104,6 +133,7 @@ def index():
     ip_coded = ip_to_alphabet(user_ip)
     return render_template_string(UI_TEMPLATE, data=MAIN_COUNTRIES, secret_db=SECRET_DB, 
                                  expanded_db=EXPANDED_DB, nuclear_targets=NUCLEAR_TARGETS,
+                                 country_codes=COUNTRY_CODES,
                                  user_ip=user_ip, ip_coded=ip_coded)
 
 @app.route('/nuclear_simulate', methods=['POST'])
@@ -141,8 +171,28 @@ def nuclear_simulate():
         "timestamp": "2024-ULTRA-SIM"
     })
 
-# ... yukarıdaki kod aynı kalacak ...
+@app.route('/check_country_code', methods=['POST'])
+def check_country_code():
+    data = request.json
+    country = data.get('country')
+    code = data.get('code')
+    
+    correct_code = COUNTRY_CODES.get(country, "")
+    
+    if code == correct_code:
+        return jsonify({
+            "success": True,
+            "message": "KOD DOĞRU! ERİŞİM VERİLDİ.",
+            "country_info": MAIN_COUNTRIES.get(country, "Bilgi bulunamadı.")
+        })
+    else:
+        return jsonify({
+            "success": False,
+            "message": "HATALI KOD! ERİŞİM REDDEDİLDİ.",
+            "hint": f"Kod {len(correct_code)} haneli" if correct_code else "Kod bulunamadı"
+        })
 
+# Ana HTML şablonu
 UI_TEMPLATE = '''<!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -195,6 +245,12 @@ UI_TEMPLATE = '''<!DOCTYPE html>
         .card{background:rgba(0,0,0,0.4);border:1px solid #112233;margin-bottom:8px;padding:12px;cursor:pointer;transition:0.3s}
         .card:hover{border-color:var(--b);background:rgba(0,242,255,0.05)}
         .intel-box{color:var(--g);font-size:11px;white-space:pre-wrap;margin-top:8px;display:none;border-left:2px solid var(--g);padding-left:10px}
+        
+        /* Yapay Zeka Asistanı */
+        #ai-assistant{position:fixed;bottom:80px;right:20px;width:60px;height:60px;border-radius:50%;background:var(--r);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:900;font-size:24px;box-shadow:0 0 20px var(--r);animation:pulse 2s infinite}
+        #ai-panel{position:fixed;bottom:150px;right:20px;width:300px;background:rgba(0,0,0,0.95);border:1px solid var(--b);padding:15px;display:none;z-index:901;border-radius:10px}
+        #ai-panel input{width:100%;background:#111;color:#fff;border:1px solid var(--g);padding:8px;margin-top:10px}
+        #ai-response{color:var(--g);font-size:11px;margin-top:10px;max-height:200px;overflow-y:auto}
 
         #term-out,#feed-out{font-size:11px;color:var(--g);line-height:1.4}
         .cmd-line{display:flex;padding:10px;background:#050a10;border-top:1px solid #224466}
@@ -212,12 +268,14 @@ UI_TEMPLATE = '''<!DOCTYPE html>
         @keyframes float {0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
         @keyframes scan {0%{background-position:0 0}100%{background-position:100% 100%}}
         @keyframes glitch {0%{transform:translate(0)}20%{transform:translate(-2px,2px)}40%{transform:translate(-2px,-2px)}60%{transform:translate(2px,2px)}80%{transform:translate(2px,-2px)}100%{transform:translate(0)}}
+        @keyframes fall {0%{transform:translateY(-100px) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(360deg);opacity:0}}
         
         .pulse{animation:pulse 2s infinite}
         .shake{animation:shake 0.5s}
         .float{animation:float 3s ease-in-out infinite}
         .scan-line{background:linear-gradient(to bottom, transparent 50%, rgba(0,242,255,0.1) 50%);background-size:100% 4px;animation:scan 2s linear infinite}
         .glitch{animation:glitch 0.5s}
+        .falling-text{position:fixed;top:-50px;color:var(--g);font-size:14px;z-index:9997;animation:fall linear forwards;pointer-events:none}
         
         /* Nükleer Simülasyon Stilleri */
         #nuke-sim{position:fixed;inset:0;background:#000;z-index:9999;display:none;flex-direction:column;color:#fff;overflow:hidden}
@@ -232,16 +290,36 @@ UI_TEMPLATE = '''<!DOCTYPE html>
         .damage-meter{height:20px;background:#333;margin:10px 0;position:relative;border:1px solid #666}
         .damage-fill{height:100%;background:linear-gradient(to right, green, yellow, orange, red);width:0%;transition:width 1s}
         
-        .audio-btn{position:fixed;bottom:20px;right:20px;width:50px;height:50px;border-radius:50%;background:var(--b);color:#000;border:none;cursor:pointer;z-index:999}
+        .audio-btn{position:fixed;bottom:20px;right:90px;width:50px;height:50px;border-radius:50%;background:var(--b);color:#000;border:none;cursor:pointer;z-index:999}
         .audio-btn:hover{background:var(--g);transform:scale(1.1)}
+        
+        /* Ülke Kodu Girişi */
+        .code-input-container{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.95);padding:30px;border:2px solid var(--r);z-index:10002;display:none;min-width:400px}
+        .code-input-container input{width:100%;padding:15px;background:#111;color:#fff;border:1px solid var(--b);text-align:center;font-size:16px;letter-spacing:2px}
 
         #matrix-screen{position:fixed;inset:0;background:#000;z-index:9998;display:none;overflow:hidden}
         .matrix-column{position:absolute;top:-100%;font-size:14px;color:var(--g);text-shadow:0 0 5px var(--g);white-space:pre;line-height:1.2}
+        
+        /* Gravity Effect Toggle */
+        #gravity-toggle{position:fixed;bottom:20px;left:20px;background:var(--b);color:#000;border:none;padding:10px 15px;cursor:pointer;z-index:999;border-radius:5px;font-size:11px}
+        #gravity-toggle:hover{background:var(--g)}
     </style>
 </head>
 <body>
     <!-- Ses Kontrolü -->
     <button class="audio-btn" onclick="toggleAudio()" title="Sesleri Aç/Kapat">🔊</button>
+    
+    <!-- Gravity Effect Toggle -->
+    <button id="gravity-toggle" onclick="toggleGravity()">GRAVITY: ON</button>
+    
+    <!-- Yapay Zeka Asistanı -->
+    <div id="ai-assistant" onclick="toggleAIPanel()">🤖</div>
+    <div id="ai-panel">
+        <div style="color:var(--b);font-weight:bold">YAPAY ZEKA ASİSTANI</div>
+        <div style="color:#aaa;font-size:10px;margin-bottom:10px">Ülke kodlarını sorabilirsiniz</div>
+        <input type="text" id="ai-question" placeholder="Fransa'nın güvenlik kodu nedir?" onkeypress="handleAIQuestion(event)">
+        <div id="ai-response"></div>
+    </div>
     
     <div id="cookie-banner" style="display:none">
         <div style="color:#fff;font-size:12px">
@@ -259,6 +337,18 @@ UI_TEMPLATE = '''<!DOCTYPE html>
         <div style="margin-top:5px;font-size:9px;color:#666">Latin: 1=A, 2=B...</div>
     </div>
 
+    <!-- Ülke Kodu Giriş Ekranı -->
+    <div id="country-code-modal" class="code-input-container">
+        <div style="color:var(--r);font-size:18px;text-align:center;margin-bottom:20px" id="code-country-name">ÜLKE KODU GİRİN</div>
+        <div style="color:var(--g);font-size:12px;text-align:center;margin-bottom:10px" id="code-hint"></div>
+        <input type="text" id="country-code-input" placeholder="Güvenlik kodunu girin..." maxlength="20">
+        <div style="margin-top:15px;display:flex;gap:10px">
+            <button onclick="submitCountryCode()" style="flex:1;background:var(--b);color:#000;border:none;padding:10px;cursor:pointer">DOĞRULA</button>
+            <button onclick="closeCodeModal()" style="flex:1;background:var(--r);color:#fff;border:none;padding:10px;cursor:pointer">İPTAL</button>
+        </div>
+        <div id="code-result" style="margin-top:15px;text-align:center"></div>
+    </div>
+
     <div id="login-screen">
         <h2 style="color:var(--r);margin-bottom:20px">GGI SUPREME SECURITY ACCESS</h2>
         <input type="password" id="pass-input" placeholder="78921" maxlength="5" autofocus>
@@ -272,11 +362,12 @@ UI_TEMPLATE = '''<!DOCTYPE html>
 
     <main>
         <div class="panel">
-            <div class="panel-h">STRATEJİK ANALİZ (25 ÜLKE)</div>
+            <div class="panel-h">STRATEJİK ANALİZ (25 ÜLKE) <span style="color:var(--r);font-size:9px">*Kod gereklidir</span></div>
             <div class="scroll">
                 {% for country,info in data.items() %}
-                <div class="card" onclick="runMainDaktilo(this,'{{info}}')">
+                <div class="card" onclick="requestCountryAccess('{{country}}')">
                     <strong>{{country}}</strong>
+                    <div style="font-size:9px;color:#666;margin-top:3px">🔒 Kilitli - Kodu girin</div>
                     <div class="intel-box"></div>
                 </div>
                 {% endfor %}
@@ -335,378 +426,3 @@ UI_TEMPLATE = '''<!DOCTYPE html>
                 <select id="target-city" style="width:100%;background:#000;color:var(--g);border:1px solid var(--b);padding:5px">
                     <option value="WASHINGTON DC">WASHINGTON DC</option>
                 </select>
-            </div>
-            <div>
-                <label style="color:var(--g)">Bomba Gücü (kT):</label>
-                <input type="range" id="yield-slider" min="10" max="50000" value="1000" style="width:100%">
-                <div id="yield-display" style="color:orange">1000 kT</div>
-            </div>
-            <div>
-                <label style="color:var(--g)">Koordinatlar:</label>
-                <input type="text" id="coords-input" value="39.8283, -98.5795" style="width:100%;background:#000;color:var(--g);border:1px solid var(--b);padding:5px">
-            </div>
-        </div>
-        
-        <div class="sim-controls">
-            <button onclick="launchSimulation()" style="grid-column:1/3;background:var(--r);color:#fff;border:none;padding:15px;cursor:pointer;font-size:16px">
-                🚀 SİMÜLASYONU BAŞLAT
-            </button>
-            <button onclick="generateRandomTarget()" style="grid-column:3/5;background:var(--b);color:#000;border:none;padding:15px;cursor:pointer">
-                🎯 RASTGELE HEDEF
-            </button>
-        </div>
-        
-        <div class="sim-result" id="sim-result">
-            <h3 style="color:var(--r)">Simülasyon Sonuçları:</h3>
-            <div id="simulation-output"></div>
-        </div>
-    </div>
-
-    <div id="matrix-screen"></div>
-
-    <!-- Ses Elementleri -->
-    <audio id="click-sound" preload="auto"></audio>
-    <audio id="typing-sound" preload="auto"></audio>
-    <audio id="alert-sound" preload="auto"></audio>
-    <audio id="nuke-sound" preload="auto"></audio>
-    <audio id="matrix-sound" preload="auto"></audio>
-    <audio id="bg-music" loop preload="auto"></audio>
-
-    <script>
-        const secretStore = {{secret_db|tojson}};
-        const expandedStore = {{expanded_db|tojson}};
-        const nuclearTargets = {{nuclear_targets|tojson}};
-        
-        let cookiesAccepted = localStorage.getItem('cookies_accepted');
-        let audioEnabled = false;
-        
-        if (!cookiesAccepted) {
-            document.getElementById('cookie-banner').style.display = 'flex';
-        }
-
-        function playSound(soundId) {
-            if (!audioEnabled) return;
-            const sound = document.getElementById(soundId);
-            if (sound) {
-                sound.currentTime = 0;
-                sound.play().catch(e => console.log("Ses çalınamadı:", e));
-            }
-        }
-
-        function toggleAudio() {
-            audioEnabled = !audioEnabled;
-            const btn = document.querySelector('.audio-btn');
-            if (audioEnabled) {
-                btn.style.background = 'var(--g)';
-                btn.textContent = '🔊';
-                playSound('bg-music');
-            } else {
-                btn.style.background = 'var(--r)';
-                btn.textContent = '🔇';
-                document.getElementById('bg-music').pause();
-            }
-        }
-
-        function acceptCookies() {
-            localStorage.setItem('cookies_accepted', 'true');
-            document.getElementById('cookie-banner').style.display = 'none';
-            playSound('click-sound');
-        }
-
-        function rejectCookies() {
-            playSound('alert-sound');
-            alert('İzin olmadan sistem kullanılamaz!');
-            document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:red;font-size:24px">ERİŞİM REDDEDİLDİ</div>';
-        }
-
-        document.getElementById('pass-input').addEventListener('input', function(e) {
-            playSound('typing-sound');
-            if (this.value === '78921') {
-                document.getElementById('login-screen').style.display = 'none';
-                startLiveFeed();
-                playSound('click-sound');
-            } else if (this.value.length === 5) {
-                this.value = "";
-                document.getElementById('login-msg').innerText = "HATALI ŞİFRE!";
-                document.getElementById('login-msg').style.color = "red";
-                playSound('alert-sound');
-            }
-        });
-
-        function daktiloExecution(text, element, speed = 15) {
-            element.innerHTML = "";
-            element.style.display = "block";
-            let i = 0;
-            function type() {
-                if (i < text.length) {
-                    element.innerHTML += text.charAt(i);
-                    i++;
-                    playSound('typing-sound');
-                    setTimeout(type, speed);
-                }
-            }
-            type();
-        }
-
-        function runMainDaktilo(card, info) {
-            const box = card.querySelector('.intel-box');
-            if (box.style.display === "block") {
-                box.style.display = "none";
-            } else {
-                daktiloExecution(info, box, 12);
-            }
-        }
-
-        function runSecretDaktilo(country) {
-            const output = document.getElementById('stream-output');
-            const data = secretStore[country].join('\\n');
-            daktiloExecution('[ERİŞİM: ' + country + ']\\n━━━━━━━━━━━━━━━━\\n' + data, output, 20);
-        }
-
-        function showMatrixScreen(data) {
-            const screen = document.getElementById('matrix-screen');
-            screen.style.display = 'block';
-            screen.innerHTML = '';
-            
-            if (audioEnabled) playSound('matrix-sound');
-            
-            for (let i = 0; i < 50; i++) {
-                const col = document.createElement('div');
-                col.className = 'matrix-column';
-                col.style.left = Math.random() * 100 + '%';
-                col.style.animationDuration = (Math.random() * 5 + 3) + 's';
-                col.innerText = data[Math.floor(Math.random() * data.length)];
-                screen.appendChild(col);
-                
-                setTimeout(() => {
-                    col.style.top = '100%';
-                    col.style.transition = 'top ' + (Math.random() * 5 + 5) + 's linear';
-                }, 100);
-            }
-            
-            setTimeout(() => {
-                screen.style.display = 'none';
-                screen.innerHTML = '';
-            }, 8000);
-        }
-
-        function showAdvancedAnimation(type) {
-            const animations = {
-                quantum: {
-                    data: expandedStore.ANIMATION_SEQUENCES.quantum,
-                    color: '#00f2ff'
-                },
-                cyber: {
-                    data: expandedStore.ANIMATION_SEQUENCES.cyber,
-                    color: '#39ff14'
-                },
-                nuclear: {
-                    data: expandedStore.ANIMATION_SEQUENCES.nuclear,
-                    color: '#ff0000'
-                },
-                space: {
-                    data: expandedStore.ANIMATION_SEQUENCES.space,
-                    color: '#ff00ff'
-                }
-            };
-            
-            const anim = animations[type];
-            if (anim) {
-                showMatrixScreen(anim.data);
-            }
-        }
-
-        const CMD_RESPONSES = {
-            'matrix_flow': () => showMatrixScreen(['NÜKLEER FÜZE AKTIF','SİBER SALDIRI TESPİT','UYDU BAĞLANTISI','KRİPTO ANAHTAR DÖNDÜR','HAVA SAVUNMA HAZIR','THREAT LEVEL: 89%','QUANTUM KEY ROTATION','DEEP STATE PROTOCOL','BLACK OPS ACTIVE','INTEL STREAM LIVE']),
-            'neural_scan': () => showMatrixScreen(['NEURAL NETWORK AKTIF','AI LEARNING MODE ON','DEEP LEARNING: 94%','PATTERN RECOGNITION','THREAT PREDICTION','SYNAPTIC WEIGHTS OK','QUANTUM NEURONS SYNC','BACKPROPAGATION RUN','GRADIENT DESCENT OK','MODEL ACCURACY: 97%']),
-            'crypto_decode': () => showMatrixScreen(['SHA-512 HASH VERIFY','AES-256 ENCRYPT OK','RSA-4096 KEY GEN','QUANTUM RESISTANT','ELLIPTIC CURVE SIGN','BLOCKCHAIN VERIFY','ZERO KNOWLEDGE PROOF','HOMOMORPHIC ENCRYPT','POST-QUANTUM READY','KEY EXCHANGE DONE']),
-            'satellite_track': () => showMatrixScreen(['SATELLITE #247 LOCK','ORBITAL POSITION SET','GROUND STATION SYNC','TELEMETRY STREAM OK','SIGNAL STRENGTH: 98%','DOPPLER SHIFT CALC','ANTENNA POINTING OK','DATA DOWNLINK LIVE','GPS SYNC COMPLETE','IMAGING MODE ACTIVE']),
-            'bio_threat': () => showMatrixScreen(['BIOWEAPON SCAN START','PATHOGEN DETECT: 0','DNA SEQUENCE MATCH','PROTEIN ANALYSIS OK','ANTIBODY RESPONSE','VACCINE DATABASE OK','QUARANTINE PROTOCOL','LEVEL 4 CONTAINMENT','AIRBORNE MONITOR','SAMPLE ANALYSIS DONE']),
-            'quantum_state': () => showAdvancedAnimation('quantum'),
-            'drone_swarm': () => showMatrixScreen(['DRONE SWARM ACTIVE','UAV COUNT: 247','AUTONOMOUS MODE ON','COLLISION AVOIDANCE','TARGET TRACKING OK','FORMATION FLIGHT','MESH NETWORK SYNC','BATTERY: 78% AVG','MISSION: RECON','SWARM INTELLIGENCE']),
-            'cyber_attack': () => showAdvancedAnimation('cyber'),
-            'nuclear_status': () => showAdvancedAnimation('nuclear'),
-            'space_defense': () => showAdvancedAnimation('space'),
-            'bombsimulation': () => {
-                document.getElementById('nuke-sim').style.display = 'flex';
-                initWorldMap();
-                playSound('alert-sound');
-            }
-        };
-
-        document.getElementById('term-cmd').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                const cmd = this.value.toLowerCase().trim();
-                const out = document.getElementById('term-out');
-                out.innerHTML += '<div><span style="color:#fff">> ' + cmd + '</span></div>';
-                
-                if (cmd === '78921secretfiles') {
-                    document.getElementById('scr-secret').style.display = 'flex';
-                } else if (cmd === 'help') {
-                    out.innerHTML += "<div style='color:var(--b)'>KOMUTLAR: help, clear, status, matrix_flow, neural_scan, crypto_decode, satellite_track, bio_threat, quantum_state, drone_swarm, cyber_attack, nuclear_status, space_defense, bombsimulation, 78921secretfiles</div>";
-                } else if (cmd === 'clear') {
-                    out.innerHTML = "";
-                } else if (cmd === 'status') {
-                    out.innerHTML += "<div>SİSTEM: OPERASYONEL | CPU:%92 | RAM:%78 | GÜVENLIK:AKTIF</div>";
-                } else if (CMD_RESPONSES[cmd]) {
-                    CMD_RESPONSES[cmd]();
-                    out.innerHTML += '<div style="color:var(--g)">[' + cmd.toUpperCase() + '] ÇALIŞTIRILDI</div>';
-                } else {
-                    out.innerHTML += "<div style='color:var(--r)'>GEÇERSİZ KOMUT</div>";
-                }
-                this.value = "";
-                out.scrollTop = out.scrollHeight;
-            }
-        });
-
-        function closeSecret() {
-            document.getElementById('scr-secret').style.display = 'none';
-        }
-
-        function closeNukeSim() {
-            document.getElementById('nuke-sim').style.display = 'none';
-        }
-
-        function initWorldMap() {
-            const map = document.getElementById('world-map');
-            map.innerHTML = '';
-            
-            for (const [country, data] of Object.entries(nuclearTargets)) {
-                const target = document.createElement('div');
-                target.className = 'map-target';
-                target.style.left = '50%';
-                target.style.top = '50%';
-                target.title = country;
-                target.onclick = () => selectTarget(country, data.lat, data.lon);
-                map.appendChild(target);
-            }
-        }
-
-        function selectTarget(country, lat, lon) {
-            document.getElementById('target-country').value = country;
-            document.getElementById('coords-input').value = lat + ', ' + lon;
-            updateCityOptions(country);
-        }
-
-        function updateCityOptions(country) {
-            const citySelect = document.getElementById('target-city');
-            citySelect.innerHTML = '';
-            const cities = nuclearTargets[country]?.priority || ['BAŞKENT'];
-            cities.forEach(city => {
-                const option = document.createElement('option');
-                option.value = city;
-                option.textContent = city;
-                citySelect.appendChild(option);
-            });
-        }
-
-        function generateRandomTarget() {
-            const countries = Object.keys(nuclearTargets);
-            const randomCountry = countries[Math.floor(Math.random() * countries.length)];
-            const data = nuclearTargets[randomCountry];
-            const randomYield = Math.floor(Math.random() * 50000) + 10;
-            
-            document.getElementById('target-country').value = randomCountry;
-            document.getElementById('yield-slider').value = randomYield;
-            document.getElementById('yield-display').textContent = randomYield + ' kT';
-            document.getElementById('coords-input').value = data.lat + ', ' + data.lon;
-            updateCityOptions(randomCountry);
-        }
-
-        function launchSimulation() {
-            const country = document.getElementById('target-country').value;
-            const city = document.getElementById('target-city').value;
-            const yieldValue = document.getElementById('yield-slider').value;
-            const coords = document.getElementById('coords-input').value;
-            
-            playSound('nuke-sound');
-            
-            // Görsel efekt
-            const map = document.getElementById('world-map');
-            const blast = document.createElement('div');
-            blast.className = 'blast-wave';
-            blast.style.left = '50%';
-            blast.style.top = '50%';
-            map.appendChild(blast);
-            
-            setTimeout(() => blast.remove(), 3000);
-            
-            // API çağrısı
-            fetch('/nuclear_simulate', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    country: country,
-                    city: city,
-                    yield: parseInt(yieldValue),
-                    lat: parseFloat(coords.split(',')[0]),
-                    lon: parseFloat(coords.split(',')[1])
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                const output = document.getElementById('simulation-output');
-                let html = '<div class="pulse" style="color:orange">🚀 FÜZE FIRLATILDI → ' + city + ', ' + country + '</div>';
-                html += '<div style="margin:10px 0;color:var(--g)">📊 SİMÜLASYON SONUÇLARI:</div>';
-                html += '<div>💥 Patlama Yarıçapı: ' + data.impact_analysis.blast_radius + ' km</div>';
-                html += '<div>🔥 Termal Yarıçap: ' + data.impact_analysis.thermal_radius + ' km</div>';
-                html += '<div>☢️ Radyasyon Yarıçapı: ' + data.impact_analysis.radiation_radius + ' km</div>';
-                html += '<div>💀 Hasar Seviyesi: <span style="color:red">' + data.impact_analysis.damage_level + '</span></div>';
-                html += '<div>👥 Tahmini Kayıp: ' + data.impact_analysis.estimated_casualties.toLocaleString() + ' bin kişi</div>';
-                html += '<div style="margin-top:15px;color:var(--b)">📈 DİĞER ETKİLER:</div>';
-                data.additional_effects.forEach(effect => {
-                    html += '<div>• ' + effect + '</div>';
-                });
-                html += '<div style="margin-top:15px;color:var(--r)">🎯 ÖNERİLEN HEDEFLER:</div>';
-                data.recommended_targets.forEach(target => {
-                    html += '<div>• ' + target + '</div>';
-                });
-                
-                output.innerHTML = html;
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                document.getElementById('simulation-output').innerHTML = 
-                    '<div style="color:red">Simülasyon hatası! API bağlantısı kurulamadı.</div>';
-            });
-        }
-
-        document.getElementById('yield-slider').addEventListener('input', function() {
-            document.getElementById('yield-display').textContent = this.value + ' kT';
-        });
-
-        document.getElementById('target-country').addEventListener('change', function() {
-            updateCityOptions(this.value);
-            const data = nuclearTargets[this.value];
-            if (data) {
-                document.getElementById('coords-input').value = data.lat + ', ' + data.lon;
-            }
-        });
-
-        function startLiveFeed() {
-            const feed = document.getElementById('feed-out');
-            const logs = ["[SİBER] Kalkan Aktif","[UYDU] Takip Devam","[LOG] Anahtar Döndür","[NÜKLEER] Hazır","[FÜZE] Operasyonel","[RADAR] Tarama","[AI] Öğrenme Modu","[DRONE] Swarm Aktif","[QUANTUM] Entangle","[EMP] Jeneratör Hazır"];
-            setInterval(() => {
-                const log = logs[Math.floor(Math.random() * logs.length)];
-                feed.innerHTML += '<div style="color:var(--g)">> ' + log + '</div>';
-                if (feed.children.length > 50) feed.removeChild(feed.firstChild);
-                feed.scrollTop = feed.scrollHeight;
-            }, 3000);
-        }
-
-        setInterval(() => {
-            document.getElementById('clock').innerText = new Date().toLocaleTimeString();
-        }, 1000);
-
-        // Sayfa yüklendiğinde
-        document.addEventListener('DOMContentLoaded', function() {
-            updateCityOptions('ABD');
-            document.getElementById('yield-slider').dispatchEvent(new Event('input'));
-        });
-    </script>
-</body>
-</html>'''
-
-if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 10000))
-    app.run(host='0.0.0.0', port=port)
