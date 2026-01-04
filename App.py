@@ -192,7 +192,7 @@ def check_country_code():
             "hint": f"Kod {len(correct_code)} haneli" if correct_code else "Kod bulunamadı"
         })
 
-# Ana HTML şablonu
+# ===== TAM UI_TEMPLATE =====
 UI_TEMPLATE = '''<!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -303,6 +303,10 @@ UI_TEMPLATE = '''<!DOCTYPE html>
         /* Gravity Effect Toggle */
         #gravity-toggle{position:fixed;bottom:20px;left:20px;background:var(--b);color:#000;border:none;padding:10px 15px;cursor:pointer;z-index:999;border-radius:5px;font-size:11px}
         #gravity-toggle:hover{background:var(--g)}
+        
+        /* Ülke Bilgi Göstergesi */
+        .country-unlocked{background:rgba(0,255,0,0.1)!important;border-color:var(--g)!important}
+        .country-unlocked strong{color:var(--g)}
     </style>
 </head>
 <body>
@@ -422,7 +426,4 @@ UI_TEMPLATE = '''<!DOCTYPE html>
                 </select>
             </div>
             <div>
-                <label style="color:var(--g)">Şehir:</label>
-                <select id="target-city" style="width:100%;background:#000;color:var(--g);border:1px solid var(--b);padding:5px">
-                    <option value="WASHINGTON DC">WASHINGTON DC</option>
-                </select>
+                <label style
