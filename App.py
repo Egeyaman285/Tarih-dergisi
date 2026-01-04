@@ -141,10 +141,8 @@ def nuclear_simulate():
         "timestamp": "2024-ULTRA-SIM"
     })
 
-# Ana HTML şablonu (UI_TEMPLATE) buraya eklenecek
-
-UI_TEMPLATE = """
-<!DOCTYPE html>
+# Ana HTML şablonu
+UI_TEMPLATE = '''<!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
@@ -376,126 +374,113 @@ UI_TEMPLATE = """
     </audio>
 
     <script>
-        const secretStore={{secret_db|tojson}};
-        const expandedStore={{expanded_db|tojson}};
-        const nuclearTargets={{nuclear_targets|tojson}};
+        const secretStore = {{secret_db|tojson}};
+        const expandedStore = {{expanded_db|tojson}};
+        const nuclearTargets = {{nuclear_targets|tojson}};
         
-        let cookiesAccepted=localStorage.getItem('cookies_accepted');
-        let audioEnabled=false;
+        let cookiesAccepted = localStorage.getItem('cookies_accepted');
+        let audioEnabled = false;
         
-        if(!cookiesAccepted){
-            document.getElementById('cookie-banner').style.display='flex';
+        if (!cookiesAccepted) {
+            document.getElementById('cookie-banner').style.display = 'flex';
         }
 
-        function playSound(soundId){
-            if(!audioEnabled) return;
-            const sound=document.getElementById(soundId);
-            if(sound){
-                sound.currentTime=0;
-                sound.play().catch(e=>console.log("Ses çalınamadı:",e));
+        function playSound(soundId) {
+            if (!audioEnabled) return;
+            const sound = document.getElementById(soundId);
+            if (sound) {
+                sound.currentTime = 0;
+                sound.play().catch(e => console.log("Ses çalınamadı:", e));
             }
         }
 
-        function toggleAudio(){
-            audioEnabled=!audioEnabled;
-            const btn=document.querySelector('.audio-btn');
-            if(audioEnabled){
-                btn.style.background='var(--g)';
-                btn.textContent='🔊';
+        function toggleAudio() {
+            audioEnabled = !audioEnabled;
+            const btn = document.querySelector('.audio-btn');
+            if (audioEnabled) {
+                btn.style.background = 'var(--g)';
+                btn.textContent = '🔊';
                 playSound('bg-music');
-            }else{
-                btn.style.background='var(--r)';
-                btn.textContent='🔇';
+            } else {
+                btn.style.background = 'var(--r)';
+                btn.textContent = '🔇';
                 document.getElementById('bg-music').pause();
             }
         }
 
-        function acceptCookies(){
-            localStorage.setItem('cookies_accepted','true');
-            document.getElementById('cookie-banner').style.display='none';
+        function acceptCookies() {
+            localStorage.setItem('cookies_accepted', 'true');
+            document.getElementById('cookie-banner').style.display = 'none';
             playSound('click-sound');
         }
 
-        function rejectCookies(){
+        function rejectCookies() {
             playSound('alert-sound');
             alert('İzin olmadan sistem kullanılamaz!');
-            document.body.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:red;font-size:24px">ERİŞİM REDDEDİLDİ</div>';
+            document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:red;font-size:24px">ERİŞİM REDDEDİLDİ</div>';
         }
 
-        document.getElementById('pass-input').addEventListener('input',function(e){
+        document.getElementById('pass-input').addEventListener('input', function(e) {
             playSound('typing-sound');
-            if(this.value==='78921'){
-                document.getElementById('login-screen').style.display='none';
+            if (this.value === '78921') {
+                document.getElementById('login-screen').style.display = 'none';
                 startLiveFeed();
                 playSound('click-sound');
-            }else if(this.value.length===5){
-                this.value="";
-                document.getElementById('login-msg').innerText="HATALI ŞİFRE!";
-                document.getElementById('login-msg').style.color="red";
+            } else if (this.value.length === 5) {
+                this.value = "";
+                document.getElementById('login-msg').innerText = "HATALI ŞİFRE!";
+                document.getElementById('login-msg').style.color = "red";
                 playSound('alert-sound');
             }
         });
 
-        function daktiloExecution(text,element,speed=15){
-            element.innerHTML="";
-            element.style.display="block";
-            let i=0;
-            function type(){
-                if(i<text.length){
-                    element.innerHTML+=text.charAt(i);
+        function daktiloExecution(text, element, speed = 15) {
+            element.innerHTML = "";
+            element.style.display = "block";
+            let i = 0;
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
                     i++;
                     playSound('typing-sound');
-                    setTimeout(type,speed);
+                    setTimeout(type, speed);
                 }
             }
             type();
         }
 
-        function runMainDaktilo(card,info){
-            const box=card.querySelector('.intel-box');
-            if(box.style.display==="block"){
-                box.style.display="none";
-            }else{
-                daktiloExecution(info,box,12);
+        function runMainDaktilo(card, info) {
+            const box = card.querySelector('.intel-box');
+            if (box.style.display === "block") {
+                box.style.display = "none";
+            } else {
+                daktiloExecution(info, box, 12);
             }
         }
 
-        function runSecretDaktilo(country){
-            const output=document.getElementById('stream-output');
-            const data=secretStore[country].join('\\n');
-            daktiloExecution(`[ERİŞİM: ${country}]\\n━━━━━━━━━━━━━━━━\\n`+data,output,20);
+        function runSecretDaktilo(country) {
+            const output = document.getElementById('stream-output');
+            const data = secretStore[country].join('\\n');
+            daktiloExecution(`[ERİŞİM: ${country}]\\n━━━━━━━━━━━━━━━━\\n` + data, output, 20);
         }
 
         // Gelişmiş Animasyonlar
-        function showMatrixScreen(data){
-            const screen=document.getElementById('matrix-screen');
-            screen.style.display='block';
-            screen.innerHTML='';
+        function showMatrixScreen(data) {
+            const screen = document.getElementById('matrix-screen');
+            screen.style.display = 'block';
+            screen.innerHTML = '';
             
-            if(audioEnabled) playSound('matrix-sound');
+            if (audioEnabled) playSound('matrix-sound');
             
-            for(let i=0;i<50;i++){
-                const col=document.createElement('div');
-                col.className='matrix-column';
-                col.style.left=Math.random()*100+'%';
-                col.style.animationDuration=(Math.random()*5+3)+'s';
-                col.innerText=data[Math.floor(Math.random()*data.length)];
+            for (let i = 0; i < 50; i++) {
+                const col = document.createElement('div');
+                col.className = 'matrix-column';
+                col.style.left = Math.random() * 100 + '%';
+                col.style.animationDuration = (Math.random() * 5 + 3) + 's';
+                col.innerText = data[Math.floor(Math.random() * data.length)];
                 screen.appendChild(col);
                 
-                setTimeout(()=>{
-                    col.style.top='100%';
-                    col.style.transition='top '+(Math.random()*5+5)+'s linear';
-                },100);
-            }
-            
-            setTimeout(()=>{
-                screen.style.display='none';
-                screen.innerHTML='';
-            },8000);
-        }
-
-        function showAdvancedAnimation(type){
-            const animations={
-                quantum: {
-                    data: expandedStore.ANIMATION_SEQUENCES.quantum,
+                setTimeout(() => {
+                    col.style.top = '100%';
+                    col.style.transition = 'top ' + (Math.random() *
                    
