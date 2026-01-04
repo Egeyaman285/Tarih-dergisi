@@ -426,4 +426,179 @@ UI_TEMPLATE = '''<!DOCTYPE html>
                 </select>
             </div>
             <div>
-                <label style
+             </div>
+            <div>
+                <label style="color:var(--g)">Şehir:</label>
+                <select id="target-city" style="width:100%;background:#000;color:var(--g);border:1px solid var(--b);padding:5px">
+                    <option value="WASHINGTON DC">WASHINGTON DC</option>
+                </select>
+            </div>
+            <div>
+                <label style="color:var(--g)">Bomba Gücü (kT):</label>
+                <input type="range" id="yield-slider" min="10" max="50000" value="1000" style="width:100%">
+                <div id="yield-display" style="color:orange">1000 kT</div>
+            </div>
+            <div>
+                <label style="color:var(--g)">Koordinatlar:</label>
+                <input type="text" id="coords-input" value="39.8283, -98.5795" style="width:100%;background:#000;color:var(--g);border:1px solid var(--b);padding:5px">
+            </div>
+        </div>
+        
+        <div class="sim-controls">
+            <button onclick="launchSimulation()" style="grid-column:1/3;background:var(--r);color:#fff;border:none;padding:15px;cursor:pointer;font-size:16px">
+                🚀 SİMÜLASYONU BAŞLAT
+            </button>
+            <button onclick="generateRandomTarget()" style="grid-column:3/5;background:var(--b);color:#000;border:none;padding:15px;cursor:pointer">
+                🎯 RASTGELE HEDEF
+            </button>
+        </div>
+        
+        <div class="sim-result" id="sim-result">
+            <h3 style="color:var(--r)">Simülasyon Sonuçları:</h3>
+            <div id="simulation-output"></div>
+        </div>
+    </div>
+
+    <div id="matrix-screen"></div>
+
+    <!-- Ses Elementleri -->
+    <audio id="click-sound" preload="auto"></audio>
+    <audio id="typing-sound" preload="auto"></audio>
+    <audio id="alert-sound" preload="auto"></audio>
+    <audio id="nuke-sound" preload="auto"></audio>
+    <audio id="matrix-sound" preload="auto"></audio>
+    <audio id="bg-music" loop preload="auto"></audio>
+
+    <script>
+        // JS kodu buraya gelecek - kısaltılmış versiyon
+        const secretStore = {{secret_db|tojson}};
+        const expandedStore = {{expanded_db|tojson}};
+        const nuclearTargets = {{nuclear_targets|tojson}};
+        const countryCodes = {{country_codes|tojson}};
+        
+        let cookiesAccepted = localStorage.getItem('cookies_accepted');
+        let audioEnabled = false;
+        let gravityEnabled = true;
+        
+        if (!cookiesAccepted) {
+            document.getElementById('cookie-banner').style.display = 'flex';
+        }
+        
+        function toggleGravity() {
+            gravityEnabled = !gravityEnabled;
+            const btn = document.getElementById('gravity-toggle');
+            btn.textContent = 'GRAVITY: ' + (gravityEnabled ? 'ON' : 'OFF');
+            btn.style.background = gravityEnabled ? 'var(--b)' : 'var(--r)';
+        }
+        
+        function toggleAudio() {
+            audioEnabled = !audioEnabled;
+            const btn = document.querySelector('.audio-btn');
+            if (audioEnabled) {
+                btn.style.background = 'var(--g)';
+                btn.textContent = '🔊';
+            } else {
+                btn.style.background = 'var(--r)';
+                btn.textContent = '🔇';
+            }
+        }
+        
+        function requestCountryAccess(country) {
+            currentCountry = country;
+            document.getElementById('code-country-name').textContent = country + ' GÜVENLİK KODU';
+            document.getElementById('code-hint').textContent = countryCodes[country] ? 'Kod ' + countryCodes[country].length + ' haneli' : 'Kod bulunamadı';
+            document.getElementById('country-code-modal').style.display = 'block';
+            document.getElementById('country-code-input').focus();
+        }
+        
+        function submitCountryCode() {
+            const code = document.getElementById('country-code-input').value;
+            const resultDiv = document.getElementById('code-result');
+            
+            if (code === countryCodes[currentCountry]) {
+                resultDiv.innerHTML = '<span style="color:var(--g)">✓ KOD DOĞRU! ERİŞİM VERİLDİ.</span>';
+                setTimeout(() => {
+                    document.getElementById('country-code-modal').style.display = 'none';
+                    resultDiv.innerHTML = '';
+                    document.getElementById('country-code-input').value = '';
+                    
+                    // Ülkeyi aç
+                    const cards = document.querySelectorAll('.card');
+                    cards.forEach(card => {
+                        if (card.querySelector('strong').textContent === currentCountry) {
+                            card.classList.add('country-unlocked');
+                            card.querySelector('div').innerHTML = '🔓 AÇIK - Tıkla';
+                            card.onclick = () => {
+                                const box = card.querySelector('.intel-box');
+                                if (box.style.display === "block") {
+                                    box.style.display = "none";
+                                } else {
+                                    box.textContent = '{{data[currentCountry]}}';
+                                    box.style.display = "block";
+                                }
+                            };
+                        }
+                    });
+                }, 1500);
+            } else {
+                resultDiv.innerHTML = '<span style="color:var(--r)">✗ HATALI KOD! ERİŞİM REDDEDİLDİ.</span>';
+                setTimeout(() => {
+                    resultDiv.innerHTML = '';
+                }, 2000);
+            }
+        }
+        
+        function closeCodeModal() {
+            document.getElementById('country-code-modal').style.display = 'none';
+            document.getElementById('country-code-input').value = '';
+            document.getElementById('code-result').innerHTML = '';
+        }
+        
+        // Terminal komutları
+        const CMD_RESPONSES = {
+            'bombsimulation': () => {
+                document.getElementById('nuke-sim').style.display = 'flex';
+            },
+            'help': () => {
+                return "KOMUTLAR: help, clear, status, bombsimulation, 78921secretfiles";
+            }
+        };
+        
+        document.getElementById('term-cmd').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const cmd = this.value.toLowerCase().trim();
+                const out = document.getElementById('term-out');
+                
+                if (cmd === '78921secretfiles') {
+                    document.getElementById('scr-secret').style.display = 'flex';
+                } else if (CMD_RESPONSES[cmd]) {
+                    out.innerHTML += '<div>> ' + cmd + '</div>';
+                    CMD_RESPONSES[cmd]();
+                }
+                
+                this.value = "";
+            }
+        });
+        
+        // Saat güncelleme
+        setInterval(() => {
+            document.getElementById('clock').innerText = new Date().toLocaleTimeString();
+        }, 1000);
+        
+        // Giriş şifresi
+        document.getElementById('pass-input').addEventListener('input', function(e) {
+            if (this.value === '78921') {
+                document.getElementById('login-screen').style.display = 'none';
+            } else if (this.value.length === 5) {
+                this.value = "";
+                document.getElementById('login-msg').innerText = "HATALI ŞİFRE!";
+                document.getElementById('login-msg').style.color = "red";
+            }
+        });
+    </script>
+</body>
+</html>'''
+
+if __name__ == '__main__':
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host='0.0.0.0', port=port)
