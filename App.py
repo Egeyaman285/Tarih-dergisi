@@ -141,7 +141,7 @@ def nuclear_simulate():
         "timestamp": "2024-ULTRA-SIM"
     })
 
-# Ana HTML şablonu
+# Ana HTML şablonu - TAMAMLANDI
 UI_TEMPLATE = '''<!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -482,5 +482,17 @@ UI_TEMPLATE = '''<!DOCTYPE html>
                 
                 setTimeout(() => {
                     col.style.top = '100%';
-                    col.style.transition = 'top ' + (Math.random() *
-                   
+                    col.style.transition = 'top ' + (Math.random() * 5 + 5) + 's linear';
+                }, 100);
+            }
+            
+            setTimeout(() => {
+                screen.style.display = 'none';
+                screen.innerHTML = '';
+            }, 8000);
+        }
+
+        function showAdvancedAnimation(type) {
+            const animations = {
+                quantum: {
+                    data: expandedStore.ANIMATION_SEQUENCES.
