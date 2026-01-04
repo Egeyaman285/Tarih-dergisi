@@ -141,7 +141,8 @@ def nuclear_simulate():
         "timestamp": "2024-ULTRA-SIM"
     })
 
-# Ana HTML şablonu - TAMAMLANDI
+# ... yukarıdaki kod aynı kalacak ...
+
 UI_TEMPLATE = '''<!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -274,7 +275,7 @@ UI_TEMPLATE = '''<!DOCTYPE html>
             <div class="panel-h">STRATEJİK ANALİZ (25 ÜLKE)</div>
             <div class="scroll">
                 {% for country,info in data.items() %}
-                <div class="card" onclick="runMainDaktilo(this,`{{info}}`)">
+                <div class="card" onclick="runMainDaktilo(this,'{{info}}')">
                     <strong>{{country}}</strong>
                     <div class="intel-box"></div>
                 </div>
@@ -364,14 +365,12 @@ UI_TEMPLATE = '''<!DOCTYPE html>
     <div id="matrix-screen"></div>
 
     <!-- Ses Elementleri -->
-    <audio id="click-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3" preload="auto"></audio>
-    <audio id="typing-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-keyboard-typing-1386.mp3" preload="auto"></audio>
-    <audio id="alert-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3" preload="auto"></audio>
-    <audio id="nuke-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-bomb-explosion-in-battle-2800.mp3" preload="auto"></audio>
-    <audio id="matrix-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-computer-sci-fi-data-scan-2606.mp3" preload="auto"></audio>
-    <audio id="bg-music" loop preload="auto">
-        <source src="https://assets.mixkit.co/music/preview/mixkit-tech-house-vibes-130.mp3" type="audio/mpeg">
-    </audio>
+    <audio id="click-sound" preload="auto"></audio>
+    <audio id="typing-sound" preload="auto"></audio>
+    <audio id="alert-sound" preload="auto"></audio>
+    <audio id="nuke-sound" preload="auto"></audio>
+    <audio id="matrix-sound" preload="auto"></audio>
+    <audio id="bg-music" loop preload="auto"></audio>
 
     <script>
         const secretStore = {{secret_db|tojson}};
@@ -461,10 +460,9 @@ UI_TEMPLATE = '''<!DOCTYPE html>
         function runSecretDaktilo(country) {
             const output = document.getElementById('stream-output');
             const data = secretStore[country].join('\\n');
-            daktiloExecution(`[ERİŞİM: ${country}]\\n━━━━━━━━━━━━━━━━\\n` + data, output, 20);
+            daktiloExecution('[ERİŞİM: ' + country + ']\\n━━━━━━━━━━━━━━━━\\n' + data, output, 20);
         }
 
-        // Gelişmiş Animasyonlar
         function showMatrixScreen(data) {
             const screen = document.getElementById('matrix-screen');
             screen.style.display = 'block';
@@ -495,4 +493,220 @@ UI_TEMPLATE = '''<!DOCTYPE html>
         function showAdvancedAnimation(type) {
             const animations = {
                 quantum: {
-                    data: expandedStore.ANIMATION_SEQUENCES.
+                    data: expandedStore.ANIMATION_SEQUENCES.quantum,
+                    color: '#00f2ff'
+                },
+                cyber: {
+                    data: expandedStore.ANIMATION_SEQUENCES.cyber,
+                    color: '#39ff14'
+                },
+                nuclear: {
+                    data: expandedStore.ANIMATION_SEQUENCES.nuclear,
+                    color: '#ff0000'
+                },
+                space: {
+                    data: expandedStore.ANIMATION_SEQUENCES.space,
+                    color: '#ff00ff'
+                }
+            };
+            
+            const anim = animations[type];
+            if (anim) {
+                showMatrixScreen(anim.data);
+            }
+        }
+
+        const CMD_RESPONSES = {
+            'matrix_flow': () => showMatrixScreen(['NÜKLEER FÜZE AKTIF','SİBER SALDIRI TESPİT','UYDU BAĞLANTISI','KRİPTO ANAHTAR DÖNDÜR','HAVA SAVUNMA HAZIR','THREAT LEVEL: 89%','QUANTUM KEY ROTATION','DEEP STATE PROTOCOL','BLACK OPS ACTIVE','INTEL STREAM LIVE']),
+            'neural_scan': () => showMatrixScreen(['NEURAL NETWORK AKTIF','AI LEARNING MODE ON','DEEP LEARNING: 94%','PATTERN RECOGNITION','THREAT PREDICTION','SYNAPTIC WEIGHTS OK','QUANTUM NEURONS SYNC','BACKPROPAGATION RUN','GRADIENT DESCENT OK','MODEL ACCURACY: 97%']),
+            'crypto_decode': () => showMatrixScreen(['SHA-512 HASH VERIFY','AES-256 ENCRYPT OK','RSA-4096 KEY GEN','QUANTUM RESISTANT','ELLIPTIC CURVE SIGN','BLOCKCHAIN VERIFY','ZERO KNOWLEDGE PROOF','HOMOMORPHIC ENCRYPT','POST-QUANTUM READY','KEY EXCHANGE DONE']),
+            'satellite_track': () => showMatrixScreen(['SATELLITE #247 LOCK','ORBITAL POSITION SET','GROUND STATION SYNC','TELEMETRY STREAM OK','SIGNAL STRENGTH: 98%','DOPPLER SHIFT CALC','ANTENNA POINTING OK','DATA DOWNLINK LIVE','GPS SYNC COMPLETE','IMAGING MODE ACTIVE']),
+            'bio_threat': () => showMatrixScreen(['BIOWEAPON SCAN START','PATHOGEN DETECT: 0','DNA SEQUENCE MATCH','PROTEIN ANALYSIS OK','ANTIBODY RESPONSE','VACCINE DATABASE OK','QUARANTINE PROTOCOL','LEVEL 4 CONTAINMENT','AIRBORNE MONITOR','SAMPLE ANALYSIS DONE']),
+            'quantum_state': () => showAdvancedAnimation('quantum'),
+            'drone_swarm': () => showMatrixScreen(['DRONE SWARM ACTIVE','UAV COUNT: 247','AUTONOMOUS MODE ON','COLLISION AVOIDANCE','TARGET TRACKING OK','FORMATION FLIGHT','MESH NETWORK SYNC','BATTERY: 78% AVG','MISSION: RECON','SWARM INTELLIGENCE']),
+            'cyber_attack': () => showAdvancedAnimation('cyber'),
+            'nuclear_status': () => showAdvancedAnimation('nuclear'),
+            'space_defense': () => showAdvancedAnimation('space'),
+            'bombsimulation': () => {
+                document.getElementById('nuke-sim').style.display = 'flex';
+                initWorldMap();
+                playSound('alert-sound');
+            }
+        };
+
+        document.getElementById('term-cmd').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const cmd = this.value.toLowerCase().trim();
+                const out = document.getElementById('term-out');
+                out.innerHTML += '<div><span style="color:#fff">> ' + cmd + '</span></div>';
+                
+                if (cmd === '78921secretfiles') {
+                    document.getElementById('scr-secret').style.display = 'flex';
+                } else if (cmd === 'help') {
+                    out.innerHTML += "<div style='color:var(--b)'>KOMUTLAR: help, clear, status, matrix_flow, neural_scan, crypto_decode, satellite_track, bio_threat, quantum_state, drone_swarm, cyber_attack, nuclear_status, space_defense, bombsimulation, 78921secretfiles</div>";
+                } else if (cmd === 'clear') {
+                    out.innerHTML = "";
+                } else if (cmd === 'status') {
+                    out.innerHTML += "<div>SİSTEM: OPERASYONEL | CPU:%92 | RAM:%78 | GÜVENLIK:AKTIF</div>";
+                } else if (CMD_RESPONSES[cmd]) {
+                    CMD_RESPONSES[cmd]();
+                    out.innerHTML += '<div style="color:var(--g)">[' + cmd.toUpperCase() + '] ÇALIŞTIRILDI</div>';
+                } else {
+                    out.innerHTML += "<div style='color:var(--r)'>GEÇERSİZ KOMUT</div>";
+                }
+                this.value = "";
+                out.scrollTop = out.scrollHeight;
+            }
+        });
+
+        function closeSecret() {
+            document.getElementById('scr-secret').style.display = 'none';
+        }
+
+        function closeNukeSim() {
+            document.getElementById('nuke-sim').style.display = 'none';
+        }
+
+        function initWorldMap() {
+            const map = document.getElementById('world-map');
+            map.innerHTML = '';
+            
+            for (const [country, data] of Object.entries(nuclearTargets)) {
+                const target = document.createElement('div');
+                target.className = 'map-target';
+                target.style.left = '50%';
+                target.style.top = '50%';
+                target.title = country;
+                target.onclick = () => selectTarget(country, data.lat, data.lon);
+                map.appendChild(target);
+            }
+        }
+
+        function selectTarget(country, lat, lon) {
+            document.getElementById('target-country').value = country;
+            document.getElementById('coords-input').value = lat + ', ' + lon;
+            updateCityOptions(country);
+        }
+
+        function updateCityOptions(country) {
+            const citySelect = document.getElementById('target-city');
+            citySelect.innerHTML = '';
+            const cities = nuclearTargets[country]?.priority || ['BAŞKENT'];
+            cities.forEach(city => {
+                const option = document.createElement('option');
+                option.value = city;
+                option.textContent = city;
+                citySelect.appendChild(option);
+            });
+        }
+
+        function generateRandomTarget() {
+            const countries = Object.keys(nuclearTargets);
+            const randomCountry = countries[Math.floor(Math.random() * countries.length)];
+            const data = nuclearTargets[randomCountry];
+            const randomYield = Math.floor(Math.random() * 50000) + 10;
+            
+            document.getElementById('target-country').value = randomCountry;
+            document.getElementById('yield-slider').value = randomYield;
+            document.getElementById('yield-display').textContent = randomYield + ' kT';
+            document.getElementById('coords-input').value = data.lat + ', ' + data.lon;
+            updateCityOptions(randomCountry);
+        }
+
+        function launchSimulation() {
+            const country = document.getElementById('target-country').value;
+            const city = document.getElementById('target-city').value;
+            const yieldValue = document.getElementById('yield-slider').value;
+            const coords = document.getElementById('coords-input').value;
+            
+            playSound('nuke-sound');
+            
+            // Görsel efekt
+            const map = document.getElementById('world-map');
+            const blast = document.createElement('div');
+            blast.className = 'blast-wave';
+            blast.style.left = '50%';
+            blast.style.top = '50%';
+            map.appendChild(blast);
+            
+            setTimeout(() => blast.remove(), 3000);
+            
+            // API çağrısı
+            fetch('/nuclear_simulate', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    country: country,
+                    city: city,
+                    yield: parseInt(yieldValue),
+                    lat: parseFloat(coords.split(',')[0]),
+                    lon: parseFloat(coords.split(',')[1])
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const output = document.getElementById('simulation-output');
+                let html = '<div class="pulse" style="color:orange">🚀 FÜZE FIRLATILDI → ' + city + ', ' + country + '</div>';
+                html += '<div style="margin:10px 0;color:var(--g)">📊 SİMÜLASYON SONUÇLARI:</div>';
+                html += '<div>💥 Patlama Yarıçapı: ' + data.impact_analysis.blast_radius + ' km</div>';
+                html += '<div>🔥 Termal Yarıçap: ' + data.impact_analysis.thermal_radius + ' km</div>';
+                html += '<div>☢️ Radyasyon Yarıçapı: ' + data.impact_analysis.radiation_radius + ' km</div>';
+                html += '<div>💀 Hasar Seviyesi: <span style="color:red">' + data.impact_analysis.damage_level + '</span></div>';
+                html += '<div>👥 Tahmini Kayıp: ' + data.impact_analysis.estimated_casualties.toLocaleString() + ' bin kişi</div>';
+                html += '<div style="margin-top:15px;color:var(--b)">📈 DİĞER ETKİLER:</div>';
+                data.additional_effects.forEach(effect => {
+                    html += '<div>• ' + effect + '</div>';
+                });
+                html += '<div style="margin-top:15px;color:var(--r)">🎯 ÖNERİLEN HEDEFLER:</div>';
+                data.recommended_targets.forEach(target => {
+                    html += '<div>• ' + target + '</div>';
+                });
+                
+                output.innerHTML = html;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('simulation-output').innerHTML = 
+                    '<div style="color:red">Simülasyon hatası! API bağlantısı kurulamadı.</div>';
+            });
+        }
+
+        document.getElementById('yield-slider').addEventListener('input', function() {
+            document.getElementById('yield-display').textContent = this.value + ' kT';
+        });
+
+        document.getElementById('target-country').addEventListener('change', function() {
+            updateCityOptions(this.value);
+            const data = nuclearTargets[this.value];
+            if (data) {
+                document.getElementById('coords-input').value = data.lat + ', ' + data.lon;
+            }
+        });
+
+        function startLiveFeed() {
+            const feed = document.getElementById('feed-out');
+            const logs = ["[SİBER] Kalkan Aktif","[UYDU] Takip Devam","[LOG] Anahtar Döndür","[NÜKLEER] Hazır","[FÜZE] Operasyonel","[RADAR] Tarama","[AI] Öğrenme Modu","[DRONE] Swarm Aktif","[QUANTUM] Entangle","[EMP] Jeneratör Hazır"];
+            setInterval(() => {
+                const log = logs[Math.floor(Math.random() * logs.length)];
+                feed.innerHTML += '<div style="color:var(--g)">> ' + log + '</div>';
+                if (feed.children.length > 50) feed.removeChild(feed.firstChild);
+                feed.scrollTop = feed.scrollHeight;
+            }, 3000);
+        }
+
+        setInterval(() => {
+            document.getElementById('clock').innerText = new Date().toLocaleTimeString();
+        }, 1000);
+
+        // Sayfa yüklendiğinde
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCityOptions('ABD');
+            document.getElementById('yield-slider').dispatchEvent(new Event('input'));
+        });
+    </script>
+</body>
+</html>'''
+
+if __name__ == '__main__':
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host='0.0.0.0', port=port)
