@@ -416,8 +416,7 @@ UI_TEMPLATE = '''<!DOCTYPE html>
             'help': () => {
                 return "KOMUTLAR:\\n• help - Bu mesaj\\n• clear - Terminali temizle\\n• status - Sistem durumu\\n• bombsimulation - Nükleer simülasyon\\n• 78921secretfiles - Gizli arşiv\\n• matrix - Matrix efekti";
             },
-            'clear': () => {
-                document.getElementById('term-out').innerHTML = '';
+            'clear': () => {document.getElementById('term-out').innerHTML = '';
                 return "Terminal temizlendi";
             },
             'status': () => {
@@ -561,4 +560,4 @@ UI_TEMPLATE = '''<!DOCTYPE html>
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 10000))
-    app.run(host='0.0.0.0', port=port)""
+    app.run(host='0.0.0.0', port=port)
