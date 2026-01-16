@@ -4,160 +4,232 @@ from flask import Flask, render_template_string, jsonify
 
 app = Flask(__name__)
 
-# === HİKAYE VE OYUN VERİLERİ ===
-STORY_LINES = [
-    "Sistem Yükleniyor... [OK]",
-    "Yıl 2084: Veri Savaşları sonrası İstanbul harabeleri.",
-    "Birim Adı: NEON-X (Protokol 78921)",
-    "Görev: 13. Sokak'taki kuantum çekirdeğini kurtar.",
-    "UYARI: Bölgede düşman siber-drone'ları tespit edildi.",
-    "Haraket etmek için [YÖN TUŞLARINI] kullan."
+# === OYUN VERİLERİ VE HARİTA YAPILANDIRMASI ===
+# 100 Bina, Sokaklar ve Görevler
+BUILDINGS = []
+for i in range(1, 101):
+    street_num = (i // 15) + 1
+    is_accessible = i % 2 == 0 # Sadece 50 tanesine (çift numaralılar) girilebilir
+    BUILDINGS.append({
+        "id": i,
+        "name": f"Bina No:{i}",
+        "street": street_num,
+        "accessible": is_accessible,
+        "x": random.randint(100, 4000), # Geniş bir harita alanı
+        "y": random.randint(100, 4000),
+        "has_enemy": is_accessible and random.random() > 0.7,
+        "has_loot": not is_accessible or random.random() > 0.5
+    })
+
+STORY_EVENTS = [
+    "SİSTEM: Birim NEON-X aktif edildi.",
+    "GÖREV 1: 13. Sokak, 53 numaralı binadaki rejim karşıtı varlıkları temizle.",
+    "BİLGİ: İnsan direnişçiler yapay zekaya karşı sabotaj planlıyor.",
+    "GÖREV 2: Rejim sokağına git, mühimmat ve enerji (yemek) ikmali yap.",
+    "KONTROLLER: [W,A,S,D] Hareket | [E] Etkileşim | [SPACE] Ateş"
 ]
 
 @app.route('/')
 def index():
-    return render_template_string(GAME_TEMPLATE)
+    return render_template_string(GAME_ENGINE, buildings=BUILDINGS, story=STORY_EVENTS)
 
-# === OYUN ŞABLONU (CSS/JS/HTML) ===
-GAME_TEMPLATE = '''
+# === OYUN MOTORU (HTML/JS/CSS) ===
+GAME_ENGINE = '''
 <!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>NEON-X: THE LAST PROTOCOL</title>
+    <title>NEON-X: REJİM MUHAFIZI</title>
     <style>
-        :root { --p: #39ff14; --bg: #050a05; --r: #ff0055; }
+        :root { --p: #00ff41; --bg: #020502; --danger: #ff003c; }
         body { background: var(--bg); color: var(--p); font-family: 'Courier New', monospace; margin: 0; overflow: hidden; }
         
-        #ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; display: flex; flex-direction: column; padding: 20px; box-sizing: border-box; }
-        #terminal-box { background: rgba(0, 20, 0, 0.85); border: 1px solid var(--p); padding: 15px; width: 450px; min-height: 200px; box-shadow: 0 0 15px rgba(57, 255, 20, 0.2); }
-        #game-canvas { position: absolute; top: 0; left: 0; background: #000; z-index: 1; }
+        #game-ui { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; display: flex; flex-direction: column; padding: 15px; box-sizing: border-box; }
+        #terminal { background: rgba(0, 10, 0, 0.9); border: 1px solid var(--p); padding: 10px; width: 400px; height: 180px; overflow-y: auto; font-size: 12px; }
         
-        .cursor { display: inline-block; width: 10px; height: 18px; background: var(--p); animation: blink 0.8s infinite; vertical-align: middle; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        canvas { display: block; background: #000; }
         
-        #stats { margin-top: auto; border-top: 1px solid var(--p); padding-top: 10px; font-size: 14px; }
-        .scanline { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); z-index: 100; pointer-events: none; background-size: 100% 2px, 3px 100%; }
+        #hud { margin-top: auto; display: flex; justify-content: space-between; background: rgba(0,0,0,0.8); border: 1px solid var(--p); padding: 10px; pointer-events: auto; }
+        .stat-val { color: #fff; font-weight: bold; }
+        .scanlines { position: fixed; inset: 0; background: linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,0.1) 50%), linear-gradient(90deg, rgba(255,0,0,0.03), rgba(0,255,0,0.01), rgba(0,0,255,0.03)); z-index: 100; pointer-events: none; background-size: 100% 3px, 3px 100%; }
+        
+        #interaction-prompt { position: absolute; top: 60%; left: 50%; transform: translate(-50%, -50%); color: var(--danger); font-size: 20px; display: none; text-shadow: 0 0 10px var(--danger); }
     </style>
 </head>
 <body>
-    <div class="scanline"></div>
-    <canvas id="game-canvas"></canvas>
-
-    <div id="ui-layer">
-        <div id="terminal-box">
-            <div id="story-output"></div>
-            <span id="typing-line"></span><span class="cursor"></span>
-        </div>
-
-        <div id="stats">
-            ID: NEON-X | DURUM: AKTİF | KOORDİNAT: <span id="pos-x">0</span>, <span id="pos-y">0</span>
-            <br>GÖREV: 13. SOKAK İSTİHBARATI
+    <div class="scanlines"></div>
+    <div id="interaction-prompt">[E] BİNAYA GİRİŞ YAP</div>
+    
+    <div id="game-ui">
+        <div id="terminal"></div>
+        <div id="hud">
+            <div>BİRİM: <span class="stat-val">NEON-X</span></div>
+            <div>ENERJİ: <span class="stat-val" id="hp">100</span></div>
+            <div>KONUM: <span class="stat-val" id="loc">1. Sokak</span></div>
+            <div>HEDEF: <span class="stat-val" id="target">Bina 53</span></div>
         </div>
     </div>
 
+    <canvas id="screen"></canvas>
+
     <script>
-        // --- 1. DAKTİLO EFEKTİ VE HİKAYE ---
-        const lines = {{ story_data|safe if story_data else [
-            "Sistem Yükleniyor... [OK]",
-            "Yıl 2084: Veri Savaşları sonrası harabeler.",
-            "Birim: NEON-X | Protokol: 78921",
-            "Haraket etmek için YÖN TUŞLARINI kullan!",
-            "---------------------------------------"
-        ]|tojson }};
-        
-        let currentLine = 0;
-        let charIndex = 0;
-        const output = document.getElementById('story-output');
-        const typingLine = document.getElementById('typing-line');
-
-        function type() {
-            if (currentLine < lines.length) {
-                if (charIndex < lines[currentLine].length) {
-                    typingLine.textContent += lines[currentLine].charAt(charIndex);
-                    charIndex++;
-                    setTimeout(type, 30);
-                } else {
-                    output.innerHTML += "<div>" + typingLine.textContent + "</div>";
-                    typingLine.textContent = "";
-                    charIndex = 0;
-                    currentLine++;
-                    setTimeout(type, 500);
-                }
-            }
-        }
-
-        // --- 2. 2B OYUN MOTORU VE HAREKET ---
-        const canvas = document.getElementById('game-canvas');
+        const canvas = document.getElementById('screen');
         const ctx = canvas.getContext('2d');
+        const terminal = document.getElementById('terminal');
+        const prompt = document.getElementById('interaction-prompt');
+        
+        // --- DATA ---
+        const buildings = {{ buildings|tojson }};
+        const story = {{ story|tojson }};
+        
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
+        // --- PLAYER / CAMERA ---
         const player = {
-            x: canvas.width / 2,
-            y: canvas.height / 2,
-            size: 20,
-            speed: 5,
-            color: "#39ff14"
+            x: 500, y: 500,
+            width: 32, height: 48,
+            speed: 6,
+            hp: 100,
+            ammo: 50,
+            color: "#00ff41"
         };
 
-        const stars = Array.from({length: 100}, () => ({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            size: Math.random() * 2
-        }));
-
+        const camera = { x: 0, y: 0 };
         const keys = {};
+
+        // --- HİKAYE BAŞLATICI ---
+        let lineIdx = 0;
+        function logToTerminal(text) {
+            const div = document.createElement('div');
+            div.textContent = "> " + text;
+            terminal.appendChild(div);
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        function initStory() {
+            if(lineIdx < story.length) {
+                logToTerminal(story[lineIdx]);
+                lineIdx++;
+                setTimeout(initStory, 1500);
+            }
+        }
+
+        // --- KONTROLLER ---
         window.addEventListener('keydown', e => keys[e.code] = true);
         window.addEventListener('keyup', e => keys[e.code] = false);
 
+        // --- ÇİZİM FONKSİYONLARI ---
+        function drawPlayer() {
+            // Karakter Gövdesi (Basit Robot Görünümü)
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = player.color;
+            ctx.fillStyle = player.color;
+            ctx.fillRect(player.x - camera.x, player.y - camera.y, player.width, player.height);
+            
+            // Gözler (Vizör)
+            ctx.fillStyle = "black";
+            ctx.fillRect(player.x - camera.x + 5, player.y - camera.y + 10, 22, 5);
+            ctx.shadowBlur = 0;
+        }
+
+        function drawMap() {
+            buildings.forEach(b => {
+                const screenX = b.x - camera.x;
+                const screenY = b.y - camera.y;
+
+                if(screenX > -200 && screenX < canvas.width + 200 && screenY > -200 && screenY < canvas.height + 200) {
+                    // Bina Çizimi
+                    ctx.strokeStyle = b.accessible ? varColor('--p') : "#333";
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(screenX, screenY, 120, 180);
+                    
+                    // Bina Detayları
+                    ctx.fillStyle = b.accessible ? "rgba(0, 255, 65, 0.1)" : "rgba(50,50,50,0.1)";
+                    ctx.fillRect(screenX, screenY, 120, 180);
+                    
+                    ctx.fillStyle = ctx.strokeStyle;
+                    ctx.font = "10px monospace";
+                    ctx.fillText(b.name, screenX + 5, screenY - 5);
+                    ctx.fillText("Sokak: " + b.street, screenX + 5, screenY + 195);
+                    
+                    // Giriş Kapısı İşareti
+                    if(b.accessible) {
+                        ctx.fillStyle = varColor('--p');
+                        ctx.fillRect(screenX + 45, screenY + 160, 30, 20);
+                    }
+                }
+            });
+        }
+
+        function varColor(name) {
+            return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+        }
+
+        // --- GÜNCELLEME ---
         function update() {
-            if (keys['ArrowUp']) player.y -= player.speed;
-            if (keys['ArrowDown']) player.y += player.speed;
-            if (keys['ArrowLeft']) player.x -= player.speed;
-            if (keys['ArrowRight']) player.x += player.speed;
+            if (keys['KeyW']) player.y -= player.speed;
+            if (keys['KeyS']) player.y += player.speed;
+            if (keys['KeyA']) player.x -= player.speed;
+            if (keys['KeyD']) player.x += player.speed;
 
-            // Sınır kontrolü
-            player.x = Math.max(0, Math.min(canvas.width, player.x));
-            player.y = Math.max(0, Math.min(canvas.height, player.y));
+            // Kamera takibi
+            camera.x = player.x - canvas.width / 2;
+            camera.y = player.y - canvas.height / 2;
 
-            document.getElementById('pos-x').textContent = Math.round(player.x);
-            document.getElementById('pos-y').textContent = Math.round(player.y);
+            // Etkileşim Kontrolü
+            let nearBuilding = false;
+            buildings.forEach(b => {
+                const dist = Math.hypot(player.x - b.x, player.y - b.y);
+                if(dist < 150 && b.accessible) {
+                    nearBuilding = true;
+                    if(keys['KeyE']) {
+                        if(b.id === 53) {
+                            logToTerminal("KRİTİK GÖREV: Bina 53'e girildi. Hedefler imha ediliyor...");
+                            player.hp -= 5;
+                        } else {
+                            logToTerminal(b.name + " tarandı. Rejim karşıtı unsur yok.");
+                        }
+                        keys['KeyE'] = false; // Spam engelleme
+                    }
+                }
+            });
+            prompt.style.display = nearBuilding ? "block" : "none";
+
+            // HUD Güncelleme
+            document.getElementById('hp').textContent = player.hp;
+            const currentStreet = Math.floor(player.y / 800) + 1; // Basit sokak hesabı
+            document.getElementById('loc').textContent = currentStreet + ". Sokak";
         }
 
         function draw() {
             ctx.fillStyle = "black";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // Arka plan (Yıldızlar/Toz)
-            ctx.fillStyle = "rgba(57, 255, 20, 0.3)";
-            stars.forEach(s => ctx.fillRect(s.x, s.y, s.size, s.size));
-
-            // Oyuncu (Neon Kare)
-            ctx.shadowBlur = 15;
-            ctx.shadowColor = player.color;
-            ctx.fillStyle = player.color;
-            ctx.fillRect(player.x - player.size/2, player.y - player.size/2, player.size, player.size);
             
-            // Grid çizgileri
-            ctx.strokeStyle = "rgba(57, 255, 20, 0.05)";
+            // Izgara Arka Plan
+            ctx.strokeStyle = "rgba(0, 255, 65, 0.05)";
             ctx.beginPath();
-            for(let i=0; i<canvas.width; i+=50) { ctx.moveTo(i,0); ctx.lineTo(i,canvas.height); }
-            for(let i=0; i<canvas.height; i+=50) { ctx.moveTo(0,i); ctx.lineTo(canvas.width,i); }
+            for(let i = -camera.x % 100; i < canvas.width; i += 100) {
+                ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height);
+            }
+            for(let i = -camera.y % 100; i < canvas.height; i += 100) {
+                ctx.moveTo(0, i); ctx.lineTo(canvas.width, i);
+            }
             ctx.stroke();
 
-            ctx.shadowBlur = 0;
+            drawMap();
+            drawPlayer();
         }
 
-        function gameLoop() {
+        function loop() {
             update();
             draw();
-            requestAnimationFrame(gameLoop);
+            requestAnimationFrame(loop);
         }
 
         window.onload = () => {
-            type();
-            gameLoop();
+            initStory();
+            loop();
         };
 
         window.onresize = () => {
@@ -170,6 +242,5 @@ GAME_TEMPLATE = '''
 '''
 
 if __name__ == '__main__':
-    # Render veya yerel çalışma için port ayarı
     port = int(os.environ.get("PORT", 10000))
     app.run(host='0.0.0.0', port=port)
