@@ -294,3 +294,10 @@ def settings():
 
 if __name__ == "__main__":
     app.run(debug=True)
+import os
+
+if __name__ == "__main__":
+    # Render'ın verdiği portu al, yoksa 5000 kullan
+    port = int(os.environ.get("PORT", 5000))
+    # host='0.0.0.0' dış erişim için ŞARTTIR
+    app.run(host='0.0.0.0', port=port)
