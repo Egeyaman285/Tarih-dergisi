@@ -5,7 +5,7 @@ import os
 app = Flask(__name__)
 app.secret_key = 'VAKIF_GIZLI_ANAHTAR_2026'
 
-# --- VERİ TABANI (DETAYLANDIRILMIŞ 15+ SATIR RAPORLAR) ---
+# --- VERİ TABANI ---
 LEVEL_MAP = {1: "safe", 2: "euclid", 3: "keter", 4: "thaumiel", 5: "apollyon"}
 
 def create_scp_report(id_num, cls):
@@ -60,7 +60,7 @@ SEVİYE_SIFRELERI = {
     "4": "GOZETMEN-YETKISI-ALFA", "5": "DUNYA-SONU-PROTOKOLU"
 }
 
-# --- TASARIM (SAHİL ARKA PLANI + ŞEFFAF YEŞİL LOGO + DAKTİLO) ---
+# --- TASARIM (GRİMİSİ SUNUCU ODASI ARKA PLANI + YEŞİL TEMA) ---
 HTML_BASE = """
 <!DOCTYPE html>
 <html lang="tr">
@@ -69,10 +69,11 @@ HTML_BASE = """
     <title>SCP TERMINAL v6.0</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        :root { --neon-green: #39ff14; --amber: #ffb000; --bg-overlay: rgba(0, 5, 0, 0.85); }
+        :root { --neon-green: #39ff14; --bg-overlay: rgba(0, 10, 0, 0.9); }
         
         body { 
-            background: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
+            /* Grimsi Sunucu Odası Arka Planı */
+            background: url('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=2000') no-repeat center center fixed;
             background-size: cover;
             color: var(--neon-green); 
             font-family: 'Courier New', monospace; 
@@ -82,30 +83,31 @@ HTML_BASE = """
         /* ŞEFFAF YEŞİL LOGO KATMANI */
         .scp-overlay-logo {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 60vw; height: 60vw;
+            width: 65vw; height: 65vw;
             background: url('https://upload.wikimedia.org/wikipedia/commons/e/ec/SCP_Foundation_logo.svg') no-repeat center;
             background-size: contain;
-            opacity: 0.12; filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(86deg) brightness(118%) contrast(119%);
+            opacity: 0.15; 
+            filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(86deg) brightness(118%) contrast(119%);
             z-index: 1; pointer-events: none;
         }
 
         .terminal-container { 
             position: relative; z-index: 10;
-            border: 2px solid var(--neon-green); 
+            border: 1px solid var(--neon-green); 
             background: var(--bg-overlay);
-            box-shadow: 0 0 25px rgba(57, 255, 20, 0.3);
-            padding: 40px; margin-top: 50px; border-radius: 5px;
+            box-shadow: 0 0 40px rgba(0, 255, 0, 0.2);
+            padding: 40px; margin-top: 50px; border-radius: 2px;
         }
 
         .btn-custom { 
-            background: transparent; border: 1px solid var(--neon-green); color: var(--neon-green); 
+            background: rgba(0, 40, 0, 0.5); border: 1px solid var(--neon-green); color: var(--neon-green); 
             padding: 12px; margin: 8px; text-transform: uppercase; display: block;
             text-align: center; text-decoration: none; transition: 0.3s; font-weight: bold;
         }
-        .btn-custom:hover { background: var(--neon-green); color: #000; box-shadow: 0 0 15px var(--neon-green); }
+        .btn-custom:hover { background: var(--neon-green); color: #000; box-shadow: 0 0 20px var(--neon-green); }
         
-        #typewriter-text { white-space: pre-wrap; line-height: 1.6; border-left: 3px solid var(--neon-green); padding-left: 15px; }
-        .scanline { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); z-index: 100; background-size: 100% 2px, 3px 100%; pointer-events: none; }
+        #typewriter-text { white-space: pre-wrap; line-height: 1.6; border-left: 2px solid var(--neon-green); padding-left: 15px; }
+        .scanline { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(0, 255, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 255, 0, 0.03)); z-index: 100; background-size: 100% 3px, 3px 100%; pointer-events: none; }
     </style>
 </head>
 <body>
@@ -114,10 +116,10 @@ HTML_BASE = """
     <div class="container">
         <div class="terminal-container">
             <div class="text-center mb-4">
-                <h1 style="letter-spacing: 5px; text-shadow: 0 0 10px var(--neon-green);">SCP FOUNDATION ARCHIVE</h1>
-                <p>[LOCATION: SITE-19] [STATUS: ENCRYPTED]</p>
+                <h1 style="letter-spacing: 7px; text-shadow: 0 0 15px var(--neon-green);">VAKIF VERİ TABANI AĞI</h1>
+                <p>[LOCATION: SITE-19] [STATUS: ENCRYPTED] [v6.0.4]</p>
             </div>
-            <hr style="border-color: var(--neon-green);">
+            <hr style="border-color: var(--neon-green); opacity: 0.5;">
             {{ content | safe }}
         </div>
     </div>
@@ -129,7 +131,7 @@ HTML_BASE = """
             if (i === 0) el.innerHTML = "";
             if (i < text.length) {
                 el.innerHTML += text.charAt(i);
-                setTimeout(() => typeWriter(elementId, text, i + 1), 15);
+                setTimeout(() => typeWriter(elementId, text, i + 1), 10);
             }
         }
         window.onload = () => {
@@ -144,15 +146,18 @@ HTML_BASE = """
 </html>
 """
 
+# --- ROUTES ---
 @app.route('/')
 def index():
     content = """
+    <h4 class="text-center mb-4">ERİŞİM YETKİSİ SEÇİN</h4>
     <div class="row">
         <div class="col-md-4"><a href="/login/1" class="btn-custom">LVL 1 - SAFE</a></div>
         <div class="col-md-4"><a href="/login/2" class="btn-custom">LVL 2 - EUCLID</a></div>
         <div class="col-md-4"><a href="/login/3" class="btn-custom">LVL 3 - KETER</a></div>
         <div class="col-md-4"><a href="/login/4" class="btn-custom">LVL 4 - THAUMIEL</a></div>
         <div class="col-md-4"><a href="/login/5" class="btn-custom">LVL 5 - APOLLYON</a></div>
+        <div class="col-md-4"><a href="#" class="btn-custom" style="opacity: 0.5;">AYARLAR / LOGLAR</a></div>
     </div>"""
     return render_template_string(HTML_BASE, content=content)
 
@@ -160,11 +165,12 @@ def index():
 def login_page(level):
     content = f"""
     <div class="text-center">
-        <h3 class="text-warning">GÜVENLİK KİMLİK DOĞRULAMA (LEVEL {level})</h3>
+        <h3 class="text-warning">GÜVENLİK DOĞRULAMA (LEVEL {level})</h3>
+        <p>Dijital imza kodunu giriniz:</p>
         <form action="/verify" method="post" class="mt-4">
             <input type="hidden" name="level" value="{level}">
-            <input type="text" name="pwd" class="form-control bg-dark text-success border-success text-center mx-auto" style="max-width:350px; font-size:1.5rem;" autocomplete="off" autofocus>
-            <button type="submit" class="btn-custom mt-3 mx-auto" style="width:200px">ERİŞİM İSTE</button>
+            <input type="text" name="pwd" class="form-control bg-dark text-success border-success text-center mx-auto" style="max-width:350px; font-size:1.5rem; border-radius: 0;" autocomplete="off" autofocus>
+            <button type="submit" class="btn-custom mt-4 mx-auto" style="width:200px">GİRİŞ YAP</button>
         </form>
     </div>"""
     return render_template_string(HTML_BASE, content=content)
@@ -175,16 +181,16 @@ def verify():
     if SEVİYE_SIFRELERI.get(lvl) == pwd:
         session['auth_lvl'] = int(lvl)
         return redirect(f'/archive/{lvl}')
-    return "<h1 style='color:red; text-align:center;'>YETKİSİZ ERİŞİM SAPTANDI. GÜVENLİK EKİPLERİ YOLDA.</h1>"
+    return "<div style='background:black; color:red; height:100vh; display:flex; align-items:center; justify-content:center;'><h1>ERİŞİM REDDEDİLDİ. GÜVENLİK BİRİMLERİ KONUMUNUZA YÖNLENDİRİLDİ.</h1></div>"
 
 @app.route('/archive/<int:level>')
 def archive(level):
     if session.get('auth_lvl', 0) < level: return redirect('/')
     target_class = LEVEL_MAP[level]
     filtered = [s for s in scp_database if s['cls'] == target_class]
-    list_html = f"<h3>{target_class.upper()} SINIFI DOSYALARI</h3><div class='row'>"
+    list_html = f"<h4>{target_class.upper()} SINIFI VERİ ARŞİVİ</h4><hr style='border-color:var(--neon-green)'><div class='row'>"
     for scp in filtered:
-        list_html += f"<div class='col-md-3'><a href='/view/{scp['id']}' class='btn-custom' style='font-size:10px'>SCP-{scp['id']}</a></div>"
+        list_html += f"<div class='col-md-3'><a href='/view/{scp['id']}' class='btn-custom' style='font-size:11px'>DOC-SCP-{scp['id']}</a></div>"
     list_html += "</div><a href='/' class='btn-custom mt-4' style='width:150px'>ANA MENÜ</a>"
     return render_template_string(HTML_BASE, content=list_html)
 
@@ -194,9 +200,9 @@ def view(scp_id):
     if not scp or session.get('auth_lvl', 0) < scp['level']: return redirect('/')
     content = f"""
     <input type="hidden" id="raw-text" value="{scp['desc']}">
-    <h2 class="text-warning">DOSYA: SCP-{scp['id']}</h2>
+    <h2 class="text-warning">GÖRÜNTÜLENİYOR: SCP-{scp['id']}</h2>
     <div id="typewriter-text"></div>
-    <br><button onclick="history.back()" class="btn-custom" style="width:150px">GERİ</button>
+    <br><button onclick="history.back()" class="btn-custom" style="width:150px">GERİ DÖN</button>
     """
     return render_template_string(HTML_BASE, content=content)
 
