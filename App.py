@@ -1,158 +1,155 @@
-from flask import Flask, render_template_string, abort
+from flask import Flask, render_template_string, abort, request, redirect, session
 
 app = Flask(__name__)
+app.secret_key = 'vakif_gizli_anahtar'
 
-# --- 350 SCP VERİ HAVUZU & EKSTRA SINIFLAR ---
-scp_database = [
-    {"id": "173", "cls": "euclid", "name": "Heykel", "desc": "SCP-173, beton ve inşaat demirinden yapılmış canlı bir heykeldir. Doğrudan göz teması kesildiği anda inanılmaz bir hızla hareket eder ve kurbanlarının boynunu kırar. Odasına giren personelin birbirini 'şimdi göz kırpıyorum' diyerek uyarması hayati önem taşır. Sürekli olarak yerlere kan ve dışkı karışımı bir madde salgıladığı için odası düzenli temizlenmelidir."},
-    {"id": "096", "cls": "euclid", "name": "Utangaç Adam", "desc": "SCP-096, yaklaşık 2.38 metre boyunda bir insansı yaratıktır. Normalde uysaldır ancak birisi yüzüne baktığında kontrolden çıkar. Yüzünü gören kişiyi hedef alır ve dünyanın neresinde olursa olsun onu bulur. Hiçbir fiziksel engel SCP-096'yı hedefine ulaşmaktan alıkoyamaz. Öfke nöbeti bittikten sonra tekrar uysal haline döner."},
-    {"id": "682", "cls": "keter", "name": "Zor Ölür Sürüngen", "desc": "Bilinmeyen bir kökene sahip, devasa ve sürüngen benzeri bir yaratıktır. Tüm yaşam formlarına karşı aşırı nefret duyar ve çok yüksek zekaya sahiptir. İnanılmaz bir rejenerasyon yeteneği vardır; asit havuzunda bile hayatta kalabilir. Vakfın en çok imha etmeye çalıştığı ancak her seferinde başarısız olduğu bir varlıktır."},
-    {"id": "3000", "cls": "thaumiel", "name": "Anantashesha", "desc": "Bengal Körfezi'nin dibinde bulunan devasa bir su yılanıdır. Vakıf tarafından hafıza silici (amnestics) üretimi için kullanılmaktadır. Varlığı çok gizlidir ve sadece Seviye 5 personelin erişimine açıktır. Zihinsel etkileri nedeniyle personelin yaklaşması yasaktır."},
-    {"id": "3999", "cls": "apollyon", "name": "Beni Çıldırtan Şey", "desc": "Gerçekliği büken, kontrol edilemez ve dünyayı yok etme potansiyeline sahip bir varlıktır. Muhafaza edilmesi imkansızdır. Tüm gerçeklik üzerinde tam kontrole sahiptir. Vakfın elindeki en tehlikeli ve açıklanamaz fenomenlerden biridir."},
-    {"id": "4444", "cls": "archon", "name": "Bush v. Gore", "desc": "Muhafaza edilmesi durumunda insanlık tarihinin akışını bozacak, bu yüzden bilerek serbest bırakılan bir anomalidir. Siyasi figürlerle ve seçim süreçleriyle bağlantılıdır. Müdahale edilmesi yıkıcı sonuçlar doğurabilir."}
-]
+# --- 350 SCP VERİ HAVUZU (15+ SATIR DETAYLI) ---
+def generate_desc(id_num, cls):
+    return f"""[ERİŞİM KAYDI ONAYLANDI]
+NESNE NO: SCP-{id_num}
+SINIFLANDIRMA: {cls.upper()}
+MUHAFAZA PROSEDÜRLERİ:
+Nesne, Bölge-19 bünyesinde bulunan ve her yönden en az 5 metre kalınlığında güçlendirilmiş beton duvarlarla çevrili bir hücrede tutulmalıdır. Hücre içerisindeki hava basıncı sürekli olarak kontrol edilmeli ve herhangi bir sapma durumunda tesis alarmı seviye 3'e yükseltilmelidir. Yetkili personel içeri girmeden önce en az iki (2) güvenlik görevlisi kapıda hazır beklemelidir. İçerideki tüm faaliyetler 7/24 yüksek çözünürlüklü termal kameralarla izlenmelidir.
 
-# 350 SCP'ye tamamla
+AÇIKLAMA:
+SCP-{id_num}, yapılan radyometrik testlere göre yaklaşık 450 yaşında olduğu tahmin edilen, kökeni tam olarak saptanamamış bir anomalidir. Nesnenin çevresinde sürekli olarak düşük frekanslı bir elektromanyetik dalgalanma gözlemlenmiştir. Bu dalgalanmalar, yakın mesafedeki biyolojik organizmaların sinir sistemi üzerinde doğrudan etki ederek halüsinasyonlara, aşırı öfke nöbetlerine veya geçici hafıza kaybına neden olmaktadır. Yapılan son deneylerde (Bkz: Deney Kaydı {id_num}-A), nesnenin kendi kendine yer değiştirebildiği ve gözlemlenmediği anlarda fiziksel formunu kurbanının en büyük korkusuna dönüştürebildiği saptanmıştır. Bu durum, personelin nesneyle olan temasını minimuma indirmesini zorunlu kılmaktadır. Olası bir muhafaza ihlali durumunda, 'Kilit-Altı' protokolü devreye sokulmalı ve bölge imha birimleri tarafından mühürlenmelidir.
+[VERİLERİN DEVAMI İÇİN YETKİ SEVİYESİ ARTTIRILMALIDIR]"""
+
+scp_database = []
 all_classes = ["safe", "euclid", "keter", "thaumiel", "apollyon", "archon"]
-for i in range(len(scp_database), 350):
+for i in range(350):
     id_num = str(1000 + i)
     cls = all_classes[i % len(all_classes)]
     scp_database.append({
-        "id": id_num, "cls": cls, "name": f"Gizli Dosya #{id_num}",
-        "desc": f"ERİŞİM REDDEDİLDİ... Şaka şaka.\nBu nesne {cls.upper()} sınıflandırmasındadır.\nVakıf mühendisleri tarafından özel olarak izlenmektedir.\nİçerisinde yüksek miktarda Radyo-Anomalik enerji barındırır.\nPersonelin 3 metreden fazla yaklaşması durumunda zihin koruma kaskı takması zorunludur.\nDosya son güncelleme: 2026-02-23."
+        "id": id_num, "cls": cls, "name": f"Anomalik Kayıt #{id_num}",
+        "desc": generate_desc(id_num, cls),
+        "level": (i % 5) + 1 # 1'den 5'e kadar seviyeler
     })
 
-# --- GELİŞMİŞ TERMİNAL ARAYÜZÜ ---
+# Şifre Eşleşmeleri
+PASSWORDS = {
+    "1": "SCP-123",
+    "2": "VAKIF-2026",
+    "3": "KETER-ALARM",
+    "4": "GIZLI-PROJE",
+    "5": "DUNYANIN-SONU"
+}
+
+# --- ARAYÜZ ---
 HTML_BASE = """
 <!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>SCP FOUNDATION | DEEP WEB TERMINAL</title>
+    <title>SCP FOUNDATION SECURITY TERMINAL</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        :root { --amber: #ffb000; --bg: #030303; --safe: #00ff41; --euclid: #f1c40f; --keter: #ff3e3e; --thaumiel: #3498db; --apollyon: #9b59b6; --archon: #e67e22; }
-        body { background: var(--bg); color: var(--amber); font-family: 'Courier New', monospace; min-height: 100vh; position: relative; }
-        
-        /* ARKA PLAN LOGO */
-        .scp-logo-bg {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 80vh; height: 80vh; background: url('https://upload.wikimedia.org/wikipedia/commons/e/ec/SCP_Foundation_logo.svg') no-repeat center;
-            opacity: 0.07; filter: sepia(1) saturate(5) hue-rotate(5deg); pointer-events: none; z-index: -1;
-        }
-
-        .terminal { border: 1px solid var(--amber); box-shadow: 0 0 20px rgba(255,176,0,0.15); padding: 30px; margin-top: 20px; background: rgba(3,3,3,0.9); }
-        .typewriter { overflow: hidden; white-space: pre-wrap; }
-        
-        /* SINIF RENKLERİ */
-        .safe { color: var(--safe); } .euclid { color: var(--euclid); } .keter { color: var(--keter); }
-        .thaumiel { color: var(--thaumiel); } .apollyon { color: var(--apollyon); } .archon { color: var(--archon); }
-
-        .btn-scp { background: transparent; border: 1px solid var(--amber); color: var(--amber); border-radius: 0; margin: 5px; transition: 0.3s; }
-        .btn-scp:hover { background: var(--amber); color: #000; box-shadow: 0 0 15px var(--amber); }
-        
-        .scanline { width: 100%; height: 3px; background: rgba(255, 176, 0, 0.05); position: fixed; top: 0; left: 0; animation: scan 6s linear infinite; pointer-events: none; }
+        :root { --amber: #ffb000; --bg: #020202; }
+        body { background: var(--bg); color: var(--amber); font-family: 'Courier New', monospace; overflow-x: hidden; }
+        .scanline { width: 100%; height: 2px; background: rgba(255,176,0,0.03); position: fixed; top: 0; animation: scan 10s linear infinite; pointer-events: none; }
         @keyframes scan { from { top: 0; } to { top: 100%; } }
+        
+        .terminal-container { border: 2px solid var(--amber); margin-top: 30px; padding: 40px; position: relative; background: rgba(0,0,0,0.8); }
+        
+        /* LOGO ARKADA */
+        .header-logo-container { position: relative; text-align: center; margin-bottom: 50px; }
+        .bg-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 150px; opacity: 0.2; z-index: 1; }
+        .header-title { position: relative; z-index: 2; font-size: 4rem; font-weight: 900; letter-spacing: 10px; }
+
+        .btn-gate { background: transparent; border: 1px solid var(--amber); color: var(--amber); border-radius: 0; transition: 0.3s; margin: 10px; padding: 20px; }
+        .btn-gate:hover { background: var(--amber); color: black; box-shadow: 0 0 20px var(--amber); }
+        .typewriter { white-space: pre-wrap; line-height: 1.5; font-size: 1.1rem; }
     </style>
 </head>
 <body>
-    <div class="scp-logo-bg"></div>
     <div class="scanline"></div>
-    <div class="container terminal">
-        <header class="mb-4 border-bottom border-secondary d-flex justify-content-between">
-            <span>[DB_SÜRÜM: 3.5.0] [STATÜ: AKTİF]</span>
-            <nav>
-                <a href="/" class="btn-scp btn btn-sm">ANA MENÜ</a>
-                <a href="/ayarlar" class="btn-scp btn btn-sm">AYARLAR</a>
-            </nav>
-        </header>
+    <div class="container terminal-container">
+        <div class="header-logo-container">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/e/ec/SCP_Foundation_logo.svg" class="bg-logo">
+            <h1 class="header-title">SCP DATABASE</h1>
+        </div>
         {{ content | safe }}
     </div>
-
-    <script>
-        function typeWriter(el, speed = 20) {
-            const text = el.innerText; el.innerText = '';
-            let i = 0;
-            function type() { if (i < text.length) { el.innerHTML += text.charAt(i); i++; setTimeout(type, speed); } }
-            type();
-        }
-        document.querySelectorAll('.typewriter').forEach(el => typeWriter(el));
-    </script>
 </body>
 </html>
 """
 
 INDEX_CONTENT = """
-<div class="text-center py-5">
-    <h1 class="display-1 fw-bold">SCP DATABASE</h1>
-    <p class="lead">SECURE. CONTAIN. PROTECT.</p>
-    <hr>
-    <div class="row g-3 mt-4">
-        <div class="col-md-4"><a href="/sinif/safe" class="btn btn-scp w-100 py-3">SAFE</a></div>
-        <div class="col-md-4"><a href="/sinif/euclid" class="btn btn-scp w-100 py-3">EUCLID</a></div>
-        <div class="col-md-4"><a href="/sinif/keter" class="btn btn-scp w-100 py-3">KETER</a></div>
-        <div class="col-md-4"><a href="/sinif/thaumiel" class="btn btn-scp w-100 py-3 text-info">THAUMIEL</a></div>
-        <div class="col-md-4"><a href="/sinif/apollyon" class="btn btn-scp w-100 py-3 text-warning">APOLLYON</a></div>
-        <div class="col-md-4"><a href="/sinif/archon" class="btn btn-scp w-100 py-3 text-danger">ARCHON</a></div>
-    </div>
-</div>
-"""
-
-LIST_CONTENT = """
-<h2 class="mb-4">Sorgu: {{ cls.upper() }} SINIFI (350 Kayıt Mevcut)</h2>
-<div class="row row-cols-1 row-cols-md-4 g-2">
-    {% for scp in scps %}
-    <div class="col">
-        <div class="p-2 border border-secondary">
-            <span class="{{ scp.cls }}">SCP-{{ scp.id }}</span>
-            <br><a href="/scp/{{ scp.id }}" class="text-white small">[DETAY]</a>
+<div class="text-center">
+    <h3>ERİŞİM SEVİYESİ SEÇİNİZ</h3>
+    <hr style="border-color: var(--amber)">
+    <div class="row">
+        {% for lvl in range(1, 6) %}
+        <div class="col-md-4">
+            <form action="/auth" method="post">
+                <input type="hidden" name="level" value="{{ lvl }}">
+                <button type="submit" class="btn-gate w-100">SEVİYE {{ lvl }} GİRİŞİ</button>
+            </form>
         </div>
+        {% endfor %}
     </div>
-    {% endfor %}
 </div>
 """
 
-DETAIL_CONTENT = """
-<div class="p-4">
-    <h1 class="{{ scp.cls }}">SCP-{{ scp.id }}</h1>
-    <h3 class="text-muted">NESNE SINIFI: <span class="{{ scp.cls }}">{{ scp.cls.upper() }}</span></h3>
-    <hr>
-    <div class="typewriter fs-5" style="line-height: 1.8;">{{ scp.desc }}</div>
-    <hr>
-    <button onclick="history.back()" class="btn-scp btn mt-4">Geri Dön</button>
-</div>
-"""
-
-SETTINGS_CONTENT = """
-<h3>SİSTEM YAPILANDIRMASI</h3>
-<hr>
-<div class="fs-5">
-    <p>> Arka Plan Logosu: [AKTİF]</p>
-    <p>> Veri Tabanı Boyutu: [350 NESNE]</p>
-    <p>> Terminal Rengi: [AMBER STANDART]</p>
-    <div class="mt-4">
-        <button class="btn-scp" onclick="document.body.style.color='#00ff41'">YEŞİL TERMİNAL</button>
-        <button class="btn-scp" onclick="document.body.style.color='#ffb000'">AMBER TERMİNAL</button>
-    </div>
+AUTH_CONTENT = """
+<div class="text-center py-5">
+    <h2 class="text-danger">GÜVENLİK KONTROLÜ: SEVİYE {{ level }}</h2>
+    <p>Lütfen bu yetki seviyesi için atanmış olan güvenlik anahtarını giriniz.</p>
+    <form action="/verify" method="post" class="mt-4">
+        <input type="hidden" name="level" value="{{ level }}">
+        <input type="password" name="password" class="form-control bg-dark text-warning border-warning text-center mx-auto" style="max-width: 300px;" autofocus>
+        <button type="submit" class="btn-gate mt-3">DOĞRULA</button>
+    </form>
 </div>
 """
 
 @app.route('/')
-def index(): return render_template_string(HTML_BASE, content=INDEX_CONTENT)
+def index():
+    return render_template_string(HTML_BASE, content=INDEX_CONTENT)
 
-@app.route('/sinif/<cls>')
-def list_scps(cls):
-    filtered = [s for s in scp_database if s['cls'] == cls.lower()]
-    return render_template_string(HTML_BASE, content=render_template_string(LIST_CONTENT, scps=filtered, cls=cls))
+@app.route('/auth', methods=['POST'])
+def auth():
+    level = request.form.get('level')
+    return render_template_string(HTML_BASE, content=render_template_string(AUTH_CONTENT, level=level))
+
+@app.route('/verify', methods=['POST'])
+def verify():
+    level = request.form.get('level')
+    password = request.form.get('password')
+    if PASSWORDS.get(level) == password:
+        session['access_level'] = int(level)
+        return redirect(f'/list/{level}')
+    return "<h1>ERİŞİM REDDEDİLDİ: HATALI ŞİFRE!</h1><a href='/'>Geri Dön</a>"
+
+@app.route('/list/<int:level>')
+def list_scps(level):
+    if session.get('access_level', 0) < level:
+        return redirect('/')
+    filtered = [s for s in scp_database if s['level'] == level]
+    
+    list_html = f"<h3>SEVİYE {level} ARŞİVİ</h3><hr><div class='row'>"
+    for scp in filtered:
+        list_html += f"<div class='col-md-3'><a href='/scp/{scp['id']}' class='btn-gate w-100'>SCP-{scp['id']}</a></div>"
+    list_html += "</div><a href='/' class='btn-gate mt-4'>ANA MENÜ</a>"
+    
+    return render_template_string(HTML_BASE, content=list_html)
 
 @app.route('/scp/<scp_id>')
 def detail(scp_id):
     scp = next((s for s in scp_database if s['id'] == scp_id), None)
-    if not scp: abort(404)
-    return render_template_string(HTML_BASE, content=render_template_string(DETAIL_CONTENT, scp=scp))
-
-@app.route('/ayarlar')
-def settings(): return render_template_string(HTML_BASE, content=SETTINGS_CONTENT)
+    if not scp or session.get('access_level', 0) < scp['level']:
+        return "<h1>ERİŞİM YETKİSİ YETERSİZ!</h1>"
+    
+    content = f"""
+    <div class='p-3 border border-warning'>
+        <h2 class='text-danger'>DOKÜMAN: SCP-{scp['id']}</h2>
+        <p><strong>GÜVENLİK DÜZEYİ:</strong> SEVİYE {scp['level']}</p>
+        <hr style='border-color: var(--amber)'>
+        <div class='typewriter'>{scp['desc']}</div>
+        <button onclick='history.back()' class='btn-gate mt-5'>DOSYAYI KAPAT</button>
+    </div>
+    """
+    return render_template_string(HTML_BASE, content=content)
 
 if __name__ == "__main__":
     app.run(debug=True)
