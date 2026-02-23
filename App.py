@@ -1,153 +1,294 @@
 from flask import Flask, render_template_string, abort, request, redirect, session
+import random
 
 app = Flask(__name__)
-app.secret_key = 'vakif_gizli_anahtar'
+app.secret_key = 'SÜPER_GİZLİ_VAKIF_ANAHTARI_2026'
 
-# --- 350 SCP VERİ HAVUZU (15+ SATIR DETAYLI) ---
-def generate_desc(id_num, cls):
-    return f"""[ERİŞİM KAYDI ONAYLANDI]
-NESNE NO: SCP-{id_num}
-SINIFLANDIRMA: {cls.upper()}
-MUHAFAZA PROSEDÜRLERİ:
-Nesne, Bölge-19 bünyesinde bulunan ve her yönden en az 5 metre kalınlığında güçlendirilmiş beton duvarlarla çevrili bir hücrede tutulmalıdır. Hücre içerisindeki hava basıncı sürekli olarak kontrol edilmeli ve herhangi bir sapma durumunda tesis alarmı seviye 3'e yükseltilmelidir. Yetkili personel içeri girmeden önce en az iki (2) güvenlik görevlisi kapıda hazır beklemelidir. İçerideki tüm faaliyetler 7/24 yüksek çözünürlüklü termal kameralarla izlenmelidir.
+# --- VERİ TABANI OLUŞTURMA (350 SCP + DETAYLI RAPORLAR) ---
+def create_scp_report(id_num, cls):
+    # 15+ Satırlık Detaylı Rapor Şablonu
+    return f"""[GÜVENLİK PROTOKOLÜ AKTİF]
+DOSYA NO: SCP-{id_num}
+NESNE SINIFI: {cls.upper()}
+ERİŞİM İZNİ: SEVİYE {random.randint(1,5)}
+
+ÖZEL MUHAFAZA PROSEDÜRLERİ:
+1. Nesne, her türlü dış müdahaleden arındırılmış, [VERİSİLİNDİ] maddesiyle kaplanmış 10x10x10 metrelik bir odada tutulmalıdır.
+2. Odadaki nem oranı %15'in üzerine çıkmamalıdır; aksi takdirde nesne agresifleşmektedir.
+3. Deneyler sırasında en az iki (2) Seviye 3 personel odanın dışında hazır bulunmalıdır.
+4. Muhafaza ihlali durumunda 'Kod Siyah' protokolü uygulanmalı ve tüm tesis tahliye edilmelidir.
+5. Herhangi bir personel nesneyle doğrudan göz teması kurmamalıdır; kuranlar derhal [REDACTED] işlemine tabi tutulmalıdır.
+6. Hücrenin temizliği sadece D-Sınıfı personel tarafından, ayda bir kez yapılmalıdır.
 
 AÇIKLAMA:
-SCP-{id_num}, yapılan radyometrik testlere göre yaklaşık 450 yaşında olduğu tahmin edilen, kökeni tam olarak saptanamamış bir anomalidir. Nesnenin çevresinde sürekli olarak düşük frekanslı bir elektromanyetik dalgalanma gözlemlenmiştir. Bu dalgalanmalar, yakın mesafedeki biyolojik organizmaların sinir sistemi üzerinde doğrudan etki ederek halüsinasyonlara, aşırı öfke nöbetlerine veya geçici hafıza kaybına neden olmaktadır. Yapılan son deneylerde (Bkz: Deney Kaydı {id_num}-A), nesnenin kendi kendine yer değiştirebildiği ve gözlemlenmediği anlarda fiziksel formunu kurbanının en büyük korkusuna dönüştürebildiği saptanmıştır. Bu durum, personelin nesneyle olan temasını minimuma indirmesini zorunlu kılmaktadır. Olası bir muhafaza ihlali durumunda, 'Kilit-Altı' protokolü devreye sokulmalı ve bölge imha birimleri tarafından mühürlenmelidir.
-[VERİLERİN DEVAMI İÇİN YETKİ SEVİYESİ ARTTIRILMALIDIR]"""
+SCP-{id_num}, ilk olarak 19██ yılında [SANSÜRLENDİ] yakınlarında bir mağarada keşfedilmiştir. 
+Fiziksel yapısı itibariyle durağan görünse de, kuantum seviyesinde sürekli bir yer değiştirme sergilemektedir. 
+Yapılan testler (Bkz: Ek-4), nesnenin insan bilincine doğrudan sızabildiğini göstermiştir. 
+Mağdur olan özneler, nesnenin kendilerine [SANSÜRLENDİ] fısıldadığını iddia etmektedirler.
+Nesnenin çevresindeki radyasyon düzeyi, bilinen hiçbir elementle uyuşmamaktadır. 
+Dr. ██████ tarafından yürütülen araştırmalar sonucunda, nesnenin aslında bir [REDACTED] olduğu teorisi ortaya atılmıştır.
+Bu durum, K-Sınıfı bir dünya sonu senaryosuna yol açabilecek potansiyele sahiptir.
+Personelin bu dosyayı okuduktan sonra amneztik (hafıza silici) kullanması tavsiye edilir.
 
+[RAPORUN SONU - YETKİSİZ KOPYALANMASI ÖLÜMLE CEZALANDIRILIR]"""
+
+# 350 SCP'lik Veri Setini Oluştur
 scp_database = []
-all_classes = ["safe", "euclid", "keter", "thaumiel", "apollyon", "archon"]
-for i in range(350):
+classes = ["safe", "euclid", "keter", "thaumiel", "apollyon", "archon"]
+for i in range(1, 351):
     id_num = str(1000 + i)
-    cls = all_classes[i % len(all_classes)]
+    cls = classes[i % len(classes)]
     scp_database.append({
-        "id": id_num, "cls": cls, "name": f"Anomalik Kayıt #{id_num}",
-        "desc": generate_desc(id_num, cls),
-        "level": (i % 5) + 1 # 1'den 5'e kadar seviyeler
+        "id": id_num, 
+        "cls": cls, 
+        "name": f"Anomalik Varlık #{id_num}",
+        "desc": create_scp_report(id_num, cls),
+        "level": (i % 5) + 1
     })
 
-# Şifre Eşleşmeleri
-PASSWORDS = {
-    "1": "SCP-123",
-    "2": "VAKIF-2026",
+# Şifre Tanımlamaları
+SEVİYE_SIFRELERI = {
+    "1": "SCP-SAFE",
+    "2": "EUCLID-77",
     "3": "KETER-ALARM",
-    "4": "GIZLI-PROJE",
-    "5": "DUNYANIN-SONU"
+    "4": "O5-ONLY",
+    "5": "PROTOKOL-SİFIR"
 }
 
-# --- ARAYÜZ ---
+# --- TASARIM (SCP-001 SANSÜRLÜ RAPOR ARKA PLANI) ---
 HTML_BASE = """
 <!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>SCP FOUNDATION SECURITY TERMINAL</title>
+    <title>SCP-NET TERMINAL v5.0</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        :root { --amber: #ffb000; --bg: #020202; }
-        body { background: var(--bg); color: var(--amber); font-family: 'Courier New', monospace; overflow-x: hidden; }
-        .scanline { width: 100%; height: 2px; background: rgba(255,176,0,0.03); position: fixed; top: 0; animation: scan 10s linear infinite; pointer-events: none; }
-        @keyframes scan { from { top: 0; } to { top: 100%; } }
+        :root { --amber: #ffb000; --bg: #050505; --red: #ff3e3e; }
         
-        .terminal-container { border: 2px solid var(--amber); margin-top: 30px; padding: 40px; position: relative; background: rgba(0,0,0,0.8); }
-        
-        /* LOGO ARKADA */
-        .header-logo-container { position: relative; text-align: center; margin-bottom: 50px; }
-        .bg-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 150px; opacity: 0.2; z-index: 1; }
-        .header-title { position: relative; z-index: 2; font-size: 4rem; font-weight: 900; letter-spacing: 10px; }
+        body { 
+            background-color: var(--bg); 
+            color: var(--amber); 
+            font-family: 'Courier New', monospace; 
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
 
-        .btn-gate { background: transparent; border: 1px solid var(--amber); color: var(--amber); border-radius: 0; transition: 0.3s; margin: 10px; padding: 20px; }
-        .btn-gate:hover { background: var(--amber); color: black; box-shadow: 0 0 20px var(--amber); }
-        .typewriter { white-space: pre-wrap; line-height: 1.5; font-size: 1.1rem; }
+        /* SCP-001 GİZLİ RAPOR ARKA PLANI */
+        body::before {
+            content: "TOP SECRET - SCP-001 REPORT [REDACTED] [SANSÜRLENDİ] ITEM-001: THE GUARDIAN... [VERİ SİLİNDİ]... PROHIBITED... DEATH PENALTY... NO ACCESS... [REDACTED]";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            font-size: 14px;
+            color: rgba(255, 176, 0, 0.04);
+            white-space: pre-wrap;
+            padding: 20px;
+            z-index: -1;
+            line-height: 2;
+            pointer-events: none;
+        }
+
+        .terminal-container { 
+            border: 2px solid var(--amber); 
+            background: rgba(0, 0, 0, 0.9);
+            box-shadow: 0 0 30px rgba(255, 176, 0, 0.2);
+            padding: 40px;
+            margin-top: 50px;
+            position: relative;
+        }
+
+        .header-section {
+            border-bottom: 2px double var(--amber);
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            text-align: center;
+        }
+
+        .scp-logo {
+            width: 120px;
+            opacity: 0.3;
+            filter: sepia(1) saturate(5);
+        }
+
+        .btn-custom {
+            background: transparent;
+            border: 1px solid var(--amber);
+            color: var(--amber);
+            padding: 15px;
+            margin: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: 0.3s;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .btn-custom:hover {
+            background: var(--amber);
+            color: #000;
+            box-shadow: 0 0 15px var(--amber);
+        }
+
+        .redacted {
+            background: #ffb000;
+            color: #ffb000;
+            padding: 0 5px;
+        }
+
+        .typewriter {
+            white-space: pre-wrap;
+            border-left: 2px solid var(--amber);
+            padding-left: 20px;
+            margin-top: 20px;
+            font-size: 1.1rem;
+        }
+
+        .scanline {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 176, 0, 0.05);
+            position: fixed;
+            top: 0;
+            animation: moveScan 8s linear infinite;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        @keyframes moveScan { from { top: 0; } to { top: 100%; } }
     </style>
 </head>
 <body>
     <div class="scanline"></div>
-    <div class="container terminal-container">
-        <div class="header-logo-container">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/e/ec/SCP_Foundation_logo.svg" class="bg-logo">
-            <h1 class="header-title">SCP DATABASE</h1>
+    <div class="container">
+        <div class="terminal-container">
+            <div class="header-section">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/e/ec/SCP_Foundation_logo.svg" class="scp-logo">
+                <h1 class="mt-3">VAKIF VERİ TABANI AĞI</h1>
+                <p>[STATÜ: GÜVENLİ BAĞLANTI] [SUNUCU: SITE-19]</p>
+            </div>
+            {{ content | safe }}
         </div>
-        {{ content | safe }}
     </div>
+
+    <script>
+        function runTypewriter() {
+            const elements = document.querySelectorAll('.typewriter');
+            elements.forEach(el => {
+                const text = el.innerText;
+                el.innerText = '';
+                let i = 0;
+                const timer = setInterval(() => {
+                    if (i < text.length) {
+                        el.innerHTML += text.charAt(i);
+                        i++;
+                    } else { clearInterval(timer); }
+                }, 10);
+            });
+        }
+        window.onload = runTypewriter;
+    </script>
 </body>
 </html>
 """
 
-INDEX_CONTENT = """
-<div class="text-center">
-    <h3>ERİŞİM SEVİYESİ SEÇİNİZ</h3>
-    <hr style="border-color: var(--amber)">
-    <div class="row">
-        {% for lvl in range(1, 6) %}
-        <div class="col-md-4">
-            <form action="/auth" method="post">
-                <input type="hidden" name="level" value="{{ lvl }}">
-                <button type="submit" class="btn-gate w-100">SEVİYE {{ lvl }} GİRİŞİ</button>
-            </form>
-        </div>
-        {% endfor %}
-    </div>
-</div>
-"""
-
-AUTH_CONTENT = """
-<div class="text-center py-5">
-    <h2 class="text-danger">GÜVENLİK KONTROLÜ: SEVİYE {{ level }}</h2>
-    <p>Lütfen bu yetki seviyesi için atanmış olan güvenlik anahtarını giriniz.</p>
-    <form action="/verify" method="post" class="mt-4">
-        <input type="hidden" name="level" value="{{ level }}">
-        <input type="password" name="password" class="form-control bg-dark text-warning border-warning text-center mx-auto" style="max-width: 300px;" autofocus>
-        <button type="submit" class="btn-gate mt-3">DOĞRULA</button>
-    </form>
-</div>
-"""
+# --- YOLLAR (ROUTES) ---
 
 @app.route('/')
 def index():
-    return render_template_string(HTML_BASE, content=INDEX_CONTENT)
+    # Ana sayfa: Seviye seçimi
+    content = """
+    <h3 class="text-center mb-4">ERİŞİM YETKİSİ SEÇİN</h3>
+    <div class="row">
+        <div class="col-md-4"><a href="/login/1" class="btn-custom btn">SEVİYE 1 (SAFE)</a></div>
+        <div class="col-md-4"><a href="/login/2" class="btn-custom btn">SEVİYE 2 (EUCLID)</a></div>
+        <div class="col-md-4"><a href="/login/3" class="btn-custom btn">SEVİYE 3 (KETER)</a></div>
+        <div class="col-md-4"><a href="/login/4" class="btn-custom btn">SEVİYE 4 (THAUMIEL)</a></div>
+        <div class="col-md-4"><a href="/login/5" class="btn-custom btn">SEVİYE 5 (APOLLYON)</a></div>
+        <div class="col-md-4"><a href="/ayarlar" class="btn-custom btn">AYARLAR / LOGLAR</a></div>
+    </div>
+    """
+    return render_template_string(HTML_BASE, content=content)
 
-@app.route('/auth', methods=['POST'])
-def auth():
-    level = request.form.get('level')
-    return render_template_string(HTML_BASE, content=render_template_string(AUTH_CONTENT, level=level))
+@app.route('/login/<int:level>')
+def login_page(level):
+    content = f"""
+    <div class="text-center p-5">
+        <h2 class="text-danger mb-4">DİKKAT! SEVİYE {level} ERİŞİMİ</h2>
+        <p>Devam etmek için dijital imza kodunu (şifre) giriniz:</p>
+        <form action="/verify" method="post" class="mt-4">
+            <input type="hidden" name="level" value="{level}">
+            <input type="password" name="pwd" class="form-control bg-dark text-warning border-warning text-center mx-auto" style="max-width:300px" autofocus>
+            <button type="submit" class="btn-custom mt-4" style="max-width:200px">GİRİŞ YAP</button>
+        </form>
+    </div>
+    """
+    return render_template_string(HTML_BASE, content=content)
 
 @app.route('/verify', methods=['POST'])
 def verify():
-    level = request.form.get('level')
-    password = request.form.get('password')
-    if PASSWORDS.get(level) == password:
-        session['access_level'] = int(level)
-        return redirect(f'/list/{level}')
-    return "<h1>ERİŞİM REDDEDİLDİ: HATALI ŞİFRE!</h1><a href='/'>Geri Dön</a>"
+    lvl = request.form.get('level')
+    pwd = request.form.get('pwd')
+    
+    if SEVİYE_SIFRELERI.get(lvl) == pwd:
+        session['auth_lvl'] = int(lvl)
+        return redirect(f'/archive/{lvl}')
+    else:
+        return """<body style="background:#000;color:red;text-align:center;padding-top:100px;font-family:monospace">
+                  <h1>ERİŞİM İZNİ REDDEDİLDİ!</h1>
+                  <p>GEÇERSİZ KİMLİK BİLGİSİ GİRİLDİ. GÜVENLİK BİRİMLERİ KONUMUNUZA YÖNLENDİRİLDİ.</p>
+                  <a href="/" style="color:white">TEKRAR DENE</a></body>"""
 
-@app.route('/list/<int:level>')
-def list_scps(level):
-    if session.get('access_level', 0) < level:
+@app.route('/archive/<int:level>')
+def archive(level):
+    if session.get('auth_lvl', 0) < level:
         return redirect('/')
+    
     filtered = [s for s in scp_database if s['level'] == level]
-    
-    list_html = f"<h3>SEVİYE {level} ARŞİVİ</h3><hr><div class='row'>"
+    list_html = f"<h3>ARŞİV SEVİYESİ {level} - TOPLAM {len(filtered)} KAYIT</h3><hr>"
+    list_html += "<div class='row'>"
     for scp in filtered:
-        list_html += f"<div class='col-md-3'><a href='/scp/{scp['id']}' class='btn-gate w-100'>SCP-{scp['id']}</a></div>"
-    list_html += "</div><a href='/' class='btn-gate mt-4'>ANA MENÜ</a>"
-    
+        list_html += f"<div class='col-md-3'><a href='/view/{scp['id']}' class='btn-custom btn' style='font-size:12px'>SCP-{scp['id']}</a></div>"
+    list_html += "</div><a href='/' class='btn-custom btn mt-4' style='width:200px'>ÇIKIŞ YAP</a>"
     return render_template_string(HTML_BASE, content=list_html)
 
-@app.route('/scp/<scp_id>')
-def detail(scp_id):
+@app.route('/view/<scp_id>')
+def view(scp_id):
     scp = next((s for s in scp_database if s['id'] == scp_id), None)
-    if not scp or session.get('access_level', 0) < scp['level']:
-        return "<h1>ERİŞİM YETKİSİ YETERSİZ!</h1>"
+    if not scp or session.get('auth_lvl', 0) < scp['level']:
+        return redirect('/')
     
     content = f"""
-    <div class='p-3 border border-warning'>
-        <h2 class='text-danger'>DOKÜMAN: SCP-{scp['id']}</h2>
-        <p><strong>GÜVENLİK DÜZEYİ:</strong> SEVİYE {scp['level']}</p>
-        <hr style='border-color: var(--amber)'>
-        <div class='typewriter'>{scp['desc']}</div>
-        <button onclick='history.back()' class='btn-gate mt-5'>DOSYAYI KAPAT</button>
+    <div class="p-2">
+        <h1 class="text-danger">DOSYA: SCP-{scp['id']}</h1>
+        <h4>DURUM: <span class="redacted">[SANSÜRLENDİ]</span></h4>
+        <div class="typewriter">{scp['desc']}</div>
+        <hr>
+        <button onclick="history.back()" class="btn-custom" style="width:200px">GERİ DÖN</button>
     </div>
+    """
+    return render_template_string(HTML_BASE, content=content)
+
+@app.route('/ayarlar')
+def settings():
+    content = """
+    <h3>SİSTEM TERMİNAL AYARLARI</h3>
+    <hr>
+    <p>> Arka Plan Dokusu: SCP-001 ONAYLANDI</p>
+    <p>> Veri Tabanı Kaydı: 350 Nesne</p>
+    <p>> Güvenlik Protokolü: AKTİF</p>
+    <p>> Bağlantı Noktası: Render.com Cloud</p>
+    <div class="mt-4">
+        <p>Sistem Logları:</p>
+        <div class="bg-dark p-3 text-secondary small" style="height:150px; overflow-y:scroll">
+            [13:48:02] Bağlantı isteği alındı...<br>
+            [13:48:05] Seviye 5 protokolü sorgulanıyor...<br>
+            [13:48:10] SCP-001 veri sızıntısı engellendi.<br>
+            [13:49:01] Kullanıcı kimliği doğrulanamadı...<br>
+            [13:49:55] Şifreleme anahtarı güncellendi.
+        </div>
+    </div>
+    <a href="/" class="btn-custom btn mt-4" style="width:200px">GERİ</a>
     """
     return render_template_string(HTML_BASE, content=content)
 
