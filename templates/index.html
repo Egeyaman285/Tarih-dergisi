@@ -183,6 +183,48 @@
         }
         .branch-desc-line { color: var(--green); font-size: 0.85rem; line-height: 2; }
 
+        /* IGD RAPOR PANELİ */
+        #igdyonetim {
+            background: #000; border: 1px solid var(--red-dim);
+            padding: 20px; margin-bottom: 30px; display: none;
+        }
+        .igd-header {
+            font-family: 'Orbitron', monospace; color: var(--red);
+            font-size: 0.9rem; letter-spacing: 4px; margin-bottom: 15px;
+            border-bottom: 1px solid #1a1a1a; padding-bottom: 10px;
+        }
+        .igd-istatistik {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr));
+            gap: 10px; margin-bottom: 20px;
+        }
+        .istatistik-kutu {
+            background: #080808; border: 1px solid #1a1a1a;
+            padding: 15px; text-align: center;
+        }
+        .istatistik-sayi {
+            color: var(--red); font-size: 2rem; font-family: 'Orbitron', monospace;
+            letter-spacing: 2px; margin-bottom: 5px;
+        }
+        .istatistik-etiket { color: #444; font-size: 0.7rem; letter-spacing: 2px; }
+        .igd-rapor-tablo {
+            width: 100%; border-collapse: collapse; margin-top: 15px;
+        }
+        .igd-rapor-tablo th {
+            color: #666; font-size: 0.7rem; letter-spacing: 2px;
+            border-bottom: 1px solid #1a1a1a; padding: 8px 5px;
+        }
+        .igd-rapor-tablo td {
+            color: #aaa; font-size: 0.7rem; padding: 8px 5px;
+            border-bottom: 1px solid #0a0a0a;
+        }
+        .rapor-temizle-btn {
+            background: none; border: 1px solid var(--red-dim);
+            color: var(--red); padding: 8px 15px; margin-top: 15px;
+            font-family: 'Share Tech Mono', monospace; cursor: pointer;
+            font-size: 0.7rem; letter-spacing: 2px; transition: 0.3s;
+        }
+        .rapor-temizle-btn:hover { background: var(--red); color: #000; }
+
         /* SCP SECTION */
         #scpSection { display: none; margin-top: 10px; }
         .section-header {
@@ -341,6 +383,35 @@
         <div class="denied-sub" style="margin-top:12px;color:#1a1a1a;font-size:0.7rem;">GİRİŞİM KAYDEDÜLDÜ — İÇ GÜVENLİK BİLGİLENDİRİLDİ</div>
     </div>
 
+    <!-- IGD YÖNETİM PANELİ - SADECE ÖZEL KODLARLA GÖRÜNÜR -->
+    <div id="igdyonetim">
+        <div class="igd-header">&#128065; İÇ GÜVENLİK (IGD) — YÖNETİM PANELİ</div>
+        
+        <div class="igd-istatistik">
+            <div class="istatistik-kutu">
+                <div class="istatistik-sayi" id="toplam-giris">0</div>
+                <div class="istatistik-etiket">TOPLAM GİRİŞ</div>
+            </div>
+            <div class="istatistik-kutu">
+                <div class="istatistik-sayi" id="scp-okunma">0</div>
+                <div class="istatistik-etiket">SCP OKUNMA</div>
+            </div>
+            <div class="istatistik-kutu">
+                <div class="istatistik-sayi" id="aktif-oturum">0</div>
+                <div class="istatistik-etiket">AKTİF OTURUM</div>
+            </div>
+        </div>
+
+        <div class="igd-header" style="font-size:0.8rem; margin-top:20px;">&#128221; SON ERİŞİM RAPORLARI</div>
+        <table class="igd-rapor-tablo" id="rapor-tablosu">
+            <thead>
+                <tr><th>ZAMAN</th><th>YETKİ KODU</th><th>DEPARTMAN</th><th>SCP</th><th>İŞLEM</th></tr>
+            </thead>
+            <tbody id="rapor-tbody"></tbody>
+        </table>
+        <button class="rapor-temizle-btn" onclick="raporlariTemizle()">RAPORLARI TEMİZLE</button>
+    </div>
+
     <div id="SEC-B" class="branch-box"><div class="branch-title">GÜVENLİK DEPARTMANI</div><div id="sec-text"></div></div>
     <div id="ENG-B" class="branch-box"><div class="branch-title">MÜHENDİSLİK BİRİMİ</div><div id="eng-text"></div></div>
     <div id="ETH-B" class="branch-box"><div class="branch-title">ETİK KOMİTE</div><div id="eth-text"></div></div>
@@ -389,6 +460,60 @@ var DATABASE = {
     "D-0012":  { type:"dclass" },
     "D-SINIF": { type:"dclass" }
 };
+
+// ======================================================
+// ÖZEL YETKİLİ KODLARI (6-cİLLAHp.sr ve SRTUQUQUE78921)
+// ======================================================
+const OZEL_KODLAR = {
+    "6-CİLLAHPSR": "SUPER_ADMIN",   // Büyük harf normalize edildi
+    "SRTUQUQUE78921": "ADMIN"
+};
+
+// ======================================================
+// RAPORLAMA SİSTEMİ
+// ======================================================
+var raporlar = JSON.parse(localStorage.getItem('igd_raporlar')) || [];
+var toplamGiris = parseInt(localStorage.getItem('toplam_giris')) || 0;
+var scpOkunma = parseInt(localStorage.getItem('scp_okunma')) || 0;
+var aktifOturumKodu = null;
+
+function raporEkle(kod, departman, scp, islem) {
+    var zaman = new Date().toLocaleString('tr-TR');
+    raporlar.unshift({ zaman, kod, departman, scp, islem });
+    if (raporlar.length > 100) raporlar.pop();
+    localStorage.setItem('igd_raporlar', JSON.stringify(raporlar));
+    
+    // Eğer admin paneli açıksa güncelle
+    if (document.getElementById('igdyonetim').style.display === 'block') {
+        raporlariGoster();
+    }
+}
+
+function raporlariGoster() {
+    var tbody = document.getElementById('rapor-tbody');
+    tbody.innerHTML = '';
+    raporlar.slice(0, 20).forEach(function(r) {
+        var tr = document.createElement('tr');
+        tr.innerHTML = `<td>${r.zaman}</td><td>${r.kod}</td><td>${r.departman}</td><td>${r.scp}</td><td>${r.islem}</td>`;
+        tbody.appendChild(tr);
+    });
+    
+    document.getElementById('toplam-giris').textContent = toplamGiris;
+    document.getElementById('scp-okunma').textContent = scpOkunma;
+    document.getElementById('aktif-oturum').textContent = aktifOturumKodu ? '1' : '0';
+}
+
+function raporlariTemizle() {
+    if (confirm('Tüm raporlar silinecek. Emin misiniz?')) {
+        raporlar = [];
+        toplamGiris = 0;
+        scpOkunma = 0;
+        localStorage.setItem('igd_raporlar', '[]');
+        localStorage.setItem('toplam_giris', '0');
+        localStorage.setItem('scp_okunma', '0');
+        raporlariGoster();
+    }
+}
 
 // ======================================================
 // SCP BİLGİLERİ
@@ -527,13 +652,22 @@ document.getElementById('passInput').addEventListener('input', function() {
     for (var i = 0; i < keys.length; i++) {
         if (keys[i].toUpperCase() === key) { dbKey = keys[i]; break; }
     }
-    if (!dbKey) return;
 
-    var entry = DATABASE[dbKey];
+    // Özel kod kontrolü
+    var ozelYetki = OZEL_KODLAR[key];
+    var isAdmin = ozelYetki === "SUPER_ADMIN" || ozelYetki === "ADMIN";
+
+    // Raporlama
+    toplamGiris++;
+    localStorage.setItem('toplam_giris', toplamGiris);
+    aktifOturumKodu = key;
+    
+    raporEkle(key, 'SİSTEM', '-', 'GİRİŞ YAPILDI');
 
     document.querySelectorAll('.branch-box').forEach(function(b){ b.style.display='none'; });
     document.getElementById('accessDeniedMsg').style.display = 'none';
     document.getElementById('scpSection').style.display = 'none';
+    document.getElementById('igdyonetim').style.display = 'none';
     document.getElementById('scp-list').innerHTML = '';
     document.getElementById('pagination').innerHTML = '';
     document.getElementById('terminalHeader').classList.add('collapsed');
@@ -541,28 +675,72 @@ document.getElementById('passInput').addEventListener('input', function() {
         document.getElementById('clv-'+c).className = 'clv';
     });
 
-    if (entry.type === 'dclass') {
-        document.getElementById('accessDeniedMsg').style.display = 'block';
-        setStatus('ERİŞİM REDDEDİLDİ D-SINIFI KİMLİK', '#8b0000');
-        playBeep(80, 0.5, 0.04);
-    } else {
-        document.getElementById(entry.boxId).style.display = 'block';
-        daktilo(entry.textId, entry.info);
-        entry.allowed.forEach(function(cls){
+    if (isAdmin) {
+        // ADMIN YETKİSİ - Tüm departmanlar açık
+        document.getElementById('SEC-B').style.display = 'block';
+        document.getElementById('ENG-B').style.display = 'block';
+        document.getElementById('ETH-B').style.display = 'block';
+        document.getElementById('MED-B').style.display = 'block';
+        document.getElementById('IGD-B').style.display = 'block';
+        document.getElementById('TME-B').style.display = 'block';
+        document.getElementById('O5-B').style.display = 'block';
+        
+        // Tüm departman bilgilerini yazdır
+        daktilo('sec-text', DATABASE["SHADOW-SEC-2026"].info);
+        daktilo('eng-text', DATABASE["SHADOW-ENG-7734"].info);
+        daktilo('eth-text', DATABASE["SHADOW-ETH-0001"].info);
+        daktilo('med-text', DATABASE["SHADOW-MED-4421"].info);
+        daktilo('igd-text', DATABASE["SHADOW-IGD-9999"].info);
+        daktilo('tme-text', DATABASE["SHADOW-TME-DELTA"].info);
+        daktilo('o5-text', DATABASE["SHADOW-O5-ILLAHPASA"].info);
+        
+        // Tüm yetki seviyelerini aktif et
+        ['SAFE','EUCLID','KETER','THAUMIEL','APOLLYON'].forEach(function(cls){
             var el = document.getElementById('clv-'+cls.toLowerCase());
             if (el) el.className = 'clv active-'+cls.toLowerCase();
         });
-        currentAllowed = entry.allowed;
-        currentDept = entry.dept;
-        currentFilter = 'ALL';
-        currentPage = 1;
-        document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
-        document.querySelector('.filter-btn[data-f="ALL"]').classList.add('active');
-        buildAllSCPs();
-        document.getElementById('scpSection').style.display = 'block';
-        setStatus('YETKİ ONAYLANDI HOSGELDİNİZ', '#00ff41');
-        playBeep(440, 0.06, 0.015);
+        
+        currentAllowed = ['SAFE','EUCLID','KETER','THAUMIEL','APOLLYON'];
+        currentDept = 'ADMIN';
+        
+        // IGD Yönetim panelini göster
+        document.getElementById('igdyonetim').style.display = 'block';
+        raporlariGoster();
+        
+        setStatus('SUPER ADMIN YETKİSİ AKTİF', '#ffd700');
+        playBeep(880, 0.1, 0.02);
+        
+    } else if (dbKey) {
+        var entry = DATABASE[dbKey];
+        if (entry.type === 'dclass') {
+            document.getElementById('accessDeniedMsg').style.display = 'block';
+            setStatus('ERİŞİM REDDEDİLDİ D-SINIFI KİMLİK', '#8b0000');
+            playBeep(80, 0.5, 0.04);
+            return;
+        } else {
+            document.getElementById(entry.boxId).style.display = 'block';
+            daktilo(entry.textId, entry.info);
+            entry.allowed.forEach(function(cls){
+                var el = document.getElementById('clv-'+cls.toLowerCase());
+                if (el) el.className = 'clv active-'+cls.toLowerCase();
+            });
+            currentAllowed = entry.allowed;
+            currentDept = entry.dept;
+        }
+    } else {
+        document.getElementById('accessDeniedMsg').style.display = 'block';
+        setStatus('GEÇERSİZ YETKİ ANAHTARI', '#8b0000');
+        playBeep(80, 0.5, 0.04);
+        return;
     }
+
+    currentFilter = 'ALL';
+    currentPage = 1;
+    document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
+    document.querySelector('.filter-btn[data-f="ALL"]').classList.add('active');
+    buildAllSCPs();
+    document.getElementById('scpSection').style.display = 'block';
+    setStatus('YETKİ ONAYLANDI HOSGELDİNİZ', '#00ff41');
 });
 
 // ======================================================
@@ -581,9 +759,17 @@ function daktilo(elId, lines) {
     }, 8);
 }
 
-function daktiloDet(el, lines) {
+function daktiloDet(el, lines, scpId) {
     el.innerHTML = '';
     var li = 0, ci = 0;
+    
+    // SCP okunma sayacı
+    scpOkunma++;
+    localStorage.setItem('scp_okunma', scpOkunma);
+    
+    // Raporla
+    raporEkle(aktifOturumKodu || 'BİLİNMİYOR', currentDept, scpId, 'SCP DOSYASI AÇILDI');
+    
     var t = setInterval(function() {
         if (li >= lines.length) { clearInterval(t); return; }
         if (!el.children[li]) { var d=document.createElement('div'); d.className='scp-detail-line'; el.appendChild(d); }
@@ -664,7 +850,7 @@ function renderPage() {
                     var inner = document.createElement('div');
                     inner.className = 'scp-detail-inner';
                     d.innerHTML = ''; d.appendChild(inner);
-                    daktiloDet(inner, getSCPLines(s.num, s.cls, currentDept));
+                    daktiloDet(inner, getSCPLines(s.num, s.cls, currentDept), s.id);
                     playBeep(200, 0.04, 0.01);
                 }
             };
@@ -712,6 +898,13 @@ function renderPagination() {
         pg.appendChild(next);
     }
 }
+
+// Admin paneli güncellemesi için interval
+setInterval(function() {
+    if (document.getElementById('igdyonetim').style.display === 'block') {
+        raporlariGoster();
+    }
+}, 2000);
 </script>
 </body>
 </html>
