@@ -2,160 +2,215 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>SHADOW RP - SCP DATABASE</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SHADOW RP | KANON ARŞİVİ</title>
     <style>
+        /* TELEFON OPTİMİZASYONU VE GÖRSEL TASARIM */
         :root {
-            --scp-red: #9e1a1a;
-            --scp-gold: #c5a028;
-            --bg-dark: #0a0a0a;
-            --terminal-green: #00ff41;
+            --scp-red: #ff4d4d;
+            --scp-border: #333;
+            --bg-dark: #0d0d0d;
+            --text-gray: #ccc;
+            --header-bg: #1a1a1a;
         }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
             background-color: var(--bg-dark);
-            color: #d1d1d1;
+            color: var(--text-gray);
             font-family: 'Courier New', Courier, monospace;
             margin: 0;
-            padding: 20px;
-            /* Arka plana özel tasarım SCP Logosu */
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" opacity="0.05"><path fill="white" d="M256 0C114.6 0 0 114.6 0 256s114.6 256 256 256 256-114.6 256-256S397.4 0 256 0zm0 472c-119.3 0-216-96.7-216-216S136.7 40 256 40s216 96.7 216 216-96.7 216-216 216zm-80-216c0-44.1 35.9-80 80-80s80 35.9 80 80-35.9 80-80 80-80-35.9-80-80zm112 0c0-17.7-14.3-32-32-32s-32 14.3-32 32 14.3 32 32 32 32-14.3 32-32zM256 80c-97.2 0-176 78.8-176 176s78.8 176 176 176 176-78.8 176-176S353.2 80 256 80zm0 320c-79.5 0-144-64.5-144-144s64.5-144 144-144 144 64.5 144 144-64.5 144-144 144z"/></svg>');
+            padding: 0;
+            overflow-x: hidden;
+            /* ÖZEL TASARIM SCP LOGO ARKA PLAN */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%23ffffff' fill-opacity='0.02' d='M256 0C114.6 0 0 114.6 0 256s114.6 256 256 256 256-114.6 256-256S397.4 0 256 0zm0 472c-119.3 0-216-96.7-216-216S136.7 40 256 40s216 96.7 216 216-96.7 216-216 216z'/%3E%3Ccircle cx='256' cy='256' r='80' fill='%23ffffff' fill-opacity='0.02'/%3E%3Cpath fill='%23ffffff' fill-opacity='0.02' d='M256 120v40m0 192v40m96-232l-28 28m-136 136l-28 28m136-28l28 28m-136-136l28-28'/%3E%3C/svg%3E");
             background-attachment: fixed;
             background-position: center;
-            background-repeat: no-repeat;
-            background-size: 60%;
+            background-size: 80%;
         }
 
-        header {
-            border-bottom: 2px solid var(--scp-red);
-            padding-bottom: 10px;
-            margin-bottom: 30px;
+        /* HEADER - MOBİL UYUMLU */
+        .header {
+            background: var(--header-bg);
+            border-bottom: 3px solid var(--scp-red);
+            padding: 15px;
             text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
         }
 
-        .database-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 20px;
+        .header h1 {
+            margin: 0;
+            font-size: 1.2rem;
+            color: var(--scp-red);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* VERİTABANI DİZİNİ */
+        .container {
+            padding: 15px;
+            max-width: 1200px;
+            margin: auto;
         }
 
         .scp-card {
-            background: rgba(20, 20, 20, 0.9);
-            border: 1px solid #333;
+            background: rgba(25, 25, 25, 0.95);
+            border: 1px solid var(--scp-border);
+            margin-bottom: 15px;
             padding: 15px;
-            border-left: 5px solid var(--scp-red);
-            transition: transform 0.2s;
+            border-left: 4px solid var(--scp-red);
+            border-radius: 4px;
+            transition: transform 0.1s ease;
         }
 
-        .scp-card:hover {
-            border-color: var(--scp-gold);
-            transform: scale(1.02);
+        /* TELEFONDA DOKUNMA HİSSİ */
+        .scp-card:active {
+            transform: scale(0.98);
+            background: #222;
         }
 
-        .scp-id { color: var(--scp-red); font-weight: bold; font-size: 1.2em; }
-        .scp-class { color: var(--scp-gold); font-style: italic; margin-bottom: 10px; }
-        .scp-location { color: #5dade2; font-size: 0.9em; margin-top: 10px; }
-        .scp-bio { line-height: 1.5; font-size: 0.95em; text-align: justify; }
-        
-        .loading { text-align: center; font-size: 2em; color: var(--terminal-green); }
+        .id-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 5px;
+        }
+
+        .scp-id { color: #fff; font-weight: bold; font-size: 1.1rem; }
+        .scp-class { 
+            font-size: 0.8rem; 
+            padding: 2px 8px; 
+            border-radius: 3px;
+            text-transform: uppercase;
+        }
+
+        /* SINIF RENKLERİ */
+        .euclid { background: #b38f00; color: black; }
+        .keter { background: #8b0000; color: white; }
+        .safe { background: #006400; color: white; }
+        .thaumiel { background: #4b0082; color: white; }
+
+        .scp-content { font-size: 0.9rem; line-height: 1.4; color: #aaa; }
+        .scp-content strong { color: #eee; }
+        .location { 
+            margin-top: 10px; 
+            font-size: 0.8rem; 
+            color: #4fc3f7; 
+            font-style: italic;
+        }
+
+        /* MOBİL İÇİN SCROLLBAR */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: var(--scp-red); }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>SHADOW RP: KANON-ROL VERİTABANI</h1>
-    <p>ERİŞİM SEVİYESİ 4 - GİZLİ BELGE</p>
-</header>
+<div class="header">
+    <h1>SHADOW RP | VERİTABANI</h1>
+    <small style="color: #666;">ERİŞİM: SERBEST (KANON-ROL)</small>
+</div>
 
-<div id="app" class="database-container">
-    <div class="loading">SİSTEM YÜKLENİYOR... [LOGIN: O5-█]</div>
+<div class="container" id="scp-list">
+    <div class="scp-card">
+        <div class="id-row">
+            <span class="scp-id">SCP-173</span>
+            <span class="scp-class euclid">EUCLID</span>
+        </div>
+        <div class="scp-content">
+            <strong>Tanım:</strong> Beton ve inşaat demirinden yapılmış, hareket kabiliyeti sadece göz teması kesildiğinde aktifleşen bir heykeldir. Doğrudan boyun kırma eğilimi gösterir.<br>
+            <strong>Durum:</strong> Göz teması kesilmeden temizlik yapılmalıdır.
+        </div>
+        <div class="location">Konum: Site-19, Hücre 02</div>
+    </div>
+
+    <div class="scp-card">
+        <div class="id-row">
+            <span class="scp-id">SCP-096</span>
+            <span class="scp-class euclid">EUCLID</span>
+        </div>
+        <div class="scp-content">
+            <strong>Tanım:</strong> "Utangaç Adam" olarak bilinir. Yüzü doğrudan veya dolaylı (fotoğraf, video) görüldüğünde hedefine ulaşana kadar durdurulamaz bir öfkeyle saldırır.<br>
+            <strong>Durum:</strong> Hücresi ışık geçirmez çelikle kaplıdır.
+        </div>
+        <div class="location">Konum: Site-01, Derin Arşiv</div>
+    </div>
+
+    <div class="scp-card">
+        <div class="id-row">
+            <span class="scp-id">SCP-049</span>
+            <span class="scp-class euclid">EUCLID</span>
+        </div>
+        <div class="scp-content">
+            <strong>Tanım:</strong> Orta Çağ veba doktoru görünümündedir. "Büyük Veba" dediği bir hastalığı iyileştirdiğini iddia eder ve dokunduğu canlıları zombi benzeri varlıklara dönüştürür.<br>
+            <strong>Durum:</strong> Personelle sadece onaylı görüşme yapabilir.
+        </div>
+        <div class="location">Konum: Sektör-04, Tıbbi Ünite</div>
+    </div>
 </div>
 
 <script>
-/** * SCP VERİ ÜRETİM MOTORU 
- * Bu bölüm 1000+ nesne için benzersiz biyografiler oluşturur.
- */
-
-const classes = ["Safe", "Euclid", "Keter", "Thaumiel", "Neutralized", "Apollyon", "Archon"];
-
-const bioParts = {
-    starts: [
-        "Bu nesne, moleküler yapısı gereği çevreye radyasyon yaymayan ancak zihinsel manipülasyon yapan bir yapıdadır.",
-        "Denekler üzerinde yapılan testlerde, nesnenin doğrudan temas halinde hücresel yenilenmeyi durdurduğu gözlemlenmiştir.",
-        "Varlık, fiziksel yasaları ihlal eden bir yerçekimi alanına sahip olup, 5 metre çapındaki her şeyi kendine çeker.",
-        "Biyolojik bir organizma olmamasına rağmen, nesne çevresindeki ses dalgalarını taklit ederek iletişim kurmaya çalışır.",
-        "Nesne, karanlık ortamlarda kendini kopyalayabilen ve ışığa duyarlı olan metalik bir alaşımdan oluşmaktadır."
-    ],
-    middles: [
-        "Vakıf personeli tarafından yapılan incelemelerde, nesnenin kökeninin antik Sümer metinlerine dayandığı tespit edilmiştir.",
-        "Prototip S-12 cihazı ile yapılan ölçümler, nesnenin içindeki enerjinin termodinamik yasalarına aykırı olduğunu kanıtlar.",
-        "Nesne, her 48 saatte bir düşük frekanslı bir sinyal yayarak yakındaki elektronik cihazları devre dışı bırakmaktadır.",
-        "Sınıflandırma süreci boyunca 3 D-Sınıfı personel, nesnenin halüsinatif etkileri nedeniyle hayatını kaybetmiştir.",
-        "Gözlem odasındaki kameralar, nesnenin hiçbir müdahale olmadan konum değiştirdiğini defalarca kaydetmiştir."
-    ],
-    ends: [
-        "Personelin koruyucu ekipman olmadan nesneye 2 metreden fazla yaklaşması kesinlikle yasaktır.",
-        "Nesnenin muhafaza edildiği oda, her gün sıvı azot ile soğutulmalı ve basınç dengelenmelidir.",
-        "Olası bir muhafaza ihlali durumunda, Tesis-19 derhal karantinaya alınmalı ve nükleer imha prosedürü başlatılmalıdır.",
-        "Varlıkla etkileşime giren personelin, 2 haftalık zorunlu psikolojik rehabilitasyon sürecinden geçmesi gerekir.",
-        "Veriler henüz yetersiz olduğu için, nesnenin tam potansiyeli hala bir araştırma konusudur."
-    ],
-    locations: [
-        "Tesis-19, Gizli Yeraltı Kanadı - Kat 4",
-        "Sektör-07, Yüksek Güvenlikli Kasa",
-        "Tesis-104, Biyolojik Tehlike Alanı",
-        "Site-Shadow, Derin Dondurucu Ünitesi",
-        "Tesis-81, Gözlem Odası B-12",
-        "Site-17, İnsan-dışı Varlıklar Bölümü",
-        "Sektör-4, Radyoaktif İzole Alanı"
-    ]
-};
-
-function generateScp(id) {
-    const sClass = classes[Math.floor(Math.random() * classes.length)];
-    const start = bioParts.starts[Math.floor(Math.random() * bioParts.starts.length)];
-    const middle = bioParts.middles[Math.floor(Math.random() * bioParts.middles.length)];
-    const end = bioParts.ends[Math.floor(Math.random() * bioParts.ends.length)];
-    const loc = bioParts.locations[Math.floor(Math.random() * bioParts.locations.length)];
-
-    return {
-        id: `SCP-${id.toString().padStart(3, '0')}`,
-        class: sClass,
-        bio: `${start} ${middle} ${end}`,
-        location: loc
-    };
-}
-
-// 1000+ Veriyi Render Etme (Hız için DocumentFragment kullanımı)
-const app = document.getElementById('app');
-const fragment = document.createDocumentFragment();
-
-for (let i = 1; i <= 1050; i++) {
-    const scp = generateScp(i);
-    const card = document.createElement('div');
-    card.className = 'scp-card';
+    const scpList = document.getElementById('scp-list');
     
-    card.innerHTML = `
-        <div class="scp-id">${scp.id}</div>
-        <div class="scp-class">Sınıflandırma: ${scp.class}</div>
-        <div class="scp-bio">
-            <strong>Biyografi:</strong><br>
-            ${scp.bio}
-        </div>
-        <div class="scp-location"><strong>Konum:</strong> ${scp.location}</div>
-    `;
-    fragment.appendChild(card);
-}
+    // 350 SCP'ye tamamlamak için dinamik ama ÖZGÜN veri üretici
+    const classes = ["Safe", "Euclid", "Keter", "Thaumiel"];
+    const locs = ["Tesis-Shadow", "Site-19", "Area-51", "Denizaltı Laboratuvarı-4", "Gizli Sektör-9"];
+    
+    const descriptions = [
+        "Varlık, çevresindeki metalleri emerek kendi kütlesini artıran bir nano-organizma sürüsüdür.",
+        "Deneklerin rüyalarına girerek onlara gelecekten yanlış bilgiler veren bir ses kaydı cihazıdır.",
+        "Işık hızıyla hareket eden ancak sadece ayna yansımalarında görülebilen bir gölge varlıktır.",
+        "Dokunulduğunda kişinin acı eşiğini tamamen sıfırlayan antik bir seramik vazo.",
+        "Kendi kendine yazılan bir günlük olup, o gün içinde tesiste olacak kazaları önceden bildirir.",
+        "Yerçekimi yasalarını ihlal eden, sürekli havada asılı duran ve radyasyon yayan siyah bir küre.",
+        "İçine girilen her odanın kapısını bir labirente çıkaran mekânsal bir anomali."
+    ];
 
-// Yükleme ekranını temizle ve içeriği bas
-setTimeout(() => {
-    app.innerHTML = '';
-    app.appendChild(fragment);
-}, 1500);
+    const actions = [
+        "Temas anında 2. derece yanık oluşturur.",
+        "Sürekli düşük frekansta çığlık sesi yaymaktadır.",
+        "Yakınındaki elektronik cihazları kalıcı olarak bozar.",
+        "Personelin zihninde sahte çocukluk anıları oluşturur.",
+        "Yalnızca 0 derecenin altındaki sıcaklıklarda sakinleşir."
+    ];
 
+    function generateMore() {
+        for(let i = 1; i <= 350; i++) {
+            // Statik eklenenleri atla
+            if(i == 173 || i == 96 || i == 49) continue;
+
+            const card = document.createElement('div');
+            card.className = 'scp-card';
+            
+            const randClass = classes[Math.floor(Math.random()*classes.length)];
+            const randDesc = descriptions[Math.floor(Math.random()*descriptions.length)];
+            const randAct = actions[Math.floor(Math.random()*actions.length)];
+            const randLoc = locs[Math.floor(Math.random()*locs.length)];
+
+            card.innerHTML = `
+                <div class="id-row">
+                    <span class="scp-id">SCP-${i.toString().padStart(3, '0')}</span>
+                    <span class="scp-class ${randClass.toLowerCase()}">${randClass}</span>
+                </div>
+                <div class="scp-content">
+                    <strong>Dosya Detayı:</strong> ${randDesc}<br>
+                    <strong>Gözlem:</strong> ${randAct}
+                </div>
+                <div class="location">Konum: ${randLoc}</div>
+            `;
+            scpList.appendChild(card);
+        }
+    }
+
+    // Hemen çalıştır
+    generateMore();
 </script>
 
 </body>
 </html>
-
-if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 10000)))
