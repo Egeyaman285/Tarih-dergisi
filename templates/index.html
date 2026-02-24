@@ -2040,7 +2040,57 @@
                 EUCLID: "ORTA - DEĞİŞKEN",
                 SAFE: "DÜŞÜK - GÜVENLİ"
             }[cls] || "BİLİNMİYOR";
+// 1. O5 paneli var mı kontrol et
+var panel = document.getElementById('o5-panel');
+console.log("O5 Panel var mı:", panel);
 
+// 2. Yoksa HTML'e ekle
+if (!panel) {
+    console.log("❌ O5 PANEL BULUNAMADI! Ekleniyor...");
+    
+    var mainContainer = document.querySelector('.main-container');
+    var statsPanel = document.getElementById('statsPanel');
+    
+    var yeniPanel = document.createElement('div');
+    yeniPanel.id = 'o5-panel';
+    yeniPanel.style.cssText = 'background:#000; border:2px solid var(--gold); padding:20px; margin-bottom:30px; display:block; border-radius:5px;';
+    yeniPanel.innerHTML = `
+        <div class="o5-header" style="font-family:'Orbitron'; color:var(--gold); font-size:1rem; letter-spacing:4px; margin-bottom:20px; border-bottom:1px solid #333; padding-bottom:10px;">
+            ⚜️ O5 ONAY PANELİ - BEKLEYEN TALEPLER (1)
+        </div>
+        <div id="o5-talep-listesi">
+            <div class="o5-talep" style="border:1px solid #333; margin-bottom:10px; padding:15px; display:flex; justify-content:space-between; align-items:center; animation:pulse 2s infinite; border-radius:5px;">
+                <div class="o5-talep-info" style="flex:1;">
+                    <div class="o5-talep-scp" style="color:var(--gold); font-size:1.1rem; margin-bottom:5px;">⚠️ BEKLEYEN TALEP VAR</div>
+                    <div class="o5-talep-detay" style="color:#666; font-size:0.7rem;">İstatistiklerde 1 onay görünüyor</div>
+                </div>
+                <div class="o5-talep-butonlar" style="display:flex; gap:10px;">
+                    <button class="o5-onayla" style="background:green; color:#fff; border:none; padding:8px 20px; cursor:pointer; border-radius:3px;" onclick="alert('ONAYLANDI (Test)')">✓ ONAYLA</button>
+                    <button class="o5-reddet" style="background:var(--red); color:#fff; border:none; padding:8px 20px; cursor:pointer; border-radius:3px;" onclick="alert('REDDEDİLDİ (Test)')">✗ REDDET</button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // StatsPanel'den sonra ekle
+    if (statsPanel) {
+        statsPanel.insertAdjacentElement('afterend', yeniPanel);
+        console.log("✅ O5 PANEL EKLENDİ!");
+    } else {
+        mainContainer.insertBefore(yeniPanel, mainContainer.firstChild);
+        console.log("✅ O5 PANEL EKLENDİ (başa)!");
+    }
+} else {
+    console.log("✅ O5 Panel var, display durumu:", panel.style.display);
+    panel.style.display = 'block';
+    
+    // Bekleyen onay sayısını göster
+    var sayi = document.getElementById('bekleyen-onay')?.textContent || '1';
+    document.querySelector('.o5-header').innerHTML = `⚜️ O5 ONAY PANELİ - BEKLEYEN TALEPLER (${sayi})`;
+    
+    // Talep listesini güncelle
+    document.getElementById('o5-talep-listesi').innerHTML = '<div style="color:#444; text-align:center; padding:30px; border:1px dashed #333;">⚜️ BEKLEYEN TALEPLER YÜKLENİYOR...</div>';
+}
             // Tehlikeli SCP'ler için özel içerik
             if (TEHLIKELI_SCPLER.includes(scpId)) {
                 var onayBilgisi = onaylananSCPLer.find(o => o.scp === scpId);
