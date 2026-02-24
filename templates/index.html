@@ -17,7 +17,8 @@
             --panel: #080808;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * { box-sizing: border-box; margin: 0; padding: 0; cursor: crosshair; }
+
         body {
             background: var(--bg);
             color: #aaa;
@@ -25,207 +26,319 @@
             overflow-x: hidden;
             min-height: 100vh;
         }
+
         body::before {
             content: '';
             position: fixed; top: 0; left: 0;
             width: 100%; height: 100%;
-            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.07) 2px, rgba(0,0,0,0.07) 4px);
-            pointer-events: none;
-            z-index: 9999;
+            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 4px);
+            pointer-events: none; z-index: 9998;
         }
 
-        /* BAŞLANGIÇ EKRANI */
+        /* SCP LOGO ARKA PLAN */
+        #scpBg {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60vmin; height: 60vmin;
+            opacity: 0.04; z-index: 0;
+            pointer-events: none;
+            animation: rotateSlow 60s linear infinite;
+        }
+        @keyframes rotateSlow {
+            from { transform: translate(-50%,-50%) rotate(0deg); }
+            to   { transform: translate(-50%,-50%) rotate(360deg); }
+        }
+
+        /* BASLANGIÇ EKRANI */
         #startScreen {
             position: fixed; top: 0; left: 0;
             width: 100%; height: 100%;
             background: #000; z-index: 5000;
             display: flex; flex-direction: column;
-            justify-content: center; align-items: center; gap: 30px;
+            justify-content: center; align-items: center; gap: 25px;
         }
         .start-logo {
             font-family: 'Orbitron', monospace;
-            font-size: 3rem; font-weight: 900;
+            font-size: clamp(2rem, 6vw, 4rem); font-weight: 900;
             color: var(--red); letter-spacing: 12px;
-            text-shadow: 0 0 30px var(--red), 0 0 60px var(--red-dim);
-            animation: flicker 4s infinite;
+            text-shadow: 0 0 30px var(--red), 0 0 80px var(--red-dim);
+            animation: flicker 5s infinite;
         }
-        .start-sub { color: #444; letter-spacing: 4px; font-size: 0.8rem; text-align: center; }
+        .start-sub { color: #333; letter-spacing: 4px; font-size: 0.75rem; text-align: center; }
         .start-btn {
-            padding: 16px 55px;
-            background: transparent;
-            border: 2px solid var(--red);
-            color: var(--red);
+            padding: 16px 55px; background: transparent;
+            border: 2px solid var(--red); color: var(--red);
             font-family: 'Share Tech Mono', monospace;
-            font-size: 1.1rem; cursor: pointer;
-            letter-spacing: 5px; transition: all 0.3s;
+            font-size: 1rem; cursor: pointer; letter-spacing: 5px; transition: all 0.3s;
         }
         .start-btn:hover { background: var(--red); color: #fff; box-shadow: 0 0 40px var(--red); }
 
         /* HEADER */
         #terminalHeader {
-            background: rgba(0,0,0,0.97);
-            border-bottom: 3px solid var(--red);
+            background: rgba(0,0,0,0.97); border-bottom: 3px solid var(--red);
             padding: 25px 30px; text-align: center;
-            position: sticky; top: 0; z-index: 1500;
-            transition: all 0.5s;
+            position: sticky; top: 0; z-index: 1500; transition: all 0.5s;
         }
-        #terminalHeader.collapsed {
-            padding: 8px 30px;
-            border-bottom: 1px solid var(--red-dim);
-        }
+        #terminalHeader.collapsed { padding: 8px 30px; border-bottom: 1px solid var(--red-dim); }
         .header-title {
-            font-family: 'Orbitron', monospace;
-            color: var(--red); font-size: 1.5rem; font-weight: 700;
-            letter-spacing: 8px; text-shadow: 0 0 20px var(--red);
-            margin-bottom: 15px; transition: all 0.5s;
+            font-family: 'Orbitron', monospace; color: var(--red);
+            font-size: 1.4rem; font-weight: 700; letter-spacing: 8px;
+            text-shadow: 0 0 20px var(--red); margin-bottom: 15px; transition: all 0.5s;
         }
-        #terminalHeader.collapsed .header-title {
-            font-size: 0.75rem; margin-bottom: 0; letter-spacing: 3px; opacity: 0.4;
-        }
-        #headerInputArea {
-            transition: all 0.5s; overflow: hidden; max-height: 120px;
-        }
-        #terminalHeader.collapsed #headerInputArea {
-            max-height: 0; opacity: 0;
-        }
+        #terminalHeader.collapsed .header-title { font-size: 0.7rem; margin-bottom: 0; opacity: 0.3; letter-spacing: 3px; }
+        #headerInputArea { transition: all 0.5s; overflow: hidden; max-height: 150px; }
+        #terminalHeader.collapsed #headerInputArea { max-height: 0; opacity: 0; }
+
+        /* YETKİ SEVİYESİ */
+        .clearance-bar { display: flex; justify-content: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+        .clv { padding: 3px 12px; font-size: 0.6rem; font-family: 'Orbitron', monospace; letter-spacing: 2px; border: 1px solid #111; color: #1a1a1a; transition: all 0.3s; }
+        .clv.active-safe     { border-color: #00ff41; color: #00ff41; box-shadow: 0 0 10px #00ff41; }
+        .clv.active-euclid   { border-color: #ffd700; color: #ffd700; box-shadow: 0 0 10px #ffd700; }
+        .clv.active-keter    { border-color: #ff4444; color: #ff4444; box-shadow: 0 0 10px #ff4444; }
+        .clv.active-thaumiel { border-color: #cc88ff; color: #cc88ff; box-shadow: 0 0 10px #cc88ff; }
+        .clv.active-apollyon { border-color: var(--red); color: var(--red); box-shadow: 0 0 10px var(--red); animation: pulse 1s infinite; }
+
         .auth-input {
-            background: #000;
-            border: 1px solid var(--red-dim);
-            border-bottom: 2px solid var(--red);
-            color: var(--red); padding: 12px 20px;
-            width: 80%; max-width: 550px;
-            margin: 10px auto; display: block;
-            outline: none; text-align: center;
-            font-size: 1rem; font-family: 'Share Tech Mono', monospace;
+            background: #000; border: 1px solid var(--red-dim);
+            border-bottom: 2px solid var(--red); color: var(--red);
+            padding: 12px 20px; width: 80%; max-width: 550px;
+            margin: 8px auto; display: block; outline: none;
+            text-align: center; font-size: 1rem;
+            font-family: 'Share Tech Mono', monospace;
             letter-spacing: 4px; transition: 0.3s;
         }
         .auth-input:focus { border-color: var(--red); box-shadow: 0 0 20px rgba(255,0,0,0.3); }
-        #statusBar { font-size: 0.75rem; color: #333; margin-top: 8px; letter-spacing: 3px; }
+        #statusBar { font-size: 0.7rem; color: #333; margin-top: 6px; letter-spacing: 3px; }
 
         .shadow-tag {
             position: fixed; top: 18px; right: 25px;
             color: var(--red); font-family: 'Orbitron', monospace;
-            font-size: 0.85rem; font-weight: 700;
-            letter-spacing: 3px; text-shadow: 0 0 10px var(--red);
-            z-index: 2000; opacity: 0.6;
+            font-size: 0.8rem; font-weight: 700; letter-spacing: 3px;
+            text-shadow: 0 0 10px var(--red); z-index: 2000; opacity: 0.6;
         }
 
-        .main-container { max-width: 950px; margin: 30px auto; padding: 0 20px 60px; }
+        /* AYARLAR */
+        #settingsBtn {
+            position: fixed; top: 15px; left: 25px;
+            background: none; border: 1px solid #1a1a1a;
+            color: #2a2a2a; font-family: 'Share Tech Mono', monospace;
+            font-size: 0.7rem; letter-spacing: 2px; padding: 6px 12px;
+            cursor: pointer; z-index: 2000; transition: 0.3s;
+        }
+        #settingsBtn:hover { border-color: var(--red); color: var(--red); }
 
-        /* ERİŞİM REDDEDİLDİ */
+        #settingsModal {
+            display: none; position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%; background: rgba(0,0,0,0.93);
+            z-index: 8000; justify-content: center; align-items: center;
+        }
+        #settingsModal.open { display: flex; }
+        .settings-box {
+            background: #040404; border: 1px solid #1a1a1a;
+            border-left: 6px solid var(--red); padding: 40px;
+            max-width: 480px; width: 90%; animation: slideIn 0.3s;
+        }
+        .settings-title {
+            font-family: 'Orbitron', monospace; color: var(--red);
+            font-size: 0.9rem; letter-spacing: 5px; margin-bottom: 25px;
+            text-shadow: 0 0 10px var(--red);
+        }
+        .settings-line { color: #444; font-size: 0.8rem; line-height: 2.8; border-bottom: 1px solid #080808; }
+        .settings-line span { color: var(--green); }
+        .settings-divider { color: #1a1a1a; font-size: 0.65rem; letter-spacing: 4px; margin: 15px 0 5px; }
+        .settings-close {
+            margin-top: 22px; background: none; border: 1px solid #222;
+            color: #444; font-family: 'Share Tech Mono', monospace;
+            padding: 8px 20px; cursor: pointer; letter-spacing: 3px; transition: 0.3s;
+        }
+        .settings-close:hover { border-color: var(--red); color: var(--red); }
+
+        /* ANA */
+        .main-container { max-width: 960px; margin: 30px auto; padding: 0 20px 80px; position: relative; z-index: 1; }
+
+        /* ERİŞİM REDDEDILDI */
         #accessDeniedMsg {
-            display: none;
-            background: #050000; border: 2px solid var(--red);
-            padding: 50px; text-align: center;
-            margin-bottom: 30px; animation: fadeIn 0.4s;
+            display: none; background: #050000; border: 2px solid var(--red);
+            padding: 50px; text-align: center; margin-bottom: 30px; animation: fadeIn 0.4s;
         }
         .denied-title {
-            font-family: 'Orbitron', monospace;
-            color: var(--red); font-size: 2rem; margin-bottom: 15px;
+            font-family: 'Orbitron', monospace; color: var(--red);
+            font-size: 1.8rem; margin-bottom: 15px;
             text-shadow: 0 0 20px var(--red); animation: pulse 1.5s infinite;
         }
-        .denied-sub { color: #555; letter-spacing: 2px; font-size: 0.85rem; margin-top: 8px; }
+        .denied-sub { color: #555; letter-spacing: 2px; font-size: 0.82rem; margin-top: 8px; }
 
-        /* DEPARTMAN KUTUSU */
+        /* DEPARTMAN */
         .branch-box {
             background: var(--panel); border: 1px solid #111;
-            border-left: 6px solid var(--blue);
-            padding: 25px; margin-bottom: 30px;
-            display: none; animation: slideIn 0.4s ease;
+            border-left: 6px solid var(--blue); padding: 25px;
+            margin-bottom: 30px; display: none; animation: slideIn 0.4s ease;
         }
         .o5-box { border-left-color: var(--gold); }
         .branch-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 1rem; color: #fff; letter-spacing: 4px;
-            border-bottom: 1px solid #1a1a1a;
+            font-family: 'Orbitron', monospace; font-size: 0.9rem;
+            color: #fff; letter-spacing: 4px; border-bottom: 1px solid #1a1a1a;
             padding-bottom: 12px; margin-bottom: 18px;
         }
-        .branch-desc-line { color: var(--green); font-size: 0.88rem; line-height: 2; }
+        .branch-desc-line { color: var(--green); font-size: 0.85rem; line-height: 2; }
 
-        /* SCP LİSTESİ */
-        #scpSection { margin-top: 10px; display: none; }
+        /* SCP SECTION */
+        #scpSection { display: none; margin-top: 10px; }
         .section-header {
-            font-family: 'Orbitron', monospace;
-            font-size: 0.75rem; color: #333; letter-spacing: 5px;
-            margin-bottom: 15px; border-top: 1px solid #111; padding-top: 20px;
+            font-family: 'Orbitron', monospace; font-size: 0.7rem;
+            color: #2a2a2a; letter-spacing: 5px; margin-bottom: 15px;
+            border-top: 1px solid #0d0d0d; padding-top: 20px;
         }
+
+        .filter-bar { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+        .filter-btn {
+            padding: 4px 14px; background: none;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.62rem; letter-spacing: 2px; cursor: pointer; transition: 0.2s;
+            border: 1px solid #0d0d0d; color: #222;
+        }
+        .filter-btn.active { color: #fff; border-color: #333; }
+        .filter-btn[data-f="SAFE"].active    { border-color: #00ff41; color: #00ff41; }
+        .filter-btn[data-f="EUCLID"].active  { border-color: #ffd700; color: #ffd700; }
+        .filter-btn[data-f="KETER"].active   { border-color: #ff4444; color: #ff4444; }
+        .filter-btn[data-f="THAUMIEL"].active{ border-color: #cc88ff; color: #cc88ff; }
+        .filter-btn[data-f="APOLLYON"].active{ border-color: var(--red); color: var(--red); }
+
+        .search-bar {
+            background: #000; border: 1px solid #0d0d0d; border-bottom: 1px solid #1a1a1a;
+            color: #666; padding: 8px 15px; width: 100%; margin-bottom: 12px;
+            font-family: 'Share Tech Mono', monospace; font-size: 0.78rem;
+            outline: none; letter-spacing: 2px;
+        }
+        .search-bar:focus { border-bottom-color: #333; }
+
         .scp-folder {
-            background: #050505; border: 1px solid #111;
+            background: #040404; border: 1px solid #0a0a0a;
             border-left: 4px solid var(--red-dim);
-            padding: 14px 20px; margin-bottom: 6px;
+            padding: 11px 18px; margin-bottom: 5px;
             cursor: pointer; display: flex;
             justify-content: space-between; align-items: center;
-            transition: all 0.2s;
+            transition: all 0.18s;
         }
-        .scp-folder:hover { background: #0a0a0a; border-left-color: var(--red); transform: translateX(6px); }
-        .scp-folder.active { border-left-color: var(--red); background: #0c0000; }
-        .scp-name { color: #ccc; font-size: 0.9rem; letter-spacing: 2px; }
-        .scp-right { display: flex; align-items: center; gap: 12px; }
-        .scp-arrow { color: #333; font-size: 0.8rem; transition: 0.2s; }
+        .scp-folder:hover { background: #090909; border-left-color: var(--red); transform: translateX(5px); }
+        .scp-folder.active { border-left-color: var(--red); background: #0b0000; }
+        .scp-name { color: #aaa; font-size: 0.85rem; letter-spacing: 2px; }
+        .scp-right { display: flex; align-items: center; gap: 10px; }
+        .scp-arrow { color: #1a1a1a; font-size: 0.72rem; transition: 0.2s; }
         .scp-folder.active .scp-arrow { color: var(--red); transform: rotate(90deg); }
 
         .badge {
-            padding: 3px 10px; font-size: 0.65rem; font-weight: bold;
+            padding: 2px 9px; font-size: 0.58rem; font-weight: bold;
             font-family: 'Orbitron', monospace; letter-spacing: 1px; border-radius: 2px;
         }
-        .badge-safe     { background: #1a3d1a; color: #00ff41; border: 1px solid #00ff41; }
-        .badge-euclid   { background: #3d3500; color: #ffd700; border: 1px solid #ffd700; }
-        .badge-keter    { background: #3d0000; color: #ff4444; border: 1px solid #ff4444; }
-        .badge-thaumiel { background: #1e0033; color: #cc88ff; border: 1px solid #cc88ff; }
+        .badge-safe     { background: #0a1a0a; color: #00ff41; border: 1px solid #00ff41; }
+        .badge-euclid   { background: #1a1400; color: #ffd700; border: 1px solid #ffd700; }
+        .badge-keter    { background: #1a0000; color: #ff4444; border: 1px solid #ff4444; }
+        .badge-thaumiel { background: #0e0018; color: #cc88ff; border: 1px solid #cc88ff; }
         .badge-apollyon { background: #000; color: var(--red); border: 1px solid var(--red); animation: pulse 1.2s infinite; }
 
         .scp-details {
-            background: #000; border: 1px solid #1a0000;
+            background: #000; border: 1px solid #0a0000;
             border-left: 4px solid var(--red); border-top: none;
-            padding: 20px 25px; margin-bottom: 10px;
-            display: none; animation: fadeIn 0.3s;
+            margin-bottom: 8px; display: none;
         }
+        .scp-details.open { display: block; animation: fadeIn 0.25s; }
+        .scp-detail-inner { padding: 16px 20px; }
         .scp-detail-line {
-            color: var(--green); font-size: 0.82rem; line-height: 2;
-            border-bottom: 1px solid #080808; padding: 2px 0;
+            color: var(--green); font-size: 0.78rem; line-height: 2;
+            border-bottom: 1px solid #050505; padding: 1px 0;
         }
         .scp-detail-line:last-child { border-bottom: none; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
-        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
-        @keyframes flicker {
-            0%,100% { opacity: 1; } 92% { opacity: 1; } 93% { opacity: 0.4; }
-            94% { opacity: 1; } 96% { opacity: 0.7; } 97% { opacity: 1; }
+        .pagination { display: flex; gap: 6px; margin-top: 18px; flex-wrap: wrap; align-items: center; }
+        .page-btn {
+            padding: 4px 10px; background: none; border: 1px solid #0d0d0d;
+            color: #2a2a2a; font-family: 'Share Tech Mono', monospace;
+            font-size: 0.65rem; cursor: pointer; transition: 0.2s; letter-spacing: 1px;
         }
+        .page-btn:hover { border-color: #333; color: #555; }
+        .page-btn.active { border-color: var(--red); color: var(--red); }
+        .page-info { color: #1a1a1a; font-size: 0.62rem; letter-spacing: 2px; margin-right: 8px; }
 
-        ::-webkit-scrollbar { width: 4px; }
+        @keyframes fadeIn  { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-15px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes pulse   { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
+        @keyframes flicker { 0%,89%,91%,95%,100% { opacity: 1; } 90%,93%,96% { opacity: 0.4; } }
+
+        ::-webkit-scrollbar { width: 3px; }
         ::-webkit-scrollbar-track { background: #000; }
         ::-webkit-scrollbar-thumb { background: var(--red-dim); }
     </style>
 </head>
 <body>
 
+<!-- SCP LOGO ARKA PLAN -->
+<svg id="scpBg" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="256" cy="256" r="240" fill="none" stroke="red" stroke-width="8"/>
+    <circle cx="256" cy="256" r="50"  fill="none" stroke="red" stroke-width="8"/>
+    <line x1="256" y1="16"  x2="256" y2="206" stroke="red" stroke-width="8"/>
+    <line x1="116" y1="376" x2="222" y2="310" stroke="red" stroke-width="8"/>
+    <line x1="396" y1="376" x2="290" y2="310" stroke="red" stroke-width="8"/>
+    <line x1="256" y1="206" x2="222" y2="256" stroke="red" stroke-width="4"/>
+    <line x1="256" y1="206" x2="290" y2="256" stroke="red" stroke-width="4"/>
+    <line x1="256" y1="306" x2="222" y2="256" stroke="red" stroke-width="4"/>
+    <line x1="256" y1="306" x2="290" y2="256" stroke="red" stroke-width="4"/>
+</svg>
+
+<!-- BASLANGIÇ -->
 <div id="startScreen">
-    <div class="start-logo">SHADOW</div>
-    <div class="start-sub">SİTE-SHADOW GİZLİ VERİ TABANI</div>
-    <div class="start-sub">ERİŞİM KISITLIDIR — YETKİSİZ GİRİŞ TESPİT EDİLECEKTİR</div>
+    <div class="start-logo">SHADOW RP</div>
+    <div class="start-sub">SİTE-SHADOW GİZLİ VERİ TABANI — SINIFLANDIRILMIŞ</div>
+    <div class="start-sub" style="color:#1a1a1a;">YETKİSİZ ERİŞİM YASAKTIR VE KAYIT ALTINA ALINIR</div>
     <button class="start-btn" onclick="initSystem()">&#9654; SİSTEMİ BAŞLAT</button>
+</div>
+
+<!-- AYARLAR -->
+<button id="settingsBtn" onclick="document.getElementById('settingsModal').classList.add('open')">&#9881; AYARLAR</button>
+
+<div id="settingsModal">
+    <div class="settings-box">
+        <div class="settings-title">&#9881; SİSTEM BİLGİLERİ</div>
+        <div class="settings-line">Terminal Versiyonu &nbsp;&nbsp;<span>V13.0</span></div>
+        <div class="settings-line">Platform &nbsp;&nbsp;<span>SHADOW RP</span></div>
+        <div class="settings-line">Toplam SCP Kaydı &nbsp;&nbsp;<span>1050 ANOMALİ</span></div>
+        <div class="settings-line">Sunucu &nbsp;&nbsp;<span>SİTE-SHADOW / AKTİF</span></div>
+        <div class="settings-divider">— EMEK VERENLER —</div>
+        <div class="settings-line">Yapay Zeka &nbsp;&nbsp;<span>Claude</span></div>
+        <div class="settings-line">Yapay Zeka &nbsp;&nbsp;<span>Gemini</span></div>
+        <div class="settings-line">Ana Yaratıcı &nbsp;&nbsp;<span style="color:var(--gold);text-shadow:0 0 10px var(--gold);">İllah Paşa</span></div>
+        <button class="settings-close" onclick="document.getElementById('settingsModal').classList.remove('open')">&#10005; KAPAT</button>
+    </div>
 </div>
 
 <div class="shadow-tag">SHADOW RP</div>
 
+<!-- HEADER -->
 <div id="terminalHeader">
     <div class="header-title">&#11041; SECURE TERMINAL V13 &#11041;</div>
     <div id="headerInputArea">
+        <div class="clearance-bar">
+            <span class="clv" id="clv-safe">SAFE</span>
+            <span class="clv" id="clv-euclid">EUCLID</span>
+            <span class="clv" id="clv-keter">KETER</span>
+            <span class="clv" id="clv-thaumiel">THAUMIEL</span>
+            <span class="clv" id="clv-apollyon">APOLLYON</span>
+        </div>
         <input type="password" id="passInput" class="auth-input" placeholder="[ YETKİ ANAHTARI GİRİNİZ ]" autocomplete="off">
         <div id="statusBar">&#9679; STATUS: OFFLINE — YETKİ BEKLENİYOR</div>
     </div>
 </div>
 
+<!-- ANA -->
 <div class="main-container">
 
     <div id="accessDeniedMsg">
         <div class="denied-title">&#9888; ERİŞİM REDDEDİLDİ &#9888;</div>
-        <div style="color:#ff4444; margin:15px 0; font-size:1.1rem; letter-spacing:4px;">DOSYA BULUNAMADI</div>
+        <div style="color:#ff3333;margin:12px 0;font-size:1rem;letter-spacing:4px;font-family:'Orbitron',monospace;">DOSYA BULUNAMADI</div>
         <div class="denied-sub">D-SINIFI PERSONEL SİCİL NUMARASI TANIMLANDI</div>
         <div class="denied-sub">BU KİMLİK İLE ERİŞİLEBİLECEK GİZLİ DOSYA MEVCUT DEĞİLDİR</div>
-        <div class="denied-sub" style="margin-top:15px; color:#2a2a2a;">GİRİŞİM KAYDEDÜLDÜ — GÜVENLİK BİLGİLENDİRİLDİ</div>
+        <div class="denied-sub" style="margin-top:12px;color:#1a1a1a;font-size:0.7rem;">GİRİŞİM KAYDEDÜLDÜ — İÇ GÜVENLİK BİLGİLENDİRİLDİ</div>
     </div>
 
     <div id="SEC-B" class="branch-box"><div class="branch-title">GÜVENLİK DEPARTMANI</div><div id="sec-text"></div></div>
@@ -234,219 +347,178 @@
     <div id="MED-B" class="branch-box"><div class="branch-title">TIBBİ DEPARTMAN</div><div id="med-text"></div></div>
     <div id="IGD-B" class="branch-box"><div class="branch-title">İÇ GÜVENLİK (IGD)</div><div id="igd-text"></div></div>
     <div id="TME-B" class="branch-box"><div class="branch-title">TAKTİKSEL MÜDAHALE (TME)</div><div id="tme-text"></div></div>
-    <div id="O5-B" class="branch-box o5-box"><div class="branch-title">O5 KONSEYİ</div><div id="o5-text"></div></div>
+    <div id="O5-B"  class="branch-box o5-box"><div class="branch-title">O5 KONSEYİ</div><div id="o5-text"></div></div>
 
     <div id="scpSection">
-        <div class="section-header">&#9658; ANOMALİK NESNE ARŞİVİ — YETKİLİ DOSYALAR</div>
+        <div class="section-header">&#9658; ANOMALİK NESNE ARŞİVİ</div>
+        <input type="text" class="search-bar" id="searchBar" placeholder="SCP ARA... (örn: SCP-173, KETER)" oninput="filterSCPs()">
+        <div class="filter-bar">
+            <button class="filter-btn active" data-f="ALL"      onclick="setFilter('ALL')">TÜMÜ</button>
+            <button class="filter-btn"        data-f="SAFE"     onclick="setFilter('SAFE')">SAFE</button>
+            <button class="filter-btn"        data-f="EUCLID"   onclick="setFilter('EUCLID')">EUCLID</button>
+            <button class="filter-btn"        data-f="KETER"    onclick="setFilter('KETER')">KETER</button>
+            <button class="filter-btn"        data-f="THAUMIEL" onclick="setFilter('THAUMIEL')">THAUMIEL</button>
+            <button class="filter-btn"        data-f="APOLLYON" onclick="setFilter('APOLLYON')">APOLLYON</button>
+        </div>
         <div id="scp-list"></div>
+        <div class="pagination" id="pagination"></div>
     </div>
 </div>
 
 <script>
+// ======================================================
+// VERİTABANI — YENİ SİFRELER
+// ======================================================
 var DATABASE = {
-    "SEC-SHADOW-2026": {
-        type:"dept", boxId:"SEC-B", textId:"sec-text", dept:"SEC",
-        allowed:["SAFE","EUCLID"],
-        info:[
-            "GÜVENLİK PROTOKOLÜ AKTİF",
-            "► Yetki Seviyesi   : BETA-3",
-            "► Müdahale Kapsamı : Safe ve Euclid sınıfı anomaliler",
-            "► Keter İhlali     : TME müdahalesi çağrılır, personel bölgeden çekilir",
-            "► Vardiya Süresi   : 8 saatlik rotasyon, 3 peron / vardiya",
-            "► Silah Protokolü  : Standart ateşli silah — Thaumiel için yasak",
-            "► Öncelik          : Tesis güvenliği, sivil kayıp SIFIR politikası",
-            "► Uyarı            : İhlal anında kod KIRMIZI butonu tetiklenecek"
-        ]
-    },
-    "ENG-TECH-SYS": {
-        type:"dept", boxId:"ENG-B", textId:"eng-text", dept:"ENG",
-        allowed:["SAFE","EUCLID","KETER","THAUMIEL"],
-        info:[
-            "MÜHENDİSLİK SİSTEM RAPORU",
-            "► Yetki Seviyesi   : DELTA-4",
-            "► Bakım Kapsamı    : Safe, Euclid, Keter, Thaumiel sınıfları",
-            "► Güç Sistemi      : Jeneratör denetimi her 24 saatte bir zorunlu",
-            "► Containment Sys  : Thaumiel muhafaza cihazları aktif izleme altında",
-            "► Acil Kapatma     : EMP-7 protokolü — yetkili mühendis imzası gerekli",
-            "► Malzeme Yönetimi : Anomalik bileşen stoku haftalık raporlanır",
-            "► Uyarı            : İzinsiz sistem değişikliği otomatik alarm tetikler"
-        ]
-    },
-    "ETHIC-BOARD-01": {
-        type:"dept", boxId:"ETH-B", textId:"eth-text", dept:"ETH",
-        allowed:["SAFE","EUCLID","KETER","THAUMIEL","APOLLYON"],
-        info:[
-            "ETİK KOMİTE DİREKTİFİ",
-            "► Yetki Seviyesi   : OMEGA-5 — Tüm sınıflar üzerinde denetim",
-            "► Denetim Kapsamı  : Tüm deney protokolleri etik onay gerektirir",
-            "► İnsan Deneyleri  : D-sınıfı kullanımı kota ve limit dahilinde",
-            "► Amnezik Kullanımı: Yalnızca komite onayı ile uygulanabilir",
-            "► Komitenin Gücü   : O5 kararlarını etik ihlal gerekçesiyle durdurabilir",
-            "► Rapor Dönemi     : Aylık etik değerlendirme raporu zorunludur",
-            "► Uyarı            : İnsan onuruna aykırı deney derhal durdurulur"
-        ]
-    },
-    "MED-DEPT-99": {
-        type:"dept", boxId:"MED-B", textId:"med-text", dept:"MED",
-        allowed:["SAFE","EUCLID","KETER"],
-        info:[
-            "TIBBİ DEPARTMAN ANALİZİ",
-            "► Yetki Seviyesi   : GAMMA-3",
-            "► Biyolojik Tehdit : Sınıf-A biyohazmat protokolü daima hazır",
-            "► Personel Sağlığı : Temas sonrası 72 saat karantina zorunlu",
-            "► Amnezik Stok     : A-klası, B-klası ve C-klası mevcut",
-            "► Antidot Veri     : Anomalik maruziyete karşı 14 formül arşivde",
-            "► D-Sınıfı Tıbbi   : Tıbbi kayıt tutulur; ölüm protokolü ayrı dosyada",
-            "► Uyarı            : Bulaşıcı anomali tespitinde tesis karantinaya alınır"
-        ]
-    },
-    "IGD-INTERNAL-00": {
-        type:"dept", boxId:"IGD-B", textId:"igd-text", dept:"IGD",
-        allowed:["SAFE","EUCLID","KETER","THAUMIEL","APOLLYON"],
-        info:[
-            "İÇ GÜVENLİK DİREKTİFİ — GİZLİ",
-            "► Yetki Seviyesi   : SIGMA-5 — Tüm departmanlar üzerinde",
-            "► Görev            : Vakıf içi sızıntı, casusluk, ihanet tespiti",
-            "► İzleme           : Tüm personel iletişimi pasif izleme altında",
-            "► Ajan Ağı         : Her departmanda en az 1 gizli IGD ajanı bulunur",
-            "► Gözaltı Yetkisi  : Şüpheli personel mahkemesiz tutulabilir 72 saat",
-            "► Dosya Erişimi    : IGD tüm gizli dosyalara erişim hakkına sahiptir",
-            "► Uyarı            : Bu dosyayı okuduğunuz kaydedildi"
-        ]
-    },
-    "TME-TACTICAL-X": {
-        type:"dept", boxId:"TME-B", textId:"tme-text", dept:"TME",
-        allowed:["SAFE","EUCLID","KETER","THAUMIEL","APOLLYON"],
-        info:[
-            "TAKTİKSEL MÜDAHALE PLANI — GİZLİ",
-            "► Yetki Seviyesi   : KAPPA-4 — Ağır silahlı operasyon birimi",
-            "► Müdahale Hızı    : Alarm sonrası sahaya iniş 3 dakika altında",
-            "► Keter Protokolü  : Nötralizasyon emri O5 onayı olmadan verilemez",
-            "► Apollyon Durumu  : Olay yeri boşaltma — TME son savunma hattı",
-            "► Ekipman          : Anomalik karşı silahlar, Thaumiel destekli zırh",
-            "► Kayıp Politikası : Operasyon önceliklidir; kayıp ikincil kabul edilir",
-            "► Uyarı            : TME emirleri yazılı olmadan sözlü kabul edilmez"
-        ]
-    },
-    "O5-secsysttem": {
-        type:"dept", boxId:"O5-B", textId:"o5-text", dept:"O5",
-        allowed:["SAFE","EUCLID","KETER","THAUMIEL","APOLLYON"],
-        info:[
-            "O5 KONSEYİ — MUTLAK GİZLİLİK SEVİYESİ",
-            "► Yetki Seviyesi   : BEYOND-5 — Mutlak otorite",
-            "► Kimlik           : O5 üyeleri kimliklerini hiç kimseyle paylaşmaz",
-            "► Karar Yetkisi    : Vakfın tüm kaynakları konseyin emrinde",
-            "► XK Protokolü     : Dünya sonu senaryosu kararları bu konseye aittir",
-            "► İletişim         : Sadece şifreli kanal — yüz yüze görüşme yasak",
-            "► Veto Hakkı       : Herhangi bir etik IGD veya TME kararı veto edilir",
-            "► Uyarı            : Bu veriye erişim otomatik olarak O5'e bildirildi"
-        ]
-    },
-    "D-CLASS-PERS":  { type:"dclass" },
-    "D-SINIF-001":   { type:"dclass" },
-    "D-PERSONEL":    { type:"dclass" },
-    "D-4829":        { type:"dclass" },
-    "D-SINIFI":      { type:"dclass" }
+    "SHADOW-SEC-2026":    { type:"dept", boxId:"SEC-B", textId:"sec-text", dept:"SEC", allowed:["SAFE","EUCLID"],
+        info:["GÜVENLİK PROTOKOLÜ AKTİF","Yetki Seviyesi   : BETA-3","Müdahale Kapsamı : Safe ve Euclid sinifi anomaliler","Keter İhlali     : TME müdahalesi çagirilir personel bölgeden çekilir","Vardiya Süresi   : 8 saatlik rotasyon 3 peron / vardiya","Silah Protokolü  : Standart atisli silah Thaumiel için yasak","Tesis Önceligi   : Sivil kayip SIFIR politikasi","Uyari            : İhlal aninda kod KIRMIZI butonu tetiklenecek"] },
+    "SHADOW-ENG-7734":    { type:"dept", boxId:"ENG-B", textId:"eng-text", dept:"ENG", allowed:["SAFE","EUCLID","KETER","THAUMIEL"],
+        info:["MÜHENDİSLİK SİSTEM RAPORU","Yetki Seviyesi   : DELTA-4","Bakim Kapsami    : Safe Euclid Keter ve Thaumiel siniflari","Güç Sistemi      : Jeneratör denetimi her 24 saatte bir zorunlu","Containment Sys  : Thaumiel muhafaza cihazlari aktif izleme altinda","Acil Kapatma     : EMP-7 protokolü yetkili mühendis imzasi gerekli","Malzeme Yönetimi : Anomalik bilesen stoku haftalik raporlanir","Uyari            : İzinsiz sistem degisikligi otomatik alarm tetikler"] },
+    "SHADOW-ETH-0001":    { type:"dept", boxId:"ETH-B", textId:"eth-text", dept:"ETH", allowed:["SAFE","EUCLID","KETER","THAUMIEL","APOLLYON"],
+        info:["ETİK KOMİTE DİREKTİFİ","Yetki Seviyesi   : OMEGA-5 Tüm siniflar üzerinde denetim","Denetim Kapsami  : Tüm deney protokolleri etik onay gerektirir","İnsan Deneyleri  : D-sinifi kullanimi kota ve limit dahilinde","Amnezik Kullanimi: Yalnizca komite onayi ile uygulanabilir","Komitenin Gücü   : O5 kararlarini etik ihlal gerekçesiyle durdurabilir","Rapor Dönemi     : Aylik etik degerlendirme raporu zorunludur","Uyari            : İnsan onuruna aykirideney derhal durdurulur"] },
+    "SHADOW-MED-4421":    { type:"dept", boxId:"MED-B", textId:"med-text", dept:"MED", allowed:["SAFE","EUCLID","KETER"],
+        info:["TIBBİ DEPARTMAN ANALİZİ","Yetki Seviyesi   : GAMMA-3","Biyolojik Tehdit : Sinif-A biyohazmat protokolü daima hazir","Personel Sagligi : Temas sonrasi 72 saat karantina zorunlu","Amnezik Stok     : A-klasi B-klasi ve C-klasi mevcut","Antidot Veri     : Anomalik maruziyete karsi 14 formül arsivde","D-Sinifi Tibbi   : Tibbi kayit tutulur ölüm protokolü ayri dosyada","Uyari            : Bulasici anomali tespitinde tesis karantinaya alinir"] },
+    "SHADOW-IGD-9999":    { type:"dept", boxId:"IGD-B", textId:"igd-text", dept:"IGD", allowed:["SAFE","EUCLID","KETER","THAUMIEL","APOLLYON"],
+        info:["İÇ GÜVENLİK DİREKTİFİ GIZLI","Yetki Seviyesi   : SIGMA-5 Tüm departmanlar üzerinde","Görev            : Vakif içi sizinti casusluk ihanet tespiti","İzleme           : Tüm personel iletisimi pasif izleme altinda","Ajan Agi         : Her departmanda en az 1 gizli IGD ajani bulunur","Gözalti Yetkisi  : Süpheli personel mahkemesiz tutulabilir 72 saat","Dosya Erisimi    : IGD tüm gizli dosyalara erisim hakkina sahiptir","Uyari            : Bu dosyayi okudugunuz kaydedildi"] },
+    "SHADOW-TME-DELTA":   { type:"dept", boxId:"TME-B", textId:"tme-text", dept:"TME", allowed:["SAFE","EUCLID","KETER","THAUMIEL","APOLLYON"],
+        info:["TAKTİKSEL MÜDAHALE PLANI GIZLI","Yetki Seviyesi   : KAPPA-4 Agir silahli operasyon birimi","Müdahale Hizi    : Alarm sonrasi sahaya inis 3 dakika altinda","Keter Protokolü  : Nötralizasyon emri O5 onayi olmadan verilemez","Apollyon Durumu  : Olay yeri bosaltma TME son savunma hatti","Ekipman          : Anomalik karsi silahlar Thaumiel destekli zirh","Kayip Politikasi : Operasyon önceliklidir kayip ikincil kabul edilir","Uyari            : TME emirleri yazili olmadan sözlü kabul edilmez"] },
+    "SHADOW-O5-ILLAHPASA":{ type:"dept", boxId:"O5-B",  textId:"o5-text",  dept:"O5",  allowed:["SAFE","EUCLID","KETER","THAUMIEL","APOLLYON"],
+        info:["O5 KONSEYİ MUTLAK GİZLİLİK SEVİYESİ","Yetki Seviyesi   : BEYOND-5 Mutlak otorite","Kimlik           : O5 üyeleri kimliklerini hiç kimseyle paylasmaz","Karar Yetkisi    : Vakfin tüm kaynaklari konseyin emrinde","XK Protokolü     : Dünya sonu senaryosu kararlari bu konseye aittir","İletisim         : Sadece sifreli kanal yüz yüze görüsme yasak","Veto Hakki       : Herhangi bir departman karari veto edilebilir","Uyari            : Bu veriye erisim otomatik olarak O5 e bildirildi"] },
+    "D-4829":  { type:"dclass" },
+    "D-7731":  { type:"dclass" },
+    "D-0012":  { type:"dclass" },
+    "D-SINIF": { type:"dclass" }
 };
 
-function getSCPLines(num, cls, dept) {
-    var sites = ["Site-Shadow","Site-19","Site-17","Site-23","Site-17"];
-    var site = sites[num % sites.length];
-    var yil = "20" + (10 + (num % 14));
+// ======================================================
+// SCP BİLGİLERİ
+// ======================================================
+var SCP_NAMES = [
+    "Yikilmaz Heykel","Sonsuz Merdiven","Karanlik Oda","Yürüyen Dag","Ölümsüz Balik",
+    "Aglayanın Aynasi","Gülümseyen Adam","Kosan Tünel","Sessiz Orman","Kayan Kapi",
+    "Düsünen Tas","Konusan Gölge","Yüzen Ev","Kaybolan Nehir","Sarkı Söyleyen Çukur",
+    "Kirmizi Göl","Parlayan Kafes","Dönüsüm Odasi","Kanayan Duvar","Yasayan Kablo",
+    "Sifir Noktasi","Zaman Kilidi","Bilinç Aktarici","Entropi Motoru","Gerceklik Carpici",
+    "Hafiza Silici","Boyut Kapisi","Varoluş Yiyici","Zihin Kolonisi","Kaos Jeneratörü",
+    "Silinmez İz","Evrilen Madde","Uyuyan Tünel","Kopan Zincir","Cagiran Ses",
+    "Yansıyan Korku","Gizli Alan","Dolan Göz","Akan Renk","Bilgi Tüketicisi"
+];
 
-    var data = {
-        "SEC": [
-            "Siniflandirma   : " + cls,
-            "Muhafaza Tesisi : " + site + " — B Kati Güvenli Bölge",
-            "Güvenlik Cemberi: 3 katli manyetik kilit, 24 saat silahli nöbet",
-            "Personel Izni   : En az Güvenlik Yetki-2 gerektirir",
-            "Ihlal Protokolü : Alarm kodu KIRMIZI, tesis otomatik kilitlenir",
-            "Son Ihlal       : " + (num % 5 === 0 ? "Kayit YOK" : yil + " — personel kayiplari mühürlendi"),
-            "Güvenlik Notu   : Nesneye 5 metreden fazla yaklasmak yasaktir"
+var SCP_LOCS = ["Site-Shadow","Site-19","Site-17","Site-23","Site-X","Alan-Shadow-B","Yer-Alti-7","Tesis-Shadow-K"];
+
+function getSCPLines(num, cls, dept) {
+    var site = SCP_LOCS[num % SCP_LOCS.length];
+    var name = SCP_NAMES[num % SCP_NAMES.length];
+    var yil = "20" + (10 + (num % 15));
+    var tehlike = {APOLLYON:"OMEGA",KETER:"YÜKSEK",THAUMIEL:"KONTROLLÜ",EUCLID:"ORTA",SAFE:"DÜSÜK"}[cls] || "BILINMIYOR";
+
+    var sets = {
+        SEC:[
+            "Kod Adi         : " + name,
+            "Siniflandirma   : " + cls + "  |  Tehlike: " + tehlike,
+            "Muhafaza Tesisi : " + site + " Güvenli Bölge B-" + (num % 9 + 1),
+            "Güvenlik Çemberi: " + (num % 3 + 2) + " katli kilit sistemi 24 saat nöbet",
+            "Personel İzni   : Güvenlik Yetki-" + (num % 3 + 1) + " ve üzeri",
+            "Son İhlal       : " + (num % 7 === 0 ? "Kayit bulunmuyor" : yil + " dosya mühürlendi"),
+            "Güvenlik Notu   : Nesneye " + (num % 5 + 3) + " metreden fazla yaklasmak yasaktir"
         ],
-        "ENG": [
-            "Siniflandirma   : " + cls,
-            "Muhafaza Tesisi : " + site + " — Mühendislik Kanadi",
-            "Muhafaza Sistemi: " + (cls === "THAUMIEL" ? "Thaumiel destekli reaktif çevre" : "Standart çelik-beton oda"),
-            "Güç Tüketimi    : Günlük " + ((num * 17) % 400 + 50) + " kWh — kesintisiz izleme",
-            "Bakim Periyodu  : Her " + (num % 3 + 1) + " günde bir zorunlu kontrol",
-            "Son Bakim       : " + yil + "-0" + ((num % 9) + 1) + "-" + (10 + num % 18),
-            "Mühendislik Notu: Sistem arizasinda acil kapatma EMP-7 devreye girer"
+        ENG:[
+            "Kod Adi         : " + name,
+            "Siniflandirma   : " + cls + "  |  Tehlike: " + tehlike,
+            "Muhafaza Tesisi : " + site + " Mühendislik K-" + (num % 6 + 1),
+            "Muhafaza Sistemi: " + (cls === "THAUMIEL" ? "Thaumiel destekli reaktif alan" : "Standart çelik-beton izole oda"),
+            "Güç Tüketimi    : Günlük " + ((num * 13) % 500 + 100) + " kWh kesintisiz",
+            "Son Bakim       : " + yil + "-" + String(num % 12 + 1).padStart(2,"0") + "-" + String(num % 28 + 1).padStart(2,"0"),
+            "Mühendislik Notu: Sistem arizasinda EMP-7 acil kapatma devreye girer"
         ],
-        "ETH": [
-            "Siniflandirma   : " + cls,
+        ETH:[
+            "Kod Adi         : " + name,
+            "Siniflandirma   : " + cls + "  |  Tehlike: " + tehlike,
             "Muhafaza Tesisi : " + site,
-            "Deney Durumu    : " + (num % 3 === 0 ? "Deneyler etik komite onayi bekliyor" : "Onaylandi — sinirli deney izni verildi"),
-            "D-Sinifi Kullanim: " + (num % 4 === 0 ? "Zorunlu — haftada 1 denekle sinirli" : "Yasak — bilgisayar simülasyonu yeterli"),
-            "Insan Etkisi    : " + (cls === "APOLLYON" ? "Toplu etkilenme riski — etik ihlal sayilir" : "Bireysel — kontrollü ortamda kabul edilebilir"),
-            "Komite Karari   : " + yil + " tarihli etik raporu onaylandi",
-            "Etik Notu       : Tüm deneyler komite karari olmadan baslatilamamaz"
+            "Deney Durumu    : " + (num % 4 === 0 ? "Etik komite onayi bekleniyor" : "Onaylı sinirli deney izni"),
+            "D-Sinifi        : " + (num % 5 === 0 ? "Zorunlu haftada 1 denkle sinirli" : "Yasak simülasyon yeterli"),
+            "Komite Karari   : " + yil + " tarihli rapor onaylandi",
+            "Etik Notu       : Tüm deneyler komite karari olmadan baslatılamaz"
         ],
-        "MED": [
-            "Siniflandirma   : " + cls,
-            "Muhafaza Tesisi : " + site + " — Tibbi Karantina Bölgesi",
-            "Biyolojik Risk  : " + (cls === "KETER" ? "Sinif-A Biyohazmat — tam koruyucu zorunlu" : "Düsük — standart maske yeterli"),
-            "Temas Protokolü : " + (cls === "APOLLYON" ? "Temas KESINLIKLE YASAK — uzaktan izleme" : "72 saat karantina zorunlu"),
-            "Anomalik Belirti: Maruziyet sonrasi hafiza bozuklugu rapor edildi",
-            "Tedavi Yöntemi  : " + (num % 2 === 0 ? "A-sinifi amnezik + destekleyici bakim" : "Henüz bilinen tedavi mevcut degil"),
-            "Tibbi Notu      : " + (cls === "KETER" || cls === "APOLLYON" ? "Tüm kayiplar gizli tutulmaktadir" : "Personel sagligi sürekli takip altinda")
+        MED:[
+            "Kod Adi         : " + name,
+            "Siniflandirma   : " + cls + "  |  Tehlike: " + tehlike,
+            "Muhafaza Tesisi : " + site + " Tibbi Karantina",
+            "Biyolojik Risk  : " + (cls === "KETER" ? "Sinif-A Biyohazmat tam koruyucu zorunlu" : "Standart maske yeterli"),
+            "Temas Protokolü : " + (cls === "APOLLYON" ? "Temas KESİNLİKLE YASAK" : "72 saat karantina zorunlu"),
+            "Tedavi          : " + (num % 2 === 0 ? "A-sinifi amnezik destekleyici bakim" : "Bilinen tedavi mevcut degil"),
+            "Tibbi Notu      : " + (cls === "KETER" || cls === "APOLLYON" ? "Tüm kayiplar gizli tutulur" : "Personel sagligi takip altinda")
         ],
-        "IGD": [
-            "Siniflandirma   : " + cls,
-            "Muhafaza Tesisi : " + site + " — GIZLI BÖLGE",
-            "IGD Izleme      : Nesne etrafinda gizli kamera agi 7/24 aktif",
-            "Personel Tarama : Her 48 saatte bir psikolojik degerlendirme zorunlu",
-            "Etki Süphesi    : " + (num % 3 === 0 ? "Nesnenin personel kararlarini etkiledigi süpheleniliyor" : "Herhangi bir zihinsel etki tespit edilmedi"),
-            "Sizinti Riski   : " + (cls === "APOLLYON" || cls === "KETER" ? "YÜKSEK — SOK protokolü devreye girer" : "DÜSÜK"),
+        IGD:[
+            "Kod Adi         : " + name,
+            "Siniflandirma   : " + cls + "  |  Tehlike: " + tehlike,
+            "Muhafaza Tesisi : " + site + " GIZLI BÖLGE",
+            "IGD İzleme      : Nesne çevresinde gizli kamera agi 7/24 aktif",
+            "Personel Tarama : Her 48 saatte psikolojik degerlendirme zorunlu",
+            "Sizinti Riski   : " + (cls === "APOLLYON" || cls === "KETER" ? "YÜKSEK SOK protokolü hazir" : "DÜSÜK standart izleme"),
             "IGD Notu        : Bu dosyayi açan tüm personel kaydedilmektedir"
         ],
-        "TME": [
-            "Siniflandirma   : " + cls,
+        TME:[
+            "Kod Adi         : " + name,
+            "Siniflandirma   : " + cls + "  |  Tehlike: " + tehlike,
             "Muhafaza Tesisi : " + site,
-            "Müdahale Birimi : TME-" + ((num % 4) + 1) + " — " + (cls === "APOLLYON" ? "Kiyamet Timi" : "Standart Müdahale Ekibi"),
-            "Nötralizasyon   : " + (cls === "KETER" || cls === "APOLLYON" ? "Agir silah — termit + anomalik patlayici" : "Standart atisli silah yeterli"),
-            "Sahaya Inis     : " + (num % 3 + 2) + " dakika alti — daima hazir durumda",
-            "Son Operasyon   : " + yil + " — " + (num % 2 === 0 ? "basariyla kontrol altina alindi" : "kayiplar mühürlendi"),
-            "Operasyon Notu  : " + (cls === "APOLLYON" ? "Nötralizasyon emirsiz verilmez — O5 onayi sart" : "Standart protokol geçerli")
+            "Müdahale Birimi : TME-" + ((num % 5) + 1) + (cls === "APOLLYON" ? " Kiyamet Timi" : " Standart Ekip"),
+            "Nötralizasyon   : " + (cls === "KETER" || cls === "APOLLYON" ? "Agir silah termit anomalik patlayici" : "Standart atisli silah"),
+            "Son Operasyon   : " + yil + " " + (num % 2 === 0 ? "basariyla kontrol altina alindi" : "kayiplar mühürlendi"),
+            "Op Notu         : " + (cls === "APOLLYON" ? "O5 onayi olmadan hareket baslatılamaz" : "Standart protokol geçerli")
         ],
-        "O5": [
-            "Siniflandirma   : " + cls,
-            "Muhafaza Tesisi : [MÜHÜRLÜ — O5 SEVİYESİ]",
-            "Konsey Karari   : Nesne O5'in dogrudan denetiminde bulunmaktadir",
-            "Erisim Izni     : Yalnizca O5 üyeleri ve onaylı temsilciler",
-            "Thaumiel Kullanim: " + (cls === "APOLLYON" ? "Aktif — XK önlemesi için devreye alindi" : "Degerlendirme asamasinda"),
-            "Gerceklik Riski : " + (cls === "APOLLYON" ? "OMEGA SEVIYE — varolussal tehdit aktif" : "Kontrol altinda — periyodik degerlendirme yapiliyor"),
-            "O5 Notu         : Bu belgenin varligi resmi kanallar tarafindan kabul edilmeyecektir"
+        O5:[
+            "Kod Adi         : " + name,
+            "Siniflandirma   : " + cls + "  |  Tehlike: " + tehlike,
+            "Muhafaza Tesisi : [MÜHÜRLÜ O5 SEVİYESİ]",
+            "Konsey Karari   : Nesne O5 dogrudan denetiminde",
+            "Erisim          : Yalnizca O5 üyeleri ve onaylı temsilciler",
+            "Gerceklik Riski : " + (cls === "APOLLYON" ? "OMEGA varolussal tehdit aktif" : "Kontrol altinda"),
+            "O5 Notu         : Bu belgenin varligi resmi olarak kabul edilmeyecektir"
         ]
     };
-
-    return data[dept] || data["SEC"];
+    return sets[dept] || sets["SEC"];
 }
 
+// ======================================================
+// SES
+// ======================================================
 var audioCtx;
 function ensureAudio() {
-    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (!audioCtx) { try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){} }
 }
 function playBeep(freq, dur, vol) {
     if (!audioCtx) return;
-    freq = freq || 150; dur = dur || 0.02; vol = vol || 0.012;
-    var osc = audioCtx.createOscillator();
-    var gain = audioCtx.createGain();
-    osc.type = 'square';
-    osc.frequency.value = freq;
-    gain.gain.value = vol;
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-    osc.start();
-    osc.stop(audioCtx.currentTime + dur);
+    try {
+        var o = audioCtx.createOscillator(), g = audioCtx.createGain();
+        o.type = 'square'; o.frequency.value = freq||150;
+        g.gain.value = vol||0.01;
+        o.connect(g); g.connect(audioCtx.destination);
+        o.start(); o.stop(audioCtx.currentTime + (dur||0.02));
+    } catch(e){}
 }
 
+// ======================================================
+// BASLANGIÇ
+// ======================================================
 function initSystem() {
     document.getElementById('startScreen').style.display = 'none';
     ensureAudio();
-    document.getElementById('statusBar').textContent = 'STATUS: ONLINE — YETKİ ANAHTARI BEKLENİYOR';
-    document.getElementById('statusBar').style.color = '#1a3d1a';
+    setStatus('ONLINE YETKI ANAHTARI BEKLENİYOR', '#1a3d1a');
 }
+
+function setStatus(t, c) {
+    var el = document.getElementById('statusBar');
+    el.textContent = 'STATUS: ' + t;
+    el.style.color = c || '#333';
+}
+
+// ======================================================
+// YETKİ GİRİŞİ
+// ======================================================
+var currentAllowed = [], currentDept = '', currentFilter = 'ALL', currentPage = 1;
+var PAGE_SIZE = 30;
+var allSCPs = [], filteredSCPs = [];
 
 document.getElementById('passInput').addEventListener('input', function() {
     var key = this.value.trim().toUpperCase();
@@ -459,118 +531,186 @@ document.getElementById('passInput').addEventListener('input', function() {
 
     var entry = DATABASE[dbKey];
 
-    var boxes = document.querySelectorAll('.branch-box');
-    for (var i = 0; i < boxes.length; i++) boxes[i].style.display = 'none';
+    document.querySelectorAll('.branch-box').forEach(function(b){ b.style.display='none'; });
     document.getElementById('accessDeniedMsg').style.display = 'none';
     document.getElementById('scpSection').style.display = 'none';
     document.getElementById('scp-list').innerHTML = '';
+    document.getElementById('pagination').innerHTML = '';
     document.getElementById('terminalHeader').classList.add('collapsed');
+    ['safe','euclid','keter','thaumiel','apollyon'].forEach(function(c){
+        document.getElementById('clv-'+c).className = 'clv';
+    });
 
     if (entry.type === 'dclass') {
         document.getElementById('accessDeniedMsg').style.display = 'block';
-        document.getElementById('statusBar').textContent = 'STATUS: ERİŞİM REDDEDİLDİ — D-SINIFI KİMLİK';
-        document.getElementById('statusBar').style.color = '#8b0000';
-        playBeep(80, 0.4, 0.04);
+        setStatus('ERİŞİM REDDEDİLDİ D-SINIFI KİMLİK', '#8b0000');
+        playBeep(80, 0.5, 0.04);
     } else {
         document.getElementById(entry.boxId).style.display = 'block';
         daktilo(entry.textId, entry.info);
-        buildSCPList(entry.allowed, entry.dept);
-        document.getElementById('statusBar').textContent = 'STATUS: YETKİ ONAYLANDI';
-        document.getElementById('statusBar').style.color = '#00ff41';
-        playBeep(440, 0.05, 0.015);
+        entry.allowed.forEach(function(cls){
+            var el = document.getElementById('clv-'+cls.toLowerCase());
+            if (el) el.className = 'clv active-'+cls.toLowerCase();
+        });
+        currentAllowed = entry.allowed;
+        currentDept = entry.dept;
+        currentFilter = 'ALL';
+        currentPage = 1;
+        document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
+        document.querySelector('.filter-btn[data-f="ALL"]').classList.add('active');
+        buildAllSCPs();
+        document.getElementById('scpSection').style.display = 'block';
+        setStatus('YETKİ ONAYLANDI HOSGELDİNİZ', '#00ff41');
+        playBeep(440, 0.06, 0.015);
     }
 });
 
+// ======================================================
+// DAKTİLO
+// ======================================================
 function daktilo(elId, lines) {
     var el = document.getElementById(elId);
     el.innerHTML = '';
-    var lineIndex = 0;
-    var charIndex = 0;
-
-    var timer = setInterval(function() {
-        if (lineIndex >= lines.length) { clearInterval(timer); return; }
-        if (!el.children[lineIndex]) {
-            var div = document.createElement('div');
-            div.className = 'branch-desc-line';
-            el.appendChild(div);
-        }
-        var line = lines[lineIndex];
-        if (charIndex < line.length) {
-            el.children[lineIndex].textContent += line[charIndex];
-            charIndex++;
-            if (charIndex % 4 === 0) playBeep(100 + Math.random() * 50, 0.015, 0.007);
-        } else {
-            lineIndex++;
-            charIndex = 0;
-        }
-    }, 10);
+    var li = 0, ci = 0;
+    var t = setInterval(function() {
+        if (li >= lines.length) { clearInterval(t); return; }
+        if (!el.children[li]) { var d=document.createElement('div'); d.className='branch-desc-line'; el.appendChild(d); }
+        var line = lines[li];
+        if (ci < line.length) { el.children[li].textContent += line[ci]; ci++; if(ci%3===0) playBeep(80+Math.random()*60,0.012,0.006); }
+        else { li++; ci=0; }
+    }, 8);
 }
 
-function buildSCPList(allowed, dept) {
-    var scpSection = document.getElementById('scpSection');
-    var scpList = document.getElementById('scp-list');
-    scpList.innerHTML = '';
+function daktiloDet(el, lines) {
+    el.innerHTML = '';
+    var li = 0, ci = 0;
+    var t = setInterval(function() {
+        if (li >= lines.length) { clearInterval(t); return; }
+        if (!el.children[li]) { var d=document.createElement('div'); d.className='scp-detail-line'; el.appendChild(d); }
+        var line = lines[li];
+        if (ci < line.length) { el.children[li].textContent += line[ci]; ci++; if(ci%4===0) playBeep(60+Math.random()*40,0.01,0.005); }
+        else { li++; ci=0; }
+    }, 5);
+}
 
-    var allClasses = ["SAFE","EUCLID","KETER","THAUMIEL","APOLLYON"];
-
+// ======================================================
+// SCP LİSTESİ — 1050 ADET
+// ======================================================
+function buildAllSCPs() {
+    var cls5 = ["SAFE","EUCLID","KETER","THAUMIEL","APOLLYON"];
     var indices = [];
-    for (var i = 1; i <= 50; i++) indices.push(i);
-
-    // Fisher-Yates shuffle
-    for (var i = indices.length - 1; i > 0; i--) {
-        var j = Math.floor(Math.random() * (i + 1));
-        var tmp = indices[i]; indices[i] = indices[j]; indices[j] = tmp;
+    for (var i = 1; i <= 1050; i++) indices.push(i);
+    // Fisher-Yates
+    for (var i = indices.length-1; i > 0; i--) {
+        var j = Math.floor(Math.random()*(i+1));
+        var tmp=indices[i]; indices[i]=indices[j]; indices[j]=tmp;
     }
+    allSCPs = [];
+    indices.forEach(function(n){
+        var cls = cls5[n % 5];
+        if (currentAllowed.indexOf(cls) !== -1)
+            allSCPs.push({ id:"SCP-"+(n+100), num:n, cls:cls });
+    });
+    applyFilter();
+}
 
-    var count = 0;
-    indices.forEach(function(num) {
-        var cls = allClasses[num % allClasses.length];
-        if (allowed.indexOf(cls) === -1) return;
-        count++;
+function setFilter(f) {
+    currentFilter = f; currentPage = 1;
+    document.querySelectorAll('.filter-btn').forEach(function(b){
+        b.classList.toggle('active', b.getAttribute('data-f') === f);
+    });
+    applyFilter();
+}
 
-        var id = "SCP-" + (num + 100);
+function filterSCPs() { currentPage = 1; applyFilter(); }
 
+function applyFilter() {
+    var s = document.getElementById('searchBar').value.trim().toUpperCase();
+    filteredSCPs = allSCPs.filter(function(scp){
+        var cm = currentFilter === 'ALL' || scp.cls === currentFilter;
+        var sm = !s || scp.id.indexOf(s) !== -1 || scp.cls.indexOf(s) !== -1;
+        return cm && sm;
+    });
+    renderPage();
+}
+
+function renderPage() {
+    var list = document.getElementById('scp-list');
+    list.innerHTML = '';
+    var start = (currentPage-1)*PAGE_SIZE;
+    var page = filteredSCPs.slice(start, start+PAGE_SIZE);
+
+    page.forEach(function(scp){
         var folder = document.createElement('div');
         folder.className = 'scp-folder';
         folder.innerHTML =
-            '<span class="scp-name">' + id + '</span>' +
-            '<span class="scp-right">' +
-            '<span class="badge badge-' + cls.toLowerCase() + '">' + cls + '</span>' +
-            '<span class="scp-arrow">&#9658;</span>' +
+            '<span class="scp-name">'+scp.id+'</span>'+
+            '<span class="scp-right">'+
+            '<span class="badge badge-'+scp.cls.toLowerCase()+'">'+scp.cls+'</span>'+
+            '<span class="scp-arrow">&#9658;</span>'+
             '</span>';
 
         var det = document.createElement('div');
         det.className = 'scp-details';
 
-        (function(folderEl, detEl, n, c, d) {
-            folderEl.onclick = function() {
-                var isOpen = detEl.style.display === 'block';
-                var allDets = document.querySelectorAll('.scp-details');
-                var allFolders = document.querySelectorAll('.scp-folder');
-                for (var i = 0; i < allDets.length; i++) allDets[i].style.display = 'none';
-                for (var i = 0; i < allFolders.length; i++) allFolders[i].classList.remove('active');
-
-                if (!isOpen) {
-                    detEl.style.display = 'block';
-                    folderEl.classList.add('active');
-                    detEl.innerHTML = '';
-                    var lines = getSCPLines(n, c, d);
-                    lines.forEach(function(line) {
-                        var div = document.createElement('div');
-                        div.className = 'scp-detail-line';
-                        div.textContent = line;
-                        detEl.appendChild(div);
-                    });
-                    playBeep(220, 0.04, 0.012);
+        (function(f, d, s){
+            f.onclick = function(){
+                var open = d.classList.contains('open');
+                document.querySelectorAll('.scp-details').forEach(function(x){ x.classList.remove('open'); });
+                document.querySelectorAll('.scp-folder').forEach(function(x){ x.classList.remove('active'); });
+                if (!open) {
+                    d.classList.add('open');
+                    f.classList.add('active');
+                    var inner = document.createElement('div');
+                    inner.className = 'scp-detail-inner';
+                    d.innerHTML = ''; d.appendChild(inner);
+                    daktiloDet(inner, getSCPLines(s.num, s.cls, currentDept));
+                    playBeep(200, 0.04, 0.01);
                 }
             };
-        })(folder, det, num, cls, dept);
+        })(folder, det, scp);
 
-        scpList.appendChild(folder);
-        scpList.appendChild(det);
+        list.appendChild(folder);
+        list.appendChild(det);
     });
 
-    if (count > 0) scpSection.style.display = 'block';
+    renderPagination();
+}
+
+function renderPagination() {
+    var pg = document.getElementById('pagination');
+    pg.innerHTML = '';
+    var total = Math.ceil(filteredSCPs.length / PAGE_SIZE);
+    if (total <= 1) return;
+
+    var info = document.createElement('span');
+    info.className = 'page-info';
+    info.textContent = filteredSCPs.length + ' KAYIT  SAYFA ' + currentPage + '/' + total + '  ';
+    pg.appendChild(info);
+
+    if (currentPage > 1) {
+        var prev = document.createElement('button');
+        prev.className = 'page-btn'; prev.innerHTML = '&#9664; ÖNCEKİ';
+        prev.onclick = function(){ currentPage--; renderPage(); window.scrollTo(0,250); };
+        pg.appendChild(prev);
+    }
+
+    for (var p = Math.max(1,currentPage-2); p <= Math.min(total,currentPage+2); p++) {
+        (function(pp){
+            var btn = document.createElement('button');
+            btn.className = 'page-btn'+(pp===currentPage?' active':'');
+            btn.textContent = pp;
+            btn.onclick = function(){ currentPage=pp; renderPage(); window.scrollTo(0,250); };
+            pg.appendChild(btn);
+        })(p);
+    }
+
+    if (currentPage < total) {
+        var next = document.createElement('button');
+        next.className = 'page-btn'; next.innerHTML = 'SONRAKİ &#9654;';
+        next.onclick = function(){ currentPage++; renderPage(); window.scrollTo(0,250); };
+        pg.appendChild(next);
+    }
 }
 </script>
 </body>
