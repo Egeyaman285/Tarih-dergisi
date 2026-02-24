@@ -204,7 +204,7 @@ def view(scp_id):
     <div id="typewriter-text"></div>
     <br><button onclick="history.back()" class="btn-custom" style="width:120px">KAPAT</button>
     """
-    return render_template_string(HTML_BASE, content=content)
+    return render_template_string(HTML_BASE, content=content)  
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 10000)))
