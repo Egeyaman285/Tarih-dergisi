@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>SHADOW RP | SECURE TERMINAL V13</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap');
@@ -25,6 +25,42 @@
             font-family: 'Share Tech Mono', monospace;
             overflow-x: hidden;
             min-height: 100vh;
+            font-size: 16px;
+        }
+
+        /* Mobil Optimizasyon */
+        @media (max-width: 768px) {
+            body { font-size: 14px; }
+            .header-title { font-size: 1rem; letter-spacing: 4px; }
+            .auth-input { width: 95%; padding: 10px; font-size: 0.9rem; }
+            .clearance-bar { gap: 4px; }
+            .clv { padding: 2px 6px; font-size: 0.5rem; }
+            .branch-box { padding: 15px; }
+            .branch-title { font-size: 0.8rem; }
+            .branch-desc-line { font-size: 0.75rem; }
+            .filter-bar { gap: 4px; }
+            .filter-btn { padding: 3px 8px; font-size: 0.55rem; }
+            .search-bar { font-size: 0.7rem; padding: 6px 10px; }
+            .scp-folder { padding: 8px 12px; }
+            .scp-name { font-size: 0.75rem; }
+            .badge { padding: 1px 5px; font-size: 0.5rem; }
+            .scp-detail-line { font-size: 0.7rem; }
+            .pagination { gap: 3px; }
+            .page-btn { padding: 3px 6px; font-size: 0.55rem; }
+            .igd-istatistik { grid-template-columns: 1fr; gap: 5px; }
+            .istatistik-sayi { font-size: 1.5rem; }
+            .igd-rapor-tablo th, .igd-rapor-tablo td { font-size: 0.6rem; padding: 4px 2px; }
+            .settings-box { padding: 20px; }
+            .settings-line { font-size: 0.7rem; }
+        }
+
+        @media (max-width: 480px) {
+            body { font-size: 12px; }
+            .header-title { font-size: 0.9rem; letter-spacing: 3px; }
+            .auth-input { font-size: 0.8rem; }
+            .clv { padding: 2px 4px; font-size: 0.45rem; }
+            .shadow-tag { font-size: 0.6rem; top: 10px; right: 10px; }
+            #settingsBtn { font-size: 0.6rem; padding: 4px 8px; top: 10px; left: 10px; }
         }
 
         body::before {
@@ -57,6 +93,7 @@
             background: #000; z-index: 5000;
             display: flex; flex-direction: column;
             justify-content: center; align-items: center; gap: 25px;
+            padding: 20px;
         }
         .start-logo {
             font-family: 'Orbitron', monospace;
@@ -64,6 +101,7 @@
             color: var(--red); letter-spacing: 12px;
             text-shadow: 0 0 30px var(--red), 0 0 80px var(--red-dim);
             animation: flicker 5s infinite;
+            text-align: center;
         }
         .start-sub { color: #333; letter-spacing: 4px; font-size: 0.75rem; text-align: center; }
         .start-btn {
@@ -175,7 +213,23 @@
             border-left: 6px solid var(--blue); padding: 25px;
             margin-bottom: 30px; display: none; animation: slideIn 0.4s ease;
         }
-        .o5-box { border-left-color: var(--gold); }
+        .o5-box { 
+            border-left-color: var(--gold); 
+            background: linear-gradient(145deg, #080808, #0a0500);
+            position: relative;
+            overflow: hidden;
+        }
+        .o5-box::before {
+            content: "☠ O5 ☠";
+            position: absolute;
+            bottom: 5px; right: 15px;
+            font-size: 3rem;
+            color: rgba(255,215,0,0.03);
+            font-family: 'Orbitron', monospace;
+            font-weight: 900;
+            pointer-events: none;
+            transform: rotate(-5deg);
+        }
         .branch-title {
             font-family: 'Orbitron', monospace; font-size: 0.9rem;
             color: #fff; letter-spacing: 4px; border-bottom: 1px solid #1a1a1a;
@@ -187,6 +241,7 @@
         #igdyonetim {
             background: #000; border: 1px solid var(--red-dim);
             padding: 20px; margin-bottom: 30px; display: none;
+            overflow-x: auto;
         }
         .igd-header {
             font-family: 'Orbitron', monospace; color: var(--red);
@@ -208,6 +263,7 @@
         .istatistik-etiket { color: #444; font-size: 0.7rem; letter-spacing: 2px; }
         .igd-rapor-tablo {
             width: 100%; border-collapse: collapse; margin-top: 15px;
+            min-width: 600px;
         }
         .igd-rapor-tablo th {
             color: #666; font-size: 0.7rem; letter-spacing: 2px;
@@ -403,12 +459,14 @@
         </div>
 
         <div class="igd-header" style="font-size:0.8rem; margin-top:20px;">&#128221; SON ERİŞİM RAPORLARI</div>
-        <table class="igd-rapor-tablo" id="rapor-tablosu">
-            <thead>
-                <tr><th>ZAMAN</th><th>YETKİ KODU</th><th>DEPARTMAN</th><th>SCP</th><th>İŞLEM</th></tr>
-            </thead>
-            <tbody id="rapor-tbody"></tbody>
-        </table>
+        <div style="overflow-x: auto;">
+            <table class="igd-rapor-tablo" id="rapor-tablosu">
+                <thead>
+                    <tr><th>ZAMAN</th><th>YETKİ KODU</th><th>DEPARTMAN</th><th>SCP</th><th>İŞLEM</th></tr>
+                </thead>
+                <tbody id="rapor-tbody"></tbody>
+            </table>
+        </div>
         <button class="rapor-temizle-btn" onclick="raporlariTemizle()">RAPORLARI TEMİZLE</button>
     </div>
 
@@ -438,35 +496,65 @@
 
 <script>
 // ======================================================
-// VERİTABANI — YENİ SİFRELER
+// VERİTABANI — YENİ ŞİFRELER (ADMİN HARİÇ)
 // ======================================================
 var DATABASE = {
-    "SHADOW-SEC-2026":    { type:"dept", boxId:"SEC-B", textId:"sec-text", dept:"SEC", allowed:["SAFE","EUCLID"],
-        info:["GÜVENLİK PROTOKOLÜ AKTİF","Yetki Seviyesi   : BETA-3","Müdahale Kapsamı : Safe ve Euclid sinifi anomaliler","Keter İhlali     : TME müdahalesi çagirilir personel bölgeden çekilir","Vardiya Süresi   : 8 saatlik rotasyon 3 peron / vardiya","Silah Protokolü  : Standart atisli silah Thaumiel için yasak","Tesis Önceligi   : Sivil kayip SIFIR politikasi","Uyari            : İhlal aninda kod KIRMIZI butonu tetiklenecek"] },
-    "SHADOW-ENG-7734":    { type:"dept", boxId:"ENG-B", textId:"eng-text", dept:"ENG", allowed:["SAFE","EUCLID","KETER","THAUMIEL"],
-        info:["MÜHENDİSLİK SİSTEM RAPORU","Yetki Seviyesi   : DELTA-4","Bakim Kapsami    : Safe Euclid Keter ve Thaumiel siniflari","Güç Sistemi      : Jeneratör denetimi her 24 saatte bir zorunlu","Containment Sys  : Thaumiel muhafaza cihazlari aktif izleme altinda","Acil Kapatma     : EMP-7 protokolü yetkili mühendis imzasi gerekli","Malzeme Yönetimi : Anomalik bilesen stoku haftalik raporlanir","Uyari            : İzinsiz sistem degisikligi otomatik alarm tetikler"] },
-    "SHADOW-ETH-0001":    { type:"dept", boxId:"ETH-B", textId:"eth-text", dept:"ETH", allowed:["SAFE","EUCLID","KETER","THAUMIEL","APOLLYON"],
-        info:["ETİK KOMİTE DİREKTİFİ","Yetki Seviyesi   : OMEGA-5 Tüm siniflar üzerinde denetim","Denetim Kapsami  : Tüm deney protokolleri etik onay gerektirir","İnsan Deneyleri  : D-sinifi kullanimi kota ve limit dahilinde","Amnezik Kullanimi: Yalnizca komite onayi ile uygulanabilir","Komitenin Gücü   : O5 kararlarini etik ihlal gerekçesiyle durdurabilir","Rapor Dönemi     : Aylik etik degerlendirme raporu zorunludur","Uyari            : İnsan onuruna aykirideney derhal durdurulur"] },
-    "SHADOW-MED-4421":    { type:"dept", boxId:"MED-B", textId:"med-text", dept:"MED", allowed:["SAFE","EUCLID","KETER"],
-        info:["TIBBİ DEPARTMAN ANALİZİ","Yetki Seviyesi   : GAMMA-3","Biyolojik Tehdit : Sinif-A biyohazmat protokolü daima hazir","Personel Sagligi : Temas sonrasi 72 saat karantina zorunlu","Amnezik Stok     : A-klasi B-klasi ve C-klasi mevcut","Antidot Veri     : Anomalik maruziyete karsi 14 formül arsivde","D-Sinifi Tibbi   : Tibbi kayit tutulur ölüm protokolü ayri dosyada","Uyari            : Bulasici anomali tespitinde tesis karantinaya alinir"] },
-    "SHADOW-IGD-9999":    { type:"dept", boxId:"IGD-B", textId:"igd-text", dept:"IGD", allowed:["SAFE","EUCLID","KETER","THAUMIEL","APOLLYON"],
-        info:["İÇ GÜVENLİK DİREKTİFİ GIZLI","Yetki Seviyesi   : SIGMA-5 Tüm departmanlar üzerinde","Görev            : Vakif içi sizinti casusluk ihanet tespiti","İzleme           : Tüm personel iletisimi pasif izleme altinda","Ajan Agi         : Her departmanda en az 1 gizli IGD ajani bulunur","Gözalti Yetkisi  : Süpheli personel mahkemesiz tutulabilir 72 saat","Dosya Erisimi    : IGD tüm gizli dosyalara erisim hakkina sahiptir","Uyari            : Bu dosyayi okudugunuz kaydedildi"] },
-    "SHADOW-TME-DELTA":   { type:"dept", boxId:"TME-B", textId:"tme-text", dept:"TME", allowed:["SAFE","EUCLID","KETER","THAUMIEL","APOLLYON"],
-        info:["TAKTİKSEL MÜDAHALE PLANI GIZLI","Yetki Seviyesi   : KAPPA-4 Agir silahli operasyon birimi","Müdahale Hizi    : Alarm sonrasi sahaya inis 3 dakika altinda","Keter Protokolü  : Nötralizasyon emri O5 onayi olmadan verilemez","Apollyon Durumu  : Olay yeri bosaltma TME son savunma hatti","Ekipman          : Anomalik karsi silahlar Thaumiel destekli zirh","Kayip Politikasi : Operasyon önceliklidir kayip ikincil kabul edilir","Uyari            : TME emirleri yazili olmadan sözlü kabul edilmez"] },
-    "SHADOW-O5-ILLAHPASA":{ type:"dept", boxId:"O5-B",  textId:"o5-text",  dept:"O5",  allowed:["SAFE","EUCLID","KETER","THAUMIEL","APOLLYON"],
-        info:["O5 KONSEYİ MUTLAK GİZLİLİK SEVİYESİ","Yetki Seviyesi   : BEYOND-5 Mutlak otorite","Kimlik           : O5 üyeleri kimliklerini hiç kimseyle paylasmaz","Karar Yetkisi    : Vakfin tüm kaynaklari konseyin emrinde","XK Protokolü     : Dünya sonu senaryosu kararlari bu konseye aittir","İletisim         : Sadece sifreli kanal yüz yüze görüsme yasak","Veto Hakki       : Herhangi bir departman karari veto edilebilir","Uyari            : Bu veriye erisim otomatik olarak O5 e bildirildi"] },
-    "D-4829":  { type:"dclass" },
-    "D-7731":  { type:"dclass" },
-    "D-0012":  { type:"dclass" },
-    "D-SINIF": { type:"dclass" }
+    // GÜVENLİK DEPARTMANI
+    "SHADOW-SEC-7712":    { type:"dept", boxId:"SEC-B", textId:"sec-text", dept:"SEC", allowed:["SAFE","EUCLID"],
+        info:["GÜVENLİK PROTOKOLÜ AKTİF","Yetki Seviyesi   : BETA-3","Müdahale Kapsamı : Safe ve Euclid sinifi anomaliler","Keter İhlali     : TME müdahalesi çağırılır","Vardiya Süresi   : 8 saatlik rotasyon","Silah Protokolü  : Standart atışlı silah","Tesis Önceliği   : Sivil kayıp SIFIR politikası"] },
+    
+    // MÜHENDİSLİK
+    "SHADOW-ENG-5591":    { type:"dept", boxId:"ENG-B", textId:"eng-text", dept:"ENG", allowed:["SAFE","EUCLID","KETER","THAUMIEL"],
+        info:["MÜHENDİSLİK SİSTEM RAPORU","Yetki Seviyesi   : DELTA-4","Bakım Kapsamı    : Tüm sınıflar","Güç Sistemi      : Jeneratör denetimi 24 saat","Containment Sys  : Thaumiel aktif izleme","Acil Kapatma     : EMP-7 protokolü","Malzeme Yönetimi : Anomalik bileşen stoku"] },
+    
+    // ETİK KOMİTE
+    "SHADOW-ETH-8823":    { type:"dept", boxId:"ETH-B", textId:"eth-text", dept:"ETH", allowed:["SAFE","EUCLID","KETER","THAUMIEL","APOLLYON"],
+        info:["ETİK KOMİTE DİREKTİFİ","Yetki Seviyesi   : OMEGA-5","Denetim Kapsamı  : Tüm deney protokolleri","İnsan Deneyleri  : D-sınıfı kullanımı kontrollü","Amnezik Kullanımı: Komite onayı gerekli","Komite Gücü      : O5 kararlarını durdurabilir"] },
+    
+    // TIBBİ DEPARTMAN
+    "SHADOW-MED-3367":    { type:"dept", boxId:"MED-B", textId:"med-text", dept:"MED", allowed:["SAFE","EUCLID","KETER"],
+        info:["TIBBİ DEPARTMAN ANALİZİ","Yetki Seviyesi   : GAMMA-3","Biyolojik Tehdit : Sınıf-A biyohazmat","Personel Sağlığı : 72 saat karantina","Amnezik Stok     : A,B,C sınıfları mevcut","D-Sınıfı Tıbbi   : Tıbbi kayıt tutulur"] },
+    
+    // İÇ GÜVENLİK
+    "SHADOW-IGD-4413":    { type:"dept", boxId:"IGD-B", textId:"igd-text", dept:"IGD", allowed:["SAFE","EUCLID","KETER","THAUMIEL","APOLLYON"],
+        info:["İÇ GÜVENLİK DİREKTİFİ GİZLİ","Yetki Seviyesi   : SIGMA-5","Görev            : Vakıf içi sızıntı tespiti","İzleme           : Tüm iletişim izleniyor","Ajan Ağı         : Her departmanda gizli ajan","Gözaltı Yetkisi  : 72 saat mahkemesiz tutma"] },
+    
+    // TAKTİKSEL MÜDAHALE
+    "SHADOW-TME-9921":   { type:"dept", boxId:"TME-B", textId:"tme-text", dept:"TME", allowed:["SAFE","EUCLID","KETER","THAUMIEL","APOLLYON"],
+        info:["TAKTİKSEL MÜDAHALE PLANI GİZLİ","Yetki Seviyesi   : KAPPA-4","Müdahale Hızı    : 3 dakika","Keter Protokolü  : O5 onayı gerekli","Apollyon Durumu  : Son savunma hattı","Ekipman          : Anomalik karşıtı silahlar"] },
+    
+    // O5 KONSEYİ
+    "SHADOW-O5-5513":{ type:"dept", boxId:"O5-B",  textId:"o5-text",  dept:"O5",  allowed:["SAFE","EUCLID","KETER","THAUMIEL","APOLLYON"],
+        info:["O5 KONSEYİ MUTLAK GİZLİLİK","Yetki Seviyesi   : BEYOND-5","Kimlik           : Asla paylaşılmaz","Karar Yetkisi    : Tüm kaynaklar konsey emrinde","XK Protokolü     : Dünya sonu senaryoları","Veto Hakkı       : Her karar veto edilebilir"] },
+    
+    // D-SINIFI KODLARI
+    "D-7712":  { type:"dclass" },
+    "D-5591":  { type:"dclass" },
+    "D-8823":  { type:"dclass" },
+    "D-3367":  { type:"dclass" },
+    "D-4413":  { type:"dclass" },
+    "D-9921":  { type:"dclass" },
+    "D-5513":  { type:"dclass" },
+    "D-0012":  { type:"dclass" }
 };
 
 // ======================================================
-// ÖZEL YETKİLİ KODLARI (6-cİLLAHp.sr ve SRTUQUQUE78921)
+// ÖZEL YETKİLİ KODLARI (DEĞİŞTİRİLDİ)
 // ======================================================
 const OZEL_KODLAR = {
-    "6-CİLLAHPSR": "SUPER_ADMIN",   // Büyük harf normalize edildi
+    "6-CİLLAHPSR": "SUPER_ADMIN",
     "SRTUQUQUE78921": "ADMIN"
+};
+
+// ======================================================
+// SCP SINIFLANDIRMA DÜZENLENDİ
+// ======================================================
+const SCP_CLASSES = {
+    "SAFE": "Güvenli - Kolay muhafaza edilebilir",
+    "EUCLID": "Orta - Tahmin edilemez davranışlar",
+    "KETER": "Tehlikeli - Sürekli muhafaza gerektirir",
+    "THAUMIEL": "Yararlı - Vakıf amaçları için kullanılır",
+    "APOLLYON": "Kıyamet - Durdurulamaz yıkım potansiyeli"
 };
 
 // ======================================================
@@ -483,7 +571,6 @@ function raporEkle(kod, departman, scp, islem) {
     if (raporlar.length > 100) raporlar.pop();
     localStorage.setItem('igd_raporlar', JSON.stringify(raporlar));
     
-    // Eğer admin paneli açıksa güncelle
     if (document.getElementById('igdyonetim').style.display === 'block') {
         raporlariGoster();
     }
@@ -516,90 +603,95 @@ function raporlariTemizle() {
 }
 
 // ======================================================
-// SCP BİLGİLERİ
+// SCP BİLGİLERİ - DÜZENLENDİ
 // ======================================================
 var SCP_NAMES = [
-    "Yikilmaz Heykel","Sonsuz Merdiven","Karanlik Oda","Yürüyen Dag","Ölümsüz Balik",
-    "Aglayanın Aynasi","Gülümseyen Adam","Kosan Tünel","Sessiz Orman","Kayan Kapi",
-    "Düsünen Tas","Konusan Gölge","Yüzen Ev","Kaybolan Nehir","Sarkı Söyleyen Çukur",
-    "Kirmizi Göl","Parlayan Kafes","Dönüsüm Odasi","Kanayan Duvar","Yasayan Kablo",
-    "Sifir Noktasi","Zaman Kilidi","Bilinç Aktarici","Entropi Motoru","Gerceklik Carpici",
-    "Hafiza Silici","Boyut Kapisi","Varoluş Yiyici","Zihin Kolonisi","Kaos Jeneratörü",
-    "Silinmez İz","Evrilen Madde","Uyuyan Tünel","Kopan Zincir","Cagiran Ses",
-    "Yansıyan Korku","Gizli Alan","Dolan Göz","Akan Renk","Bilgi Tüketicisi"
+    "Yıkılmaz Heykel","Sonsuz Merdiven","Karanlık Oda","Yürüyen Dağ","Ölümsüz Balık",
+    "Ağlayan Ayna","Gülümseyen Adam","Koşan Tünel","Sessiz Orman","Kayan Kapı",
+    "Düşünen Taş","Konuşan Gölge","Yüzen Ev","Kaybolan Nehir","Şarkı Söyleyen Çukur",
+    "Kırmızı Göl","Parlayan Kafes","Dönüşüm Odası","Kanayan Duvar","Yaşayan Kablo",
+    "Sıfır Noktası","Zaman Kilidi","Bilinç Aktarıcı","Entropi Motoru","Gerçeklik Çarpıcı",
+    "Hafıza Silici","Boyut Kapısı","Varoluş Yiyici","Zihin Kolonisi","Kaos Jeneratörü",
+    "Silinmez İz","Evrilen Madde","Uyuyan Tanrı","Kopan Zincir","Çağıran Ses",
+    "Yansıyan Korku","Gizli Alan","Dönen Göz","Akan Renk","Bilgi Tüketicisi"
 ];
 
-var SCP_LOCS = ["Site-Shadow","Site-19","Site-17","Site-23","Site-X","Alan-Shadow-B","Yer-Alti-7","Tesis-Shadow-K"];
+var SCP_LOCS = ["Site-Shadow","Site-19","Site-17","Site-23","Site-X","Alan-Shadow-B","Yer-Altı-7","Tesis-Shadow-K"];
 
 function getSCPLines(num, cls, dept) {
     var site = SCP_LOCS[num % SCP_LOCS.length];
     var name = SCP_NAMES[num % SCP_NAMES.length];
     var yil = "20" + (10 + (num % 15));
-    var tehlike = {APOLLYON:"OMEGA",KETER:"YÜKSEK",THAUMIEL:"KONTROLLÜ",EUCLID:"ORTA",SAFE:"DÜSÜK"}[cls] || "BILINMIYOR";
+    var tehlike = {APOLLYON:"OMEGA - GERÇEKLİK ÇÖKÜŞÜ",KETER:"YÜKSEK - ÖLÜMCÜL",THAUMIEL:"KONTROLLÜ - YARARLI",EUCLID:"ORTA - DEĞİŞKEN",SAFE:"DÜŞÜK - GÜVENLİ"}[cls] || "BİLİNMİYOR";
+
+    // O5 için özel içerik
+    if (dept === 'O5') {
+        return [
+            "Kod Adı         : " + name + " [O5 SEVİYESİ]",
+            "Sınıflandırma   : " + cls,
+            "Tehlike Seviyesi: " + tehlike,
+            "Muhafaza Tesisi : " + site + " [GİZLİ KAT]",
+            "O5 Kararı       : " + (cls === "APOLLYON" ? "ACİL TOPLANMA" : "Standart Protokol"),
+            "Gözlemci        : O5-" + (num % 13 + 1),
+            "XK Sınıfı       : " + (cls === "APOLLYON" ? "AKTİF - TÜM TESİSLER ALARMDA" : "PASİF"),
+            "Not             : BU BELGE O5 ONAYI OLMADAN AÇILAMAZ"
+        ];
+    }
+
+    // IGD için özel içerik
+    if (dept === 'IGD') {
+        return [
+            "Kod Adı         : " + name,
+            "Sınıflandırma   : " + cls,
+            "Tehlike Seviyesi: " + tehlike,
+            "Muhafaza Tesisi : " + site,
+            "IGD Gözlem      : Gizli kamera ile 7/24 izleniyor",
+            "Personel        : " + (num % 10 + 1) + " ajan görevlendirildi",
+            "Sızıntı Riski   : " + (cls === "KETER" ? "YÜKSEK" : "DÜŞÜK"),
+            "Not             : Bu dosyayı açan kaydedildi"
+        ];
+    }
 
     var sets = {
         SEC:[
-            "Kod Adi         : " + name,
-            "Siniflandirma   : " + cls + "  |  Tehlike: " + tehlike,
-            "Muhafaza Tesisi : " + site + " Güvenli Bölge B-" + (num % 9 + 1),
-            "Güvenlik Çemberi: " + (num % 3 + 2) + " katli kilit sistemi 24 saat nöbet",
-            "Personel İzni   : Güvenlik Yetki-" + (num % 3 + 1) + " ve üzeri",
-            "Son İhlal       : " + (num % 7 === 0 ? "Kayit bulunmuyor" : yil + " dosya mühürlendi"),
-            "Güvenlik Notu   : Nesneye " + (num % 5 + 3) + " metreden fazla yaklasmak yasaktir"
+            "Kod Adı         : " + name,
+            "Sınıflandırma   : " + cls + "  |  Tehlike: " + tehlike,
+            "Muhafaza Tesisi : " + site + " Güvenli Bölge",
+            "Güvenlik Çemberi: " + (num % 3 + 2) + " katlı kilit",
+            "Personel İzni   : Güvenlik Yetki-" + (num % 3 + 1),
+            "Son İhlal       : " + (num % 7 === 0 ? "Kayıt yok" : yil)
         ],
         ENG:[
-            "Kod Adi         : " + name,
-            "Siniflandirma   : " + cls + "  |  Tehlike: " + tehlike,
-            "Muhafaza Tesisi : " + site + " Mühendislik K-" + (num % 6 + 1),
-            "Muhafaza Sistemi: " + (cls === "THAUMIEL" ? "Thaumiel destekli reaktif alan" : "Standart çelik-beton izole oda"),
-            "Güç Tüketimi    : Günlük " + ((num * 13) % 500 + 100) + " kWh kesintisiz",
-            "Son Bakim       : " + yil + "-" + String(num % 12 + 1).padStart(2,"0") + "-" + String(num % 28 + 1).padStart(2,"0"),
-            "Mühendislik Notu: Sistem arizasinda EMP-7 acil kapatma devreye girer"
+            "Kod Adı         : " + name,
+            "Sınıflandırma   : " + cls + "  |  Tehlike: " + tehlike,
+            "Muhafaza Tesisi : " + site + " Mühendislik Bölgesi",
+            "Muhafaza Sistemi: " + (cls === "THAUMIEL" ? "Thaumiel destekli" : "Standart izole oda"),
+            "Güç Tüketimi    : " + ((num * 13) % 500 + 100) + " kWh",
+            "Son Bakım       : " + yil
         ],
         ETH:[
-            "Kod Adi         : " + name,
-            "Siniflandirma   : " + cls + "  |  Tehlike: " + tehlike,
+            "Kod Adı         : " + name,
+            "Sınıflandırma   : " + cls + "  |  Tehlike: " + tehlike,
             "Muhafaza Tesisi : " + site,
-            "Deney Durumu    : " + (num % 4 === 0 ? "Etik komite onayi bekleniyor" : "Onaylı sinirli deney izni"),
-            "D-Sinifi        : " + (num % 5 === 0 ? "Zorunlu haftada 1 denkle sinirli" : "Yasak simülasyon yeterli"),
-            "Komite Karari   : " + yil + " tarihli rapor onaylandi",
-            "Etik Notu       : Tüm deneyler komite karari olmadan baslatılamaz"
+            "Deney Durumu    : " + (num % 4 === 0 ? "Etik onay bekliyor" : "Onaylı"),
+            "D-Sınıfı        : " + (num % 5 === 0 ? "Sınırlı kullanım" : "Yasak"),
+            "Komite Kararı   : " + yil + " onaylı"
         ],
         MED:[
-            "Kod Adi         : " + name,
-            "Siniflandirma   : " + cls + "  |  Tehlike: " + tehlike,
-            "Muhafaza Tesisi : " + site + " Tibbi Karantina",
-            "Biyolojik Risk  : " + (cls === "KETER" ? "Sinif-A Biyohazmat tam koruyucu zorunlu" : "Standart maske yeterli"),
-            "Temas Protokolü : " + (cls === "APOLLYON" ? "Temas KESİNLİKLE YASAK" : "72 saat karantina zorunlu"),
-            "Tedavi          : " + (num % 2 === 0 ? "A-sinifi amnezik destekleyici bakim" : "Bilinen tedavi mevcut degil"),
-            "Tibbi Notu      : " + (cls === "KETER" || cls === "APOLLYON" ? "Tüm kayiplar gizli tutulur" : "Personel sagligi takip altinda")
-        ],
-        IGD:[
-            "Kod Adi         : " + name,
-            "Siniflandirma   : " + cls + "  |  Tehlike: " + tehlike,
-            "Muhafaza Tesisi : " + site + " GIZLI BÖLGE",
-            "IGD İzleme      : Nesne çevresinde gizli kamera agi 7/24 aktif",
-            "Personel Tarama : Her 48 saatte psikolojik degerlendirme zorunlu",
-            "Sizinti Riski   : " + (cls === "APOLLYON" || cls === "KETER" ? "YÜKSEK SOK protokolü hazir" : "DÜSÜK standart izleme"),
-            "IGD Notu        : Bu dosyayi açan tüm personel kaydedilmektedir"
+            "Kod Adı         : " + name,
+            "Sınıflandırma   : " + cls + "  |  Tehlike: " + tehlike,
+            "Muhafaza Tesisi : " + site + " Tıbbi Karantina",
+            "Biyolojik Risk  : " + (cls === "KETER" ? "Sınıf-A biyohazmat" : "Standart maske"),
+            "Temas Protokolü : " + (cls === "APOLLYON" ? "KESİNLİKLE YASAK" : "72 saat karantina"),
+            "Tedavi          : " + (num % 2 === 0 ? "Amnezik uygulanır" : "Tedavi yok")
         ],
         TME:[
-            "Kod Adi         : " + name,
-            "Siniflandirma   : " + cls + "  |  Tehlike: " + tehlike,
+            "Kod Adı         : " + name,
+            "Sınıflandırma   : " + cls + "  |  Tehlike: " + tehlike,
             "Muhafaza Tesisi : " + site,
-            "Müdahale Birimi : TME-" + ((num % 5) + 1) + (cls === "APOLLYON" ? " Kiyamet Timi" : " Standart Ekip"),
-            "Nötralizasyon   : " + (cls === "KETER" || cls === "APOLLYON" ? "Agir silah termit anomalik patlayici" : "Standart atisli silah"),
-            "Son Operasyon   : " + yil + " " + (num % 2 === 0 ? "basariyla kontrol altina alindi" : "kayiplar mühürlendi"),
-            "Op Notu         : " + (cls === "APOLLYON" ? "O5 onayi olmadan hareket baslatılamaz" : "Standart protokol geçerli")
-        ],
-        O5:[
-            "Kod Adi         : " + name,
-            "Siniflandirma   : " + cls + "  |  Tehlike: " + tehlike,
-            "Muhafaza Tesisi : [MÜHÜRLÜ O5 SEVİYESİ]",
-            "Konsey Karari   : Nesne O5 dogrudan denetiminde",
-            "Erisim          : Yalnizca O5 üyeleri ve onaylı temsilciler",
-            "Gerceklik Riski : " + (cls === "APOLLYON" ? "OMEGA varolussal tehdit aktif" : "Kontrol altinda"),
-            "O5 Notu         : Bu belgenin varligi resmi olarak kabul edilmeyecektir"
+            "Müdahale Birimi : TME-" + ((num % 5) + 1),
+            "Nötralizasyon   : " + (cls === "KETER" || cls === "APOLLYON" ? "Ağır silah" : "Standart"),
+            "Son Operasyon   : " + yil
         ]
     };
     return sets[dept] || sets["SEC"];
@@ -629,7 +721,7 @@ function playBeep(freq, dur, vol) {
 function initSystem() {
     document.getElementById('startScreen').style.display = 'none';
     ensureAudio();
-    setStatus('ONLINE YETKI ANAHTARI BEKLENİYOR', '#1a3d1a');
+    setStatus('ONLINE YETKİ ANAHTARI BEKLENİYOR', '#1a3d1a');
 }
 
 function setStatus(t, c) {
@@ -676,7 +768,7 @@ document.getElementById('passInput').addEventListener('input', function() {
     });
 
     if (isAdmin) {
-        // ADMIN YETKİSİ - Tüm departmanlar açık
+        // ADMIN YETKİSİ
         document.getElementById('SEC-B').style.display = 'block';
         document.getElementById('ENG-B').style.display = 'block';
         document.getElementById('ETH-B').style.display = 'block';
@@ -685,14 +777,14 @@ document.getElementById('passInput').addEventListener('input', function() {
         document.getElementById('TME-B').style.display = 'block';
         document.getElementById('O5-B').style.display = 'block';
         
-        // Tüm departman bilgilerini yazdır
-        daktilo('sec-text', DATABASE["SHADOW-SEC-2026"].info);
-        daktilo('eng-text', DATABASE["SHADOW-ENG-7734"].info);
-        daktilo('eth-text', DATABASE["SHADOW-ETH-0001"].info);
-        daktilo('med-text', DATABASE["SHADOW-MED-4421"].info);
-        daktilo('igd-text', DATABASE["SHADOW-IGD-9999"].info);
-        daktilo('tme-text', DATABASE["SHADOW-TME-DELTA"].info);
-        daktilo('o5-text', DATABASE["SHADOW-O5-ILLAHPASA"].info);
+        // Departman bilgilerini yazdır
+        daktilo('sec-text', DATABASE["SHADOW-SEC-7712"].info);
+        daktilo('eng-text', DATABASE["SHADOW-ENG-5591"].info);
+        daktilo('eth-text', DATABASE["SHADOW-ETH-8823"].info);
+        daktilo('med-text', DATABASE["SHADOW-MED-3367"].info);
+        daktilo('igd-text', DATABASE["SHADOW-IGD-4413"].info);
+        daktilo('tme-text', DATABASE["SHADOW-TME-9921"].info);
+        daktilo('o5-text', DATABASE["SHADOW-O5-5513"].info);
         
         // Tüm yetki seviyelerini aktif et
         ['SAFE','EUCLID','KETER','THAUMIEL','APOLLYON'].forEach(function(cls){
@@ -703,7 +795,6 @@ document.getElementById('passInput').addEventListener('input', function() {
         currentAllowed = ['SAFE','EUCLID','KETER','THAUMIEL','APOLLYON'];
         currentDept = 'ADMIN';
         
-        // IGD Yönetim panelini göster
         document.getElementById('igdyonetim').style.display = 'block';
         raporlariGoster();
         
@@ -740,7 +831,7 @@ document.getElementById('passInput').addEventListener('input', function() {
     document.querySelector('.filter-btn[data-f="ALL"]').classList.add('active');
     buildAllSCPs();
     document.getElementById('scpSection').style.display = 'block';
-    setStatus('YETKİ ONAYLANDI HOSGELDİNİZ', '#00ff41');
+    setStatus('YETKİ ONAYLANDI HOŞGELDİNİZ', '#00ff41');
 });
 
 // ======================================================
@@ -763,11 +854,9 @@ function daktiloDet(el, lines, scpId) {
     el.innerHTML = '';
     var li = 0, ci = 0;
     
-    // SCP okunma sayacı
     scpOkunma++;
     localStorage.setItem('scp_okunma', scpOkunma);
     
-    // Raporla
     raporEkle(aktifOturumKodu || 'BİLİNMİYOR', currentDept, scpId, 'SCP DOSYASI AÇILDI');
     
     var t = setInterval(function() {
@@ -780,22 +869,23 @@ function daktiloDet(el, lines, scpId) {
 }
 
 // ======================================================
-// SCP LİSTESİ — 1050 ADET
+// SCP LİSTESİ
 // ======================================================
 function buildAllSCPs() {
     var cls5 = ["SAFE","EUCLID","KETER","THAUMIEL","APOLLYON"];
     var indices = [];
     for (var i = 1; i <= 1050; i++) indices.push(i);
-    // Fisher-Yates
+    
     for (var i = indices.length-1; i > 0; i--) {
         var j = Math.floor(Math.random()*(i+1));
         var tmp=indices[i]; indices[i]=indices[j]; indices[j]=tmp;
     }
+    
     allSCPs = [];
     indices.forEach(function(n){
         var cls = cls5[n % 5];
         if (currentAllowed.indexOf(cls) !== -1)
-            allSCPs.push({ id:"SCP-"+(n+100), num:n, cls:cls });
+            allSCPs.push({ id:"SCP-" + (n + 1000).toString().substring(1), num:n, cls:cls });
     });
     applyFilter();
 }
@@ -830,10 +920,10 @@ function renderPage() {
         var folder = document.createElement('div');
         folder.className = 'scp-folder';
         folder.innerHTML =
-            '<span class="scp-name">'+scp.id+'</span>'+
-            '<span class="scp-right">'+
-            '<span class="badge badge-'+scp.cls.toLowerCase()+'">'+scp.cls+'</span>'+
-            '<span class="scp-arrow">&#9658;</span>'+
+            '<span class="scp-name">' + scp.id + '</span>' +
+            '<span class="scp-right">' +
+            '<span class="badge badge-' + scp.cls.toLowerCase() + '">' + scp.cls + '</span>' +
+            '<span class="scp-arrow">&#9658;</span>' +
             '</span>';
 
         var det = document.createElement('div');
@@ -899,7 +989,7 @@ function renderPagination() {
     }
 }
 
-// Admin paneli güncellemesi için interval
+// Admin paneli güncellemesi
 setInterval(function() {
     if (document.getElementById('igdyonetim').style.display === 'block') {
         raporlariGoster();
