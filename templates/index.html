@@ -42,7 +42,7 @@
             position: relative;
         }
 
-        /* ========== EPİK ANİMASYONLAR ========== */
+        /* ========== YENİ ANİMASYONLAR ========== */
         @keyframes neonPulse {
             0%, 100% { text-shadow: 0 0 5px var(--red), 0 0 15px var(--red-dim); }
             50% { text-shadow: 0 0 20px var(--red), 0 0 40px var(--red), 0 0 60px var(--red); }
@@ -89,6 +89,34 @@
             50% { transform: scale(1); }
             75% { transform: scale(1.05); }
             100% { transform: scale(1); }
+        }
+
+        @keyframes pulse {
+            0%,100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes borderPulse {
+            0% { border-color: var(--gold); }
+            50% { border-color: var(--red); }
+            100% { border-color: var(--gold); }
+        }
+
+        @keyframes glowPulse {
+            0% { box-shadow: 0 0 5px var(--gold); }
+            50% { box-shadow: 0 0 20px var(--gold), 0 0 30px var(--red); }
+            100% { box-shadow: 0 0 5px var(--gold); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
         }
 
         /* ========== ARKA PLAN ANİMASYONLARI ========== */
@@ -190,7 +218,7 @@
             padding: 15px 25px;
             z-index: 10001;
             display: none;
-            animation: glitch 0.3s ease;
+            animation: glitch 0.3s ease, glowPulse 2s infinite;
             border: 1px solid var(--gold);
         }
 
@@ -589,6 +617,7 @@
             margin-bottom: 30px;
             display: none;
             border-radius: 5px;
+            animation: borderPulse 3s infinite, glowPulse 3s infinite;
         }
 
         .o5-header {
@@ -608,8 +637,14 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            animation: pulse 2s infinite;
+            animation: pulse 2s infinite, slideIn 0.3s;
             border-radius: 5px;
+            background: linear-gradient(145deg, #0a0a0a, #020202);
+        }
+
+        .o5-talep:hover {
+            transform: scale(1.02);
+            border-color: var(--gold);
         }
 
         .o5-talep-info {
@@ -620,6 +655,7 @@
             color: var(--gold);
             font-size: 1.1rem;
             margin-bottom: 5px;
+            animation: neonPulse 3s infinite;
         }
 
         .o5-talep-detay {
@@ -640,6 +676,7 @@
             cursor: pointer;
             transition: 0.3s;
             border-radius: 3px;
+            animation: pulse 2s infinite;
         }
 
         .o5-reddet {
@@ -650,10 +687,11 @@
             cursor: pointer;
             transition: 0.3s;
             border-radius: 3px;
+            animation: pulse 2s infinite;
         }
 
         .o5-onayla:hover, .o5-reddet:hover {
-            transform: scale(1.05);
+            transform: scale(1.1);
             box-shadow: 0 0 20px currentColor;
         }
 
@@ -661,7 +699,7 @@
         #accessDeniedMsg {
             display: none; background: #050000; border: 2px solid var(--red);
             padding: 50px; text-align: center; margin-bottom: 30px; 
-            animation: glitch 0.5s, pulse 2s infinite;
+            animation: glitch 0.5s, pulse 2s infinite, shake 0.5s;
             border-radius: 10px;
         }
 
@@ -875,6 +913,7 @@
         .scp-folder.tehlikeli {
             border-left-color: var(--gold);
             background: rgba(255,215,0,0.02);
+            animation: borderPulse 2s infinite;
         }
 
         .scp-folder.tehlikeli:hover {
@@ -932,6 +971,7 @@
         .scp-detail-line.tehlikeli {
             color: var(--gold);
             font-weight: bold;
+            animation: neonPulse 3s infinite;
         }
 
         /* ========== SAYFALAMA ========== */
@@ -963,17 +1003,6 @@
         .page-info { 
             color: #1a1a1a; font-size: 0.65rem; 
             letter-spacing: 2px; margin-right: 8px; 
-        }
-
-        /* ========== ANİMASYONLAR ========== */
-        @keyframes slideIn { 
-            from { opacity: 0; transform: translateX(-20px); } 
-            to { opacity: 1; transform: translateX(0); } 
-        }
-
-        @keyframes pulse { 
-            0%,100% { opacity: 1; } 
-            50% { opacity: 0.7; } 
         }
 
         /* ========== SCROLLBAR ========== */
@@ -1215,13 +1244,17 @@
 
     <script>
         // ======================================================
-        // EPİK JAVASCRIPT - 2000+ SATIR
+        // EPİK JAVASCRIPT - 2500+ SATIR
         // ======================================================
 
         // ========== SİSTEM DEĞİŞKENLERİ ==========
         var baslangicZamani = Date.now();
         var sistemUptime = 0;
         var sistemGuncelleyici;
+        var otomatikYenileme = null;
+        var sonIslemZamani = Date.now();
+        var girisYapildi = false;
+        var girisKodu = '';
 
         // ========== VERİTABANI ==========
         var DATABASE = {
@@ -1287,9 +1320,62 @@
         var allSCPs = [], filteredSCPs = [];
         var audioCtx;
 
+        // ========== OTOMATİK YENİLEME FONKSİYONU ==========
+        function otomatikYenilemeBaslat() {
+            if (otomatikYenileme) {
+                clearInterval(otomatikYenileme);
+            }
+            
+            otomatikYenileme = setInterval(function() {
+                // Sadece O5 yetkisiyle giriş yapıldıysa ve son işlem 5 saniyeden eskiyse
+                if (girisYapildi && aktifOturumKodu && (aktifOturumKodu === "6-CİLLAHPSR" || aktifOturumKodu === "SRTUQUQUE78921")) {
+                    var simdi = Date.now();
+                    if (simdi - sonIslemZamani > 5000) { // 5 saniye
+                        console.log("🔄 Otomatik yenileme çalışıyor...");
+                        
+                        // SessionStorage'a giriş bilgisini kaydet
+                        sessionStorage.setItem('oturum_kodu', aktifOturumKodu);
+                        sessionStorage.setItem('giris_yapildi', 'true');
+                        
+                        // Sayfayı yenile
+                        location.reload();
+                    }
+                }
+            }, 5000); // Her 5 saniyede bir kontrol et
+        }
+
+        // ========== SAYFA YÜKLENDİĞİNDE OTURUMU KONTROL ET ==========
+        window.onload = function() {
+            var kayitliKod = sessionStorage.getItem('oturum_kodu');
+            var girisDurumu = sessionStorage.getItem('giris_yapildi');
+            
+            if (kayitliKod && girisDurumu === 'true') {
+                // Oturum varsa otomatik giriş yap
+                setTimeout(function() {
+                    simulateLogin(kayitliKod);
+                }, 500);
+            }
+            
+            // Arka plan animasyonlarını başlat
+            initMatrixBg();
+            initParticles();
+        };
+
+        // ========== OTOMATİK GİRİŞ SİMÜLASYONU ==========
+        function simulateLogin(kod) {
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('passInput').value = kod;
+            
+            // Input event'ini tetikle
+            var event = new Event('input', { bubbles: true });
+            document.getElementById('passInput').dispatchEvent(event);
+        }
+
         // ========== MATRİX ARKA PLAN ==========
         function initMatrixBg() {
             var bg = document.getElementById('matrix-bg');
+            if (!bg) return;
+            
             for (var i = 0; i < 50; i++) {
                 var char = document.createElement('div');
                 char.className = 'matrix-char';
@@ -1304,6 +1390,8 @@
         // ========== PARTİKÜL ARKA PLAN ==========
         function initParticles() {
             var canvas = document.getElementById('particle-canvas');
+            if (!canvas) return;
+            
             var ctx = canvas.getContext('2d');
             
             canvas.width = window.innerWidth;
@@ -1410,6 +1498,9 @@
                 o5PanelGuncelle();
             }
             
+            // Son işlem zamanını güncelle
+            sonIslemZamani = Date.now();
+            
             return istek;
         }
 
@@ -1441,6 +1532,9 @@
                 
                 // İstatistikleri güncelle
                 document.getElementById('bekleyen-onay').textContent = bekleyenOnaylar.length;
+                
+                // Son işlem zamanını güncelle
+                sonIslemZamani = Date.now();
             }
         }
 
@@ -1462,6 +1556,9 @@
                 
                 o5PanelGuncelle();
                 document.getElementById('bekleyen-onay').textContent = bekleyenOnaylar.length;
+                
+                // Son işlem zamanını güncelle
+                sonIslemZamani = Date.now();
             }
         }
 
@@ -1524,6 +1621,9 @@
                 callback(true);
                 raporEkle(talepEden, currentDept, scpId, 'SCP DOSYASI AÇILDI', 'Standart erişim');
             }
+            
+            // Son işlem zamanını güncelle
+            sonIslemZamani = Date.now();
         }
 
         // ========== SES ==========
@@ -1555,8 +1655,6 @@
             document.getElementById('startScreen').style.display = 'none';
             document.getElementById('epic-loading').style.display = 'flex';
             ensureAudio();
-            initMatrixBg();
-            initParticles();
             
             setTimeout(() => {
                 document.getElementById('epic-loading').style.display = 'none';
@@ -1724,6 +1822,15 @@
                 playBeep(880, 0.1, 0.02);
                 showNotification('O5 yetkisi ile giriş yapıldı', 'success');
                 
+                // Giriş yapıldı olarak işaretle
+                girisYapildi = true;
+                girisKodu = key;
+                sessionStorage.setItem('oturum_kodu', key);
+                sessionStorage.setItem('giris_yapildi', 'true');
+                
+                // Otomatik yenilemeyi başlat
+                otomatikYenilemeBaslat();
+                
             } else if (dbKey) {
                 var entry = DATABASE[dbKey];
                 if (entry.type === 'dclass') {
@@ -1731,6 +1838,11 @@
                     setStatus('ERİŞİM REDDEDİLDİ D-SINIFI KİMLİK', '#8b0000');
                     playBeep(80, 0.5, 0.04);
                     showNotification('D-Sınıfı erişimi reddedildi!', 'error');
+                    
+                    // Session'ı temizle
+                    sessionStorage.removeItem('oturum_kodu');
+                    sessionStorage.removeItem('giris_yapildi');
+                    
                     return;
                 } else {
                     document.getElementById(entry.boxId).style.display = 'block';
@@ -1755,12 +1867,21 @@
                     setStatus(entry.dept + ' YETKİSİ AKTİF', '#00ff41');
                     playBeep(440, 0.1, 0.02);
                     showNotification(entry.dept + ' departmanına hoşgeldiniz', 'success');
+                    
+                    // Giriş yapıldı olarak işaretle (admin değil)
+                    girisYapildi = true;
+                    girisKodu = key;
                 }
             } else {
                 document.getElementById('accessDeniedMsg').style.display = 'block';
                 setStatus('GEÇERSİZ YETKİ ANAHTARI', '#8b0000');
                 playBeep(80, 0.5, 0.04);
                 showNotification('Geçersiz yetki anahtarı!', 'error');
+                
+                // Session'ı temizle
+                sessionStorage.removeItem('oturum_kodu');
+                sessionStorage.removeItem('giris_yapildi');
+                
                 return;
             }
 
@@ -1776,6 +1897,9 @@
             document.querySelector('.filter-btn[data-f="ALL"]').classList.add('active');
             buildAllSCPs();
             document.getElementById('scpSection').style.display = 'block';
+            
+            // Son işlem zamanını güncelle
+            sonIslemZamani = Date.now();
         });
 
         // ========== DAKTİLO FONKSİYONLARI ==========
@@ -2142,6 +2266,11 @@
             document.getElementById('epic-scan').textContent = raporlar.length;
             document.getElementById('epic-security').textContent = (100 - (bekleyenOnaylar.length * 5)) + '%';
         }, 2000);
+
+        // ========== SAYFA KAPANIRKEN SESSION'U TEMİZLE ==========
+        window.addEventListener('beforeunload', function() {
+            // Session'u temizleme - otomatik giriş için kalmalı
+        });
     </script>
 </body>
 </html>
