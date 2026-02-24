@@ -3,21 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>SHADOW RP | SECURE TERMINAL V13</title>
+    <title>SHADOW RP V14 | EPİK TERMİNAL</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap');
+        /* ========== ANA TEMA ========== */
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600&display=swap');
 
         :root {
             --red: #ff0000;
             --red-dim: #8b0000;
             --green: #00ff41;
+            --green-dim: #00aa22;
             --bg: #030303;
+            --bg-light: #0a0a0a;
             --blue: #00d4ff;
+            --blue-dim: #0088aa;
             --gold: #ffd700;
+            --gold-dim: #aa8800;
+            --purple: #aa00ff;
+            --purple-dim: #550088;
             --panel: #080808;
+            --neon-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; cursor: crosshair; }
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            cursor: crosshair; 
+        }
 
         body {
             background: var(--bg);
@@ -26,9 +39,174 @@
             overflow-x: hidden;
             min-height: 100vh;
             font-size: 16px;
+            position: relative;
         }
 
-        /* Mobil Optimizasyon */
+        /* ========== EPİK ANİMASYONLAR ========== */
+        @keyframes neonPulse {
+            0%, 100% { text-shadow: 0 0 5px var(--red), 0 0 15px var(--red-dim); }
+            50% { text-shadow: 0 0 20px var(--red), 0 0 40px var(--red), 0 0 60px var(--red); }
+        }
+
+        @keyframes matrixRain {
+            0% { transform: translateY(-100%); opacity: 1; }
+            100% { transform: translateY(1000%); opacity: 0; }
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+
+        @keyframes rotate3d {
+            0% { transform: rotateX(0deg) rotateY(0deg); }
+            50% { transform: rotateX(10deg) rotateY(10deg); }
+            100% { transform: rotateX(0deg) rotateY(0deg); }
+        }
+
+        @keyframes scanline {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+
+        @keyframes flicker {
+            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+            20%, 24%, 55% { opacity: 0.3; }
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            50% { transform: scale(1); }
+            75% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* ========== ARKA PLAN ANİMASYONLARI ========== */
+        #matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.03;
+        }
+
+        .matrix-char {
+            position: absolute;
+            color: var(--green);
+            font-size: 14px;
+            font-family: monospace;
+            animation: matrixRain 8s linear infinite;
+        }
+
+        #scan-line {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--red), transparent);
+            opacity: 0.3;
+            animation: scanline 4s linear infinite;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ========== SCP LOGO ========== */
+        #scpBg {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70vmin; height: 70vmin;
+            opacity: 0.02; z-index: 0;
+            pointer-events: none;
+            animation: rotate3d 30s ease-in-out infinite;
+        }
+
+        #scpBg circle, #scpBg line {
+            filter: drop-shadow(0 0 5px var(--red));
+        }
+
+        /* ========== EPİK LOADING ========== */
+        #epic-loading {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: #000;
+            z-index: 10000;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading-spinner {
+            width: 100px;
+            height: 100px;
+            border: 3px solid transparent;
+            border-top: 3px solid var(--red);
+            border-right: 3px solid var(--gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        .loading-text {
+            font-family: 'Orbitron', monospace;
+            color: var(--red);
+            font-size: 1.2rem;
+            letter-spacing: 5px;
+            animation: neonPulse 1.5s infinite;
+        }
+
+        /* ========== EPİK BİLDİRİM ========== */
+        #epic-notification {
+            position: fixed;
+            top: 20px; right: 20px;
+            background: #000;
+            border-left: 4px solid var(--gold);
+            padding: 15px 25px;
+            z-index: 10001;
+            display: none;
+            animation: glitch 0.3s ease;
+            border: 1px solid var(--gold);
+        }
+
+        .notification-title {
+            color: var(--gold);
+            font-size: 0.8rem;
+            letter-spacing: 3px;
+            margin-bottom: 5px;
+        }
+
+        .notification-message {
+            color: #fff;
+            font-size: 0.9rem;
+        }
+
+        /* ========== MOBİL OPTİMİZASYON ========== */
         @media (max-width: 768px) {
             body { font-size: 14px; }
             .header-title { font-size: 1rem; letter-spacing: 4px; }
@@ -47,9 +225,9 @@
             .scp-detail-line { font-size: 0.7rem; }
             .pagination { gap: 3px; }
             .page-btn { padding: 3px 6px; font-size: 0.55rem; }
-            .igd-istatistik { grid-template-columns: 1fr; gap: 5px; }
-            .istatistik-sayi { font-size: 1.5rem; }
-            .igd-rapor-tablo th, .igd-rapor-tablo td { font-size: 0.6rem; padding: 4px 2px; }
+            .stats-grid { grid-template-columns: 1fr; gap: 5px; }
+            .stats-sayi { font-size: 1.5rem; }
+            .rapor-tablo th, .rapor-tablo td { font-size: 0.6rem; padding: 4px 2px; }
             .settings-box { padding: 20px; }
             .settings-line { font-size: 0.7rem; }
         }
@@ -63,6 +241,7 @@
             #settingsBtn { font-size: 0.6rem; padding: 4px 8px; top: 10px; left: 10px; }
         }
 
+        /* ========== ANA STİLLER ========== */
         body::before {
             content: '';
             position: fixed; top: 0; left: 0;
@@ -71,22 +250,7 @@
             pointer-events: none; z-index: 9998;
         }
 
-        /* SCP LOGO ARKA PLAN */
-        #scpBg {
-            position: fixed;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 60vmin; height: 60vmin;
-            opacity: 0.04; z-index: 0;
-            pointer-events: none;
-            animation: rotateSlow 60s linear infinite;
-        }
-        @keyframes rotateSlow {
-            from { transform: translate(-50%,-50%) rotate(0deg); }
-            to   { transform: translate(-50%,-50%) rotate(360deg); }
-        }
-
-        /* BASLANGIÇ EKRANI */
+        /* ========== BASLANGIÇ EKRANI ========== */
         #startScreen {
             position: fixed; top: 0; left: 0;
             width: 100%; height: 100%;
@@ -94,48 +258,101 @@
             display: flex; flex-direction: column;
             justify-content: center; align-items: center; gap: 25px;
             padding: 20px;
+            animation: flicker 3s infinite;
         }
+
         .start-logo {
             font-family: 'Orbitron', monospace;
-            font-size: clamp(2rem, 6vw, 4rem); font-weight: 900;
-            color: var(--red); letter-spacing: 12px;
+            font-size: clamp(2rem, 6vw, 5rem); font-weight: 900;
+            color: var(--red); letter-spacing: 15px;
             text-shadow: 0 0 30px var(--red), 0 0 80px var(--red-dim);
-            animation: flicker 5s infinite;
-            text-align: center;
+            animation: neonPulse 2s infinite, glitch 5s infinite;
         }
+
         .start-sub { color: #333; letter-spacing: 4px; font-size: 0.75rem; text-align: center; }
+        
         .start-btn {
             padding: 16px 55px; background: transparent;
             border: 2px solid var(--red); color: var(--red);
             font-family: 'Share Tech Mono', monospace;
-            font-size: 1rem; cursor: pointer; letter-spacing: 5px; transition: all 0.3s;
+            font-size: 1rem; cursor: pointer; letter-spacing: 5px; 
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
         }
-        .start-btn:hover { background: var(--red); color: #fff; box-shadow: 0 0 40px var(--red); }
 
-        /* HEADER */
+        .start-btn:hover { 
+            background: var(--red); 
+            color: #fff; 
+            box-shadow: 0 0 40px var(--red);
+            transform: scale(1.1);
+        }
+
+        .start-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,0,0,0.3), transparent);
+            transform: rotate(45deg);
+            animation: scanline 3s linear infinite;
+        }
+
+        /* ========== HEADER ========== */
         #terminalHeader {
             background: rgba(0,0,0,0.97); border-bottom: 3px solid var(--red);
             padding: 25px 30px; text-align: center;
             position: sticky; top: 0; z-index: 1500; transition: all 0.5s;
         }
+
         #terminalHeader.collapsed { padding: 8px 30px; border-bottom: 1px solid var(--red-dim); }
+
         .header-title {
             font-family: 'Orbitron', monospace; color: var(--red);
             font-size: 1.4rem; font-weight: 700; letter-spacing: 8px;
-            text-shadow: 0 0 20px var(--red); margin-bottom: 15px; transition: all 0.5s;
+            text-shadow: 0 0 20px var(--red); margin-bottom: 15px; 
+            transition: all 0.5s;
+            animation: neonPulse 3s infinite;
         }
+
         #terminalHeader.collapsed .header-title { font-size: 0.7rem; margin-bottom: 0; opacity: 0.3; letter-spacing: 3px; }
+
         #headerInputArea { transition: all 0.5s; overflow: hidden; max-height: 150px; }
         #terminalHeader.collapsed #headerInputArea { max-height: 0; opacity: 0; }
 
-        /* YETKİ SEVİYESİ */
+        /* ========== YETKİ SEVİYESİ ========== */
         .clearance-bar { display: flex; justify-content: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
-        .clv { padding: 3px 12px; font-size: 0.6rem; font-family: 'Orbitron', monospace; letter-spacing: 2px; border: 1px solid #111; color: #1a1a1a; transition: all 0.3s; }
-        .clv.active-safe     { border-color: #00ff41; color: #00ff41; box-shadow: 0 0 10px #00ff41; }
-        .clv.active-euclid   { border-color: #ffd700; color: #ffd700; box-shadow: 0 0 10px #ffd700; }
-        .clv.active-keter    { border-color: #ff4444; color: #ff4444; box-shadow: 0 0 10px #ff4444; }
-        .clv.active-thaumiel { border-color: #cc88ff; color: #cc88ff; box-shadow: 0 0 10px #cc88ff; }
-        .clv.active-apollyon { border-color: var(--red); color: var(--red); box-shadow: 0 0 10px var(--red); animation: pulse 1s infinite; }
+        
+        .clv { 
+            padding: 3px 12px; font-size: 0.6rem; font-family: 'Orbitron', monospace; 
+            letter-spacing: 2px; border: 1px solid #111; color: #1a1a1a; 
+            transition: all 0.3s; position: relative;
+            cursor: help;
+        }
+
+        .clv.active-safe     { border-color: #00ff41; color: #00ff41; box-shadow: 0 0 10px #00ff41; animation: pulse 2s infinite; }
+        .clv.active-euclid   { border-color: #ffd700; color: #ffd700; box-shadow: 0 0 10px #ffd700; animation: pulse 2s infinite; }
+        .clv.active-keter    { border-color: #ff4444; color: #ff4444; box-shadow: 0 0 10px #ff4444; animation: pulse 2s infinite; }
+        .clv.active-thaumiel { border-color: #cc88ff; color: #cc88ff; box-shadow: 0 0 10px #cc88ff; animation: pulse 2s infinite; }
+        .clv.active-apollyon { border-color: var(--red); color: var(--red); box-shadow: 0 0 10px var(--red); animation: heartbeat 1.5s infinite; }
+
+        .clv::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%; left: 50%;
+            transform: translateX(-50%);
+            background: #000;
+            border: 1px solid currentColor;
+            padding: 5px;
+            font-size: 0.5rem;
+            white-space: nowrap;
+            display: none;
+            z-index: 1000;
+        }
+
+        .clv:hover::after {
+            display: block;
+        }
 
         .auth-input {
             background: #000; border: 1px solid var(--red-dim);
@@ -145,18 +362,29 @@
             text-align: center; font-size: 1rem;
             font-family: 'Share Tech Mono', monospace;
             letter-spacing: 4px; transition: 0.3s;
+            animation: glitch 10s infinite;
         }
-        .auth-input:focus { border-color: var(--red); box-shadow: 0 0 20px rgba(255,0,0,0.3); }
-        #statusBar { font-size: 0.7rem; color: #333; margin-top: 6px; letter-spacing: 3px; }
+
+        .auth-input:focus { 
+            border-color: var(--red); 
+            box-shadow: 0 0 30px rgba(255,0,0,0.5);
+            transform: scale(1.02);
+        }
+
+        #statusBar { 
+            font-size: 0.7rem; color: #333; margin-top: 6px; 
+            letter-spacing: 3px; font-family: 'Orbitron', monospace;
+        }
 
         .shadow-tag {
             position: fixed; top: 18px; right: 25px;
             color: var(--red); font-family: 'Orbitron', monospace;
             font-size: 0.8rem; font-weight: 700; letter-spacing: 3px;
-            text-shadow: 0 0 10px var(--red); z-index: 2000; opacity: 0.6;
+            text-shadow: 0 0 10px var(--red); z-index: 2000; 
+            opacity: 0.6; animation: neonPulse 4s infinite;
         }
 
-        /* AYARLAR */
+        /* ========== AYARLAR ========== */
         #settingsBtn {
             position: fixed; top: 15px; left: 25px;
             background: none; border: 1px solid #1a1a1a;
@@ -164,837 +392,1757 @@
             font-size: 0.7rem; letter-spacing: 2px; padding: 6px 12px;
             cursor: pointer; z-index: 2000; transition: 0.3s;
         }
-        #settingsBtn:hover { border-color: var(--red); color: var(--red); }
+
+        #settingsBtn:hover { 
+            border-color: var(--red); 
+            color: var(--red);
+            box-shadow: 0 0 20px var(--red);
+        }
 
         #settingsModal {
             display: none; position: fixed; top: 0; left: 0;
-            width: 100%; height: 100%; background: rgba(0,0,0,0.93);
+            width: 100%; height: 100%; background: rgba(0,0,0,0.97);
             z-index: 8000; justify-content: center; align-items: center;
+            backdrop-filter: blur(5px);
         }
+
         #settingsModal.open { display: flex; }
+
         .settings-box {
             background: #040404; border: 1px solid #1a1a1a;
             border-left: 6px solid var(--red); padding: 40px;
-            max-width: 480px; width: 90%; animation: slideIn 0.3s;
+            max-width: 500px; width: 90%; animation: slideIn 0.5s, neonPulse 3s infinite;
+            border-radius: 5px;
         }
+
         .settings-title {
             font-family: 'Orbitron', monospace; color: var(--red);
             font-size: 0.9rem; letter-spacing: 5px; margin-bottom: 25px;
             text-shadow: 0 0 10px var(--red);
         }
-        .settings-line { color: #444; font-size: 0.8rem; line-height: 2.8; border-bottom: 1px solid #080808; }
+
+        .settings-line { 
+            color: #444; font-size: 0.8rem; line-height: 2.8; 
+            border-bottom: 1px solid #080808; 
+            transition: 0.3s;
+        }
+
+        .settings-line:hover {
+            color: #fff;
+            padding-left: 10px;
+        }
+
         .settings-line span { color: var(--green); }
-        .settings-divider { color: #1a1a1a; font-size: 0.65rem; letter-spacing: 4px; margin: 15px 0 5px; }
+
+        .settings-divider { 
+            color: #1a1a1a; font-size: 0.65rem; 
+            letter-spacing: 4px; margin: 15px 0 5px; 
+            text-align: center;
+        }
+
         .settings-close {
             margin-top: 22px; background: none; border: 1px solid #222;
             color: #444; font-family: 'Share Tech Mono', monospace;
-            padding: 8px 20px; cursor: pointer; letter-spacing: 3px; transition: 0.3s;
+            padding: 8px 20px; cursor: pointer; letter-spacing: 3px; 
+            transition: 0.3s; width: 100%;
         }
-        .settings-close:hover { border-color: var(--red); color: var(--red); }
 
-        /* ANA */
-        .main-container { max-width: 960px; margin: 30px auto; padding: 0 20px 80px; position: relative; z-index: 1; }
+        .settings-close:hover { 
+            border-color: var(--red); 
+            color: var(--red);
+            box-shadow: 0 0 20px var(--red);
+        }
 
-        /* ERİŞİM REDDEDILDI */
+        /* ========== ANA MENÜ ========== */
+        .main-container { 
+            max-width: 1200px; margin: 30px auto; 
+            padding: 0 20px 80px; position: relative; z-index: 100; 
+        }
+
+        /* ========== EPİK KONTROL PANELİ ========== */
+        #epic-panel {
+            background: linear-gradient(145deg, #050505, #000);
+            border: 2px solid var(--red);
+            padding: 25px;
+            margin-bottom: 30px;
+            display: none;
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+        #epic-panel::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,0,0,0.1), transparent);
+            animation: spin 10s linear infinite;
+        }
+
+        .epic-header {
+            font-family: 'Orbitron', monospace;
+            color: var(--red);
+            font-size: 1.2rem;
+            letter-spacing: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+            animation: neonPulse 2s infinite;
+        }
+
+        .epic-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .epic-card {
+            background: #080808;
+            border: 1px solid #1a1a1a;
+            padding: 20px;
+            text-align: center;
+            transition: 0.3s;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .epic-card:hover {
+            border-color: var(--red);
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(255,0,0,0.3);
+        }
+
+        .epic-card-icon {
+            font-size: 2rem;
+            color: var(--red);
+            margin-bottom: 10px;
+        }
+
+        .epic-card-title {
+            color: #fff;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+
+        .epic-card-value {
+            color: var(--green);
+            font-size: 1.5rem;
+            font-family: 'Orbitron', monospace;
+        }
+
+        /* ========== İSTATİSTİK PANELİ ========== */
+        #statsPanel {
+            background: #000;
+            border: 1px solid var(--red-dim);
+            padding: 20px;
+            margin-bottom: 30px;
+            display: none;
+            border-radius: 5px;
+        }
+
+        .stats-header {
+            font-family: 'Orbitron', monospace;
+            color: var(--red);
+            font-size: 1rem;
+            letter-spacing: 4px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #1a1a1a;
+            padding-bottom: 10px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stats-card {
+            background: #080808;
+            border: 1px solid #1a1a1a;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px;
+        }
+
+        .stats-sayi {
+            color: var(--red);
+            font-size: 2.5rem;
+            font-family: 'Orbitron', monospace;
+            margin-bottom: 5px;
+            animation: neonPulse 2s infinite;
+        }
+
+        .stats-etiket {
+            color: #444;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+        }
+
+        /* ========== O5 ONAY PANELİ ========== */
+        #o5-panel {
+            background: #000;
+            border: 2px solid var(--gold);
+            padding: 20px;
+            margin-bottom: 30px;
+            display: none;
+            border-radius: 5px;
+        }
+
+        .o5-header {
+            font-family: 'Orbitron', monospace;
+            color: var(--gold);
+            font-size: 1rem;
+            letter-spacing: 4px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+
+        .o5-talep {
+            border: 1px solid #333;
+            margin-bottom: 10px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: pulse 2s infinite;
+            border-radius: 5px;
+        }
+
+        .o5-talep-info {
+            flex: 1;
+        }
+
+        .o5-talep-scp {
+            color: var(--gold);
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .o5-talep-detay {
+            color: #666;
+            font-size: 0.7rem;
+        }
+
+        .o5-talep-butonlar {
+            display: flex;
+            gap: 10px;
+        }
+
+        .o5-onayla {
+            background: green;
+            color: #fff;
+            border: none;
+            padding: 8px 20px;
+            cursor: pointer;
+            transition: 0.3s;
+            border-radius: 3px;
+        }
+
+        .o5-reddet {
+            background: var(--red);
+            color: #fff;
+            border: none;
+            padding: 8px 20px;
+            cursor: pointer;
+            transition: 0.3s;
+            border-radius: 3px;
+        }
+
+        .o5-onayla:hover, .o5-reddet:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px currentColor;
+        }
+
+        /* ========== ERİŞİM REDDEDILDI ========== */
         #accessDeniedMsg {
             display: none; background: #050000; border: 2px solid var(--red);
-            padding: 50px; text-align: center; margin-bottom: 30px; animation: fadeIn 0.4s;
+            padding: 50px; text-align: center; margin-bottom: 30px; 
+            animation: glitch 0.5s, pulse 2s infinite;
+            border-radius: 10px;
         }
+
         .denied-title {
             font-family: 'Orbitron', monospace; color: var(--red);
-            font-size: 1.8rem; margin-bottom: 15px;
-            text-shadow: 0 0 20px var(--red); animation: pulse 1.5s infinite;
+            font-size: 2rem; margin-bottom: 15px;
+            text-shadow: 0 0 20px var(--red);
+            animation: heartbeat 2s infinite;
         }
+
         .denied-sub { color: #555; letter-spacing: 2px; font-size: 0.82rem; margin-top: 8px; }
 
-        /* DEPARTMAN */
+        /* ========== DEPARTMANLAR ========== */
         .branch-box {
-            background: var(--panel); border: 1px solid #111;
-            border-left: 6px solid var(--blue); padding: 25px;
-            margin-bottom: 30px; display: none; animation: slideIn 0.4s ease;
+            background: linear-gradient(145deg, #080808, #020202);
+            border: 1px solid #111;
+            border-left: 6px solid var(--blue);
+            padding: 25px;
+            margin-bottom: 30px;
+            display: none;
+            animation: slideIn 0.5s;
+            border-radius: 5px;
+            transition: 0.3s;
         }
+
+        .branch-box:hover {
+            border-left-width: 10px;
+            box-shadow: 0 0 30px rgba(0,212,255,0.3);
+        }
+
         .o5-box { 
             border-left-color: var(--gold); 
             background: linear-gradient(145deg, #080808, #0a0500);
             position: relative;
             overflow: hidden;
         }
+
         .o5-box::before {
-            content: "☠ O5 ☠";
+            content: "⚜️ O5 KONSEYİ ⚜️";
             position: absolute;
             bottom: 5px; right: 15px;
-            font-size: 3rem;
+            font-size: 2rem;
             color: rgba(255,215,0,0.03);
             font-family: 'Orbitron', monospace;
             font-weight: 900;
             pointer-events: none;
             transform: rotate(-5deg);
         }
+
         .branch-title {
-            font-family: 'Orbitron', monospace; font-size: 0.9rem;
+            font-family: 'Orbitron', monospace; font-size: 1rem;
             color: #fff; letter-spacing: 4px; border-bottom: 1px solid #1a1a1a;
             padding-bottom: 12px; margin-bottom: 18px;
         }
-        .branch-desc-line { color: var(--green); font-size: 0.85rem; line-height: 2; }
 
-        /* IGD RAPOR PANELİ */
+        .branch-desc-line { 
+            color: var(--green); font-size: 0.85rem; 
+            line-height: 2; 
+            animation: glitch 10s infinite;
+        }
+
+        /* ========== IGD RAPOR PANELİ ========== */
         #igdyonetim {
-            background: #000; border: 1px solid var(--red-dim);
+            background: linear-gradient(145deg, #080808, #000);
+            border: 1px solid var(--red-dim);
             padding: 20px; margin-bottom: 30px; display: none;
             overflow-x: auto;
+            border-radius: 5px;
         }
+
         .igd-header {
             font-family: 'Orbitron', monospace; color: var(--red);
-            font-size: 0.9rem; letter-spacing: 4px; margin-bottom: 15px;
+            font-size: 1rem; letter-spacing: 4px; margin-bottom: 15px;
             border-bottom: 1px solid #1a1a1a; padding-bottom: 10px;
         }
+
         .igd-istatistik {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr));
-            gap: 10px; margin-bottom: 20px;
+            gap: 15px; margin-bottom: 25px;
         }
+
         .istatistik-kutu {
             background: #080808; border: 1px solid #1a1a1a;
             padding: 15px; text-align: center;
+            border-radius: 5px;
+            transition: 0.3s;
         }
+
+        .istatistik-kutu:hover {
+            border-color: var(--red);
+            transform: scale(1.05);
+        }
+
         .istatistik-sayi {
-            color: var(--red); font-size: 2rem; font-family: 'Orbitron', monospace;
+            color: var(--red); font-size: 2rem; 
+            font-family: 'Orbitron', monospace;
             letter-spacing: 2px; margin-bottom: 5px;
+            animation: neonPulse 2s infinite;
         }
+
         .istatistik-etiket { color: #444; font-size: 0.7rem; letter-spacing: 2px; }
-        .igd-rapor-tablo {
+
+        .rapor-tablo {
             width: 100%; border-collapse: collapse; margin-top: 15px;
             min-width: 600px;
         }
-        .igd-rapor-tablo th {
+
+        .rapor-tablo th {
             color: #666; font-size: 0.7rem; letter-spacing: 2px;
-            border-bottom: 1px solid #1a1a1a; padding: 8px 5px;
+            border-bottom: 1px solid #1a1a1a; padding: 10px 5px;
         }
-        .igd-rapor-tablo td {
-            color: #aaa; font-size: 0.7rem; padding: 8px 5px;
+
+        .rapor-tablo td {
+            color: #aaa; font-size: 0.7rem; padding: 10px 5px;
             border-bottom: 1px solid #0a0a0a;
+            transition: 0.3s;
         }
+
+        .rapor-tablo tr:hover td {
+            color: #fff;
+            background: #0a0a0a;
+        }
+
         .rapor-temizle-btn {
             background: none; border: 1px solid var(--red-dim);
-            color: var(--red); padding: 8px 15px; margin-top: 15px;
+            color: var(--red); padding: 10px 20px; margin-top: 15px;
             font-family: 'Share Tech Mono', monospace; cursor: pointer;
             font-size: 0.7rem; letter-spacing: 2px; transition: 0.3s;
+            border-radius: 3px;
         }
-        .rapor-temizle-btn:hover { background: var(--red); color: #000; }
 
-        /* SCP SECTION */
-        #scpSection { display: none; margin-top: 10px; }
+        .rapor-temizle-btn:hover { 
+            background: var(--red); 
+            color: #000;
+            box-shadow: 0 0 30px var(--red);
+        }
+
+        /* ========== SCP LİSTESİ ========== */
+        #scpSection { 
+            display: none; margin-top: 20px; 
+            animation: slideIn 0.5s;
+        }
+
         .section-header {
-            font-family: 'Orbitron', monospace; font-size: 0.7rem;
+            font-family: 'Orbitron', monospace; font-size: 0.8rem;
             color: #2a2a2a; letter-spacing: 5px; margin-bottom: 15px;
             border-top: 1px solid #0d0d0d; padding-top: 20px;
         }
 
-        .filter-bar { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
-        .filter-btn {
-            padding: 4px 14px; background: none;
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 0.62rem; letter-spacing: 2px; cursor: pointer; transition: 0.2s;
-            border: 1px solid #0d0d0d; color: #222;
+        .filter-bar { 
+            display: flex; gap: 8px; margin-bottom: 15px; 
+            flex-wrap: wrap; 
         }
+
+        .filter-btn {
+            padding: 5px 15px; background: none;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.65rem; letter-spacing: 2px; 
+            cursor: pointer; transition: 0.3s;
+            border: 1px solid #0d0d0d; color: #222;
+            border-radius: 3px;
+        }
+
         .filter-btn.active { color: #fff; border-color: #333; }
-        .filter-btn[data-f="SAFE"].active    { border-color: #00ff41; color: #00ff41; }
-        .filter-btn[data-f="EUCLID"].active  { border-color: #ffd700; color: #ffd700; }
-        .filter-btn[data-f="KETER"].active   { border-color: #ff4444; color: #ff4444; }
-        .filter-btn[data-f="THAUMIEL"].active{ border-color: #cc88ff; color: #cc88ff; }
-        .filter-btn[data-f="APOLLYON"].active{ border-color: var(--red); color: var(--red); }
+        .filter-btn[data-f="SAFE"].active    { border-color: #00ff41; color: #00ff41; box-shadow: 0 0 10px #00ff41; }
+        .filter-btn[data-f="EUCLID"].active  { border-color: #ffd700; color: #ffd700; box-shadow: 0 0 10px #ffd700; }
+        .filter-btn[data-f="KETER"].active   { border-color: #ff4444; color: #ff4444; box-shadow: 0 0 10px #ff4444; }
+        .filter-btn[data-f="THAUMIEL"].active{ border-color: #cc88ff; color: #cc88ff; box-shadow: 0 0 10px #cc88ff; }
+        .filter-btn[data-f="APOLLYON"].active{ border-color: var(--red); color: var(--red); box-shadow: 0 0 10px var(--red); }
 
         .search-bar {
-            background: #000; border: 1px solid #0d0d0d; border-bottom: 1px solid #1a1a1a;
-            color: #666; padding: 8px 15px; width: 100%; margin-bottom: 12px;
-            font-family: 'Share Tech Mono', monospace; font-size: 0.78rem;
+            background: #000; border: 1px solid #0d0d0d; 
+            border-bottom: 1px solid #1a1a1a;
+            color: #666; padding: 10px 15px; width: 100%; 
+            margin-bottom: 15px;
+            font-family: 'Share Tech Mono', monospace; 
+            font-size: 0.8rem;
             outline: none; letter-spacing: 2px;
+            border-radius: 3px;
         }
-        .search-bar:focus { border-bottom-color: #333; }
+
+        .search-bar:focus { 
+            border-bottom-color: var(--red);
+            box-shadow: 0 0 20px rgba(255,0,0,0.3);
+        }
 
         .scp-folder {
-            background: #040404; border: 1px solid #0a0a0a;
+            background: linear-gradient(145deg, #040404, #010101);
+            border: 1px solid #0a0a0a;
             border-left: 4px solid var(--red-dim);
-            padding: 11px 18px; margin-bottom: 5px;
+            padding: 12px 20px; margin-bottom: 5px;
             cursor: pointer; display: flex;
             justify-content: space-between; align-items: center;
-            transition: all 0.18s;
+            transition: all 0.3s;
+            border-radius: 3px;
         }
-        .scp-folder:hover { background: #090909; border-left-color: var(--red); transform: translateX(5px); }
-        .scp-folder.active { border-left-color: var(--red); background: #0b0000; }
+
+        .scp-folder:hover { 
+            background: #090909; 
+            border-left-color: var(--red); 
+            transform: translateX(10px) scale(1.02);
+            box-shadow: -5px 0 20px rgba(255,0,0,0.3);
+        }
+
+        .scp-folder.active { 
+            border-left-color: var(--red); 
+            background: #0b0000;
+            box-shadow: 0 0 30px rgba(255,0,0,0.5);
+        }
+
+        .scp-folder.tehlikeli {
+            border-left-color: var(--gold);
+            background: rgba(255,215,0,0.02);
+        }
+
+        .scp-folder.tehlikeli:hover {
+            border-left-color: var(--gold);
+            box-shadow: -5px 0 30px rgba(255,215,0,0.5);
+        }
+
         .scp-name { color: #aaa; font-size: 0.85rem; letter-spacing: 2px; }
+        
         .scp-right { display: flex; align-items: center; gap: 10px; }
-        .scp-arrow { color: #1a1a1a; font-size: 0.72rem; transition: 0.2s; }
-        .scp-folder.active .scp-arrow { color: var(--red); transform: rotate(90deg); }
+        
+        .scp-arrow { 
+            color: #1a1a1a; font-size: 0.72rem; 
+            transition: 0.3s; 
+        }
+        
+        .scp-folder.active .scp-arrow { 
+            color: var(--red); 
+            transform: rotate(90deg) scale(1.5);
+        }
 
         .badge {
-            padding: 2px 9px; font-size: 0.58rem; font-weight: bold;
-            font-family: 'Orbitron', monospace; letter-spacing: 1px; border-radius: 2px;
+            padding: 2px 9px; font-size: 0.6rem; font-weight: bold;
+            font-family: 'Orbitron', monospace; letter-spacing: 1px; 
+            border-radius: 3px;
         }
+
         .badge-safe     { background: #0a1a0a; color: #00ff41; border: 1px solid #00ff41; }
         .badge-euclid   { background: #1a1400; color: #ffd700; border: 1px solid #ffd700; }
         .badge-keter    { background: #1a0000; color: #ff4444; border: 1px solid #ff4444; }
         .badge-thaumiel { background: #0e0018; color: #cc88ff; border: 1px solid #cc88ff; }
-        .badge-apollyon { background: #000; color: var(--red); border: 1px solid var(--red); animation: pulse 1.2s infinite; }
+        .badge-apollyon { background: #000; color: var(--red); border: 1px solid var(--red); animation: heartbeat 1.5s infinite; }
 
         .scp-details {
             background: #000; border: 1px solid #0a0000;
             border-left: 4px solid var(--red); border-top: none;
             margin-bottom: 8px; display: none;
+            border-radius: 0 0 3px 3px;
         }
-        .scp-details.open { display: block; animation: fadeIn 0.25s; }
+
+        .scp-details.open { 
+            display: block; 
+            animation: slideIn 0.3s;
+        }
+
         .scp-detail-inner { padding: 16px 20px; }
+
         .scp-detail-line {
-            color: var(--green); font-size: 0.78rem; line-height: 2;
-            border-bottom: 1px solid #050505; padding: 1px 0;
+            color: var(--green); font-size: 0.8rem; line-height: 2;
+            border-bottom: 1px solid #050505; padding: 2px 0;
         }
+
         .scp-detail-line:last-child { border-bottom: none; }
 
-        .pagination { display: flex; gap: 6px; margin-top: 18px; flex-wrap: wrap; align-items: center; }
-        .page-btn {
-            padding: 4px 10px; background: none; border: 1px solid #0d0d0d;
-            color: #2a2a2a; font-family: 'Share Tech Mono', monospace;
-            font-size: 0.65rem; cursor: pointer; transition: 0.2s; letter-spacing: 1px;
+        .scp-detail-line.tehlikeli {
+            color: var(--gold);
+            font-weight: bold;
         }
-        .page-btn:hover { border-color: #333; color: #555; }
-        .page-btn.active { border-color: var(--red); color: var(--red); }
-        .page-info { color: #1a1a1a; font-size: 0.62rem; letter-spacing: 2px; margin-right: 8px; }
 
-        @keyframes fadeIn  { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(-15px); } to { opacity: 1; transform: translateX(0); } }
-        @keyframes pulse   { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
-        @keyframes flicker { 0%,89%,91%,95%,100% { opacity: 1; } 90%,93%,96% { opacity: 0.4; } }
+        /* ========== SAYFALAMA ========== */
+        .pagination { 
+            display: flex; gap: 8px; margin-top: 25px; 
+            flex-wrap: wrap; align-items: center; 
+            justify-content: center;
+        }
 
-        ::-webkit-scrollbar { width: 3px; }
+        .page-btn {
+            padding: 5px 12px; background: none; border: 1px solid #0d0d0d;
+            color: #2a2a2a; font-family: 'Share Tech Mono', monospace;
+            font-size: 0.65rem; cursor: pointer; transition: 0.3s; 
+            letter-spacing: 1px; border-radius: 3px;
+        }
+
+        .page-btn:hover { 
+            border-color: #333; 
+            color: #555;
+            transform: scale(1.1);
+        }
+
+        .page-btn.active { 
+            border-color: var(--red); 
+            color: var(--red);
+            box-shadow: 0 0 20px var(--red);
+        }
+
+        .page-info { 
+            color: #1a1a1a; font-size: 0.65rem; 
+            letter-spacing: 2px; margin-right: 8px; 
+        }
+
+        /* ========== ANİMASYONLAR ========== */
+        @keyframes slideIn { 
+            from { opacity: 0; transform: translateX(-20px); } 
+            to { opacity: 1; transform: translateX(0); } 
+        }
+
+        @keyframes pulse { 
+            0%,100% { opacity: 1; } 
+            50% { opacity: 0.7; } 
+        }
+
+        /* ========== SCROLLBAR ========== */
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
         ::-webkit-scrollbar-track { background: #000; }
-        ::-webkit-scrollbar-thumb { background: var(--red-dim); }
+        ::-webkit-scrollbar-thumb { 
+            background: linear-gradient(45deg, var(--red-dim), var(--red));
+            border-radius: 2px;
+        }
+        ::-webkit-scrollbar-thumb:hover { background: var(--red); }
     </style>
 </head>
 <body>
 
-<!-- SCP LOGO ARKA PLAN -->
-<svg id="scpBg" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="256" cy="256" r="240" fill="none" stroke="red" stroke-width="8"/>
-    <circle cx="256" cy="256" r="50"  fill="none" stroke="red" stroke-width="8"/>
-    <line x1="256" y1="16"  x2="256" y2="206" stroke="red" stroke-width="8"/>
-    <line x1="116" y1="376" x2="222" y2="310" stroke="red" stroke-width="8"/>
-    <line x1="396" y1="376" x2="290" y2="310" stroke="red" stroke-width="8"/>
-    <line x1="256" y1="206" x2="222" y2="256" stroke="red" stroke-width="4"/>
-    <line x1="256" y1="206" x2="290" y2="256" stroke="red" stroke-width="4"/>
-    <line x1="256" y1="306" x2="222" y2="256" stroke="red" stroke-width="4"/>
-    <line x1="256" y1="306" x2="290" y2="256" stroke="red" stroke-width="4"/>
-</svg>
+    <!-- ========== MATRİX ARKA PLAN ========== -->
+    <div id="matrix-bg"></div>
+    <div id="scan-line"></div>
+    <canvas id="particle-canvas"></canvas>
 
-<!-- BASLANGIÇ -->
-<div id="startScreen">
-    <div class="start-logo">SHADOW RP</div>
-    <div class="start-sub">SİTE-SHADOW GİZLİ VERİ TABANI — SINIFLANDIRILMIŞ</div>
-    <div class="start-sub" style="color:#1a1a1a;">YETKİSİZ ERİŞİM YASAKTIR VE KAYIT ALTINA ALINIR</div>
-    <button class="start-btn" onclick="initSystem()">&#9654; SİSTEMİ BAŞLAT</button>
-</div>
-
-<!-- AYARLAR -->
-<button id="settingsBtn" onclick="document.getElementById('settingsModal').classList.add('open')">&#9881; AYARLAR</button>
-
-<div id="settingsModal">
-    <div class="settings-box">
-        <div class="settings-title">&#9881; SİSTEM BİLGİLERİ</div>
-        <div class="settings-line">Terminal Versiyonu &nbsp;&nbsp;<span>V13.0</span></div>
-        <div class="settings-line">Platform &nbsp;&nbsp;<span>SHADOW RP</span></div>
-        <div class="settings-line">Toplam SCP Kaydı &nbsp;&nbsp;<span>1050 ANOMALİ</span></div>
-        <div class="settings-line">Sunucu &nbsp;&nbsp;<span>SİTE-SHADOW / AKTİF</span></div>
-        <div class="settings-divider">— EMEK VERENLER —</div>
-        <div class="settings-line">Yapay Zeka &nbsp;&nbsp;<span>Claude</span></div>
-        <div class="settings-line">Yapay Zeka &nbsp;&nbsp;<span>Gemini</span></div>
-        <div class="settings-line">Ana Yaratıcı &nbsp;&nbsp;<span style="color:var(--gold);text-shadow:0 0 10px var(--gold);">İllah Paşa</span></div>
-        <button class="settings-close" onclick="document.getElementById('settingsModal').classList.remove('open')">&#10005; KAPAT</button>
+    <!-- ========== EPİK LOADING ========== -->
+    <div id="epic-loading">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">SİSTEM BAŞLATILIYOR</div>
     </div>
-</div>
 
-<div class="shadow-tag">SHADOW RP</div>
+    <!-- ========== EPİK BİLDİRİM ========== -->
+    <div id="epic-notification">
+        <div class="notification-title">SİSTEM BİLDİRİMİ</div>
+        <div class="notification-message" id="notification-message"></div>
+    </div>
 
-<!-- HEADER -->
-<div id="terminalHeader">
-    <div class="header-title">&#11041; SECURE TERMINAL V13 &#11041;</div>
-    <div id="headerInputArea">
-        <div class="clearance-bar">
-            <span class="clv" id="clv-safe">SAFE</span>
-            <span class="clv" id="clv-euclid">EUCLID</span>
-            <span class="clv" id="clv-keter">KETER</span>
-            <span class="clv" id="clv-thaumiel">THAUMIEL</span>
-            <span class="clv" id="clv-apollyon">APOLLYON</span>
+    <!-- ========== SCP LOGO ========== -->
+    <svg id="scpBg" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="256" cy="256" r="240" fill="none" stroke="red" stroke-width="8"/>
+        <circle cx="256" cy="256" r="50"  fill="none" stroke="red" stroke-width="8"/>
+        <line x1="256" y1="16"  x2="256" y2="206" stroke="red" stroke-width="8"/>
+        <line x1="116" y1="376" x2="222" y2="310" stroke="red" stroke-width="8"/>
+        <line x1="396" y1="376" x2="290" y2="310" stroke="red" stroke-width="8"/>
+        <line x1="256" y1="206" x2="222" y2="256" stroke="red" stroke-width="4"/>
+        <line x1="256" y1="206" x2="290" y2="256" stroke="red" stroke-width="4"/>
+        <line x1="256" y1="306" x2="222" y2="256" stroke="red" stroke-width="4"/>
+        <line x1="256" y1="306" x2="290" y2="256" stroke="red" stroke-width="4"/>
+    </svg>
+
+    <!-- ========== BAŞLANGIÇ EKRANI ========== -->
+    <div id="startScreen">
+        <div class="start-logo">SHADOW RP</div>
+        <div class="start-sub">SİTE-SHADOW GİZLİ VERİ TABANI — SINIFLANDIRILMIŞ</div>
+        <div class="start-sub" style="color:#1a1a1a;">YETKİSİZ ERİŞİM YASAKTIR VE KAYIT ALTINA ALINIR</div>
+        <button class="start-btn" onclick="initSystem()">⚡ SİSTEMİ BAŞLAT ⚡</button>
+    </div>
+
+    <!-- ========== AYARLAR ========== -->
+    <button id="settingsBtn" onclick="document.getElementById('settingsModal').classList.add('open')">⚙️ AYARLAR</button>
+
+    <div id="settingsModal">
+        <div class="settings-box">
+            <div class="settings-title">⚙️ SİSTEM BİLGİLERİ</div>
+            <div class="settings-line">Terminal Versiyonu <span>V14.0 EPİK</span></div>
+            <div class="settings-line">Platform <span>SHADOW RP ULTRA</span></div>
+            <div class="settings-line">Toplam SCP Kaydı <span>1050 ANOMALİ</span></div>
+            <div class="settings-line">Sunucu <span>SİTE-SHADOW / AKTİF</span></div>
+            <div class="settings-line">Aktif Kullanıcı <span id="settings-user">-</span></div>
+            <div class="settings-line">Oturum Süresi <span id="settings-uptime">-</span></div>
+            <div class="settings-divider">— EMEK VERENLER —</div>
+            <div class="settings-line">Yapay Zeka <span>Claude 3.5</span></div>
+            <div class="settings-line">Yapay Zeka <span>Gemini Pro</span></div>
+            <div class="settings-line">Ana Yaratıcı <span style="color:var(--gold);text-shadow:0 0 10px var(--gold);">İllah Paşa</span></div>
+            <div class="settings-line">Shadow RP <span>∞ EPİK</span></div>
+            <button class="settings-close" onclick="document.getElementById('settingsModal').classList.remove('open')">✖ KAPAT</button>
         </div>
-        <input type="password" id="passInput" class="auth-input" placeholder="[ YETKİ ANAHTARI GİRİNİZ ]" autocomplete="off">
-        <div id="statusBar">&#9679; STATUS: OFFLINE — YETKİ BEKLENİYOR</div>
-    </div>
-</div>
-
-<!-- ANA -->
-<div class="main-container">
-
-    <div id="accessDeniedMsg">
-        <div class="denied-title">&#9888; ERİŞİM REDDEDİLDİ &#9888;</div>
-        <div style="color:#ff3333;margin:12px 0;font-size:1rem;letter-spacing:4px;font-family:'Orbitron',monospace;">DOSYA BULUNAMADI</div>
-        <div class="denied-sub">D-SINIFI PERSONEL SİCİL NUMARASI TANIMLANDI</div>
-        <div class="denied-sub">BU KİMLİK İLE ERİŞİLEBİLECEK GİZLİ DOSYA MEVCUT DEĞİLDİR</div>
-        <div class="denied-sub" style="margin-top:12px;color:#1a1a1a;font-size:0.7rem;">GİRİŞİM KAYDEDÜLDÜ — İÇ GÜVENLİK BİLGİLENDİRİLDİ</div>
     </div>
 
-    <!-- IGD YÖNETİM PANELİ - SADECE ÖZEL KODLARLA GÖRÜNÜR -->
-    <div id="igdyonetim">
-        <div class="igd-header">&#128065; İÇ GÜVENLİK (IGD) — YÖNETİM PANELİ</div>
-        
-        <div class="igd-istatistik">
-            <div class="istatistik-kutu">
-                <div class="istatistik-sayi" id="toplam-giris">0</div>
-                <div class="istatistik-etiket">TOPLAM GİRİŞ</div>
+    <div class="shadow-tag">SHADOW RP V14</div>
+
+    <!-- ========== HEADER ========== -->
+    <div id="terminalHeader">
+        <div class="header-title">⚡ SECURE TERMINAL V14 EPİK ⚡</div>
+        <div id="headerInputArea">
+            <div class="clearance-bar">
+                <span class="clv" id="clv-safe" data-tooltip="Güvenli - Kolay muhafaza">SAFE</span>
+                <span class="clv" id="clv-euclid" data-tooltip="Orta - Tahmin edilemez">EUCLID</span>
+                <span class="clv" id="clv-keter" data-tooltip="Tehlikeli - Sürekli muhafaza">KETER</span>
+                <span class="clv" id="clv-thaumiel" data-tooltip="Yararlı - Vakıf amaçlı">THAUMIEL</span>
+                <span class="clv" id="clv-apollyon" data-tooltip="Kıyamet - Durdurulamaz">APOLLYON</span>
             </div>
-            <div class="istatistik-kutu">
-                <div class="istatistik-sayi" id="scp-okunma">0</div>
-                <div class="istatistik-etiket">SCP OKUNMA</div>
-            </div>
-            <div class="istatistik-kutu">
-                <div class="istatistik-sayi" id="aktif-oturum">0</div>
-                <div class="istatistik-etiket">AKTİF OTURUM</div>
-            </div>
+            <input type="password" id="passInput" class="auth-input" placeholder="[ YETKİ ANAHTARI GİRİNİZ ]" autocomplete="off">
+            <div id="statusBar">⚫ STATUS: OFFLINE — YETKİ BEKLENİYOR</div>
         </div>
-
-        <div class="igd-header" style="font-size:0.8rem; margin-top:20px;">&#128221; SON ERİŞİM RAPORLARI</div>
-        <div style="overflow-x: auto;">
-            <table class="igd-rapor-tablo" id="rapor-tablosu">
-                <thead>
-                    <tr><th>ZAMAN</th><th>YETKİ KODU</th><th>DEPARTMAN</th><th>SCP</th><th>İŞLEM</th></tr>
-                </thead>
-                <tbody id="rapor-tbody"></tbody>
-            </table>
-        </div>
-        <button class="rapor-temizle-btn" onclick="raporlariTemizle()">RAPORLARI TEMİZLE</button>
     </div>
 
-    <div id="SEC-B" class="branch-box"><div class="branch-title">GÜVENLİK DEPARTMANI</div><div id="sec-text"></div></div>
-    <div id="ENG-B" class="branch-box"><div class="branch-title">MÜHENDİSLİK BİRİMİ</div><div id="eng-text"></div></div>
-    <div id="ETH-B" class="branch-box"><div class="branch-title">ETİK KOMİTE</div><div id="eth-text"></div></div>
-    <div id="MED-B" class="branch-box"><div class="branch-title">TIBBİ DEPARTMAN</div><div id="med-text"></div></div>
-    <div id="IGD-B" class="branch-box"><div class="branch-title">İÇ GÜVENLİK (IGD)</div><div id="igd-text"></div></div>
-    <div id="TME-B" class="branch-box"><div class="branch-title">TAKTİKSEL MÜDAHALE (TME)</div><div id="tme-text"></div></div>
-    <div id="O5-B"  class="branch-box o5-box"><div class="branch-title">O5 KONSEYİ</div><div id="o5-text"></div></div>
+    <!-- ========== ANA MENÜ ========== -->
+    <div class="main-container">
 
-    <div id="scpSection">
-        <div class="section-header">&#9658; ANOMALİK NESNE ARŞİVİ</div>
-        <input type="text" class="search-bar" id="searchBar" placeholder="SCP ARA... (örn: SCP-173, KETER)" oninput="filterSCPs()">
-        <div class="filter-bar">
-            <button class="filter-btn active" data-f="ALL"      onclick="setFilter('ALL')">TÜMÜ</button>
-            <button class="filter-btn"        data-f="SAFE"     onclick="setFilter('SAFE')">SAFE</button>
-            <button class="filter-btn"        data-f="EUCLID"   onclick="setFilter('EUCLID')">EUCLID</button>
-            <button class="filter-btn"        data-f="KETER"    onclick="setFilter('KETER')">KETER</button>
-            <button class="filter-btn"        data-f="THAUMIEL" onclick="setFilter('THAUMIEL')">THAUMIEL</button>
-            <button class="filter-btn"        data-f="APOLLYON" onclick="setFilter('APOLLYON')">APOLLYON</button>
+        <!-- ========== EPİK KONTROL PANELİ ========== -->
+        <div id="epic-panel">
+            <div class="epic-header">⚡ EPİK KONTROL PANELİ ⚡</div>
+            <div class="epic-grid">
+                <div class="epic-card" onclick="showNotification('Sistem taraması başlatıldı')">
+                    <div class="epic-card-icon">🔍</div>
+                    <div class="epic-card-title">SİSTEM TARA</div>
+                    <div class="epic-card-value" id="epic-scan">0</div>
+                </div>
+                <div class="epic-card" onclick="showNotification('Güvenlik duvarı yenilendi')">
+                    <div class="epic-card-icon">🛡️</div>
+                    <div class="epic-card-title">GÜVENLİK</div>
+                    <div class="epic-card-value" id="epic-security">100%</div>
+                </div>
+                <div class="epic-card" onclick="exportRapor()">
+                    <div class="epic-card-icon">📊</div>
+                    <div class="epic-card-title">RAPOR DIŞA AKTAR</div>
+                    <div class="epic-card-value" id="epic-export">PDF</div>
+                </div>
+                <div class="epic-card" onclick="rebootSystem()">
+                    <div class="epic-card-icon">🔄</div>
+                    <div class="epic-card-title">SİSTEM YENİLE</div>
+                    <div class="epic-card-value" id="epic-reboot">RESTART</div>
+                </div>
+            </div>
         </div>
-        <div id="scp-list"></div>
-        <div class="pagination" id="pagination"></div>
+
+        <!-- ========== İSTATİSTİK PANELİ ========== -->
+        <div id="statsPanel">
+            <div class="stats-header">📊 SİSTEM İSTATİSTİKLERİ</div>
+            <div class="stats-grid">
+                <div class="stats-card">
+                    <div class="stats-sayi" id="toplam-giris">0</div>
+                    <div class="stats-etiket">TOPLAM GİRİŞ</div>
+                </div>
+                <div class="stats-card">
+                    <div class="stats-sayi" id="scp-okunma">0</div>
+                    <div class="stats-etiket">SCP OKUNMA</div>
+                </div>
+                <div class="stats-card">
+                    <div class="stats-sayi" id="aktif-oturum">0</div>
+                    <div class="stats-etiket">AKTİF OTURUM</div>
+                </div>
+                <div class="stats-card">
+                    <div class="stats-sayi" id="bekleyen-onay">0</div>
+                    <div class="stats-etiket">BEKLEYEN ONAY</div>
+                </div>
+                <div class="stats-card">
+                    <div class="stats-sayi" id="toplam-rapor">0</div>
+                    <div class="stats-etiket">TOPLAM RAPOR</div>
+                </div>
+                <div class="stats-card">
+                    <div class="stats-sayi" id="sistem-uptime">0</div>
+                    <div class="stats-etiket">SİSTEM SÜRESİ</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== O5 ONAY PANELİ ========== -->
+        <div id="o5-panel">
+            <div class="o5-header">⚜️ O5 ONAY PANELİ - BEKLEYEN TALEPLER</div>
+            <div id="o5-talep-listesi"></div>
+        </div>
+
+        <!-- ========== IGD YÖNETİM PANELİ ========== -->
+        <div id="igdyonetim">
+            <div class="igd-header">🔍 İÇ GÜVENLİK (IGD) — YÖNETİM PANELİ</div>
+            
+            <div class="igd-istatistik">
+                <div class="istatistik-kutu">
+                    <div class="istatistik-sayi" id="igd-giris">0</div>
+                    <div class="istatistik-etiket">IGD GİRİŞ</div>
+                </div>
+                <div class="istatistik-kutu">
+                    <div class="istatistik-sayi" id="igd-scp">0</div>
+                    <div class="istatistik-etiket">IGD SCP</div>
+                </div>
+                <div class="istatistik-kutu">
+                    <div class="istatistik-sayi" id="igd-alarm">0</div>
+                    <div class="istatistik-etiket">ALARMLAR</div>
+                </div>
+            </div>
+
+            <div class="igd-header" style="font-size:0.8rem; margin-top:20px;">📋 SON ERİŞİM RAPORLARI</div>
+            <div style="overflow-x: auto;">
+                <table class="rapor-tablo" id="rapor-tablosu">
+                    <thead>
+                        <tr>
+                            <th>ZAMAN</th>
+                            <th>YETKİ KODU</th>
+                            <th>DEPARTMAN</th>
+                            <th>SCP</th>
+                            <th>İŞLEM</th>
+                            <th>DETAY</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rapor-tbody"></tbody>
+                </table>
+            </div>
+            
+            <div style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
+                <button class="rapor-temizle-btn" onclick="raporlariTemizle()">🗑️ RAPORLARI TEMİZLE</button>
+                <button class="rapor-temizle-btn" onclick="filtreleRapor('GİRİŞ')">🔍 GİRİŞ RAPORLARI</button>
+                <button class="rapor-temizle-btn" onclick="filtreleRapor('SCP')">🔍 SCP RAPORLARI</button>
+                <button class="rapor-temizle-btn" onclick="filtreleRapor('O5')">🔍 O5 RAPORLARI</button>
+                <button class="rapor-temizle-btn" onclick="raporlariGoster()">📋 TÜMÜ</button>
+            </div>
+        </div>
+
+        <!-- ========== ERİŞİM REDDEDİLDİ ========== -->
+        <div id="accessDeniedMsg">
+            <div class="denied-title">⛔ ERİŞİM REDDEDİLDİ ⛔</div>
+            <div style="color:#ff3333;margin:12px 0;font-size:1rem;letter-spacing:4px;font-family:'Orbitron',monospace;">DOSYA BULUNAMADI</div>
+            <div class="denied-sub">D-SINIFI PERSONEL SİCİL NUMARASI TANIMLANDI</div>
+            <div class="denied-sub">BU KİMLİK İLE ERİŞİLEBİLECEK GİZLİ DOSYA MEVCUT DEĞİLDİR</div>
+            <div class="denied-sub" style="margin-top:12px;color:#1a1a1a;font-size:0.7rem;">GİRİŞİM KAYDEDÜLDÜ — İÇ GÜVENLİK BİLGİLENDİRİLDİ</div>
+        </div>
+
+        <!-- ========== DEPARTMANLAR ========== -->
+        <div id="SEC-B" class="branch-box"><div class="branch-title">🔒 GÜVENLİK DEPARTMANI</div><div id="sec-text"></div></div>
+        <div id="ENG-B" class="branch-box"><div class="branch-title">⚙️ MÜHENDİSLİK BİRİMİ</div><div id="eng-text"></div></div>
+        <div id="ETH-B" class="branch-box"><div class="branch-title">⚖️ ETİK KOMİTE</div><div id="eth-text"></div></div>
+        <div id="MED-B" class="branch-box"><div class="branch-title">💊 TIBBİ DEPARTMAN</div><div id="med-text"></div></div>
+        <div id="IGD-B" class="branch-box"><div class="branch-title">🔍 İÇ GÜVENLİK (IGD)</div><div id="igd-text"></div></div>
+        <div id="TME-B" class="branch-box"><div class="branch-title">⚡ TAKTİKSEL MÜDAHALE (TME)</div><div id="tme-text"></div></div>
+        <div id="O5-B"  class="branch-box o5-box"><div class="branch-title">⚜️ O5 KONSEYİ</div><div id="o5-text"></div></div>
+
+        <!-- ========== SCP LİSTESİ ========== -->
+        <div id="scpSection">
+            <div class="section-header">📁 ANOMALİK NESNE ARŞİVİ</div>
+            <input type="text" class="search-bar" id="searchBar" placeholder="SCP ARA... (örn: SCP-173, KETER, 682)" oninput="filterSCPs()">
+            <div class="filter-bar">
+                <button class="filter-btn active" data-f="ALL"      onclick="setFilter('ALL')">TÜMÜ</button>
+                <button class="filter-btn"        data-f="SAFE"     onclick="setFilter('SAFE')">SAFE</button>
+                <button class="filter-btn"        data-f="EUCLID"   onclick="setFilter('EUCLID')">EUCLID</button>
+                <button class="filter-btn"        data-f="KETER"    onclick="setFilter('KETER')">KETER</button>
+                <button class="filter-btn"        data-f="THAUMIEL" onclick="setFilter('THAUMIEL')">THAUMIEL</button>
+                <button class="filter-btn"        data-f="APOLLYON" onclick="setFilter('APOLLYON')">APOLLYON</button>
+                <button class="filter-btn"        data-f="TEHLIKELI" onclick="setFilter('TEHLIKELI')">⚠️ TEHLİKELİ</button>
+            </div>
+            <div id="scp-list"></div>
+            <div class="pagination" id="pagination"></div>
+        </div>
     </div>
-</div>
 
-<script>
-// ======================================================
-// VERİTABANI — YENİ ŞİFRELER (ADMİN HARİÇ)
-// ======================================================
-var DATABASE = {
-    // GÜVENLİK DEPARTMANI
-    "SHADOW-SEC-7712":    { type:"dept", boxId:"SEC-B", textId:"sec-text", dept:"SEC", allowed:["SAFE","EUCLID"],
-        info:["GÜVENLİK PROTOKOLÜ AKTİF","Yetki Seviyesi   : BETA-3","Müdahale Kapsamı : Safe ve Euclid sinifi anomaliler","Keter İhlali     : TME müdahalesi çağırılır","Vardiya Süresi   : 8 saatlik rotasyon","Silah Protokolü  : Standart atışlı silah","Tesis Önceliği   : Sivil kayıp SIFIR politikası"] },
-    
-    // MÜHENDİSLİK
-    "SHADOW-ENG-5591":    { type:"dept", boxId:"ENG-B", textId:"eng-text", dept:"ENG", allowed:["SAFE","EUCLID","KETER","THAUMIEL"],
-        info:["MÜHENDİSLİK SİSTEM RAPORU","Yetki Seviyesi   : DELTA-4","Bakım Kapsamı    : Tüm sınıflar","Güç Sistemi      : Jeneratör denetimi 24 saat","Containment Sys  : Thaumiel aktif izleme","Acil Kapatma     : EMP-7 protokolü","Malzeme Yönetimi : Anomalik bileşen stoku"] },
-    
-    // ETİK KOMİTE
-    "SHADOW-ETH-8823":    { type:"dept", boxId:"ETH-B", textId:"eth-text", dept:"ETH", allowed:["SAFE","EUCLID","KETER","THAUMIEL","APOLLYON"],
-        info:["ETİK KOMİTE DİREKTİFİ","Yetki Seviyesi   : OMEGA-5","Denetim Kapsamı  : Tüm deney protokolleri","İnsan Deneyleri  : D-sınıfı kullanımı kontrollü","Amnezik Kullanımı: Komite onayı gerekli","Komite Gücü      : O5 kararlarını durdurabilir"] },
-    
-    // TIBBİ DEPARTMAN
-    "SHADOW-MED-3367":    { type:"dept", boxId:"MED-B", textId:"med-text", dept:"MED", allowed:["SAFE","EUCLID","KETER"],
-        info:["TIBBİ DEPARTMAN ANALİZİ","Yetki Seviyesi   : GAMMA-3","Biyolojik Tehdit : Sınıf-A biyohazmat","Personel Sağlığı : 72 saat karantina","Amnezik Stok     : A,B,C sınıfları mevcut","D-Sınıfı Tıbbi   : Tıbbi kayıt tutulur"] },
-    
-    // İÇ GÜVENLİK
-    "SHADOW-IGD-4413":    { type:"dept", boxId:"IGD-B", textId:"igd-text", dept:"IGD", allowed:["SAFE","EUCLID","KETER","THAUMIEL","APOLLYON"],
-        info:["İÇ GÜVENLİK DİREKTİFİ GİZLİ","Yetki Seviyesi   : SIGMA-5","Görev            : Vakıf içi sızıntı tespiti","İzleme           : Tüm iletişim izleniyor","Ajan Ağı         : Her departmanda gizli ajan","Gözaltı Yetkisi  : 72 saat mahkemesiz tutma"] },
-    
-    // TAKTİKSEL MÜDAHALE
-    "SHADOW-TME-9921":   { type:"dept", boxId:"TME-B", textId:"tme-text", dept:"TME", allowed:["SAFE","EUCLID","KETER","THAUMIEL","APOLLYON"],
-        info:["TAKTİKSEL MÜDAHALE PLANI GİZLİ","Yetki Seviyesi   : KAPPA-4","Müdahale Hızı    : 3 dakika","Keter Protokolü  : O5 onayı gerekli","Apollyon Durumu  : Son savunma hattı","Ekipman          : Anomalik karşıtı silahlar"] },
-    
-    // O5 KONSEYİ
-    "SHADOW-O5-5513":{ type:"dept", boxId:"O5-B",  textId:"o5-text",  dept:"O5",  allowed:["SAFE","EUCLID","KETER","THAUMIEL","APOLLYON"],
-        info:["O5 KONSEYİ MUTLAK GİZLİLİK","Yetki Seviyesi   : BEYOND-5","Kimlik           : Asla paylaşılmaz","Karar Yetkisi    : Tüm kaynaklar konsey emrinde","XK Protokolü     : Dünya sonu senaryoları","Veto Hakkı       : Her karar veto edilebilir"] },
-    
-    // D-SINIFI KODLARI
-    "D-7712":  { type:"dclass" },
-    "D-5591":  { type:"dclass" },
-    "D-8823":  { type:"dclass" },
-    "D-3367":  { type:"dclass" },
-    "D-4413":  { type:"dclass" },
-    "D-9921":  { type:"dclass" },
-    "D-5513":  { type:"dclass" },
-    "D-0012":  { type:"dclass" }
-};
+    <script>
+        // ======================================================
+        // EPİK JAVASCRIPT - 1500 SATIR
+        // ======================================================
 
-// ======================================================
-// ÖZEL YETKİLİ KODLARI (DEĞİŞTİRİLDİ)
-// ======================================================
-const OZEL_KODLAR = {
-    "6-CİLLAHPSR": "SUPER_ADMIN",
-    "SRTUQUQUE78921": "ADMIN"
-};
+        // ========== SİSTEM DEĞİŞKENLERİ ==========
+        var baslangicZamani = Date.now();
+        var sistemUptime = 0;
+        var sistemGuncelleyici;
 
-// ======================================================
-// SCP SINIFLANDIRMA DÜZENLENDİ
-// ======================================================
-const SCP_CLASSES = {
-    "SAFE": "Güvenli - Kolay muhafaza edilebilir",
-    "EUCLID": "Orta - Tahmin edilemez davranışlar",
-    "KETER": "Tehlikeli - Sürekli muhafaza gerektirir",
-    "THAUMIEL": "Yararlı - Vakıf amaçları için kullanılır",
-    "APOLLYON": "Kıyamet - Durdurulamaz yıkım potansiyeli"
-};
+        // ========== VERİTABANI ==========
+        var DATABASE = {
+            "SHADOW-SEC-7712":    { type:"dept", boxId:"SEC-B", textId:"sec-text", dept:"SEC", allowed:["SAFE","EUCLID"],
+                info:["🔒 GÜVENLİK PROTOKOLÜ AKTİF","Yetki Seviyesi   : BETA-3","Müdahale Kapsamı : Safe ve Euclid sinifi anomaliler","Keter İhlali     : TME müdahalesi çağırılır","Vardiya Süresi   : 8 saatlik rotasyon","Silah Protokolü  : Standart atışlı silah","Tesis Önceliği   : Sivil kayıp SIFIR politikası","Son Güncelleme   : 2026-02-24","Aktif Personel   : 127"] },
+            
+            "SHADOW-ENG-5591":    { type:"dept", boxId:"ENG-B", textId:"eng-text", dept:"ENG", allowed:["SAFE","EUCLID","KETER","THAUMIEL"],
+                info:["⚙️ MÜHENDİSLİK SİSTEM RAPORU","Yetki Seviyesi   : DELTA-4","Bakım Kapsamı    : Tüm sınıflar","Güç Sistemi      : Jeneratör denetimi 24 saat","Containment Sys  : Thaumiel aktif izleme","Acil Kapatma     : EMP-7 protokolü","Malzeme Yönetimi : Anomalik bileşen stoku","Son Bakım        : 2026-02-23","Aktif Mühendis   : 43"] },
+            
+            "SHADOW-ETH-8823":    { type:"dept", boxId:"ETH-B", textId:"eth-text", dept:"ETH", allowed:["SAFE","EUCLID","KETER","THAUMIEL","APOLLYON"],
+                info:["⚖️ ETİK KOMİTE DİREKTİFİ","Yetki Seviyesi   : OMEGA-5","Denetim Kapsamı  : Tüm deney protokolleri","İnsan Deneyleri  : D-sınıfı kullanımı kontrollü","Amnezik Kullanımı: Komite onayı gerekli","Komite Gücü      : O5 kararlarını durdurabilir","Toplantı         : Haftalık","Üye Sayısı       : 7"] },
+            
+            "SHADOW-MED-3367":    { type:"dept", boxId:"MED-B", textId:"med-text", dept:"MED", allowed:["SAFE","EUCLID","KETER"],
+                info:["💊 TIBBİ DEPARTMAN ANALİZİ","Yetki Seviyesi   : GAMMA-3","Biyolojik Tehdit : Sınıf-A biyohazmat","Personel Sağlığı : 72 saat karantina","Amnezik Stok     : A,B,C sınıfları mevcut","D-Sınıfı Tıbbi   : Tıbbi kayıt tutulur","Aşı Stoku        : 12450 doz","Aktif Hasta      : 23"] },
+            
+            "SHADOW-IGD-4413":    { type:"dept", boxId:"IGD-B", textId:"igd-text", dept:"IGD", allowed:["SAFE","EUCLID","KETER","THAUMIEL","APOLLYON"],
+                info:["🔍 İÇ GÜVENLİK DİREKTİFİ GİZLİ","Yetki Seviyesi   : SIGMA-5","Görev            : Vakıf içi sızıntı tespiti","İzleme           : Tüm iletişim izleniyor","Ajan Ağı         : Her departmanda gizli ajan","Gözaltı Yetkisi  : 72 saat mahkemesiz tutma","Aktif Soruşturma : 12","Şüpheli Personel : 8"] },
+            
+            "SHADOW-TME-9921":   { type:"dept", boxId:"TME-B", textId:"tme-text", dept:"TME", allowed:["SAFE","EUCLID","KETER","THAUMIEL","APOLLYON"],
+                info:["⚡ TAKTİKSEL MÜDAHALE PLANI GİZLİ","Yetki Seviyesi   : KAPPA-4","Müdahale Hızı    : 3 dakika","Keter Protokolü  : O5 onayı gerekli","Apollyon Durumu  : Son savunma hattı","Ekipman          : Anomalik karşıtı silahlar","Aktif Ekip       : 4 tim","Hazır Durum      : 7/24"] },
+            
+            "SHADOW-O5-5513":{ type:"dept", boxId:"O5-B",  textId:"o5-text",  dept:"O5",  allowed:["SAFE","EUCLID","KETER","THAUMIEL","APOLLYON"],
+                info:["⚜️ O5 KONSEYİ MUTLAK GİZLİLİK","Yetki Seviyesi   : BEYOND-5","Kimlik           : Asla paylaşılmaz","Karar Yetkisi    : Tüm kaynaklar konsey emrinde","XK Protokolü     : Dünya sonu senaryoları","Veto Hakkı       : Her karar veto edilebilir","Toplantı         : Acil durumlarda","Üye Sayısı       : 13"] },
+            
+            "D-7712":  { type:"dclass" },
+            "D-5591":  { type:"dclass" },
+            "D-8823":  { type:"dclass" },
+            "D-3367":  { type:"dclass" },
+            "D-4413":  { type:"dclass" },
+            "D-9921":  { type:"dclass" },
+            "D-5513":  { type:"dclass" },
+            "D-0012":  { type:"dclass" }
+        };
 
-// ======================================================
-// RAPORLAMA SİSTEMİ
-// ======================================================
-var raporlar = JSON.parse(localStorage.getItem('igd_raporlar')) || [];
-var toplamGiris = parseInt(localStorage.getItem('toplam_giris')) || 0;
-var scpOkunma = parseInt(localStorage.getItem('scp_okunma')) || 0;
-var aktifOturumKodu = null;
+        // ========== ÖZEL YETKİLİ KODLARI ==========
+        const OZEL_KODLAR = {
+            "6-CİLLAHPSR": "SUPER_ADMIN",
+            "SRTUQUQUE78921": "ADMIN"
+        };
 
-function raporEkle(kod, departman, scp, islem) {
-    var zaman = new Date().toLocaleString('tr-TR');
-    raporlar.unshift({ zaman, kod, departman, scp, islem });
-    if (raporlar.length > 100) raporlar.pop();
-    localStorage.setItem('igd_raporlar', JSON.stringify(raporlar));
-    
-    if (document.getElementById('igdyonetim').style.display === 'block') {
-        raporlariGoster();
-    }
-}
-
-function raporlariGoster() {
-    var tbody = document.getElementById('rapor-tbody');
-    tbody.innerHTML = '';
-    raporlar.slice(0, 20).forEach(function(r) {
-        var tr = document.createElement('tr');
-        tr.innerHTML = `<td>${r.zaman}</td><td>${r.kod}</td><td>${r.departman}</td><td>${r.scp}</td><td>${r.islem}</td>`;
-        tbody.appendChild(tr);
-    });
-    
-    document.getElementById('toplam-giris').textContent = toplamGiris;
-    document.getElementById('scp-okunma').textContent = scpOkunma;
-    document.getElementById('aktif-oturum').textContent = aktifOturumKodu ? '1' : '0';
-}
-
-function raporlariTemizle() {
-    if (confirm('Tüm raporlar silinecek. Emin misiniz?')) {
-        raporlar = [];
-        toplamGiris = 0;
-        scpOkunma = 0;
-        localStorage.setItem('igd_raporlar', '[]');
-        localStorage.setItem('toplam_giris', '0');
-        localStorage.setItem('scp_okunma', '0');
-        raporlariGoster();
-    }
-}
-
-// ======================================================
-// SCP BİLGİLERİ - DÜZENLENDİ
-// ======================================================
-var SCP_NAMES = [
-    "Yıkılmaz Heykel","Sonsuz Merdiven","Karanlık Oda","Yürüyen Dağ","Ölümsüz Balık",
-    "Ağlayan Ayna","Gülümseyen Adam","Koşan Tünel","Sessiz Orman","Kayan Kapı",
-    "Düşünen Taş","Konuşan Gölge","Yüzen Ev","Kaybolan Nehir","Şarkı Söyleyen Çukur",
-    "Kırmızı Göl","Parlayan Kafes","Dönüşüm Odası","Kanayan Duvar","Yaşayan Kablo",
-    "Sıfır Noktası","Zaman Kilidi","Bilinç Aktarıcı","Entropi Motoru","Gerçeklik Çarpıcı",
-    "Hafıza Silici","Boyut Kapısı","Varoluş Yiyici","Zihin Kolonisi","Kaos Jeneratörü",
-    "Silinmez İz","Evrilen Madde","Uyuyan Tanrı","Kopan Zincir","Çağıran Ses",
-    "Yansıyan Korku","Gizli Alan","Dönen Göz","Akan Renk","Bilgi Tüketicisi"
-];
-
-var SCP_LOCS = ["Site-Shadow","Site-19","Site-17","Site-23","Site-X","Alan-Shadow-B","Yer-Altı-7","Tesis-Shadow-K"];
-
-function getSCPLines(num, cls, dept) {
-    var site = SCP_LOCS[num % SCP_LOCS.length];
-    var name = SCP_NAMES[num % SCP_NAMES.length];
-    var yil = "20" + (10 + (num % 15));
-    var tehlike = {APOLLYON:"OMEGA - GERÇEKLİK ÇÖKÜŞÜ",KETER:"YÜKSEK - ÖLÜMCÜL",THAUMIEL:"KONTROLLÜ - YARARLI",EUCLID:"ORTA - DEĞİŞKEN",SAFE:"DÜŞÜK - GÜVENLİ"}[cls] || "BİLİNMİYOR";
-
-    // O5 için özel içerik
-    if (dept === 'O5') {
-        return [
-            "Kod Adı         : " + name + " [O5 SEVİYESİ]",
-            "Sınıflandırma   : " + cls,
-            "Tehlike Seviyesi: " + tehlike,
-            "Muhafaza Tesisi : " + site + " [GİZLİ KAT]",
-            "O5 Kararı       : " + (cls === "APOLLYON" ? "ACİL TOPLANMA" : "Standart Protokol"),
-            "Gözlemci        : O5-" + (num % 13 + 1),
-            "XK Sınıfı       : " + (cls === "APOLLYON" ? "AKTİF - TÜM TESİSLER ALARMDA" : "PASİF"),
-            "Not             : BU BELGE O5 ONAYI OLMADAN AÇILAMAZ"
+        // ========== EN TEHLİKELİ 15 SCP ==========
+        const TEHLIKELI_SCPLER = [
+            "SCP-682", "SCP-106", "SCP-096", "SCP-173", "SCP-001",
+            "SCP-169", "SCP-4666", "SCP-3000", "SCP-3001", "SCP-2718",
+            "SCP-610", "SCP-035", "SCP-1048", "SCP-513", "SCP-966"
         ];
-    }
 
-    // IGD için özel içerik
-    if (dept === 'IGD') {
-        return [
-            "Kod Adı         : " + name,
-            "Sınıflandırma   : " + cls,
-            "Tehlike Seviyesi: " + tehlike,
-            "Muhafaza Tesisi : " + site,
-            "IGD Gözlem      : Gizli kamera ile 7/24 izleniyor",
-            "Personel        : " + (num % 10 + 1) + " ajan görevlendirildi",
-            "Sızıntı Riski   : " + (cls === "KETER" ? "YÜKSEK" : "DÜŞÜK"),
-            "Not             : Bu dosyayı açan kaydedildi"
-        ];
-    }
+        // ========== ONAY SİSTEMİ ==========
+        var bekleyenOnaylar = JSON.parse(localStorage.getItem('bekleyen_onaylar')) || [];
+        var onaylananSCPLer = JSON.parse(localStorage.getItem('onaylanan_scpler')) || [];
 
-    var sets = {
-        SEC:[
-            "Kod Adı         : " + name,
-            "Sınıflandırma   : " + cls + "  |  Tehlike: " + tehlike,
-            "Muhafaza Tesisi : " + site + " Güvenli Bölge",
-            "Güvenlik Çemberi: " + (num % 3 + 2) + " katlı kilit",
-            "Personel İzni   : Güvenlik Yetki-" + (num % 3 + 1),
-            "Son İhlal       : " + (num % 7 === 0 ? "Kayıt yok" : yil)
-        ],
-        ENG:[
-            "Kod Adı         : " + name,
-            "Sınıflandırma   : " + cls + "  |  Tehlike: " + tehlike,
-            "Muhafaza Tesisi : " + site + " Mühendislik Bölgesi",
-            "Muhafaza Sistemi: " + (cls === "THAUMIEL" ? "Thaumiel destekli" : "Standart izole oda"),
-            "Güç Tüketimi    : " + ((num * 13) % 500 + 100) + " kWh",
-            "Son Bakım       : " + yil
-        ],
-        ETH:[
-            "Kod Adı         : " + name,
-            "Sınıflandırma   : " + cls + "  |  Tehlike: " + tehlike,
-            "Muhafaza Tesisi : " + site,
-            "Deney Durumu    : " + (num % 4 === 0 ? "Etik onay bekliyor" : "Onaylı"),
-            "D-Sınıfı        : " + (num % 5 === 0 ? "Sınırlı kullanım" : "Yasak"),
-            "Komite Kararı   : " + yil + " onaylı"
-        ],
-        MED:[
-            "Kod Adı         : " + name,
-            "Sınıflandırma   : " + cls + "  |  Tehlike: " + tehlike,
-            "Muhafaza Tesisi : " + site + " Tıbbi Karantina",
-            "Biyolojik Risk  : " + (cls === "KETER" ? "Sınıf-A biyohazmat" : "Standart maske"),
-            "Temas Protokolü : " + (cls === "APOLLYON" ? "KESİNLİKLE YASAK" : "72 saat karantina"),
-            "Tedavi          : " + (num % 2 === 0 ? "Amnezik uygulanır" : "Tedavi yok")
-        ],
-        TME:[
-            "Kod Adı         : " + name,
-            "Sınıflandırma   : " + cls + "  |  Tehlike: " + tehlike,
-            "Muhafaza Tesisi : " + site,
-            "Müdahale Birimi : TME-" + ((num % 5) + 1),
-            "Nötralizasyon   : " + (cls === "KETER" || cls === "APOLLYON" ? "Ağır silah" : "Standart"),
-            "Son Operasyon   : " + yil
-        ]
-    };
-    return sets[dept] || sets["SEC"];
-}
+        // ========== RAPORLAMA SİSTEMİ ==========
+        var raporlar = JSON.parse(localStorage.getItem('igd_raporlar')) || [];
+        var toplamGiris = parseInt(localStorage.getItem('toplam_giris')) || 0;
+        var scpOkunma = parseInt(localStorage.getItem('scp_okunma')) || 0;
+        var aktifOturumKodu = null;
+        var aktifDepartman = null;
+        var mevcutFiltre = null;
 
-// ======================================================
-// SES
-// ======================================================
-var audioCtx;
-function ensureAudio() {
-    if (!audioCtx) { try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){} }
-}
-function playBeep(freq, dur, vol) {
-    if (!audioCtx) return;
-    try {
-        var o = audioCtx.createOscillator(), g = audioCtx.createGain();
-        o.type = 'square'; o.frequency.value = freq||150;
-        g.gain.value = vol||0.01;
-        o.connect(g); g.connect(audioCtx.destination);
-        o.start(); o.stop(audioCtx.currentTime + (dur||0.02));
-    } catch(e){}
-}
+        // ========== SCP LİSTESİ ==========
+        var currentAllowed = [], currentDept = '', currentFilter = 'ALL', currentPage = 1;
+        var PAGE_SIZE = 30;
+        var allSCPs = [], filteredSCPs = [];
+        var audioCtx;
 
-// ======================================================
-// BASLANGIÇ
-// ======================================================
-function initSystem() {
-    document.getElementById('startScreen').style.display = 'none';
-    ensureAudio();
-    setStatus('ONLINE YETKİ ANAHTARI BEKLENİYOR', '#1a3d1a');
-}
-
-function setStatus(t, c) {
-    var el = document.getElementById('statusBar');
-    el.textContent = 'STATUS: ' + t;
-    el.style.color = c || '#333';
-}
-
-// ======================================================
-// YETKİ GİRİŞİ
-// ======================================================
-var currentAllowed = [], currentDept = '', currentFilter = 'ALL', currentPage = 1;
-var PAGE_SIZE = 30;
-var allSCPs = [], filteredSCPs = [];
-
-document.getElementById('passInput').addEventListener('input', function() {
-    var key = this.value.trim().toUpperCase();
-    var dbKey = null;
-    var keys = Object.keys(DATABASE);
-    for (var i = 0; i < keys.length; i++) {
-        if (keys[i].toUpperCase() === key) { dbKey = keys[i]; break; }
-    }
-
-    // Özel kod kontrolü
-    var ozelYetki = OZEL_KODLAR[key];
-    var isAdmin = ozelYetki === "SUPER_ADMIN" || ozelYetki === "ADMIN";
-
-    // Raporlama
-    toplamGiris++;
-    localStorage.setItem('toplam_giris', toplamGiris);
-    aktifOturumKodu = key;
-    
-    raporEkle(key, 'SİSTEM', '-', 'GİRİŞ YAPILDI');
-
-    document.querySelectorAll('.branch-box').forEach(function(b){ b.style.display='none'; });
-    document.getElementById('accessDeniedMsg').style.display = 'none';
-    document.getElementById('scpSection').style.display = 'none';
-    document.getElementById('igdyonetim').style.display = 'none';
-    document.getElementById('scp-list').innerHTML = '';
-    document.getElementById('pagination').innerHTML = '';
-    document.getElementById('terminalHeader').classList.add('collapsed');
-    ['safe','euclid','keter','thaumiel','apollyon'].forEach(function(c){
-        document.getElementById('clv-'+c).className = 'clv';
-    });
-
-    if (isAdmin) {
-        // ADMIN YETKİSİ
-        document.getElementById('SEC-B').style.display = 'block';
-        document.getElementById('ENG-B').style.display = 'block';
-        document.getElementById('ETH-B').style.display = 'block';
-        document.getElementById('MED-B').style.display = 'block';
-        document.getElementById('IGD-B').style.display = 'block';
-        document.getElementById('TME-B').style.display = 'block';
-        document.getElementById('O5-B').style.display = 'block';
-        
-        // Departman bilgilerini yazdır
-        daktilo('sec-text', DATABASE["SHADOW-SEC-7712"].info);
-        daktilo('eng-text', DATABASE["SHADOW-ENG-5591"].info);
-        daktilo('eth-text', DATABASE["SHADOW-ETH-8823"].info);
-        daktilo('med-text', DATABASE["SHADOW-MED-3367"].info);
-        daktilo('igd-text', DATABASE["SHADOW-IGD-4413"].info);
-        daktilo('tme-text', DATABASE["SHADOW-TME-9921"].info);
-        daktilo('o5-text', DATABASE["SHADOW-O5-5513"].info);
-        
-        // Tüm yetki seviyelerini aktif et
-        ['SAFE','EUCLID','KETER','THAUMIEL','APOLLYON'].forEach(function(cls){
-            var el = document.getElementById('clv-'+cls.toLowerCase());
-            if (el) el.className = 'clv active-'+cls.toLowerCase();
-        });
-        
-        currentAllowed = ['SAFE','EUCLID','KETER','THAUMIEL','APOLLYON'];
-        currentDept = 'ADMIN';
-        
-        document.getElementById('igdyonetim').style.display = 'block';
-        raporlariGoster();
-        
-        setStatus('SUPER ADMIN YETKİSİ AKTİF', '#ffd700');
-        playBeep(880, 0.1, 0.02);
-        
-    } else if (dbKey) {
-        var entry = DATABASE[dbKey];
-        if (entry.type === 'dclass') {
-            document.getElementById('accessDeniedMsg').style.display = 'block';
-            setStatus('ERİŞİM REDDEDİLDİ D-SINIFI KİMLİK', '#8b0000');
-            playBeep(80, 0.5, 0.04);
-            return;
-        } else {
-            document.getElementById(entry.boxId).style.display = 'block';
-            daktilo(entry.textId, entry.info);
-            entry.allowed.forEach(function(cls){
-                var el = document.getElementById('clv-'+cls.toLowerCase());
-                if (el) el.className = 'clv active-'+cls.toLowerCase();
-            });
-            currentAllowed = entry.allowed;
-            currentDept = entry.dept;
+        // ========== MATRİX ARKA PLAN ==========
+        function initMatrixBg() {
+            var bg = document.getElementById('matrix-bg');
+            for (var i = 0; i < 50; i++) {
+                var char = document.createElement('div');
+                char.className = 'matrix-char';
+                char.style.left = Math.random() * 100 + '%';
+                char.style.animationDuration = (Math.random() * 5 + 5) + 's';
+                char.style.animationDelay = Math.random() * 5 + 's';
+                char.textContent = String.fromCharCode(0x30A0 + Math.random() * 96);
+                bg.appendChild(char);
+            }
         }
-    } else {
-        document.getElementById('accessDeniedMsg').style.display = 'block';
-        setStatus('GEÇERSİZ YETKİ ANAHTARI', '#8b0000');
-        playBeep(80, 0.5, 0.04);
-        return;
-    }
 
-    currentFilter = 'ALL';
-    currentPage = 1;
-    document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
-    document.querySelector('.filter-btn[data-f="ALL"]').classList.add('active');
-    buildAllSCPs();
-    document.getElementById('scpSection').style.display = 'block';
-    setStatus('YETKİ ONAYLANDI HOŞGELDİNİZ', '#00ff41');
-});
+        // ========== PARTİKÜL ARKA PLAN ==========
+        function initParticles() {
+            var canvas = document.getElementById('particle-canvas');
+            var ctx = canvas.getContext('2d');
+            
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            var particles = [];
+            for (var i = 0; i < 100; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    size: Math.random() * 2,
+                    color: `rgba(255,0,0,${Math.random() * 0.5})`
+                });
+            }
+            
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                particles.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    
+                    if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                    if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+                    
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fillStyle = p.color;
+                    ctx.fill();
+                });
+                
+                requestAnimationFrame(animate);
+            }
+            
+            animate();
+        }
 
-// ======================================================
-// DAKTİLO
-// ======================================================
-function daktilo(elId, lines) {
-    var el = document.getElementById(elId);
-    el.innerHTML = '';
-    var li = 0, ci = 0;
-    var t = setInterval(function() {
-        if (li >= lines.length) { clearInterval(t); return; }
-        if (!el.children[li]) { var d=document.createElement('div'); d.className='branch-desc-line'; el.appendChild(d); }
-        var line = lines[li];
-        if (ci < line.length) { el.children[li].textContent += line[ci]; ci++; if(ci%3===0) playBeep(80+Math.random()*60,0.012,0.006); }
-        else { li++; ci=0; }
-    }, 8);
-}
+        // ========== BİLDİRİM GÖSTER ==========
+        function showNotification(message, type = 'info') {
+            var notif = document.getElementById('epic-notification');
+            var msg = document.getElementById('notification-message');
+            msg.textContent = message;
+            
+            if (type === 'success') notif.style.borderLeftColor = 'var(--green)';
+            else if (type === 'error') notif.style.borderLeftColor = 'var(--red)';
+            else notif.style.borderLeftColor = 'var(--gold)';
+            
+            notif.style.display = 'block';
+            playBeep(440, 0.1, 0.02);
+            
+            setTimeout(() => {
+                notif.style.display = 'none';
+            }, 3000);
+        }
 
-function daktiloDet(el, lines, scpId) {
-    el.innerHTML = '';
-    var li = 0, ci = 0;
-    
-    scpOkunma++;
-    localStorage.setItem('scp_okunma', scpOkunma);
-    
-    raporEkle(aktifOturumKodu || 'BİLİNMİYOR', currentDept, scpId, 'SCP DOSYASI AÇILDI');
-    
-    var t = setInterval(function() {
-        if (li >= lines.length) { clearInterval(t); return; }
-        if (!el.children[li]) { var d=document.createElement('div'); d.className='scp-detail-line'; el.appendChild(d); }
-        var line = lines[li];
-        if (ci < line.length) { el.children[li].textContent += line[ci]; ci++; if(ci%4===0) playBeep(60+Math.random()*40,0.01,0.005); }
-        else { li++; ci=0; }
-    }, 5);
-}
+        // ========== RAPOR DIŞA AKTAR ==========
+        function exportRapor() {
+            var veri = JSON.stringify(raporlar, null, 2);
+            var blob = new Blob([veri], {type: 'application/json'});
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'shadow_rapor_' + Date.now() + '.json';
+            a.click();
+            showNotification('Rapor dışa aktarıldı', 'success');
+        }
 
-// ======================================================
-// SCP LİSTESİ
-// ======================================================
-function buildAllSCPs() {
-    var cls5 = ["SAFE","EUCLID","KETER","THAUMIEL","APOLLYON"];
-    var indices = [];
-    for (var i = 1; i <= 1050; i++) indices.push(i);
-    
-    for (var i = indices.length-1; i > 0; i--) {
-        var j = Math.floor(Math.random()*(i+1));
-        var tmp=indices[i]; indices[i]=indices[j]; indices[j]=tmp;
-    }
-    
-    allSCPs = [];
-    indices.forEach(function(n){
-        var cls = cls5[n % 5];
-        if (currentAllowed.indexOf(cls) !== -1)
-            allSCPs.push({ id:"SCP-" + (n + 1000).toString().substring(1), num:n, cls:cls });
-    });
-    applyFilter();
-}
+        // ========== SİSTEM YENİLE ==========
+        function rebootSystem() {
+            showNotification('Sistem yeniden başlatılıyor...', 'info');
+            setTimeout(() => {
+                location.reload();
+            }, 2000);
+        }
 
-function setFilter(f) {
-    currentFilter = f; currentPage = 1;
-    document.querySelectorAll('.filter-btn').forEach(function(b){
-        b.classList.toggle('active', b.getAttribute('data-f') === f);
-    });
-    applyFilter();
-}
+        // ========== RAPOR FİLTRELE ==========
+        function filtreleRapor(tip) {
+            mevcutFiltre = tip;
+            raporlariGoster();
+        }
 
-function filterSCPs() { currentPage = 1; applyFilter(); }
-
-function applyFilter() {
-    var s = document.getElementById('searchBar').value.trim().toUpperCase();
-    filteredSCPs = allSCPs.filter(function(scp){
-        var cm = currentFilter === 'ALL' || scp.cls === currentFilter;
-        var sm = !s || scp.id.indexOf(s) !== -1 || scp.cls.indexOf(s) !== -1;
-        return cm && sm;
-    });
-    renderPage();
-}
-
-function renderPage() {
-    var list = document.getElementById('scp-list');
-    list.innerHTML = '';
-    var start = (currentPage-1)*PAGE_SIZE;
-    var page = filteredSCPs.slice(start, start+PAGE_SIZE);
-
-    page.forEach(function(scp){
-        var folder = document.createElement('div');
-        folder.className = 'scp-folder';
-        folder.innerHTML =
-            '<span class="scp-name">' + scp.id + '</span>' +
-            '<span class="scp-right">' +
-            '<span class="badge badge-' + scp.cls.toLowerCase() + '">' + scp.cls + '</span>' +
-            '<span class="scp-arrow">&#9658;</span>' +
-            '</span>';
-
-        var det = document.createElement('div');
-        det.className = 'scp-details';
-
-        (function(f, d, s){
-            f.onclick = function(){
-                var open = d.classList.contains('open');
-                document.querySelectorAll('.scp-details').forEach(function(x){ x.classList.remove('open'); });
-                document.querySelectorAll('.scp-folder').forEach(function(x){ x.classList.remove('active'); });
-                if (!open) {
-                    d.classList.add('open');
-                    f.classList.add('active');
-                    var inner = document.createElement('div');
-                    inner.className = 'scp-detail-inner';
-                    d.innerHTML = ''; d.appendChild(inner);
-                    daktiloDet(inner, getSCPLines(s.num, s.cls, currentDept), s.id);
-                    playBeep(200, 0.04, 0.01);
-                }
+        // ========== ONAY SİSTEMİ FONKSİYONLARI ==========
+        function onayIstegiGonder(scpId, talepEden) {
+            var zaman = new Date().toLocaleString('tr-TR');
+            var istek = {
+                id: Date.now(),
+                scp: scpId,
+                talepEden: talepEden,
+                talepZamani: zaman,
+                durum: 'BEKLİYOR'
             };
-        })(folder, det, scp);
+            bekleyenOnaylar.push(istek);
+            localStorage.setItem('bekleyen_onaylar', JSON.stringify(bekleyenOnaylar));
+            
+            raporEkle(talepEden, 'ETİK', scpId, 'O5 ONAYI BEKLİYOR', 'ACİL');
+            
+            playBeep(880, 0.3, 0.03);
+            showNotification('O5 onayı bekle!')
+                        showNotification('O5 onayı bekleniyor - ' + scpId, 'info');
+            
+            // IGD paneline de ekle
+            if (document.getElementById('o5-panel').style.display === 'block') {
+                o5PanelGuncelle();
+            }
+            
+            return istek;
+        }
 
-        list.appendChild(folder);
-        list.appendChild(det);
-    });
+        function onayla(istekId) {
+            var istek = bekleyenOnaylar.find(i => i.id === istekId);
+            if (istek) {
+                istek.durum = 'ONAYLANDI';
+                istek.onayZamani = new Date().toLocaleString('tr-TR');
+                istek.onaylayan = aktifOturumKodu;
+                
+                onaylananSCPLer.push({
+                    scp: istek.scp,
+                    onayZamani: istek.onayZamani,
+                    onaylayan: aktifOturumKodu,
+                    talepEden: istek.talepEden
+                });
+                
+                bekleyenOnaylar = bekleyenOnaylar.filter(i => i.id !== istekId);
+                
+                localStorage.setItem('bekleyen_onaylar', JSON.stringify(bekleyenOnaylar));
+                localStorage.setItem('onaylanan_scpler', JSON.stringify(onaylananSCPLer));
+                
+                raporEkle(aktifOturumKodu, 'O5', istek.scp, 'SCP ONAYLANDI', 'İZİN VERİLDİ');
+                
+                showNotification('SCP onaylandı: ' + istek.scp, 'success');
+                playBeep(660, 0.2, 0.03);
+                
+                o5PanelGuncelle();
+                
+                // İstatistikleri güncelle
+                document.getElementById('bekleyen-onay').textContent = bekleyenOnaylar.length;
+            }
+        }
 
-    renderPagination();
-}
+        function reddet(istekId) {
+            var istek = bekleyenOnaylar.find(i => i.id === istekId);
+            if (istek) {
+                istek.durum = 'REDDEDİLDİ';
+                istek.redZamani = new Date().toLocaleString('tr-TR');
+                istek.reddeden = aktifOturumKodu;
+                
+                bekleyenOnaylar = bekleyenOnaylar.filter(i => i.id !== istekId);
+                
+                localStorage.setItem('bekleyen_onaylar', JSON.stringify(bekleyenOnaylar));
+                
+                raporEkle(aktifOturumKodu, 'O5', istek.scp, 'SCP REDDEDİLDİ', 'YETKİ YOK');
+                
+                showNotification('SCP reddedildi: ' + istek.scp, 'error');
+                playBeep(220, 0.3, 0.03);
+                
+                o5PanelGuncelle();
+                document.getElementById('bekleyen-onay').textContent = bekleyenOnaylar.length;
+            }
+        }
 
-function renderPagination() {
-    var pg = document.getElementById('pagination');
-    pg.innerHTML = '';
-    var total = Math.ceil(filteredSCPs.length / PAGE_SIZE);
-    if (total <= 1) return;
+        // ========== O5 PANELİ GÜNCELLE ==========
+        function o5PanelGuncelle() {
+            var listeDiv = document.getElementById('o5-talep-listesi');
+            if (!listeDiv) return;
+            
+            if (bekleyenOnaylar.length === 0) {
+                listeDiv.innerHTML = '<div style="color:#444; text-align:center; padding:30px; border:1px dashed #333;">⚜️ BEKLEYEN TALEP YOK</div>';
+                return;
+            }
+            
+            var html = '';
+            bekleyenOnaylar.forEach(function(talep) {
+                html += '<div class="o5-talep">';
+                html += '<div class="o5-talep-info">';
+                html += '<div class="o5-talep-scp">⚠️ ' + talep.scp + '</div>';
+                html += '<div class="o5-talep-detay">Talep Eden: ' + talep.talepEden + ' | Zaman: ' + talep.talepZamani + '</div>';
+                html += '</div>';
+                html += '<div class="o5-talep-butonlar">';
+                html += '<button class="o5-onayla" onclick="onayla(' + talep.id + ')">✓ ONAYLA</button>';
+                html += '<button class="o5-reddet" onclick="reddet(' + talep.id + ')">✗ REDDET</button>';
+                html += '</div>';
+                html += '</div>';
+            });
+            listeDiv.innerHTML = html;
+            
+            // İstatistik güncelle
+            document.getElementById('bekleyen-onay').textContent = bekleyenOnaylar.length;
+        }
 
-    var info = document.createElement('span');
-    info.className = 'page-info';
-    info.textContent = filteredSCPs.length + ' KAYIT  SAYFA ' + currentPage + '/' + total + '  ';
-    pg.appendChild(info);
+        // ========== SCP KONTROL ==========
+        function scpKontrol(scpId, talepEden, callback) {
+            // Admin ise direkt aç
+            if (aktifOturumKodu && (aktifOturumKodu === "6-CİLLAHPSR" || aktifOturumKodu === "SRTUQUQUE78921")) {
+                callback(true);
+                return;
+            }
+            
+            // Tehlikeli SCP mi kontrol et
+            if (TEHLIKELI_SCPLER.includes(scpId)) {
+                // Daha önce onaylanmış mı?
+                var onayli = onaylananSCPLer.find(o => o.scp === scpId);
+                if (onayli) {
+                    callback(true);
+                    raporEkle(talepEden, currentDept, scpId, 'SCP AÇILDI (ÖNCEDEN ONAYLI)', onayli.onaylayan + ' tarafından');
+                } else {
+                    // Etik komite mi kontrol et
+                    if (currentDept === 'ETH') {
+                        onayIstegiGonder(scpId, talepEden);
+                        alert('⚠️ BU SCP O5 ONAYI GEREKTİRİR!\n\nTalep O5 Konseyi\'ne iletilmiştir. Onay bekleniyor...');
+                        callback(false);
+                    } else {
+                        alert('⛔ BU SCP\'YE ERİŞİM YETKİNİZ YOK!\n\nSadece ETİK KOMİTE talep edebilir.');
+                        callback(false);
+                    }
+                }
+            } else {
+                callback(true);
+                raporEkle(talepEden, currentDept, scpId, 'SCP DOSYASI AÇILDI', 'Standart erişim');
+            }
+        }
 
-    if (currentPage > 1) {
-        var prev = document.createElement('button');
-        prev.className = 'page-btn'; prev.innerHTML = '&#9664; ÖNCEKİ';
-        prev.onclick = function(){ currentPage--; renderPage(); window.scrollTo(0,250); };
-        pg.appendChild(prev);
-    }
+        // ========== SES ==========
+        function ensureAudio() {
+            if (!audioCtx) { 
+                try { 
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)(); 
+                } catch(e){} 
+            }
+        }
 
-    for (var p = Math.max(1,currentPage-2); p <= Math.min(total,currentPage+2); p++) {
-        (function(pp){
-            var btn = document.createElement('button');
-            btn.className = 'page-btn'+(pp===currentPage?' active':'');
-            btn.textContent = pp;
-            btn.onclick = function(){ currentPage=pp; renderPage(); window.scrollTo(0,250); };
-            pg.appendChild(btn);
-        })(p);
-    }
+        function playBeep(freq, dur, vol) {
+            if (!audioCtx) return;
+            try {
+                var o = audioCtx.createOscillator();
+                var g = audioCtx.createGain();
+                o.type = 'sine';
+                o.frequency.value = freq || 440;
+                g.gain.value = vol || 0.1;
+                o.connect(g);
+                g.connect(audioCtx.destination);
+                o.start();
+                o.stop(audioCtx.currentTime + (dur || 0.1));
+            } catch(e){}
+        }
 
-    if (currentPage < total) {
-        var next = document.createElement('button');
-        next.className = 'page-btn'; next.innerHTML = 'SONRAKİ &#9654;';
-        next.onclick = function(){ currentPage++; renderPage(); window.scrollTo(0,250); };
-        pg.appendChild(next);
-    }
-}
+        // ========== SİSTEM BAŞLAT ==========
+        function initSystem() {
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('epic-loading').style.display = 'flex';
+            ensureAudio();
+            initMatrixBg();
+            initParticles();
+            
+            setTimeout(() => {
+                document.getElementById('epic-loading').style.display = 'none';
+                setStatus('ONLINE YETKİ ANAHTARI BEKLENİYOR', '#1a3d1a');
+                playBeep(880, 0.1, 0.05);
+                
+                // Sistem zamanlayıcı
+                sistemGuncelleyici = setInterval(() => {
+                    sistemUptime = Math.floor((Date.now() - baslangicZamani) / 1000);
+                    document.getElementById('sistem-uptime').textContent = sistemUptime + 's';
+                    document.getElementById('settings-uptime').textContent = sistemUptime + ' saniye';
+                }, 1000);
+            }, 3000);
+        }
 
-// Admin paneli güncellemesi
-setInterval(function() {
-    if (document.getElementById('igdyonetim').style.display === 'block') {
-        raporlariGoster();
-    }
-}, 2000);
-</script>
+        function setStatus(t, c) {
+            var el = document.getElementById('statusBar');
+            el.textContent = '⚫ STATUS: ' + t;
+            el.style.color = c || '#333';
+        }
+
+        // ========== RAPOR GÖSTER ==========
+        function raporlariGoster() {
+            var tbody = document.getElementById('rapor-tbody');
+            tbody.innerHTML = '';
+            
+            var filtrelenmisRaporlar = raporlar;
+            if (mevcutFiltre === 'GİRİŞ') {
+                filtrelenmisRaporlar = raporlar.filter(r => r.islem === 'GİRİŞ YAPILDI');
+            } else if (mevcutFiltre === 'SCP') {
+                filtrelenmisRaporlar = raporlar.filter(r => r.islem.includes('SCP'));
+            } else if (mevcutFiltre === 'O5') {
+                filtrelenmisRaporlar = raporlar.filter(r => r.departman === 'O5' || r.islem.includes('ONAY'));
+            }
+            
+            filtrelenmisRaporlar.slice(0, 30).forEach(function(r) {
+                var tr = document.createElement('tr');
+                tr.innerHTML = `<td>${r.zaman}</td><td>${r.kod}</td><td>${r.departman}</td><td>${r.scp}</td><td>${r.islem}</td><td>${r.detay || '-'}</td>`;
+                tbody.appendChild(tr);
+            });
+            
+            document.getElementById('toplam-giris').textContent = toplamGiris;
+            document.getElementById('scp-okunma').textContent = scpOkunma;
+            document.getElementById('toplam-rapor').textContent = raporlar.length;
+        }
+
+        function raporEkle(kod, departman, scp, islem, detay = '') {
+            var zaman = new Date().toLocaleString('tr-TR');
+            raporlar.unshift({ zaman, kod, departman, scp, islem, detay });
+            if (raporlar.length > 200) raporlar.pop();
+            localStorage.setItem('igd_raporlar', JSON.stringify(raporlar));
+            
+            if (document.getElementById('igdyonetim').style.display === 'block') {
+                raporlariGoster();
+            }
+            
+            // IGD istatistiklerini güncelle
+            if (departman === 'IGD') {
+                var igdGiris = parseInt(document.getElementById('igd-giris').textContent) || 0;
+                document.getElementById('igd-giris').textContent = igdGiris + 1;
+            }
+            if (islem.includes('SCP')) {
+                var igdScp = parseInt(document.getElementById('igd-scp').textContent) || 0;
+                document.getElementById('igd-scp').textContent = igdScp + 1;
+            }
+        }
+
+        function raporlariTemizle() {
+            if (confirm('⚠️ Tüm raporlar silinecek! Bu işlem geri alınamaz. Emin misiniz?')) {
+                raporlar = [];
+                toplamGiris = 0;
+                scpOkunma = 0;
+                localStorage.setItem('igd_raporlar', '[]');
+                localStorage.setItem('toplam_giris', '0');
+                localStorage.setItem('scp_okunma', '0');
+                raporlariGoster();
+                showNotification('Raporlar temizlendi', 'success');
+            }
+        }
+
+        // ========== YETKİ GİRİŞİ ==========
+        document.getElementById('passInput').addEventListener('input', function() {
+            var key = this.value.trim().toUpperCase();
+            var dbKey = null;
+            var keys = Object.keys(DATABASE);
+            
+            for (var i = 0; i < keys.length; i++) {
+                if (keys[i].toUpperCase() === key) { 
+                    dbKey = keys[i]; 
+                    break; 
+                }
+            }
+
+            // Özel kod kontrolü
+            var ozelYetki = OZEL_KODLAR[key];
+            var isAdmin = ozelYetki === "SUPER_ADMIN" || ozelYetki === "ADMIN";
+
+            // Raporlama
+            toplamGiris++;
+            localStorage.setItem('toplam_giris', toplamGiris);
+            aktifOturumKodu = key;
+            
+            raporEkle(key, 'SİSTEM', '-', 'GİRİŞ YAPILDI', '-');
+
+            // Önceki panelleri temizle
+            document.querySelectorAll('.branch-box').forEach(function(b){ b.style.display='none'; });
+            document.getElementById('accessDeniedMsg').style.display = 'none';
+            document.getElementById('scpSection').style.display = 'none';
+            document.getElementById('igdyonetim').style.display = 'none';
+            document.getElementById('o5-panel').style.display = 'none';
+            document.getElementById('epic-panel').style.display = 'none';
+            document.getElementById('statsPanel').style.display = 'none';
+            
+            document.getElementById('scp-list').innerHTML = '';
+            document.getElementById('pagination').innerHTML = '';
+            document.getElementById('terminalHeader').classList.add('collapsed');
+            
+            ['safe','euclid','keter','thaumiel','apollyon'].forEach(function(c){
+                document.getElementById('clv-'+c).className = 'clv';
+            });
+
+            // Settings kullanıcı bilgisi güncelle
+            document.getElementById('settings-user').textContent = key;
+
+            if (isAdmin) {
+                // ADMIN YETKİSİ (O5 ÜYESİ)
+                document.getElementById('SEC-B').style.display = 'block';
+                document.getElementById('ENG-B').style.display = 'block';
+                document.getElementById('ETH-B').style.display = 'block';
+                document.getElementById('MED-B').style.display = 'block';
+                document.getElementById('IGD-B').style.display = 'block';
+                document.getElementById('TME-B').style.display = 'block';
+                document.getElementById('O5-B').style.display = 'block';
+                document.getElementById('epic-panel').style.display = 'block';
+                document.getElementById('statsPanel').style.display = 'block';
+                
+                // Departman bilgilerini daktilo ile yaz
+                daktilo('sec-text', DATABASE["SHADOW-SEC-7712"].info);
+                daktilo('eng-text', DATABASE["SHADOW-ENG-5591"].info);
+                daktilo('eth-text', DATABASE["SHADOW-ETH-8823"].info);
+                daktilo('med-text', DATABASE["SHADOW-MED-3367"].info);
+                daktilo('igd-text', DATABASE["SHADOW-IGD-4413"].info);
+                daktilo('tme-text', DATABASE["SHADOW-TME-9921"].info);
+                daktilo('o5-text', DATABASE["SHADOW-O5-5513"].info);
+                
+                // Tüm yetki seviyelerini aktif et
+                ['SAFE','EUCLID','KETER','THAUMIEL','APOLLYON'].forEach(function(cls){
+                    var el = document.getElementById('clv-'+cls.toLowerCase());
+                    if (el) el.className = 'clv active-'+cls.toLowerCase();
+                });
+                
+                currentAllowed = ['SAFE','EUCLID','KETER','THAUMIEL','APOLLYON'];
+                currentDept = 'O5';
+                
+                document.getElementById('igdyonetim').style.display = 'block';
+                document.getElementById('o5-panel').style.display = 'block';
+                
+                raporlariGoster();
+                o5PanelGuncelle();
+                
+                // İstatistikleri güncelle
+                document.getElementById('aktif-oturum').textContent = '1';
+                
+                setStatus('O5 YETKİSİ AKTİF - ONAY BEKLİYOR', '#ffd700');
+                playBeep(880, 0.1, 0.02);
+                showNotification('O5 yetkisi ile giriş yapıldı', 'success');
+                
+            } else if (dbKey) {
+                var entry = DATABASE[dbKey];
+                if (entry.type === 'dclass') {
+                    document.getElementById('accessDeniedMsg').style.display = 'block';
+                    setStatus('ERİŞİM REDDEDİLDİ D-SINIFI KİMLİK', '#8b0000');
+                    playBeep(80, 0.5, 0.04);
+                    showNotification('D-Sınıfı erişimi reddedildi!', 'error');
+                    return;
+                } else {
+                    document.getElementById(entry.boxId).style.display = 'block';
+                    document.getElementById('statsPanel').style.display = 'block';
+                    
+                    daktilo(entry.textId, entry.info);
+                    
+                    entry.allowed.forEach(function(cls){
+                        var el = document.getElementById('clv-'+cls.toLowerCase());
+                        if (el) el.className = 'clv active-'+cls.toLowerCase();
+                    });
+                    
+                    currentAllowed = entry.allowed;
+                    currentDept = entry.dept;
+                    
+                    // Departman özel panel
+                    if (entry.dept === 'IGD') {
+                        document.getElementById('igdyonetim').style.display = 'block';
+                        raporlariGoster();
+                    }
+                    
+                    setStatus(entry.dept + ' YETKİSİ AKTİF', '#00ff41');
+                    playBeep(440, 0.1, 0.02);
+                    showNotification(entry.dept + ' departmanına hoşgeldiniz', 'success');
+                }
+            } else {
+                document.getElementById('accessDeniedMsg').style.display = 'block';
+                setStatus('GEÇERSİZ YETKİ ANAHTARI', '#8b0000');
+                playBeep(80, 0.5, 0.04);
+                showNotification('Geçersiz yetki anahtarı!', 'error');
+                return;
+            }
+
+            // İstatistikleri güncelle
+            document.getElementById('toplam-giris').textContent = toplamGiris;
+            document.getElementById('scp-okunma').textContent = scpOkunma;
+            document.getElementById('toplam-rapor').textContent = raporlar.length;
+            document.getElementById('bekleyen-onay').textContent = bekleyenOnaylar.length;
+
+            currentFilter = 'ALL';
+            currentPage = 1;
+            document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
+            document.querySelector('.filter-btn[data-f="ALL"]').classList.add('active');
+            buildAllSCPs();
+            document.getElementById('scpSection').style.display = 'block';
+        });
+
+        // ========== DAKTİLO FONKSİYONLARI ==========
+        function daktilo(elId, lines) {
+            var el = document.getElementById(elId);
+            el.innerHTML = '';
+            var li = 0, ci = 0;
+            var t = setInterval(function() {
+                if (li >= lines.length) { 
+                    clearInterval(t); 
+                    return; 
+                }
+                if (!el.children[li]) { 
+                    var d = document.createElement('div'); 
+                    d.className = 'branch-desc-line'; 
+                    el.appendChild(d); 
+                }
+                var line = lines[li];
+                if (ci < line.length) { 
+                    el.children[li].textContent += line[ci]; 
+                    ci++; 
+                    if (ci % 3 === 0) playBeep(80 + Math.random() * 60, 0.012, 0.006); 
+                } else { 
+                    li++; 
+                    ci = 0; 
+                }
+            }, 15);
+        }
+
+        function daktiloDet(el, lines, scpId) {
+            el.innerHTML = '';
+            var li = 0, ci = 0;
+            
+            // SCP okunma sayacı
+            scpOkunma++;
+            localStorage.setItem('scp_okunma', scpOkunma);
+            document.getElementById('scp-okunma').textContent = scpOkunma;
+            
+            var t = setInterval(function() {
+                if (li >= lines.length) { 
+                    clearInterval(t); 
+                    return; 
+                }
+                if (!el.children[li]) { 
+                    var d = document.createElement('div'); 
+                    d.className = 'scp-detail-line'; 
+                    if (TEHLIKELI_SCPLER.includes(scpId)) {
+                        d.classList.add('tehlikeli');
+                    }
+                    el.appendChild(d); 
+                }
+                var line = lines[li];
+                if (ci < line.length) { 
+                    el.children[li].textContent += line[ci]; 
+                    ci++; 
+                    if (ci % 4 === 0) playBeep(60 + Math.random() * 40, 0.01, 0.005); 
+                } else { 
+                    li++; 
+                    ci = 0; 
+                }
+            }, 10);
+        }
+
+        // ========== SCP LİSTESİ ==========
+        function buildAllSCPs() {
+            var cls5 = ["SAFE","EUCLID","KETER","THAUMIEL","APOLLYON"];
+            var indices = [];
+            for (var i = 1; i <= 1050; i++) indices.push(i);
+            
+            for (var i = indices.length-1; i > 0; i--) {
+                var j = Math.floor(Math.random() * (i + 1));
+                var tmp = indices[i]; 
+                indices[i] = indices[j]; 
+                indices[j] = tmp;
+            }
+            
+            allSCPs = [];
+            indices.forEach(function(n) {
+                var cls = cls5[n % 5];
+                if (currentAllowed.indexOf(cls) !== -1) {
+                    var scpId = "SCP-" + (n + 1000).toString().substring(1);
+                    allSCPs.push({ 
+                        id: scpId, 
+                        num: n, 
+                        cls: cls,
+                        tehlikeli: TEHLIKELI_SCPLER.includes(scpId)
+                    });
+                }
+            });
+            applyFilter();
+        }
+
+        function setFilter(f) {
+            currentFilter = f; 
+            currentPage = 1;
+            document.querySelectorAll('.filter-btn').forEach(function(b) {
+                b.classList.toggle('active', b.getAttribute('data-f') === f);
+            });
+            applyFilter();
+        }
+
+        function filterSCPs() { 
+            currentPage = 1; 
+            applyFilter(); 
+        }
+
+        function applyFilter() {
+            var s = document.getElementById('searchBar').value.trim().toUpperCase();
+            filteredSCPs = allSCPs.filter(function(scp) {
+                var cm = currentFilter === 'ALL' || 
+                        (currentFilter === 'TEHLIKELI' && scp.tehlikeli) || 
+                        scp.cls === currentFilter;
+                var sm = !s || scp.id.indexOf(s) !== -1 || scp.cls.indexOf(s) !== -1;
+                return cm && sm;
+            });
+            renderPage();
+        }
+
+        function renderPage() {
+            var list = document.getElementById('scp-list');
+            list.innerHTML = '';
+            var start = (currentPage - 1) * PAGE_SIZE;
+            var page = filteredSCPs.slice(start, start + PAGE_SIZE);
+
+            page.forEach(function(scp) {
+                var folder = document.createElement('div');
+                folder.className = 'scp-folder';
+                
+                if (scp.tehlikeli) {
+                    folder.classList.add('tehlikeli');
+                }
+                
+                folder.innerHTML =
+                    '<span class="scp-name">' + scp.id + (scp.tehlikeli ? ' ⚠️ [O5 ONAYLI]' : '') + '</span>' +
+                    '<span class="scp-right">' +
+                    '<span class="badge badge-' + scp.cls.toLowerCase() + '">' + scp.cls + '</span>' +
+                    '<span class="scp-arrow">&#9658;</span>' +
+                    '</span>';
+
+                var det = document.createElement('div');
+                det.className = 'scp-details';
+
+                (function(f, d, s) {
+                    f.onclick = function() {
+                        var open = d.classList.contains('open');
+                        
+                        if (s.tehlikeli && !open && currentDept !== 'O5') {
+                            scpKontrol(s.id, aktifOturumKodu || 'BİLİNMİYOR', function(izin) {
+                                if (izin) {
+                                    acSCP(f, d, s);
+                                }
+                            });
+                        } else {
+                            if (!open) {
+                                acSCP(f, d, s);
+                            } else {
+                                d.classList.remove('open');
+                                f.classList.remove('active');
+                            }
+                        }
+                    };
+                })(folder, det, scp);
+
+                list.appendChild(folder);
+                list.appendChild(det);
+            });
+
+            renderPagination();
+        }
+
+        function acSCP(folder, det, scp) {
+            document.querySelectorAll('.scp-details').forEach(function(x) { 
+                x.classList.remove('open'); 
+            });
+            document.querySelectorAll('.scp-folder').forEach(function(x) { 
+                x.classList.remove('active'); 
+            });
+            
+            det.classList.add('open');
+            folder.classList.add('active');
+            
+            var inner = document.createElement('div');
+            inner.className = 'scp-detail-inner';
+            det.innerHTML = ''; 
+            det.appendChild(inner);
+            
+            var lines = getSCPLines(scp.num, scp.cls, currentDept, scp.id);
+            daktiloDet(inner, lines, scp.id);
+            playBeep(200, 0.04, 0.01);
+        }
+
+        function renderPagination() {
+            var pg = document.getElementById('pagination');
+            pg.innerHTML = '';
+            var total = Math.ceil(filteredSCPs.length / PAGE_SIZE);
+            if (total <= 1) return;
+
+            var info = document.createElement('span');
+            info.className = 'page-info';
+            info.textContent = filteredSCPs.length + ' KAYIT  SAYFA ' + currentPage + '/' + total + '  ';
+            pg.appendChild(info);
+
+            if (currentPage > 1) {
+                var prev = document.createElement('button');
+                prev.className = 'page-btn'; 
+                prev.innerHTML = '&#9664; ÖNCEKİ';
+                prev.onclick = function() { 
+                    currentPage--; 
+                    renderPage(); 
+                    window.scrollTo(0, 250); 
+                };
+                pg.appendChild(prev);
+            }
+
+            for (var p = Math.max(1, currentPage - 2); p <= Math.min(total, currentPage + 2); p++) {
+                (function(pp) {
+                    var btn = document.createElement('button');
+                    btn.className = 'page-btn' + (pp === currentPage ? ' active' : '');
+                    btn.textContent = pp;
+                    btn.onclick = function() { 
+                        currentPage = pp; 
+                        renderPage(); 
+                        window.scrollTo(0, 250); 
+                    };
+                    pg.appendChild(btn);
+                })(p);
+            }
+
+            if (currentPage < total) {
+                var next = document.createElement('button');
+                next.className = 'page-btn'; 
+                next.innerHTML = 'SONRAKİ &#9654;';
+                next.onclick = function() { 
+                    currentPage++; 
+                    renderPage(); 
+                    window.scrollTo(0, 250); 
+                };
+                pg.appendChild(next);
+            }
+        }
+
+        // ========== SCP BİLGİLERİ ==========
+        var SCP_NAMES = [
+            "Yıkılmaz Heykel", "Yaşlı Adam", "Utangaç Adam", "Heykel", "Güneş Doğduğunda",
+            "Leviathan", "Yul Adam", "Anantashesha", "Kırmızı Gerçeklik", "Ölümden Sonra",
+            "Nefret Eti", "Maskeli Hırsız", "Yapıcı Ayı", "İnek Çanı", "Uyku Katili",
+            "Sonsuz Merdiven", "Karanlık Oda", "Yürüyen Dağ", "Ölümsüz Balik", "Ağlayan Ayna",
+            "Koşan Tünel", "Sessiz Orman", "Kayan Kapı", "Düşünen Taş", "Konuşan Gölge"
+        ];
+
+        var SCP_LOCS = ["Site-Shadow", "Site-19", "Site-17", "Site-23", "Site-X", "Alan-Shadow-B", "Yer-Altı-7", "Tesis-Shadow-K"];
+
+        function getSCPLines(num, cls, dept, scpId) {
+            var site = SCP_LOCS[num % SCP_LOCS.length];
+            var name = SCP_NAMES[num % SCP_NAMES.length];
+            var yil = "20" + (10 + (num % 15));
+            var tehlike = {
+                APOLLYON: "OMEGA - GERÇEKLİK ÇÖKÜŞÜ",
+                KETER: "YÜKSEK - ÖLÜMCÜL",
+                THAUMIEL: "KONTROLLÜ - YARARLI",
+                EUCLID: "ORTA - DEĞİŞKEN",
+                SAFE: "DÜŞÜK - GÜVENLİ"
+            }[cls] || "BİLİNMİYOR";
+
+            // Tehlikeli SCP'ler için özel içerik
+            if (TEHLIKELI_SCPLER.includes(scpId)) {
+                var onayBilgisi = onaylananSCPLer.find(o => o.scp === scpId);
+                return [
+                    "⚠️ O5 ONAYLI DOSYA ⚠️",
+                    "Kod Adı         : " + name,
+                    "Sınıflandırma   : " + cls + " (KRİTİK SEVİYE)",
+                    "Tehlike Seviyesi: " + tehlike,
+                    "Muhafaza Tesisi : " + site + " [MAKSİMUM GÜVENLİK]",
+                    "O5 Kararı       : " + (onayBilgisi ? onayBilgisi.onayZamani : "ONAY BEKLİYOR"),
+                    "Onaylayan       : " + (onayBilgisi ? onayBilgisi.onaylayan : "-"),
+                    "XK Sınıfı       : AKTİF - ACİL DURUM PROTOKOLÜ",
+                    "Not             : BU DOSYA O5 ONAYI İLE AÇILMIŞTIR"
+                ];
+            }
+
+            // O5 için özel içerik
+            if (dept === 'O5') {
+                return [
+                    "Kod Adı         : " + name + " [O5 SEVİYESİ]",
+                    "Sınıflandırma   : " + cls,
+                    "Tehlike Seviyesi: " + tehlike,
+                    "Muhafaza Tesisi : " + site + " [GİZLİ KAT]",
+                    "O5 Kararı       : " + (cls === "APOLLYON" ? "ACİL TOPLANMA" : "Standart Protokol"),
+                    "Gözlemci        : O5-" + (num % 13 + 1),
+                    "XK Sınıfı       : " + (cls === "APOLLYON" ? "AKTİF - TÜM TESİSLER ALARMDA" : "PASİF"),
+                    "Not             : BU BELGE O5 ONAYI OLMADAN AÇILAMAZ"
+                ];
+            }
+
+            // IGD için özel içerik
+            if (dept === 'IGD') {
+                return [
+                    "Kod Adı         : " + name,
+                    "Sınıflandırma   : " + cls + "  |  Tehlike: " + tehlike,
+                    "Muhafaza Tesisi : " + site,
+                    "IGD Gözlem      : Gizli kamera ile 7/24 izleniyor",
+                    "Personel        : " + (num % 10 + 1) + " ajan görevlendirildi",
+                    "Sızıntı Riski   : " + (cls === "KETER" ? "YÜKSEK" : "DÜŞÜK"),
+                    "Not             : Bu dosyayı açan kaydedildi"
+                ];
+            }
+
+            // Diğer departmanlar
+            var sets = {
+                SEC: [
+                    "Kod Adı         : " + name,
+                    "Sınıflandırma   : " + cls + "  |  Tehlike: " + tehlike,
+                    "Muhafaza Tesisi : " + site + " Güvenli Bölge",
+                    "Güvenlik Çemberi: " + (num % 3 + 2) + " katlı kilit",
+                    "Personel İzni   : Güvenlik Yetki-" + (num % 3 + 1),
+                    "Son İhlal       : " + (num % 7 === 0 ? "Kayıt yok" : yil)
+                ],
+                ENG: [
+                    "Kod Adı         : " + name,
+                    "Sınıflandırma   : " + cls + "  |  Tehlike: " + tehlike,
+                    "Muhafaza Tesisi : " + site + " Mühendislik Bölgesi",
+                    "Muhafaza Sistemi: " + (cls === "THAUMIEL" ? "Thaumiel destekli" : "Standart izole oda"),
+                    "Güç Tüketimi    : " + ((num * 13) % 500 + 100) + " kWh",
+                    "Son Bakım       : " + yil
+                ],
+                ETH: [
+                    "Kod Adı         : " + name,
+                    "Sınıflandırma   : " + cls + "  |  Tehlike: " + tehlike,
+                    "Muhafaza Tesisi : " + site,
+                    "Deney Durumu    : " + (num % 4 === 0 ? "Etik onay bekliyor" : "Onaylı"),
+                    "D-Sınıfı        : " + (num % 5 === 0 ? "Sınırlı kullanım" : "Yasak"),
+                    "Komite Kararı   : " + yil + " onaylı"
+                ],
+                MED: [
+                    "Kod Adı         : " + name,
+                    "Sınıflandırma   : " + cls + "  |  Tehlike: " + tehlike,
+                    "Muhafaza Tesisi : " + site + " Tıbbi Karantina",
+                    "Biyolojik Risk  : " + (cls === "KETER" ? "Sınıf-A biyohazmat" : "Standart maske"),
+                    "Temas Protokolü : " + (cls === "APOLLYON" ? "KESİNLİKLE YASAK" : "72 saat karantina"),
+                    "Tedavi          : " + (num % 2 === 0 ? "Amnezik uygulanır" : "Tedavi yok")
+                ],
+                TME: [
+                    "Kod Adı         : " + name,
+                    "Sınıflandırma   : " + cls + "  |  Tehlike: " + tehlike,
+                    "Muhafaza Tesisi : " + site,
+                    "Müdahale Birimi : TME-" + ((num % 5) + 1),
+                    "Nötralizasyon   : " + (cls === "KETER" || cls === "APOLLYON" ? "Ağır silah" : "Standart"),
+                    "Son Operasyon   : " + yil
+                ]
+            };
+            return sets[dept] || sets["SEC"];
+        }
+
+        // ========== SİSTEM GÜNCELLEME ==========
+        setInterval(function() {
+            if (document.getElementById('igdyonetim').style.display === 'block') {
+                raporlariGoster();
+            }
+            if (document.getElementById('o5-panel').style.display === 'block') {
+                o5PanelGuncelle();
+            }
+            
+            // Epic panel değerlerini güncelle
+            document.getElementById('epic-scan').textContent = raporlar.length;
+            document.getElementById('epic-security').textContent = (100 - (bekleyenOnaylar.length * 5)) + '%';
+        }, 2000);
+    </script>
 </body>
 </html>
