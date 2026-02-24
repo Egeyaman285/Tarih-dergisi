@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>SHADOW RP V14 | EPİK TERMİNAL</title>
+    <title>SHADOW RP V15 | RÜTBE SİSTEMİ</title>
     <style>
         /* ========== ANA TEMA ========== */
         @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600&display=swap');
@@ -21,6 +21,9 @@
             --gold-dim: #aa8800;
             --purple: #aa00ff;
             --purple-dim: #550088;
+            --orange: #ff8800;
+            --cyan: #00ffff;
+            --pink: #ff44aa;
             --panel: #080808;
             --neon-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
         }
@@ -117,6 +120,12 @@
             0%, 100% { transform: translateX(0); }
             25% { transform: translateX(-5px); }
             75% { transform: translateX(5px); }
+        }
+
+        @keyframes rankGlow {
+            0% { opacity: 0.8; }
+            50% { opacity: 1; box-shadow: 0 0 15px currentColor; }
+            100% { opacity: 0.8; }
         }
 
         /* ========== ARKA PLAN ANİMASYONLARI ========== */
@@ -258,6 +267,7 @@
             .rapor-tablo th, .rapor-tablo td { font-size: 0.6rem; padding: 4px 2px; }
             .settings-box { padding: 20px; }
             .settings-line { font-size: 0.7rem; }
+            .rutbe-paneli { grid-template-columns: 1fr; }
         }
 
         @media (max-width: 480px) {
@@ -410,6 +420,140 @@
             font-size: 0.8rem; font-weight: 700; letter-spacing: 3px;
             text-shadow: 0 0 10px var(--red); z-index: 2000; 
             opacity: 0.6; animation: neonPulse 4s infinite;
+        }
+
+        /* ========== RÜTBE GİRİŞ PANELİ ========== */
+        #rutbe-paneli {
+            background: linear-gradient(145deg, #080808, #010101);
+            border: 2px solid var(--gold);
+            padding: 25px;
+            margin-bottom: 30px;
+            display: none;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #rutbe-paneli::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,215,0,0.1), transparent);
+            animation: spin 15s linear infinite;
+        }
+
+        .rutbe-header {
+            font-family: 'Orbitron', monospace;
+            color: var(--gold);
+            font-size: 1.1rem;
+            letter-spacing: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+            animation: neonPulse 2s infinite;
+        }
+
+        .rutbe-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .rutbe-kart {
+            background: #0a0a0a;
+            border: 1px solid #222;
+            padding: 20px;
+            border-radius: 8px;
+            transition: 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .rutbe-kart:hover {
+            transform: translateY(-5px);
+            border-color: var(--gold);
+            box-shadow: 0 5px 20px rgba(255,215,0,0.3);
+        }
+
+        .rutbe-kart.secilmis {
+            border-color: var(--gold);
+            background: rgba(255,215,0,0.05);
+            box-shadow: 0 0 30px rgba(255,215,0,0.5);
+        }
+
+        .rutbe-ikon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .rutbe-adi {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.1rem;
+            color: var(--gold);
+            margin-bottom: 5px;
+        }
+
+        .rutbe-departman {
+            color: #666;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .rutbe-aciklama {
+            color: #aaa;
+            font-size: 0.75rem;
+            line-height: 1.4;
+            margin-bottom: 15px;
+        }
+
+        .rutbe-giris {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .rutbe-input {
+            flex: 1;
+            background: #000;
+            border: 1px solid #333;
+            color: var(--gold);
+            padding: 10px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            border-radius: 4px;
+        }
+
+        .rutbe-input:focus {
+            border-color: var(--gold);
+            outline: none;
+        }
+
+        .rutbe-giris-btn {
+            background: none;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: 0.3s;
+            border-radius: 4px;
+        }
+
+        .rutbe-giris-btn:hover {
+            background: var(--gold);
+            color: #000;
+        }
+
+        .rutbe-mesaj {
+            color: #ff4444;
+            font-size: 0.75rem;
+            margin-top: 10px;
+            min-height: 20px;
         }
 
         /* ========== AYARLAR ========== */
@@ -749,6 +893,22 @@
             transform: rotate(-5deg);
         }
 
+        .araştırma-box {
+            border-left-color: var(--purple);
+        }
+
+        .araştırma-box::before {
+            content: "🔬 ARAŞTIRMA";
+            position: absolute;
+            bottom: 5px; right: 15px;
+            font-size: 2rem;
+            color: rgba(170,0,255,0.03);
+            font-family: 'Orbitron', monospace;
+            font-weight: 900;
+            pointer-events: none;
+            transform: rotate(-5deg);
+        }
+
         .branch-title {
             font-family: 'Orbitron', monospace; font-size: 1rem;
             color: #fff; letter-spacing: 4px; border-bottom: 1px solid #1a1a1a;
@@ -759,6 +919,14 @@
             color: var(--green); font-size: 0.85rem; 
             line-height: 2; 
             animation: glitch 10s infinite;
+        }
+
+        .rutbe-bilgi {
+            color: var(--gold);
+            font-size: 0.8rem;
+            margin-top: 10px;
+            padding: 5px;
+            border-top: 1px solid #222;
         }
 
         /* ========== IGD RAPOR PANELİ ========== */
@@ -1061,11 +1229,12 @@
     <div id="settingsModal">
         <div class="settings-box">
             <div class="settings-title">⚙️ SİSTEM BİLGİLERİ</div>
-            <div class="settings-line">Terminal Versiyonu <span>V14.0 EPİK</span></div>
+            <div class="settings-line">Terminal Versiyonu <span>V15.0 RÜTBE SİSTEMİ</span></div>
             <div class="settings-line">Platform <span>SHADOW RP ULTRA</span></div>
             <div class="settings-line">Toplam SCP Kaydı <span>1050 ANOMALİ</span></div>
             <div class="settings-line">Sunucu <span>SİTE-SHADOW / AKTİF</span></div>
             <div class="settings-line">Aktif Kullanıcı <span id="settings-user">-</span></div>
+            <div class="settings-line">Rütbe <span id="settings-rutbe">-</span></div>
             <div class="settings-line">Oturum Süresi <span id="settings-uptime">-</span></div>
             <div class="settings-divider">— EMEK VERENLER —</div>
             <div class="settings-line">Yapay Zeka <span>Claude 3.5</span></div>
@@ -1076,11 +1245,11 @@
         </div>
     </div>
 
-    <div class="shadow-tag">SHADOW RP V14</div>
+    <div class="shadow-tag">SHADOW RP V15</div>
 
     <!-- ========== HEADER ========== -->
     <div id="terminalHeader">
-        <div class="header-title">⚡ SECURE TERMINAL V14 EPİK ⚡</div>
+        <div class="header-title">⚡ SECURE TERMINAL V15 RÜTBE SİSTEMİ ⚡</div>
         <div id="headerInputArea">
             <div class="clearance-bar">
                 <span class="clv" id="clv-safe" data-tooltip="Güvenli - Kolay muhafaza">SAFE</span>
@@ -1155,6 +1324,13 @@
             </div>
         </div>
 
+        <!-- ========== RÜTBE GİRİŞ PANELİ ========== -->
+        <div id="rutbe-paneli">
+            <div class="rutbe-header">⚜️ RÜTBE SEÇİM PANELİ ⚜️</div>
+            <div class="rutbe-grid" id="rutbe-grid"></div>
+            <div id="rutbe-mesaj" class="rutbe-mesaj"></div>
+        </div>
+
         <!-- ========== O5 ONAY PANELİ ========== -->
         <div id="o5-panel">
             <div class="o5-header">⚜️ O5 ONAY PANELİ - BEKLEYEN TALEPLER</div>
@@ -1186,11 +1362,11 @@
                     <thead>
                         <tr>
                             <th>ZAMAN</th>
+                            <th>RÜTBE</th>
                             <th>YETKİ KODU</th>
                             <th>DEPARTMAN</th>
                             <th>SCP</th>
                             <th>İŞLEM</th>
-                            <th>DETAY</th>
                         </tr>
                     </thead>
                     <tbody id="rapor-tbody"></tbody>
@@ -1209,20 +1385,20 @@
         <!-- ========== ERİŞİM REDDEDİLDİ ========== -->
         <div id="accessDeniedMsg">
             <div class="denied-title">⛔ ERİŞİM REDDEDİLDİ ⛔</div>
-            <div style="color:#ff3333;margin:12px 0;font-size:1rem;letter-spacing:4px;font-family:'Orbitron',monospace;">DOSYA BULUNAMADI</div>
-            <div class="denied-sub">D-SINIFI PERSONEL SİCİL NUMARASI TANIMLANDI</div>
-            <div class="denied-sub">BU KİMLİK İLE ERİŞİLEBİLECEK GİZLİ DOSYA MEVCUT DEĞİLDİR</div>
-            <div class="denied-sub" style="margin-top:12px;color:#1a1a1a;font-size:0.7rem;">GİRİŞİM KAYDEDÜLDÜ — İÇ GÜVENLİK BİLGİLENDİRİLDİ</div>
+            <div style="color:#ff3333;margin:12px 0;font-size:1rem;letter-spacing:4px;font-family:'Orbitron',monospace;">GEÇERSİZ RÜTBE KODU</div>
+            <div class="denied-sub">YETKİ SEVİYENİZ BU İŞLEM İÇİN YETERSİZ</div>
+            <div class="denied-sub" style="margin-top:12px;color:#1a1a1a;font-size:0.7rem;">GİRİŞİM KAYDEDİLDİ — İÇ GÜVENLİK BİLGİLENDİRİLDİ</div>
         </div>
 
         <!-- ========== DEPARTMANLAR ========== -->
-        <div id="SEC-B" class="branch-box"><div class="branch-title">🔒 GÜVENLİK DEPARTMANI</div><div id="sec-text"></div></div>
-        <div id="ENG-B" class="branch-box"><div class="branch-title">⚙️ MÜHENDİSLİK BİRİMİ</div><div id="eng-text"></div></div>
-        <div id="ETH-B" class="branch-box"><div class="branch-title">⚖️ ETİK KOMİTE</div><div id="eth-text"></div></div>
-        <div id="MED-B" class="branch-box"><div class="branch-title">💊 TIBBİ DEPARTMAN</div><div id="med-text"></div></div>
-        <div id="IGD-B" class="branch-box"><div class="branch-title">🔍 İÇ GÜVENLİK (IGD)</div><div id="igd-text"></div></div>
-        <div id="TME-B" class="branch-box"><div class="branch-title">⚡ TAKTİKSEL MÜDAHALE (TME)</div><div id="tme-text"></div></div>
-        <div id="O5-B"  class="branch-box o5-box"><div class="branch-title">⚜️ O5 KONSEYİ</div><div id="o5-text"></div></div>
+        <div id="SEC-B" class="branch-box"><div class="branch-title">🔒 GÜVENLİK DEPARTMANI</div><div id="sec-text"></div><div class="rutbe-bilgi" id="sec-rutbe"></div></div>
+        <div id="ENG-B" class="branch-box"><div class="branch-title">⚙️ MÜHENDİSLİK BİRİMİ</div><div id="eng-text"></div><div class="rutbe-bilgi" id="eng-rutbe"></div></div>
+        <div id="ETH-B" class="branch-box"><div class="branch-title">⚖️ ETİK KOMİTE</div><div id="eth-text"></div><div class="rutbe-bilgi" id="eth-rutbe"></div></div>
+        <div id="MED-B" class="branch-box"><div class="branch-title">💊 TIBBİ DEPARTMAN</div><div id="med-text"></div><div class="rutbe-bilgi" id="med-rutbe"></div></div>
+        <div id="IGD-B" class="branch-box"><div class="branch-title">🔍 İÇ GÜVENLİK (IGD)</div><div id="igd-text"></div><div class="rutbe-bilgi" id="igd-rutbe"></div></div>
+        <div id="TME-B" class="branch-box"><div class="branch-title">⚡ TAKTİKSEL MÜDAHALE (TME)</div><div id="tme-text"></div><div class="rutbe-bilgi" id="tme-rutbe"></div></div>
+        <div id="ARA-B" class="branch-box araştırma-box"><div class="branch-title">🔬 ARAŞTIRMA DEPARTMANI</div><div id="ara-text"></div><div class="rutbe-bilgi" id="ara-rutbe"></div></div>
+        <div id="O5-B"  class="branch-box o5-box"><div class="branch-title">⚜️ O5 KONSEYİ</div><div id="o5-text"></div><div class="rutbe-bilgi" id="o5-rutbe"></div></div>
 
         <!-- ========== SCP LİSTESİ ========== -->
         <div id="scpSection">
@@ -1244,7 +1420,7 @@
 
     <script>
         // ======================================================
-        // EPİK JAVASCRIPT - 2500+ SATIR
+        // SHADOW RP V15 - RÜTBE SİSTEMİ
         // ======================================================
 
         // ========== SİSTEM DEĞİŞKENLERİ ==========
@@ -1255,38 +1431,193 @@
         var sonIslemZamani = Date.now();
         var girisYapildi = false;
         var girisKodu = '';
+        var aktifRutbe = null;
+        var aktifDepartman = null;
 
-        // ========== VERİTABANI ==========
+        // ========== RÜTBE VERİTABANI ==========
+        var RUTBE_DB = {
+            // GÜVENLİK RÜTBELERİ
+            "guvenlik-8241": { 
+                departman: "SEC", 
+                rutbe: "Güvenlik Albayı", 
+                rutbeSeviye: 5,
+                renk: "#00d4ff",
+                ikon: "🛡️",
+                allowed: ["SAFE", "EUCLID", "KETER"],
+                info: "Güvenlik Albayı - Tesis güvenliğinden sorumlu"
+            },
+            "guvenlik-3342": { 
+                departman: "SEC", 
+                rutbe: "Güvenlik Yüzbaşı", 
+                rutbeSeviye: 4,
+                renk: "#00aaff",
+                ikon: "🔰",
+                allowed: ["SAFE", "EUCLID"],
+                info: "Güvenlik Yüzbaşı - Vardiya amiri"
+            },
+            "guvenlik-5512": { 
+                departman: "SEC", 
+                rutbe: "Güvenlik Teğmen", 
+                rutbeSeviye: 3,
+                renk: "#0088cc",
+                ikon: "🔹",
+                allowed: ["SAFE"],
+                info: "Güvenlik Teğmen - Devriye amiri"
+            },
+
+            // MÜHENDİSLİK RÜTBELERİ
+            "muhendis-9912": { 
+                departman: "ENG", 
+                rutbe: "Baş Mühendis", 
+                rutbeSeviye: 5,
+                renk: "#ff8800",
+                ikon: "⚙️",
+                allowed: ["SAFE", "EUCLID", "KETER", "THAUMIEL"],
+                info: "Baş Mühendis - Tüm sistemlerden sorumlu"
+            },
+            "muhendis-7734": { 
+                departman: "ENG", 
+                rutbe: "Kıdemli Mühendis", 
+                rutbeSeviye: 4,
+                renk: "#ff6600",
+                ikon: "🔧",
+                allowed: ["SAFE", "EUCLID", "KETER"],
+                info: "Kıdemli Mühendis - Bakım ekibi lideri"
+            },
+
+            // ETİK KOMİTE RÜTBELERİ
+            "etik-4451": { 
+                departman: "ETH", 
+                rutbe: "Etik Kurul Başkanı", 
+                rutbeSeviye: 5,
+                renk: "#cc88ff",
+                ikon: "⚖️",
+                allowed: ["SAFE", "EUCLID", "KETER", "THAUMIEL", "APOLLYON"],
+                info: "Etik Kurul Başkanı - O5 ile doğrudan iletişim"
+            },
+
+            // TIBBİ RÜTBELER
+            "tibbi-3367": { 
+                departman: "MED", 
+                rutbe: "Başhekim", 
+                rutbeSeviye: 5,
+                renk: "#00ff41",
+                ikon: "💊",
+                allowed: ["SAFE", "EUCLID", "KETER"],
+                info: "Başhekim - Tıbbi departman direktörü"
+            },
+
+            // IGD RÜTBELERİ
+            "igd-5513": { 
+                departman: "IGD", 
+                rutbe: "İstihbarat Şefi", 
+                rutbeSeviye: 5,
+                renk: "#ff4444",
+                ikon: "🕵️",
+                allowed: ["SAFE", "EUCLID", "KETER", "THAUMIEL", "APOLLYON"],
+                info: "İstihbarat Şefi - Tüm raporlara erişim"
+            },
+
+            // TME RÜTBELERİ
+            "tme-9921": { 
+                departman: "TME", 
+                rutbe: "Taktik Komutan", 
+                rutbeSeviye: 5,
+                renk: "#ff0000",
+                ikon: "⚡",
+                allowed: ["SAFE", "EUCLID", "KETER", "THAUMIEL", "APOLLYON"],
+                info: "Taktik Komutan - Müdahale birimi lideri"
+            },
+
+            // ARAŞTIRMA RÜTBELERİ
+            "arastirma-7781": { 
+                departman: "ARA", 
+                rutbe: "Baş Araştırmacı", 
+                rutbeSeviye: 5,
+                renk: "#aa00ff",
+                ikon: "🔬",
+                allowed: ["SAFE", "EUCLID", "KETER", "THAUMIEL"],
+                info: "Baş Araştırmacı - Tüm SCP'ler üzerinde araştırma yetkisi, O5 izni gerektirenler hariç"
+            },
+            "arastirma-3392": { 
+                departman: "ARA", 
+                rutbe: "Kıdemli Araştırmacı", 
+                rutbeSeviye: 4,
+                renk: "#8800cc",
+                ikon: "🧪",
+                allowed: ["SAFE", "EUCLID", "KETER"],
+                info: "Kıdemli Araştırmacı - Tehlikeli SCP'ler için O5 izni gerekli"
+            },
+
+            // O5 RÜTBELERİ
+            "o5-001": { 
+                departman: "O5", 
+                rutbe: "O5-1 (Konsey Başkanı)", 
+                rutbeSeviye: 10,
+                renk: "#ffd700",
+                ikon: "👑",
+                allowed: ["SAFE", "EUCLID", "KETER", "THAUMIEL", "APOLLYON"],
+                info: "O5 Konsey Başkanı - Mutlak yetki"
+            },
+            "o5-013": { 
+                departman: "O5", 
+                rutbe: "O5-13", 
+                rutbeSeviye: 9,
+                renk: "#ffaa00",
+                ikon: "⚜️",
+                allowed: ["SAFE", "EUCLID", "KETER", "THAUMIEL", "APOLLYON"],
+                info: "O5 Üyesi - Tüm SCP'lere erişim, onay yetkisi var"
+            },
+
+            // ADMIN ÖZEL
+            "6-cİLLAHp.sr": { 
+                departman: "ADMIN", 
+                rutbe: "Kurucu - İllah Paşa", 
+                rutbeSeviye: 99,
+                renk: "#ff0000",
+                ikon: "👑",
+                allowed: ["SAFE", "EUCLID", "KETER", "THAUMIEL", "APOLLYON"],
+                info: "Sistem Kurucusu - Sınırsız yetki"
+            },
+            "SRTUQUQUE78921": { 
+                departman: "ADMIN", 
+                rutbe: "Süper Admin", 
+                rutbeSeviye: 50,
+                renk: "#ff44aa",
+                ikon: "⚡",
+                allowed: ["SAFE", "EUCLID", "KETER", "THAUMIEL", "APOLLYON"],
+                info: "Süper Admin - Tüm yetkiler"
+            }
+        };
+
+        // ========== DEPARTMAN VERİTABANI ==========
         var DATABASE = {
-            "SHADOW-SEC-7712":    { type:"dept", boxId:"SEC-B", textId:"sec-text", dept:"SEC", allowed:["SAFE","EUCLID"],
-                info:["🔒 GÜVENLİK PROTOKOLÜ AKTİF","Yetki Seviyesi   : BETA-3","Müdahale Kapsamı : Safe ve Euclid sinifi anomaliler","Keter İhlali     : TME müdahalesi çağırılır","Vardiya Süresi   : 8 saatlik rotasyon","Silah Protokolü  : Standart atışlı silah","Tesis Önceliği   : Sivil kayıp SIFIR politikası","Son Güncelleme   : 2026-02-24","Aktif Personel   : 127"] },
+            "SEC": { boxId:"SEC-B", textId:"sec-text", rutbeId:"sec-rutbe", dept:"SEC", 
+                info:["🔒 GÜVENLİK PROTOKOLÜ AKTİF","Tesis Güvenlik Durumu: MAVİ","Aktif Devriye: 12 ekip","Son İhlal: 47 gün önce","Güvenlik Seviyesi: BETA-3"] },
             
-            "SHADOW-ENG-5591":    { type:"dept", boxId:"ENG-B", textId:"eng-text", dept:"ENG", allowed:["SAFE","EUCLID","KETER","THAUMIEL"],
-                info:["⚙️ MÜHENDİSLİK SİSTEM RAPORU","Yetki Seviyesi   : DELTA-4","Bakım Kapsamı    : Tüm sınıflar","Güç Sistemi      : Jeneratör denetimi 24 saat","Containment Sys  : Thaumiel aktif izleme","Acil Kapatma     : EMP-7 protokolü","Malzeme Yönetimi : Anomalik bileşen stoku","Son Bakım        : 2026-02-23","Aktif Mühendis   : 43"] },
+            "ENG": { boxId:"ENG-B", textId:"eng-text", rutbeId:"eng-rutbe", dept:"ENG",
+                info:["⚙️ MÜHENDİSLİK SİSTEM RAPORU","Güç Sistemi: Çalışıyor (%98)","Bakım Durumu: 5 arıza bekliyor","Containment Sistem: AKTİF","Son Bakım: 2 saat önce"] },
             
-            "SHADOW-ETH-8823":    { type:"dept", boxId:"ETH-B", textId:"eth-text", dept:"ETH", allowed:["SAFE","EUCLID","KETER","THAUMIEL","APOLLYON"],
-                info:["⚖️ ETİK KOMİTE DİREKTİFİ","Yetki Seviyesi   : OMEGA-5","Denetim Kapsamı  : Tüm deney protokolleri","İnsan Deneyleri  : D-sınıfı kullanımı kontrollü","Amnezik Kullanımı: Komite onayı gerekli","Komite Gücü      : O5 kararlarını durdurabilir","Toplantı         : Haftalık","Üye Sayısı       : 7"] },
+            "ETH": { boxId:"ETH-B", textId:"eth-text", rutbeId:"eth-rutbe", dept:"ETH",
+                info:["⚖️ ETİK KOMİTE DİREKTİFİ","Etik Onay Bekleyen: 3 deney","İhlal Soruşturması: 2","Komite Toplantısı: Yarın 14:00"] },
             
-            "SHADOW-MED-3367":    { type:"dept", boxId:"MED-B", textId:"med-text", dept:"MED", allowed:["SAFE","EUCLID","KETER"],
-                info:["💊 TIBBİ DEPARTMAN ANALİZİ","Yetki Seviyesi   : GAMMA-3","Biyolojik Tehdit : Sınıf-A biyohazmat","Personel Sağlığı : 72 saat karantina","Amnezik Stok     : A,B,C sınıfları mevcut","D-Sınıfı Tıbbi   : Tıbbi kayıt tutulur","Aşı Stoku        : 12450 doz","Aktif Hasta      : 23"] },
+            "MED": { boxId:"MED-B", textId:"med-text", rutbeId:"med-rutbe", dept:"MED",
+                info:["💊 TIBBİ DEPARTMAN","Personel Sağlığı: 12 tedavi","Amnezik Stok: %87","Karantina: 3 kişi","Aşı Stoku: 12.450 doz"] },
             
-            "SHADOW-IGD-4413":    { type:"dept", boxId:"IGD-B", textId:"igd-text", dept:"IGD", allowed:["SAFE","EUCLID","KETER","THAUMIEL","APOLLYON"],
-                info:["🔍 İÇ GÜVENLİK DİREKTİFİ GİZLİ","Yetki Seviyesi   : SIGMA-5","Görev            : Vakıf içi sızıntı tespiti","İzleme           : Tüm iletişim izleniyor","Ajan Ağı         : Her departmanda gizli ajan","Gözaltı Yetkisi  : 72 saat mahkemesiz tutma","Aktif Soruşturma : 12","Şüpheli Personel : 8"] },
+            "IGD": { boxId:"IGD-B", textId:"igd-text", rutbeId:"igd-rutbe", dept:"IGD",
+                info:["🔍 İÇ GÜVENLİK DİREKTİFİ","Aktif Soruşturma: 12","Şüpheli Personel: 8","Gizli Ajan: 15 aktif","Son Operasyon: 3 gün önce"] },
             
-            "SHADOW-TME-9921":   { type:"dept", boxId:"TME-B", textId:"tme-text", dept:"TME", allowed:["SAFE","EUCLID","KETER","THAUMIEL","APOLLYON"],
-                info:["⚡ TAKTİKSEL MÜDAHALE PLANI GİZLİ","Yetki Seviyesi   : KAPPA-4","Müdahale Hızı    : 3 dakika","Keter Protokolü  : O5 onayı gerekli","Apollyon Durumu  : Son savunma hattı","Ekipman          : Anomalik karşıtı silahlar","Aktif Ekip       : 4 tim","Hazır Durum      : 7/24"] },
+            "TME": { boxId:"TME-B", textId:"tme-text", rutbeId:"tme-rutbe", dept:"TME",
+                info:["⚡ TAKTİKSEL MÜDAHALE","Hazır Tim: 4 ekip","Müdahale Süresi: 3 dk","Son Operasyon: Başarılı","Teçhizat Durumu: %92"] },
             
-            "SHADOW-O5-5513":{ type:"dept", boxId:"O5-B",  textId:"o5-text",  dept:"O5",  allowed:["SAFE","EUCLID","KETER","THAUMIEL","APOLLYON"],
-                info:["⚜️ O5 KONSEYİ MUTLAK GİZLİLİK","Yetki Seviyesi   : BEYOND-5","Kimlik           : Asla paylaşılmaz","Karar Yetkisi    : Tüm kaynaklar konsey emrinde","XK Protokolü     : Dünya sonu senaryoları","Veto Hakkı       : Her karar veto edilebilir","Toplantı         : Acil durumlarda","Üye Sayısı       : 13"] },
+            "ARA": { boxId:"ARA-B", textId:"ara-text", rutbeId:"ara-rutbe", dept:"ARA",
+                info:["🔬 ARAŞTIRMA DEPARTMANI","Aktif Proje: 23","Bekleyen Deney: 8","Yeni SCP: 2 tespit","Araştırmacı: 47 kişi"] },
             
-            "D-7712":  { type:"dclass" },
-            "D-5591":  { type:"dclass" },
-            "D-8823":  { type:"dclass" },
-            "D-3367":  { type:"dclass" },
-            "D-4413":  { type:"dclass" },
-            "D-9921":  { type:"dclass" },
-            "D-5513":  { type:"dclass" },
-            "D-0012":  { type:"dclass" }
+            "O5": { boxId:"O5-B", textId:"o5-text", rutbeId:"o5-rutbe", dept:"O5",
+                info:["⚜️ O5 KONSEYİ","Toplantı: Acil durumlarda","Üye Sayısı: 13","XK Protokolü: PASİF","Veto Hakkı: AKTİF"] },
+            
+            "ADMIN": { boxId:"O5-B", textId:"o5-text", rutbeId:"o5-rutbe", dept:"O5",
+                info:["⚜️ O5 KONSEYİ (ADMIN)","Sınırsız Yetki Aktif","Tüm Sistemler Çevrimiçi"] }
         };
 
         // ========== ÖZEL YETKİLİ KODLARI ==========
@@ -1310,8 +1641,6 @@
         var raporlar = JSON.parse(localStorage.getItem('igd_raporlar')) || [];
         var toplamGiris = parseInt(localStorage.getItem('toplam_giris')) || 0;
         var scpOkunma = parseInt(localStorage.getItem('scp_okunma')) || 0;
-        var aktifOturumKodu = null;
-        var aktifDepartman = null;
         var mevcutFiltre = null;
 
         // ========== SCP LİSTESİ ==========
@@ -1320,58 +1649,134 @@
         var allSCPs = [], filteredSCPs = [];
         var audioCtx;
 
-        // ========== OTOMATİK YENİLEME FONKSİYONU ==========
+        // ========== RÜTBE PANELİNİ OLUŞTUR ==========
+        function rutbePaneliniOlustur() {
+            var grid = document.getElementById('rutbe-grid');
+            if (!grid) return;
+            
+            var html = '';
+            var departmanlar = {
+                "SEC": "GÜVENLİK", "ENG": "MÜHENDİSLİK", "ETH": "ETİK", 
+                "MED": "TIBBİ", "IGD": "İÇ GÜVENLİK", "TME": "TME", 
+                "ARA": "ARAŞTIRMA", "O5": "O5 KONSEYİ", "ADMIN": "YÖNETİM"
+            };
+            
+            Object.keys(RUTBE_DB).forEach(function(kod) {
+                var r = RUTBE_DB[kod];
+                var deptAd = departmanlar[r.departman] || r.departman;
+                
+                html += '<div class="rutbe-kart" onclick="rutbeSec(\'' + kod + '\')" data-kod="' + kod + '">';
+                html += '<div class="rutbe-ikon">' + r.ikon + '</div>';
+                html += '<div class="rutbe-adi" style="color:' + r.renk + ';">' + r.rutbe + '</div>';
+                html += '<div class="rutbe-departman">' + deptAd + '</div>';
+                html += '<div class="rutbe-aciklama">' + r.info + '</div>';
+                html += '</div>';
+            });
+            
+            grid.innerHTML = html;
+        }
+
+        // ========== RÜTBE SEÇ ==========
+        function rutbeSec(kod) {
+            document.querySelectorAll('.rutbe-kart').forEach(k => k.classList.remove('secilmis'));
+            event.currentTarget.classList.add('secilmis');
+            
+            var mesajDiv = document.getElementById('rutbe-mesaj');
+            mesajDiv.innerHTML = 'Şifrenizi girin: <span style="color:var(--gold);">' + kod + '</span>';
+            mesajDiv.style.color = '#aaa';
+            
+            // Input alanı oluştur
+            var mevcutInput = document.querySelector('.rutbe-giris');
+            if (mevcutInput) mevcutInput.remove();
+            
+            var girisDiv = document.createElement('div');
+            girisDiv.className = 'rutbe-giris';
+            girisDiv.innerHTML = `
+                <input type="password" class="rutbe-input" id="rutbe-input" placeholder="Rütbe şifrenizi girin..." autocomplete="off">
+                <button class="rutbe-giris-btn" onclick="rutbeDogrula('${kod}')">▶ GİRİŞ</button>
+            `;
+            
+            document.getElementById('rutbe-paneli').appendChild(girisDiv);
+            document.getElementById('rutbe-input').focus();
+        }
+
+        // ========== RÜTBE DOĞRULA ==========
+        function rutbeDogrula(kod) {
+            var input = document.getElementById('rutbe-input').value.trim();
+            var mesajDiv = document.getElementById('rutbe-mesaj');
+            
+            if (input === kod) {
+                mesajDiv.innerHTML = '✅ Rütbe doğrulandı! Yönlendiriliyorsunuz...';
+                mesajDiv.style.color = '#00ff41';
+                
+                // PassInput'a kodu yaz ve event'i tetikle
+                document.getElementById('passInput').value = kod.toUpperCase();
+                var event = new Event('input', { bubbles: true });
+                document.getElementById('passInput').dispatchEvent(event);
+                
+                // Rütbe panelini gizle
+                setTimeout(() => {
+                    document.getElementById('rutbe-paneli').style.display = 'none';
+                }, 1000);
+            } else {
+                mesajDiv.innerHTML = '❌ Geçersiz rütbe şifresi! Tekrar deneyin.';
+                mesajDiv.style.color = '#ff4444';
+                playBeep(220, 0.3, 0.03);
+            }
+        }
+
+        // ========== OTOMATİK YENİLEME ==========
         function otomatikYenilemeBaslat() {
             if (otomatikYenileme) {
                 clearInterval(otomatikYenileme);
             }
             
             otomatikYenileme = setInterval(function() {
-                // Sadece O5 yetkisiyle giriş yapıldıysa ve son işlem 5 saniyeden eskiyse
-                if (girisYapildi && aktifOturumKodu && (aktifOturumKodu === "6-CİLLAHPSR" || aktifOturumKodu === "SRTUQUQUE78921")) {
+                if (girisYapildi && aktifRutbe && aktifRutbe.departman === 'O5') {
                     var simdi = Date.now();
-                    if (simdi - sonIslemZamani > 5000) { // 5 saniye
-                        console.log("🔄 Otomatik yenileme çalışıyor...");
-                        
-                        // SessionStorage'a giriş bilgisini kaydet
-                        sessionStorage.setItem('oturum_kodu', aktifOturumKodu);
+                    if (simdi - sonIslemZamani > 5000) {
+                        console.log("🔄 O5 otomatik yenileme çalışıyor...");
+                        sessionStorage.setItem('oturum_kodu', girisKodu);
                         sessionStorage.setItem('giris_yapildi', 'true');
-                        
-                        // Sayfayı yenile
+                        sessionStorage.setItem('aktif_rutbe', JSON.stringify(aktifRutbe));
                         location.reload();
                     }
                 }
-            }, 5000); // Her 5 saniyede bir kontrol et
+            }, 5000);
         }
 
-        // ========== SAYFA YÜKLENDİĞİNDE OTURUMU KONTROL ET ==========
+        // ========== SAYFA YÜKLENDİĞİNDE ==========
         window.onload = function() {
+            rutbePaneliniOlustur();
+            
             var kayitliKod = sessionStorage.getItem('oturum_kodu');
             var girisDurumu = sessionStorage.getItem('giris_yapildi');
+            var kayitliRutbe = sessionStorage.getItem('aktif_rutbe');
             
             if (kayitliKod && girisDurumu === 'true') {
-                // Oturum varsa otomatik giriş yap
                 setTimeout(function() {
-                    simulateLogin(kayitliKod);
+                    simulateLogin(kayitliKod, kayitliRutbe);
                 }, 500);
             }
             
-            // Arka plan animasyonlarını başlat
             initMatrixBg();
             initParticles();
         };
 
-        // ========== OTOMATİK GİRİŞ SİMÜLASYONU ==========
-        function simulateLogin(kod) {
+        // ========== OTOMATİK GİRİŞ ==========
+        function simulateLogin(kod, rutbeJson) {
             document.getElementById('startScreen').style.display = 'none';
             document.getElementById('passInput').value = kod;
             
-            // Input event'ini tetikle
+            if (rutbeJson) {
+                aktifRutbe = JSON.parse(rutbeJson);
+            }
+            
             var event = new Event('input', { bubbles: true });
             document.getElementById('passInput').dispatchEvent(event);
         }
 
-        // ========== MATRİX ARKA PLAN ==========
+        // ========== ARKA PLAN ==========
         function initMatrixBg() {
             var bg = document.getElementById('matrix-bg');
             if (!bg) return;
@@ -1387,7 +1792,6 @@
             }
         }
 
-        // ========== PARTİKÜL ARKA PLAN ==========
         function initParticles() {
             var canvas = document.getElementById('particle-canvas');
             if (!canvas) return;
@@ -1431,7 +1835,7 @@
             animate();
         }
 
-        // ========== BİLDİRİM GÖSTER ==========
+        // ========== BİLDİRİM ==========
         function showNotification(message, type = 'info') {
             var notif = document.getElementById('epic-notification');
             var msg = document.getElementById('notification-message');
@@ -1475,13 +1879,14 @@
             raporlariGoster();
         }
 
-        // ========== ONAY SİSTEMİ FONKSİYONLARI ==========
+        // ========== ONAY SİSTEMİ ==========
         function onayIstegiGonder(scpId, talepEden) {
             var zaman = new Date().toLocaleString('tr-TR');
             var istek = {
                 id: Date.now(),
                 scp: scpId,
                 talepEden: talepEden,
+                rutbe: aktifRutbe ? aktifRutbe.rutbe : 'Bilinmiyor',
                 talepZamani: zaman,
                 durum: 'BEKLİYOR'
             };
@@ -1493,14 +1898,11 @@
             playBeep(880, 0.3, 0.03);
             showNotification('O5 onayı bekleniyor - ' + scpId, 'info');
             
-            // IGD paneline de ekle
             if (document.getElementById('o5-panel').style.display === 'block') {
                 o5PanelGuncelle();
             }
             
-            // Son işlem zamanını güncelle
             sonIslemZamani = Date.now();
-            
             return istek;
         }
 
@@ -1509,12 +1911,13 @@
             if (istek) {
                 istek.durum = 'ONAYLANDI';
                 istek.onayZamani = new Date().toLocaleString('tr-TR');
-                istek.onaylayan = aktifOturumKodu;
+                istek.onaylayan = girisKodu;
+                istek.onaylayanRutbe = aktifRutbe ? aktifRutbe.rutbe : 'Bilinmiyor';
                 
                 onaylananSCPLer.push({
                     scp: istek.scp,
                     onayZamani: istek.onayZamani,
-                    onaylayan: aktifOturumKodu,
+                    onaylayan: girisKodu,
                     talepEden: istek.talepEden
                 });
                 
@@ -1523,17 +1926,13 @@
                 localStorage.setItem('bekleyen_onaylar', JSON.stringify(bekleyenOnaylar));
                 localStorage.setItem('onaylanan_scpler', JSON.stringify(onaylananSCPLer));
                 
-                raporEkle(aktifOturumKodu, 'O5', istek.scp, 'SCP ONAYLANDI', 'İZİN VERİLDİ');
+                raporEkle(girisKodu, 'O5', istek.scp, 'SCP ONAYLANDI', istek.talepEden + ' talebi onaylandı');
                 
                 showNotification('SCP onaylandı: ' + istek.scp, 'success');
                 playBeep(660, 0.2, 0.03);
                 
                 o5PanelGuncelle();
-                
-                // İstatistikleri güncelle
                 document.getElementById('bekleyen-onay').textContent = bekleyenOnaylar.length;
-                
-                // Son işlem zamanını güncelle
                 sonIslemZamani = Date.now();
             }
         }
@@ -1543,21 +1942,19 @@
             if (istek) {
                 istek.durum = 'REDDEDİLDİ';
                 istek.redZamani = new Date().toLocaleString('tr-TR');
-                istek.reddeden = aktifOturumKodu;
+                istek.reddeden = girisKodu;
                 
                 bekleyenOnaylar = bekleyenOnaylar.filter(i => i.id !== istekId);
                 
                 localStorage.setItem('bekleyen_onaylar', JSON.stringify(bekleyenOnaylar));
                 
-                raporEkle(aktifOturumKodu, 'O5', istek.scp, 'SCP REDDEDİLDİ', 'YETKİ YOK');
+                raporEkle(girisKodu, 'O5', istek.scp, 'SCP REDDEDİLDİ', istek.talepEden + ' talebi reddedildi');
                 
                 showNotification('SCP reddedildi: ' + istek.scp, 'error');
                 playBeep(220, 0.3, 0.03);
                 
                 o5PanelGuncelle();
                 document.getElementById('bekleyen-onay').textContent = bekleyenOnaylar.length;
-                
-                // Son işlem zamanını güncelle
                 sonIslemZamani = Date.now();
             }
         }
@@ -1577,7 +1974,7 @@
                 html += '<div class="o5-talep">';
                 html += '<div class="o5-talep-info">';
                 html += '<div class="o5-talep-scp">⚠️ ' + talep.scp + '</div>';
-                html += '<div class="o5-talep-detay">Talep Eden: ' + talep.talepEden + ' | Zaman: ' + talep.talepZamani + '</div>';
+                html += '<div class="o5-talep-detay">Talep Eden: ' + talep.talepEden + ' (' + (talep.rutbe || 'Bilinmiyor') + ') | Zaman: ' + talep.talepZamani + '</div>';
                 html += '</div>';
                 html += '<div class="o5-talep-butonlar">';
                 html += '<button class="o5-onayla" onclick="onayla(' + talep.id + ')">✓ ONAYLA</button>';
@@ -1587,14 +1984,13 @@
             });
             listeDiv.innerHTML = html;
             
-            // İstatistik güncelle
             document.getElementById('bekleyen-onay').textContent = bekleyenOnaylar.length;
         }
 
         // ========== SCP KONTROL ==========
         function scpKontrol(scpId, talepEden, callback) {
-            // Admin ise direkt aç
-            if (aktifOturumKodu && (aktifOturumKodu === "6-CİLLAHPSR" || aktifOturumKodu === "SRTUQUQUE78921")) {
+            // Admin veya O5 ise direkt aç
+            if (aktifRutbe && (aktifRutbe.departman === 'O5' || aktifRutbe.departman === 'ADMIN')) {
                 callback(true);
                 return;
             }
@@ -1607,13 +2003,13 @@
                     callback(true);
                     raporEkle(talepEden, currentDept, scpId, 'SCP AÇILDI (ÖNCEDEN ONAYLI)', onayli.onaylayan + ' tarafından');
                 } else {
-                    // Etik komite mi kontrol et
-                    if (currentDept === 'ETH') {
+                    // Etik komite veya Araştırma kontrol et
+                    if (currentDept === 'ETH' || currentDept === 'ARA') {
                         onayIstegiGonder(scpId, talepEden);
                         alert('⚠️ BU SCP O5 ONAYI GEREKTİRİR!\n\nTalep O5 Konseyi\'ne iletilmiştir. Onay bekleniyor...');
                         callback(false);
                     } else {
-                        alert('⛔ BU SCP\'YE ERİŞİM YETKİNİZ YOK!\n\nSadece ETİK KOMİTE talep edebilir.');
+                        alert('⛔ BU SCP\'YE ERİŞİM YETKİNİZ YOK!\n\nSadece ETİK KOMİTE veya ARAŞTIRMA talep edebilir.');
                         callback(false);
                     }
                 }
@@ -1622,7 +2018,6 @@
                 raporEkle(talepEden, currentDept, scpId, 'SCP DOSYASI AÇILDI', 'Standart erişim');
             }
             
-            // Son işlem zamanını güncelle
             sonIslemZamani = Date.now();
         }
 
@@ -1658,10 +2053,10 @@
             
             setTimeout(() => {
                 document.getElementById('epic-loading').style.display = 'none';
-                setStatus('ONLINE YETKİ ANAHTARI BEKLENİYOR', '#1a3d1a');
+                setStatus('ONLINE RÜTBE SEÇİMİ BEKLENİYOR', '#1a3d1a');
+                document.getElementById('rutbe-paneli').style.display = 'block';
                 playBeep(880, 0.1, 0.05);
                 
-                // Sistem zamanlayıcı
                 sistemGuncelleyici = setInterval(() => {
                     sistemUptime = Math.floor((Date.now() - baslangicZamani) / 1000);
                     document.getElementById('sistem-uptime').textContent = sistemUptime + 's';
@@ -1692,7 +2087,7 @@
             
             filtrelenmisRaporlar.slice(0, 30).forEach(function(r) {
                 var tr = document.createElement('tr');
-                tr.innerHTML = `<td>${r.zaman}</td><td>${r.kod}</td><td>${r.departman}</td><td>${r.scp}</td><td>${r.islem}</td><td>${r.detay || '-'}</td>`;
+                tr.innerHTML = `<td>${r.zaman}</td><td>${r.rutbe || '-'}</td><td>${r.kod}</td><td>${r.departman}</td><td>${r.scp}</td><td>${r.islem}</td>`;
                 tbody.appendChild(tr);
             });
             
@@ -1703,27 +2098,25 @@
 
         function raporEkle(kod, departman, scp, islem, detay = '') {
             var zaman = new Date().toLocaleString('tr-TR');
-            raporlar.unshift({ zaman, kod, departman, scp, islem, detay });
+            raporlar.unshift({ 
+                zaman, 
+                kod, 
+                rutbe: aktifRutbe ? aktifRutbe.rutbe : '-',
+                departman, 
+                scp, 
+                islem, 
+                detay 
+            });
             if (raporlar.length > 200) raporlar.pop();
             localStorage.setItem('igd_raporlar', JSON.stringify(raporlar));
             
             if (document.getElementById('igdyonetim').style.display === 'block') {
                 raporlariGoster();
             }
-            
-            // IGD istatistiklerini güncelle
-            if (departman === 'IGD') {
-                var igdGiris = parseInt(document.getElementById('igd-giris').textContent) || 0;
-                document.getElementById('igd-giris').textContent = igdGiris + 1;
-            }
-            if (islem.includes('SCP')) {
-                var igdScp = parseInt(document.getElementById('igd-scp').textContent) || 0;
-                document.getElementById('igd-scp').textContent = igdScp + 1;
-            }
         }
 
         function raporlariTemizle() {
-            if (confirm('⚠️ Tüm raporlar silinecek! Bu işlem geri alınamaz. Emin misiniz?')) {
+            if (confirm('⚠️ Tüm raporlar silinecek! Emin misiniz?')) {
                 raporlar = [];
                 toplamGiris = 0;
                 scpOkunma = 0;
@@ -1738,28 +2131,56 @@
         // ========== YETKİ GİRİŞİ ==========
         document.getElementById('passInput').addEventListener('input', function() {
             var key = this.value.trim().toUpperCase();
-            var dbKey = null;
-            var keys = Object.keys(DATABASE);
             
-            for (var i = 0; i < keys.length; i++) {
-                if (keys[i].toUpperCase() === key) { 
-                    dbKey = keys[i]; 
-                    break; 
+            // Rütbe kontrolü
+            var rutbeEntry = null;
+            var rutbeKod = null;
+            
+            Object.keys(RUTBE_DB).forEach(function(k) {
+                if (k.toUpperCase() === key) {
+                    rutbeEntry = RUTBE_DB[k];
+                    rutbeKod = k;
                 }
-            }
+            });
 
-            // Özel kod kontrolü
+            // Özel admin kodları
             var ozelYetki = OZEL_KODLAR[key];
             var isAdmin = ozelYetki === "SUPER_ADMIN" || ozelYetki === "ADMIN";
+
+            if (isAdmin) {
+                // Admin için özel rütbe
+                rutbeEntry = RUTBE_DB[key] || RUTBE_DB["6-cİLLAHp.sr"];
+            }
+
+            if (!rutbeEntry && !isAdmin) {
+                document.getElementById('accessDeniedMsg').style.display = 'block';
+                setStatus('GEÇERSİZ RÜTBE KODU', '#8b0000');
+                playBeep(80, 0.5, 0.04);
+                return;
+            }
 
             // Raporlama
             toplamGiris++;
             localStorage.setItem('toplam_giris', toplamGiris);
-            aktifOturumKodu = key;
+            girisKodu = key;
             
-            raporEkle(key, 'SİSTEM', '-', 'GİRİŞ YAPILDI', '-');
+            // Aktif rütbeyi ayarla
+            if (isAdmin) {
+                aktifRutbe = {
+                    departman: "ADMIN",
+                    rutbe: ozelYetki === "SUPER_ADMIN" ? "Kurucu" : "Süper Admin",
+                    allowed: ["SAFE", "EUCLID", "KETER", "THAUMIEL", "APOLLYON"]
+                };
+            } else {
+                aktifRutbe = rutbeEntry;
+            }
+            
+            currentDept = aktifRutbe.departman;
+            currentAllowed = aktifRutbe.allowed;
+            
+            raporEkle(key, currentDept, '-', 'GİRİŞ YAPILDI', aktifRutbe.rutbe);
 
-            // Önceki panelleri temizle
+            // Panelleri temizle
             document.querySelectorAll('.branch-box').forEach(function(b){ b.style.display='none'; });
             document.getElementById('accessDeniedMsg').style.display = 'none';
             document.getElementById('scpSection').style.display = 'none';
@@ -1767,6 +2188,7 @@
             document.getElementById('o5-panel').style.display = 'none';
             document.getElementById('epic-panel').style.display = 'none';
             document.getElementById('statsPanel').style.display = 'none';
+            document.getElementById('rutbe-paneli').style.display = 'none';
             
             document.getElementById('scp-list').innerHTML = '';
             document.getElementById('pagination').innerHTML = '';
@@ -1776,119 +2198,51 @@
                 document.getElementById('clv-'+c).className = 'clv';
             });
 
-            // Settings kullanıcı bilgisi güncelle
+            // Settings bilgileri
             document.getElementById('settings-user').textContent = key;
+            document.getElementById('settings-rutbe').textContent = aktifRutbe.rutbe;
 
-            if (isAdmin) {
-                // ADMIN YETKİSİ (O5 ÜYESİ)
-                document.getElementById('SEC-B').style.display = 'block';
-                document.getElementById('ENG-B').style.display = 'block';
-                document.getElementById('ETH-B').style.display = 'block';
-                document.getElementById('MED-B').style.display = 'block';
-                document.getElementById('IGD-B').style.display = 'block';
-                document.getElementById('TME-B').style.display = 'block';
-                document.getElementById('O5-B').style.display = 'block';
-                document.getElementById('epic-panel').style.display = 'block';
-                document.getElementById('statsPanel').style.display = 'block';
-                
-                // Departman bilgilerini daktilo ile yaz
-                daktilo('sec-text', DATABASE["SHADOW-SEC-7712"].info);
-                daktilo('eng-text', DATABASE["SHADOW-ENG-5591"].info);
-                daktilo('eth-text', DATABASE["SHADOW-ETH-8823"].info);
-                daktilo('med-text', DATABASE["SHADOW-MED-3367"].info);
-                daktilo('igd-text', DATABASE["SHADOW-IGD-4413"].info);
-                daktilo('tme-text', DATABASE["SHADOW-TME-9921"].info);
-                daktilo('o5-text', DATABASE["SHADOW-O5-5513"].info);
-                
-                // Tüm yetki seviyelerini aktif et
-                ['SAFE','EUCLID','KETER','THAUMIEL','APOLLYON'].forEach(function(cls){
-                    var el = document.getElementById('clv-'+cls.toLowerCase());
-                    if (el) el.className = 'clv active-'+cls.toLowerCase();
-                });
-                
-                currentAllowed = ['SAFE','EUCLID','KETER','THAUMIEL','APOLLYON'];
-                currentDept = 'O5';
-                
-                document.getElementById('igdyonetim').style.display = 'block';
-                document.getElementById('o5-panel').style.display = 'block';
-                
-                raporlariGoster();
-                o5PanelGuncelle();
-                
-                // İstatistikleri güncelle
-                document.getElementById('aktif-oturum').textContent = '1';
-                
-                setStatus('O5 YETKİSİ AKTİF - ONAY BEKLİYOR', '#ffd700');
-                playBeep(880, 0.1, 0.02);
-                showNotification('O5 yetkisi ile giriş yapıldı', 'success');
-                
-                // Giriş yapıldı olarak işaretle
-                girisYapildi = true;
-                girisKodu = key;
-                sessionStorage.setItem('oturum_kodu', key);
-                sessionStorage.setItem('giris_yapildi', 'true');
-                
-                // Otomatik yenilemeyi başlat
-                otomatikYenilemeBaslat();
-                
-            } else if (dbKey) {
-                var entry = DATABASE[dbKey];
-                if (entry.type === 'dclass') {
-                    document.getElementById('accessDeniedMsg').style.display = 'block';
-                    setStatus('ERİŞİM REDDEDİLDİ D-SINIFI KİMLİK', '#8b0000');
-                    playBeep(80, 0.5, 0.04);
-                    showNotification('D-Sınıfı erişimi reddedildi!', 'error');
-                    
-                    // Session'ı temizle
-                    sessionStorage.removeItem('oturum_kodu');
-                    sessionStorage.removeItem('giris_yapildi');
-                    
-                    return;
-                } else {
-                    document.getElementById(entry.boxId).style.display = 'block';
-                    document.getElementById('statsPanel').style.display = 'block';
-                    
-                    daktilo(entry.textId, entry.info);
-                    
-                    entry.allowed.forEach(function(cls){
-                        var el = document.getElementById('clv-'+cls.toLowerCase());
-                        if (el) el.className = 'clv active-'+cls.toLowerCase();
-                    });
-                    
-                    currentAllowed = entry.allowed;
-                    currentDept = entry.dept;
-                    
-                    // Departman özel panel
-                    if (entry.dept === 'IGD') {
-                        document.getElementById('igdyonetim').style.display = 'block';
-                        raporlariGoster();
-                    }
-                    
-                    setStatus(entry.dept + ' YETKİSİ AKTİF', '#00ff41');
-                    playBeep(440, 0.1, 0.02);
-                    showNotification(entry.dept + ' departmanına hoşgeldiniz', 'success');
-                    
-                    // Giriş yapıldı olarak işaretle (admin değil)
-                    girisYapildi = true;
-                    girisKodu = key;
-                }
-            } else {
-                document.getElementById('accessDeniedMsg').style.display = 'block';
-                setStatus('GEÇERSİZ YETKİ ANAHTARI', '#8b0000');
-                playBeep(80, 0.5, 0.04);
-                showNotification('Geçersiz yetki anahtarı!', 'error');
-                
-                // Session'ı temizle
-                sessionStorage.removeItem('oturum_kodu');
-                sessionStorage.removeItem('giris_yapildi');
-                
-                return;
+            // Departman bilgilerini göster
+            var deptInfo = DATABASE[currentDept] || DATABASE["SEC"];
+            document.getElementById(deptInfo.boxId).style.display = 'block';
+            daktilo(deptInfo.textId, deptInfo.info);
+            
+            // Rütbe bilgisini göster
+            var rutbeDiv = document.getElementById(deptInfo.rutbeId);
+            if (rutbeDiv) {
+                rutbeDiv.innerHTML = '👤 ' + aktifRutbe.rutbe + ' (' + key + ')';
             }
+            
+            // Yetki seviyelerini aktif et
+            currentAllowed.forEach(function(cls){
+                var el = document.getElementById('clv-'+cls.toLowerCase());
+                if (el) el.className = 'clv active-'+cls.toLowerCase();
+            });
+
+            // Özel paneller
+            if (currentDept === 'IGD' || currentDept === 'ADMIN' || currentDept === 'O5') {
+                document.getElementById('igdyonetim').style.display = 'block';
+                raporlariGoster();
+            }
+            
+            if (currentDept === 'O5' || currentDept === 'ADMIN') {
+                document.getElementById('o5-panel').style.display = 'block';
+                document.getElementById('epic-panel').style.display = 'block';
+                o5PanelGuncelle();
+                otomatikYenilemeBaslat();
+            }
+            
+            document.getElementById('statsPanel').style.display = 'block';
+            
+            setStatus(aktifRutbe.rutbe + ' - ' + currentDept + ' YETKİSİ AKTİF', '#00ff41');
+            playBeep(440, 0.1, 0.02);
+            showNotification(aktifRutbe.rutbe + ' olarak giriş yapıldı', 'success');
 
             // İstatistikleri güncelle
             document.getElementById('toplam-giris').textContent = toplamGiris;
             document.getElementById('scp-okunma').textContent = scpOkunma;
             document.getElementById('toplam-rapor').textContent = raporlar.length;
+            document.getElementById('aktif-oturum').textContent = '1';
             document.getElementById('bekleyen-onay').textContent = bekleyenOnaylar.length;
 
             currentFilter = 'ALL';
@@ -1898,11 +2252,15 @@
             buildAllSCPs();
             document.getElementById('scpSection').style.display = 'block';
             
-            // Son işlem zamanını güncelle
+            girisYapildi = true;
+            sessionStorage.setItem('oturum_kodu', key);
+            sessionStorage.setItem('giris_yapildi', 'true');
+            sessionStorage.setItem('aktif_rutbe', JSON.stringify(aktifRutbe));
+            
             sonIslemZamani = Date.now();
         });
 
-        // ========== DAKTİLO FONKSİYONLARI ==========
+        // ========== DAKTİLO ==========
         function daktilo(elId, lines) {
             var el = document.getElementById(elId);
             el.innerHTML = '';
@@ -1933,7 +2291,6 @@
             el.innerHTML = '';
             var li = 0, ci = 0;
             
-            // SCP okunma sayacı
             scpOkunma++;
             localStorage.setItem('scp_okunma', scpOkunma);
             document.getElementById('scp-okunma').textContent = scpOkunma;
@@ -2046,8 +2403,8 @@
                     f.onclick = function() {
                         var open = d.classList.contains('open');
                         
-                        if (s.tehlikeli && !open && currentDept !== 'O5') {
-                            scpKontrol(s.id, aktifOturumKodu || 'BİLİNMİYOR', function(izin) {
+                        if (s.tehlikeli && !open && currentDept !== 'O5' && currentDept !== 'ADMIN') {
+                            scpKontrol(s.id, girisKodu, function(izin) {
                                 if (izin) {
                                     acSCP(f, d, s);
                                 }
@@ -2164,7 +2521,6 @@
                 SAFE: "DÜŞÜK - GÜVENLİ"
             }[cls] || "BİLİNMİYOR";
 
-            // Tehlikeli SCP'ler için özel içerik
             if (TEHLIKELI_SCPLER.includes(scpId)) {
                 var onayBilgisi = onaylananSCPLer.find(o => o.scp === scpId);
                 return [
@@ -2175,79 +2531,70 @@
                     "Muhafaza Tesisi : " + site + " [MAKSİMUM GÜVENLİK]",
                     "O5 Kararı       : " + (onayBilgisi ? onayBilgisi.onayZamani : "ONAY BEKLİYOR"),
                     "Onaylayan       : " + (onayBilgisi ? onayBilgisi.onaylayan : "-"),
-                    "XK Sınıfı       : AKTİF - ACİL DURUM PROTOKOLÜ",
-                    "Not             : BU DOSYA O5 ONAYI İLE AÇILMIŞTIR"
+                    "XK Sınıfı       : AKTİF - ACİL DURUM PROTOKOLÜ"
                 ];
             }
 
-            // O5 için özel içerik
-            if (dept === 'O5') {
+            if (dept === 'O5' || dept === 'ADMIN') {
                 return [
                     "Kod Adı         : " + name + " [O5 SEVİYESİ]",
                     "Sınıflandırma   : " + cls,
                     "Tehlike Seviyesi: " + tehlike,
                     "Muhafaza Tesisi : " + site + " [GİZLİ KAT]",
-                    "O5 Kararı       : " + (cls === "APOLLYON" ? "ACİL TOPLANMA" : "Standart Protokol"),
                     "Gözlemci        : O5-" + (num % 13 + 1),
-                    "XK Sınıfı       : " + (cls === "APOLLYON" ? "AKTİF - TÜM TESİSLER ALARMDA" : "PASİF"),
-                    "Not             : BU BELGE O5 ONAYI OLMADAN AÇILAMAZ"
+                    "XK Sınıfı       : " + (cls === "APOLLYON" ? "AKTİF" : "PASİF")
                 ];
             }
 
-            // IGD için özel içerik
-            if (dept === 'IGD') {
-                return [
-                    "Kod Adı         : " + name,
-                    "Sınıflandırma   : " + cls + "  |  Tehlike: " + tehlike,
-                    "Muhafaza Tesisi : " + site,
-                    "IGD Gözlem      : Gizli kamera ile 7/24 izleniyor",
-                    "Personel        : " + (num % 10 + 1) + " ajan görevlendirildi",
-                    "Sızıntı Riski   : " + (cls === "KETER" ? "YÜKSEK" : "DÜŞÜK"),
-                    "Not             : Bu dosyayı açan kaydedildi"
-                ];
-            }
-
-            // Diğer departmanlar
             var sets = {
                 SEC: [
                     "Kod Adı         : " + name,
                     "Sınıflandırma   : " + cls + "  |  Tehlike: " + tehlike,
                     "Muhafaza Tesisi : " + site + " Güvenli Bölge",
                     "Güvenlik Çemberi: " + (num % 3 + 2) + " katlı kilit",
-                    "Personel İzni   : Güvenlik Yetki-" + (num % 3 + 1),
                     "Son İhlal       : " + (num % 7 === 0 ? "Kayıt yok" : yil)
                 ],
                 ENG: [
                     "Kod Adı         : " + name,
                     "Sınıflandırma   : " + cls + "  |  Tehlike: " + tehlike,
-                    "Muhafaza Tesisi : " + site + " Mühendislik Bölgesi",
-                    "Muhafaza Sistemi: " + (cls === "THAUMIEL" ? "Thaumiel destekli" : "Standart izole oda"),
-                    "Güç Tüketimi    : " + ((num * 13) % 500 + 100) + " kWh",
-                    "Son Bakım       : " + yil
+                    "Muhafaza Tesisi : " + site + " Mühendislik",
+                    "Muhafaza Sistemi: " + (cls === "THAUMIEL" ? "Thaumiel destekli" : "Standart"),
+                    "Güç Tüketimi    : " + ((num * 13) % 500 + 100) + " kWh"
                 ],
                 ETH: [
                     "Kod Adı         : " + name,
                     "Sınıflandırma   : " + cls + "  |  Tehlike: " + tehlike,
                     "Muhafaza Tesisi : " + site,
                     "Deney Durumu    : " + (num % 4 === 0 ? "Etik onay bekliyor" : "Onaylı"),
-                    "D-Sınıfı        : " + (num % 5 === 0 ? "Sınırlı kullanım" : "Yasak"),
-                    "Komite Kararı   : " + yil + " onaylı"
+                    "Komite Kararı   : " + yil
                 ],
                 MED: [
                     "Kod Adı         : " + name,
                     "Sınıflandırma   : " + cls + "  |  Tehlike: " + tehlike,
                     "Muhafaza Tesisi : " + site + " Tıbbi Karantina",
-                    "Biyolojik Risk  : " + (cls === "KETER" ? "Sınıf-A biyohazmat" : "Standart maske"),
-                    "Temas Protokolü : " + (cls === "APOLLYON" ? "KESİNLİKLE YASAK" : "72 saat karantina"),
-                    "Tedavi          : " + (num % 2 === 0 ? "Amnezik uygulanır" : "Tedavi yok")
+                    "Biyolojik Risk  : " + (cls === "KETER" ? "Sınıf-A" : "Düşük"),
+                    "Temas Protokolü : " + (cls === "APOLLYON" ? "YASAK" : "72 saat")
+                ],
+                IGD: [
+                    "Kod Adı         : " + name,
+                    "Sınıflandırma   : " + cls + "  |  Tehlike: " + tehlike,
+                    "Muhafaza Tesisi : " + site,
+                    "IGD Gözlem      : 7/24 izleniyor",
+                    "Sızıntı Riski   : " + (cls === "KETER" ? "YÜKSEK" : "DÜŞÜK")
                 ],
                 TME: [
                     "Kod Adı         : " + name,
                     "Sınıflandırma   : " + cls + "  |  Tehlike: " + tehlike,
                     "Muhafaza Tesisi : " + site,
                     "Müdahale Birimi : TME-" + ((num % 5) + 1),
-                    "Nötralizasyon   : " + (cls === "KETER" || cls === "APOLLYON" ? "Ağır silah" : "Standart"),
                     "Son Operasyon   : " + yil
+                ],
+                ARA: [
+                    "Kod Adı         : " + name,
+                    "Sınıflandırma   : " + cls + "  |  Tehlike: " + tehlike,
+                    "Muhafaza Tesisi : " + site + " [LABORATUVAR]",
+                    "Araştırma Durumu: " + (num % 3 === 0 ? "Devam ediyor" : "Tamamlandı"),
+                    "Baş Araştırmacı : Dr. " + String.fromCharCode(65 + (num % 26))
                 ]
             };
             return sets[dept] || sets["SEC"];
@@ -2262,15 +2609,9 @@
                 o5PanelGuncelle();
             }
             
-            // Epic panel değerlerini güncelle
             document.getElementById('epic-scan').textContent = raporlar.length;
             document.getElementById('epic-security').textContent = (100 - (bekleyenOnaylar.length * 5)) + '%';
         }, 2000);
-
-        // ========== SAYFA KAPANIRKEN SESSION'U TEMİZLE ==========
-        window.addEventListener('beforeunload', function() {
-            // Session'u temizleme - otomatik giriş için kalmalı
-        });
     </script>
 </body>
 </html>
