@@ -2,794 +2,890 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>FIRST OF THE FOREST | PUFFTON CORP. OMEGA ARCHIVE</title>
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&family=Oswald:wght@200;300;400;500;600;700&family=Bebas+Neue&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Bebas+Neue&family=Oswald:wght@300;400;600;700&family=Orbitron:wght@400;700;900&family=Creepster&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #030305;
-  --bg2: #060a0f;
-  --green: #00ff88;
-  --green2: #00cc66;
-  --red: #ff2244;
-  --orange: #ff6600;
-  --amber: #ffaa00;
-  --dim: #1a2a1a;
-  --text: #c8e0c8;
-  --muted: #556655;
-  --panel: rgba(0,255,136,0.04);
-  --border: rgba(0,255,136,0.15);
-  --danger: rgba(255,34,68,0.12);
-  --warn: rgba(255,170,0,0.1);
+:root{
+  --bg:#020304;--bg2:#040810;--g:#00ff88;--g2:#00cc66;--g3:#004422;
+  --r:#ff1a3a;--o:#ff6600;--a:#ffaa00;--b:#0066ff;--p:#ff99cc;
+  --txt:#b8d8b8;--mu:#445544;--pan:rgba(0,255,136,.04);--bor:rgba(0,255,136,.14);
+  --dbor:rgba(255,26,58,.25);--wbor:rgba(255,170,0,.2);
 }
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--txt);font-family:'Oswald',sans-serif;overflow-x:hidden;cursor:crosshair}
 
-* { margin:0; padding:0; box-sizing:border-box; }
+/* ══════════ NOISE + SCANLINES ══════════ */
+body::before{content:'';position:fixed;inset:0;
+  background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.025'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:9998;opacity:.5}
+body::after{content:'';position:fixed;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,136,.012) 2px,rgba(0,255,136,.012) 4px);
+  pointer-events:none;z-index:9997;animation:scan 10s linear infinite}
+@keyframes scan{to{background-position:0 200px}}
 
-html { scroll-behavior: smooth; }
+/* ══════════ CURSOR GLOW ══════════ */
+#cg{position:fixed;width:350px;height:350px;border-radius:50%;
+  background:radial-gradient(circle,rgba(0,255,136,.025),transparent 70%);
+  transform:translate(-50%,-50%);pointer-events:none;z-index:9996;
+  transition:left .08s,top .08s}
 
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Rajdhani', sans-serif;
-  overflow-x: hidden;
-  cursor: crosshair;
-}
+/* ══════════ BOOT SCREEN ══════════ */
+#boot{position:fixed;inset:0;background:#000;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;z-index:10000;
+  font-family:'Share Tech Mono',monospace;transition:opacity 1.4s ease 4.5s}
+#boot.hide{opacity:0;pointer-events:none}
+#bl{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,9vw,9rem);color:var(--g);
+  letter-spacing:.3em;text-shadow:0 0 50px var(--g),0 0 120px var(--g2);
+  animation:flk .08s step-end 2.2s 4}
+@keyframes flk{50%{opacity:0}}
+#bs{color:var(--mu);font-size:.85rem;margin-top:.8rem;letter-spacing:.35em}
+#bw{width:320px;height:2px;background:#0a0a0a;margin-top:2.5rem;overflow:hidden;
+  border:1px solid #111}
+#bb{height:100%;background:var(--g);width:0;animation:lb 4s ease forwards;
+  box-shadow:0 0 14px var(--g)}
+@keyframes lb{to{width:100%}}
+#bt{margin-top:1.5rem;font-size:.72rem;color:#334;min-height:1.2rem;text-align:center}
 
-/* ─── NOISE OVERLAY ─── */
-body::before {
-  content:'';
-  position:fixed; inset:0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-  pointer-events:none; z-index:9999; opacity:.4;
-}
+/* ══════════ HERO ══════════ */
+#hero{min-height:100vh;position:relative;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;overflow:hidden;
+  background:radial-gradient(ellipse at 50% 35%,#031a07 0%,var(--bg) 72%)}
+.hfog{position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 65% 45% at 50% 115%,rgba(0,90,30,.7) 0%,transparent 70%),
+    linear-gradient(to top,#010f04 0%,transparent 55%)}
+.trees-wrap{position:absolute;bottom:0;left:0;right:0;height:60vh;overflow:hidden}
+.tree{position:absolute;bottom:0;transform-origin:bottom center;animation:sway 5s ease-in-out infinite}
+@keyframes sway{0%,100%{transform:rotate(0deg)}30%{transform:rotate(1.8deg)}70%{transform:rotate(-1.4deg)}}
+.hero-eyecatch{position:relative;z-index:2;text-align:center;padding:0 1rem}
+.hero-pre{font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--a);
+  letter-spacing:.45em;margin-bottom:1.2rem;animation:fadeUp 1.5s .2s both}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(3.5rem,14vw,14rem);
+  line-height:.88;color:var(--g);letter-spacing:.04em;text-align:center;
+  text-shadow:0 0 80px rgba(0,255,136,.55),0 0 160px rgba(0,255,136,.2);
+  animation:fadeUp 1.5s .0s both}
+.hero-sub{font-family:'Orbitron',sans-serif;font-size:clamp(.55rem,1.5vw,.95rem);
+  color:var(--a);letter-spacing:.45em;text-transform:uppercase;
+  margin-top:1.8rem;animation:fadeUp 1.5s .4s both}
+.hero-tag{font-family:'Share Tech Mono',monospace;color:rgba(0,255,136,.38);
+  font-size:.82rem;margin-top:.7rem;animation:fadeUp 1.5s .6s both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(55px)}to{opacity:1;transform:none}}
+.hero-btns{margin-top:2.8rem;display:flex;gap:1.2rem;justify-content:center;
+  flex-wrap:wrap;animation:fadeUp 1.5s .8s both}
+.hbtn{font-family:'Share Tech Mono',monospace;font-size:.75rem;padding:.85rem 2.2rem;
+  text-decoration:none;letter-spacing:.22em;text-transform:uppercase;transition:all .3s;
+  border:1px solid}
+.hbtn.primary{border-color:var(--g);color:var(--g)}
+.hbtn.primary:hover{background:rgba(0,255,136,.1);box-shadow:0 0 20px rgba(0,255,136,.2)}
+.hbtn.sec{border-color:var(--mu);color:var(--mu)}
+.hbtn.sec:hover{border-color:var(--a);color:var(--a)}
+.scroll-hint{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:.5rem;z-index:2;
+  color:var(--mu);font-family:'Share Tech Mono',monospace;font-size:.7rem;
+  animation:bob 2.2s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}55%{transform:translateX(-50%) translateY(9px)}}
+.sarrow{width:1px;height:44px;background:linear-gradient(to bottom,var(--mu),transparent)}
 
-/* ─── SCANLINES ─── */
-body::after {
-  content:'';
-  position:fixed; inset:0;
-  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,136,.015) 2px, rgba(0,255,136,.015) 4px);
-  pointer-events:none; z-index:9998;
-  animation: scanroll 8s linear infinite;
-}
-@keyframes scanroll { from{background-position:0 0} to{background-position:0 100px} }
+/* ══════════ NAV ══════════ */
+nav{position:sticky;top:0;z-index:200;background:rgba(2,3,4,.94);
+  backdrop-filter:blur(16px);border-bottom:1px solid var(--bor);
+  padding:.75rem 2rem;display:flex;align-items:center;gap:2rem;flex-wrap:wrap}
+.nlogo{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--g);
+  letter-spacing:.18em;text-shadow:0 0 12px var(--g2)}
+.nlinks{display:flex;gap:1.2rem;flex-wrap:wrap;margin-left:auto}
+.nlinks a{font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--mu);
+  text-decoration:none;letter-spacing:.14em;text-transform:uppercase;
+  transition:color .2s,text-shadow .2s;padding:.28rem .55rem;border:1px solid transparent}
+.nlinks a:hover{color:var(--g);text-shadow:0 0 10px var(--g);border-color:var(--bor)}
 
-/* ─── BOOT SCREEN ─── */
-#boot {
-  position:fixed; inset:0; background:#000;
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  z-index:10000; font-family:'Share Tech Mono', monospace;
-  transition: opacity 1.2s ease 4s;
-}
-#boot.hide { opacity:0; pointer-events:none; }
-#boot-logo {
-  font-family:'Bebas Neue', sans-serif;
-  font-size:clamp(3rem,8vw,8rem);
-  color: var(--green);
-  letter-spacing:.3em;
-  text-shadow: 0 0 40px var(--green), 0 0 100px var(--green2);
-  animation: flicker 0.1s step-end 2s 3;
-}
-@keyframes flicker { 50%{opacity:0} }
-#boot-sub { color: var(--muted); font-size:.9rem; margin-top:1rem; letter-spacing:.3em; }
-#boot-bar-wrap { width:300px; height:2px; background:#111; margin-top:2.5rem; overflow:hidden; }
-#boot-bar { height:100%; background:var(--green); width:0; animation: loadbar 3.5s ease forwards; box-shadow:0 0 12px var(--green); }
-@keyframes loadbar { to{width:100%} }
-#boot-text { margin-top:1.5rem; font-size:.75rem; color:#445; min-height:1.2rem; }
+/* ══════════ LAYOUT ══════════ */
+.sec{padding:7rem 2rem;max-width:1440px;margin:0 auto}
+.sec.wide{max-width:none;padding-left:3rem;padding-right:3rem}
+.slabel{font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--a);
+  letter-spacing:.32em;text-transform:uppercase;margin-bottom:.7rem;
+  display:flex;align-items:center;gap:.7rem}
+.slabel::before{content:'//';color:var(--mu)}
+h2.st{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.8rem,5.5vw,6rem);
+  color:var(--g);letter-spacing:.04em;line-height:.95;margin-bottom:3.5rem;
+  text-shadow:0 0 50px rgba(0,255,136,.25)}
 
-/* ─── HERO ─── */
-#hero {
-  min-height:100vh; position:relative; display:flex;
-  flex-direction:column; align-items:center; justify-content:center;
-  overflow:hidden;
-  background: radial-gradient(ellipse at 50% 40%, #051a08 0%, var(--bg) 70%);
-}
+/* ══════════ STATS ══════════ */
+.stats{display:flex;gap:1.5rem;flex-wrap:wrap;margin-bottom:4rem}
+.sbox{flex:1;min-width:130px;background:var(--pan);border:1px solid var(--bor);
+  padding:1.5rem;text-align:center;transition:all .3s}
+.sbox:hover{border-color:var(--g2);transform:translateY(-3px)}
+.snum{font-family:'Bebas Neue',sans-serif;font-size:3.8rem;color:var(--g);line-height:1}
+.slbl{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--mu);
+  margin-top:.3rem;text-transform:uppercase;letter-spacing:.2em}
 
-.hero-forest {
-  position:absolute; inset:0; pointer-events:none;
-  background:
-    radial-gradient(ellipse 60% 40% at 50% 110%, rgba(0,80,30,.6) 0%, transparent 70%),
-    linear-gradient(to top, #010f04 0%, transparent 50%);
-}
+/* ══════════ TERMINAL ══════════ */
+.term{background:#000;border:1px solid var(--bor);overflow:hidden;
+  box-shadow:0 0 50px rgba(0,255,136,.07),inset 0 0 50px rgba(0,0,0,.6)}
+.tbar{background:rgba(0,255,136,.07);border-bottom:1px solid var(--bor);
+  padding:.5rem 1rem;display:flex;align-items:center;gap:.5rem;
+  font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--mu)}
+.td{width:10px;height:10px;border-radius:50%}
+.tdr{background:#ff2244}.tda{background:#ffaa00}.tdg{background:#00ff88}
+.tbody{padding:2rem;font-family:'Share Tech Mono',monospace;font-size:.82rem;
+  line-height:2.1;color:#999}
+.tbody .hi{color:var(--g)}.tbody .wa{color:var(--a)}.tbody .da{color:var(--r)}
+.tbody .dm{color:#333}.tbody p{margin-bottom:.4rem}
+.cur{display:inline-block;width:.48em;height:1em;background:var(--g);
+  animation:bl .85s step-end infinite;vertical-align:text-bottom}
+@keyframes bl{50%{opacity:0}}
 
-/* animated trees */
-.trees { position:absolute; bottom:0; left:0; right:0; height:55vh; }
-.tree {
-  position:absolute; bottom:0; width:2px;
-  background:linear-gradient(to top, #0a1f0a, #0d2a0d);
-  transform-origin: bottom center;
-  animation: sway 4s ease-in-out infinite;
-}
-.tree::after {
-  content:''; position:absolute; bottom:60%;
-  left:50%; transform:translateX(-50%);
-  width:0; height:0;
-  border-left: solid transparent;
-  border-right: solid transparent;
-  border-bottom: solid;
-}
-@keyframes sway {
-  0%,100% { transform: rotate(0deg) }
-  25% { transform: rotate(1.5deg) }
-  75% { transform: rotate(-1.5deg) }
-}
+/* ══════════ STORY CARDS ══════════ */
+.sgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:1.5rem}
+.sc{background:var(--pan);border:1px solid var(--bor);padding:2rem;
+  position:relative;overflow:hidden;transition:all .35s cubic-bezier(.16,1,.3,1)}
+.sc:hover{border-color:var(--g2);box-shadow:0 0 35px rgba(0,255,136,.1);transform:translateY(-5px)}
+.sc::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;
+  background:var(--g);transform:scaleY(0);transform-origin:bottom;
+  transition:transform .45s cubic-bezier(.16,1,.3,1)}
+.sc:hover::before{transform:scaleY(1)}
+.cn{font-family:'Bebas Neue',sans-serif;font-size:4.5rem;color:rgba(0,255,136,.07);
+  line-height:1;position:absolute;top:.3rem;right:.8rem}
+.ct{font-family:'Oswald',sans-serif;font-size:1.25rem;color:var(--a);
+  margin-bottom:.9rem;text-transform:uppercase;letter-spacing:.1em;font-weight:600}
+.cb{font-size:.95rem;color:#7a8a7a;line-height:1.85}
 
-.hero-title {
-  font-family:'Bebas Neue', sans-serif;
-  font-size: clamp(3rem,12vw,12rem);
-  line-height:.9;
-  color: var(--green);
-  text-shadow: 0 0 60px rgba(0,255,136,.5), 0 0 120px rgba(0,255,136,.2);
-  letter-spacing:.05em;
-  text-align:center;
-  position:relative; z-index:2;
-  animation: heroIn 1.5s cubic-bezier(0.16,1,0.3,1) both;
-}
-@keyframes heroIn { from{opacity:0;transform:translateY(60px) scaleX(.95)} to{opacity:1;transform:none} }
+/* ══════════ MAP SVG ══════════ */
+#map-wrap{position:relative;max-width:1100px;margin:0 auto}
+#msvg{width:100%;height:auto;display:block}
+.mloc{cursor:pointer}
+.mloc circle,.mloc rect,.mloc polygon{transition:all .2s}
+.mloc:hover circle{filter:brightness(1.5)}
+.mtt{position:absolute;background:rgba(0,0,0,.97);border:1px solid var(--g);
+  padding:1rem 1.4rem;font-family:'Share Tech Mono',monospace;font-size:.76rem;
+  color:var(--txt);pointer-events:none;opacity:0;transition:opacity .2s;
+  max-width:260px;z-index:60;box-shadow:0 0 25px rgba(0,255,136,.18);min-width:180px}
+.mtt.on{opacity:1}
+.mtt h4{color:var(--g);font-family:'Oswald',sans-serif;font-size:1.05rem;
+  margin-bottom:.5rem;font-weight:600}
+.mlegend{display:flex;gap:2rem;flex-wrap:wrap;margin-top:1.8rem;
+  font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--mu)}
+.mli{display:flex;align-items:center;gap:.5rem}
+.mlidot{width:10px;height:10px;border-radius:50%}
 
-.hero-sub {
-  font-family:'Orbitron', sans-serif;
-  font-size:clamp(.6rem,1.5vw,1rem);
-  color:var(--amber);
-  letter-spacing:.4em;
-  text-transform:uppercase;
-  margin-top:1.5rem;
-  position:relative; z-index:2;
-  animation: heroIn 1.5s .3s cubic-bezier(0.16,1,0.3,1) both;
-}
+/* ══════════ CREATURES ══════════ */
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:1.5rem}
+.cc{background:var(--pan);border:1px solid var(--dbor);overflow:hidden;
+  position:relative;transition:all .38s cubic-bezier(.16,1,.3,1)}
+.cc:hover{transform:scale(1.025);border-color:var(--r);
+  box-shadow:0 0 35px rgba(255,26,58,.14)}
+.cart{height:190px;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#0a0404,#150808);position:relative;overflow:hidden}
+.cart::after{content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 105%,rgba(255,26,58,.1),transparent 68%)}
+.cemo{font-size:5.5rem;filter:drop-shadow(0 0 22px rgba(255,100,80,.55));
+  animation:flt 3.5s ease-in-out infinite}
+@keyframes flt{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-12px) rotate(2deg)}}
+.cinfo{padding:1.5rem}
+.cname{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--r);
+  letter-spacing:.08em}
+.ccls{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--a);
+  margin:.25rem 0 .7rem}
+.cdesc{font-size:.88rem;color:#6a7a6a;line-height:1.75}
+.tbar2{margin-top:.9rem}
+.tlbl{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:#334;
+  display:flex;justify-content:space-between}
+.ttrack{height:3px;background:#0d0d0d;margin-top:.28rem;overflow:hidden}
+.tfill{height:100%;background:linear-gradient(90deg,var(--g2),var(--a),var(--r));
+  transition:width 1.2s cubic-bezier(.16,1,.3,1)}
+.cthreat{position:absolute;top:.6rem;right:.6rem;font-family:'Bebas Neue',sans-serif;
+  font-size:1rem;padding:.15rem .4rem;border:1px solid;letter-spacing:.05em}
 
-.hero-tagline {
-  font-family:'Share Tech Mono', monospace;
-  color: rgba(0,255,136,.4);
-  font-size:.85rem;
-  margin-top:.8rem;
-  position:relative; z-index:2;
-  animation: heroIn 1.5s .6s cubic-bezier(0.16,1,0.3,1) both;
-}
+/* ══════════ CAVES / LORE FILES ══════════ */
+.lgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:1.5rem}
+.lf{background:rgba(255,170,0,.06);border:1px solid var(--wbor);padding:1.6rem;
+  position:relative;cursor:pointer;transition:all .3s}
+.lf:hover{background:rgba(255,170,0,.12);transform:translateY(-4px);
+  box-shadow:0 8px 30px rgba(255,170,0,.07)}
+.lfic{font-size:2.2rem;margin-bottom:.9rem}
+.lft{font-family:'Oswald',sans-serif;color:var(--a);font-size:1.15rem;
+  text-transform:uppercase;margin-bottom:.5rem;font-weight:600}
+.lfp{font-family:'Share Tech Mono',monospace;font-size:.72rem;color:#555;line-height:1.65}
+.lff{margin-top:1rem;font-family:'Share Tech Mono',monospace;font-size:.62rem;
+  color:#334;display:flex;justify-content:space-between}
+.clamp{position:absolute;top:.75rem;right:.75rem;border:2px solid var(--r);
+  color:var(--r);font-family:'Bebas Neue',sans-serif;font-size:.95rem;
+  padding:.1rem .45rem;letter-spacing:.1em;transform:rotate(11deg);opacity:.55}
 
-.scroll-hint {
-  position:absolute; bottom:2rem; left:50%; transform:translateX(-50%);
-  display:flex; flex-direction:column; align-items:center; gap:.5rem;
-  color: var(--muted); font-family:'Share Tech Mono', monospace; font-size:.75rem;
-  z-index:2; animation: bounce 2s ease-in-out infinite;
-}
-@keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(8px)} }
-.scroll-arrow { width:1px; height:40px; background:linear-gradient(to bottom, var(--muted), transparent); }
+/* ══════════ TIMELINE ══════════ */
+.tl{position:relative;padding-left:2.2rem}
+.tl::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;
+  background:linear-gradient(to bottom,transparent,var(--bor) 8%,var(--bor) 92%,transparent)}
+.tli{position:relative;margin-bottom:3.2rem;padding-left:2rem;
+  opacity:0;transform:translateX(-22px);transition:all .7s ease}
+.tli.on{opacity:1;transform:none}
+.tldot{position:absolute;left:-2.5rem;top:.3rem;width:13px;height:13px;
+  border-radius:50%;background:var(--bg);border:2px solid var(--g);
+  box-shadow:0 0 14px var(--g2)}
+.tldate{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--mu);margin-bottom:.35rem}
+.tltit{font-family:'Oswald',sans-serif;font-size:1.25rem;color:var(--a);
+  margin-bottom:.45rem;text-transform:uppercase;font-weight:600}
+.tlbody{font-size:.93rem;color:#6a7a6a;line-height:1.85}
 
-/* ─── NAV ─── */
-nav {
-  position:sticky; top:0; z-index:100;
-  background:rgba(3,3,5,.92); backdrop-filter:blur(12px);
-  border-bottom:1px solid var(--border);
-  padding:.8rem 2rem;
-  display:flex; align-items:center; gap:2rem; flex-wrap:wrap;
-}
-.nav-logo { font-family:'Bebas Neue',sans-serif; font-size:1.4rem; color:var(--green); letter-spacing:.15em; }
-.nav-links { display:flex; gap:1.5rem; flex-wrap:wrap; margin-left:auto; }
-.nav-links a {
-  font-family:'Share Tech Mono', monospace; font-size:.75rem;
-  color:var(--muted); text-decoration:none; letter-spacing:.15em;
-  text-transform:uppercase; transition:color .2s, text-shadow .2s;
-  padding:.3rem .6rem; border:1px solid transparent;
-}
-.nav-links a:hover { color:var(--green); text-shadow:0 0 12px var(--green); border-color:var(--border); }
+/* ══════════ ARIA ══════════ */
+.apanel{background:linear-gradient(135deg,#030810,#020508);
+  border:1px solid rgba(0,150,255,.18);padding:3rem;position:relative;overflow:hidden}
+.apanel::before{content:'ARIA v9.4.1 — ONLINE';position:absolute;top:.9rem;right:1.4rem;
+  font-family:'Share Tech Mono',monospace;font-size:.7rem;color:rgba(0,150,255,.28);
+  letter-spacing:.2em;animation:pulse2 3s ease-in-out infinite}
+@keyframes pulse2{0%,100%{opacity:.3}50%{opacity:.8}}
+.agrid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center}
+.avis{position:relative;height:310px;display:flex;align-items:center;justify-content:center}
+.aring{position:absolute;border-radius:50%;border:1px solid rgba(0,150,255,.25);
+  animation:spin 12s linear infinite}
+.aring:nth-child(1){width:290px;height:290px;animation-duration:15s}
+.aring:nth-child(2){width:210px;height:210px;animation-duration:9s;
+  animation-direction:reverse;border-style:dashed}
+.aring:nth-child(3){width:140px;height:140px;animation-duration:5s;
+  border-color:rgba(0,200,255,.45)}
+.aring:nth-child(4){width:80px;height:80px;animation-duration:3s;
+  border-color:rgba(0,255,200,.6);border-style:dotted}
+@keyframes spin{to{transform:rotate(360deg)}}
+.acore{width:55px;height:55px;border-radius:50%;
+  background:radial-gradient(circle,#00ccff,#002244);
+  box-shadow:0 0 35px rgba(0,150,255,.7),0 0 80px rgba(0,100,255,.3);
+  z-index:1;animation:apulse 2.2s ease-in-out infinite}
+@keyframes apulse{0%,100%{transform:scale(1);box-shadow:0 0 35px rgba(0,150,255,.7)}
+  50%{transform:scale(1.12);box-shadow:0 0 60px rgba(0,150,255,1)}}
+.ainfo h3{font-family:'Bebas Neue',sans-serif;font-size:3.5rem;color:#00aaff;
+  margin-bottom:1rem;text-shadow:0 0 30px rgba(0,170,255,.5)}
+.ainfo p{font-size:.93rem;color:#6a7080;line-height:1.95;margin-bottom:.8rem}
+.astat{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-top:1.5rem}
+.asbox{background:rgba(0,150,255,.05);border:1px solid rgba(0,150,255,.14);padding:.75rem}
+.aslab{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:rgba(0,150,255,.5);margin-bottom:.25rem}
+.asval{color:#aab;font-size:1.15rem;font-family:'Oswald',sans-serif}
 
-/* ─── SECTIONS ─── */
-section { padding:6rem 2rem; max-width:1400px; margin:0 auto; }
-section.full { max-width:none; padding:0; }
+/* ══════════ CONNECTIONS ══════════ */
+.cpanel{background:linear-gradient(135deg,#03070a,#020508);
+  border:1px solid rgba(80,160,255,.13);padding:2.8rem;margin-top:2rem}
+.ctitle{font-family:'Orbitron',sans-serif;font-size:1.35rem;color:#44aaff;
+  margin-bottom:1.8rem;letter-spacing:.1em}
+.citem{display:flex;gap:1.5rem;align-items:flex-start;margin-bottom:1.8rem;
+  padding-bottom:1.8rem;border-bottom:1px solid rgba(80,160,255,.06)}
+.citem:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.cgame{font-family:'Bebas Neue',sans-serif;font-size:1.15rem;color:#66ccff;
+  min-width:130px;line-height:1.3}
+.cdescr{font-size:.9rem;color:#556;line-height:1.75}
+.cbadge{font-family:'Share Tech Mono',monospace;font-size:.62rem;padding:.18rem .45rem;
+  border:1px solid rgba(80,255,180,.28);color:rgba(80,255,180,.65);
+  margin-bottom:.4rem;display:inline-block}
 
-.section-label {
-  font-family:'Share Tech Mono', monospace;
-  font-size:.75rem; color:var(--amber); letter-spacing:.3em;
-  text-transform:uppercase; margin-bottom:.8rem;
-  display:flex; align-items:center; gap:.8rem;
-}
-.section-label::before { content:'//'; color:var(--muted); }
+/* ══════════ DANGER ALERTS ══════════ */
+.dalert{background:rgba(255,26,58,.09);border:1px solid rgba(255,26,58,.28);
+  border-left:3px solid var(--r);padding:1rem 1.5rem;margin-bottom:1.5rem;
+  font-family:'Share Tech Mono',monospace;font-size:.78rem;
+  color:rgba(255,170,170,.8);display:flex;gap:1rem;align-items:flex-start}
+.dai{color:var(--r);font-size:1.1rem;flex-shrink:0}
 
-h2.section-title {
-  font-family:'Bebas Neue', sans-serif;
-  font-size:clamp(2.5rem,5vw,5rem);
-  color:var(--green);
-  letter-spacing:.05em;
-  line-height:1;
-  margin-bottom:3rem;
-  text-shadow:0 0 40px rgba(0,255,136,.3);
-}
+/* ══════════ PARALLAX STRIP ══════════ */
+.pstrip{height:180px;overflow:hidden;position:relative;
+  background:linear-gradient(to bottom,var(--bg),#030f05,var(--bg));
+  display:flex;align-items:center}
+.ptext{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,7vw,8rem);
+  color:rgba(0,255,136,.035);letter-spacing:.35em;white-space:nowrap;
+  animation:mq 22s linear infinite}
+@keyframes mq{from{transform:translateX(105vw)}to{transform:translateX(-105vw)}}
 
-/* ─── STORY TERMINAL ─── */
-.terminal {
-  background:#000;
-  border:1px solid var(--border);
-  border-radius:4px;
-  overflow:hidden;
-  box-shadow:0 0 40px rgba(0,255,136,.08), inset 0 0 40px rgba(0,0,0,.5);
-}
-.terminal-bar {
-  background:rgba(0,255,136,.08);
-  border-bottom:1px solid var(--border);
-  padding:.5rem 1rem;
-  display:flex; align-items:center; gap:.5rem;
-  font-family:'Share Tech Mono', monospace; font-size:.75rem; color:var(--muted);
-}
-.t-dot { width:10px; height:10px; border-radius:50%; }
-.t-red{background:#ff2244} .t-amber{background:#ffaa00} .t-green{background:#00ff88}
-.terminal-body { padding:2rem; font-family:'Share Tech Mono', monospace; font-size:.85rem; line-height:2; color:#aaa; }
-.terminal-body .hi { color:var(--green); }
-.terminal-body .warn { color:var(--amber); }
-.terminal-body .danger { color:var(--red); }
-.terminal-body .dim { color:#444; }
-.terminal-body p { margin-bottom:.5rem; }
-.cursor { display:inline-block; width:.5em; height:1em; background:var(--green); animation:blink .8s step-end infinite; vertical-align:text-bottom; }
-@keyframes blink { 50%{opacity:0} }
+/* ══════════ LORE MODAL ══════════ */
+#modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.93);
+  z-index:6000;align-items:center;justify-content:center;padding:2rem}
+#modal.on{display:flex}
+.mbox{max-width:680px;width:100%;background:#040904;border:1px solid var(--bor);
+  padding:2.8rem;position:relative;overflow-y:auto;max-height:88vh;
+  box-shadow:0 0 60px rgba(0,255,136,.06)}
+.mclose{position:absolute;top:1rem;right:1rem;background:none;
+  border:1px solid var(--mu);color:var(--mu);font-family:'Share Tech Mono',monospace;
+  font-size:.75rem;padding:.3rem .65rem;cursor:pointer;transition:all .2s}
+.mclose:hover{border-color:var(--r);color:var(--r)}
 
-/* ─── STORY CARDS ─── */
-.story-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:1.5rem; }
-.story-card {
-  background:var(--panel);
-  border:1px solid var(--border);
-  padding:2rem;
-  position:relative; overflow:hidden;
-  transition:border-color .3s, box-shadow .3s, transform .3s;
-}
-.story-card:hover { border-color:var(--green2); box-shadow:0 0 30px rgba(0,255,136,.1); transform:translateY(-4px); }
-.story-card::before {
-  content:''; position:absolute; top:0; left:0;
-  width:3px; height:100%; background:var(--green);
-  transform:scaleY(0); transform-origin:bottom;
-  transition:transform .4s cubic-bezier(0.16,1,0.3,1);
-}
-.story-card:hover::before { transform:scaleY(1); }
-.card-num {
-  font-family:'Bebas Neue', sans-serif; font-size:4rem;
-  color:rgba(0,255,136,.08); line-height:1; position:absolute; top:.5rem; right:1rem;
-}
-.card-title { font-family:'Oswald', sans-serif; font-size:1.3rem; color:var(--amber); margin-bottom:1rem; text-transform:uppercase; letter-spacing:.1em; }
-.card-body { font-size:.95rem; color:#889; line-height:1.8; }
+/* ══════════ FADE IN SCROLL ══════════ */
+.fi{opacity:0;transform:translateY(32px);transition:all .85s cubic-bezier(.16,1,.3,1)}
+.fi.on{opacity:1;transform:none}
 
-/* ─── MAP ─── */
-#map-section { background:var(--bg2); border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
-.map-container { position:relative; }
-.island-map {
-  width:100%; max-width:1000px; margin:0 auto; display:block;
-  position:relative;
-}
+/* ══════════ FOOTER ══════════ */
+footer{background:#000;border-top:1px solid var(--bor);padding:3.5rem 2rem;
+  text-align:center;font-family:'Share Tech Mono',monospace;font-size:.72rem;color:#223}
+.flogo{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;
+  color:rgba(0,255,136,.28);letter-spacing:.2em;margin-bottom:1rem}
+.fslogan{color:var(--mu);margin-bottom:.5rem}
 
-/* SVG map styles */
-#map-svg { width:100%; height:auto; }
+/* ══════════ CHAPTER HEADERS ══════════ */
+.chapter{background:linear-gradient(135deg,rgba(0,255,136,.04),transparent);
+  border-left:3px solid var(--g);padding:1.5rem 2rem;margin:3rem 0;
+  position:relative;overflow:hidden}
+.chapter::after{content:'';position:absolute;top:0;right:0;bottom:0;width:40%;
+  background:linear-gradient(to left,rgba(0,255,136,.02),transparent)}
+.chnum{font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--mu);
+  letter-spacing:.3em;margin-bottom:.4rem}
+.chtit{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.5rem,3vw,2.5rem);
+  color:var(--g);letter-spacing:.06em;line-height:1}
+.chsub{font-size:.9rem;color:#667;margin-top:.5rem;line-height:1.7;font-family:'Share Tech Mono',monospace}
 
-.map-location-btn {
-  cursor:pointer; transition:all .2s;
-}
-.map-location-btn:hover circle { r: 10; }
-.map-tooltip {
-  position:absolute;
-  background:rgba(0,0,0,.95);
-  border:1px solid var(--green);
-  padding:1rem 1.5rem;
-  font-family:'Share Tech Mono', monospace; font-size:.8rem;
-  color:var(--text); pointer-events:none;
-  opacity:0; transition:opacity .2s;
-  max-width:250px; z-index:50;
-  box-shadow:0 0 20px rgba(0,255,136,.2);
-}
-.map-tooltip.show { opacity:1; }
-.map-tooltip h4 { color:var(--green); font-family:'Oswald',sans-serif; font-size:1.1rem; margin-bottom:.5rem; }
+/* ══════════ STORY PARAGRAPHS ══════════ */
+.story-body{max-width:780px}
+.sp{font-size:1rem;color:#7a8c7a;line-height:2;margin-bottom:1.5rem;font-family:'Oswald',sans-serif;font-weight:300}
+.sp strong{color:var(--a);font-weight:600}
+.sp em{color:var(--g);font-style:normal;font-weight:400}
+.sp .red{color:var(--r)}
+.quote{border-left:2px solid var(--g);padding:.8rem 1.5rem;margin:2rem 0;
+  font-family:'Share Tech Mono',monospace;font-size:.82rem;color:rgba(0,255,136,.6);
+  background:rgba(0,255,136,.025)}
 
-/* ─── CREATURES ─── */
-.creatures-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:1.5rem; }
-.creature-card {
-  background:var(--panel);
-  border:1px solid rgba(255,34,68,.2);
-  padding:0;
-  overflow:hidden;
-  position:relative;
-  transition:all .35s cubic-bezier(0.16,1,0.3,1);
-}
-.creature-card:hover { transform:scale(1.02); border-color:var(--red); box-shadow:0 0 30px rgba(255,34,68,.15); }
-.creature-art {
-  height:180px; display:flex; align-items:center; justify-content:center;
-  background:linear-gradient(135deg, #0a0505, #150a0a);
-  font-size:5rem; overflow:hidden; position:relative;
-}
-.creature-art::after {
-  content:''; position:absolute; inset:0;
-  background:radial-gradient(ellipse at 50% 100%, rgba(255,34,68,.1), transparent 70%);
-}
-.creature-art .c-emoji { filter:drop-shadow(0 0 20px rgba(255,100,100,.5)); animation:float 3s ease-in-out infinite; }
-@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
-.creature-info { padding:1.5rem; }
-.creature-name { font-family:'Oswald', sans-serif; font-size:1.4rem; color:var(--red); letter-spacing:.1em; text-transform:uppercase; }
-.creature-class { font-family:'Share Tech Mono', monospace; font-size:.7rem; color:var(--amber); margin:.3rem 0 .8rem; }
-.creature-desc { font-size:.85rem; color:#778; line-height:1.7; }
-.threat-bar { margin-top:.8rem; }
-.threat-label { font-family:'Share Tech Mono', monospace; font-size:.65rem; color:#445; display:flex; justify-content:space-between; }
-.threat-track { height:3px; background:#111; margin-top:.3rem; overflow:hidden; }
-.threat-fill { height:100%; background:linear-gradient(90deg, var(--green2), var(--amber), var(--red)); transition:width 1s ease; }
-
-/* ─── TIMELINE ─── */
-.timeline { position:relative; padding-left:2rem; }
-.timeline::before { content:''; position:absolute; left:0; top:0; bottom:0; width:1px; background:linear-gradient(to bottom, transparent, var(--border) 10%, var(--border) 90%, transparent); }
-.tl-item { position:relative; margin-bottom:3rem; padding-left:2rem; opacity:0; transform:translateX(-20px); transition:all .6s ease; }
-.tl-item.visible { opacity:1; transform:none; }
-.tl-dot {
-  position:absolute; left:-2.4rem; top:.3rem;
-  width:12px; height:12px; border-radius:50%;
-  background:var(--bg);
-  border:2px solid var(--green);
-  box-shadow:0 0 12px var(--green2);
-}
-.tl-date { font-family:'Share Tech Mono', monospace; font-size:.7rem; color:var(--muted); margin-bottom:.4rem; }
-.tl-title { font-family:'Oswald', sans-serif; font-size:1.2rem; color:var(--amber); margin-bottom:.5rem; text-transform:uppercase; }
-.tl-body { font-size:.9rem; color:#778; line-height:1.8; }
-
-/* ─── LORE FILES ─── */
-.lore-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.5rem; }
-.lore-file {
-  background:var(--warn);
-  border:1px solid rgba(255,170,0,.2);
-  padding:1.5rem;
-  position:relative;
-  cursor:pointer;
-  transition:all .3s;
-}
-.lore-file:hover { background:rgba(255,170,0,.15); transform:translateY(-3px); }
-.lore-file-icon { font-size:2rem; margin-bottom:.8rem; }
-.lore-file-title { font-family:'Oswald', sans-serif; color:var(--amber); font-size:1.1rem; text-transform:uppercase; margin-bottom:.5rem; }
-.lore-file-preview { font-family:'Share Tech Mono', monospace; font-size:.75rem; color:#666; line-height:1.6; }
-.lore-file-footer { margin-top:1rem; font-family:'Share Tech Mono', monospace; font-size:.65rem; color:#445; display:flex; justify-content:space-between; }
-.classified-stamp {
-  position:absolute; top:.8rem; right:.8rem;
-  border:2px solid var(--red); color:var(--red);
-  font-family:'Bebas Neue', sans-serif; font-size:1rem;
-  padding:.1rem .5rem; letter-spacing:.1em;
-  transform:rotate(12deg); opacity:.6;
-}
-
-/* ─── ARIA PANEL ─── */
-.aria-panel {
-  background:linear-gradient(135deg, #040810, #020508);
-  border:1px solid rgba(0,150,255,.2);
-  padding:3rem;
-  position:relative; overflow:hidden;
-}
-.aria-panel::before {
-  content:'ARIA v9.4.1';
-  position:absolute; top:1rem; right:1.5rem;
-  font-family:'Share Tech Mono', monospace; font-size:.75rem;
-  color:rgba(0,150,255,.3); letter-spacing:.2em;
-}
-.aria-grid { display:grid; grid-template-columns:1fr 1fr; gap:3rem; align-items:center; }
-.aria-visual { position:relative; height:300px; display:flex; align-items:center; justify-content:center; }
-.aria-ring {
-  position:absolute;
-  border-radius:50%;
-  border:1px solid rgba(0,150,255,.3);
-  animation:spin 10s linear infinite;
-}
-.aria-ring:nth-child(1) { width:280px; height:280px; animation-duration:12s; }
-.aria-ring:nth-child(2) { width:200px; height:200px; animation-duration:8s; animation-direction:reverse; border-style:dashed; }
-.aria-ring:nth-child(3) { width:130px; height:130px; animation-duration:5s; border-color:rgba(0,200,255,.5); }
-@keyframes spin { to{transform:rotate(360deg)} }
-.aria-core {
-  width:60px; height:60px; border-radius:50%;
-  background:radial-gradient(circle, #00aaff, #003366);
-  box-shadow:0 0 30px rgba(0,150,255,.6), 0 0 60px rgba(0,100,255,.3);
-  z-index:1; animation:pulse 2s ease-in-out infinite;
-}
-@keyframes pulse { 0%,100%{transform:scale(1);box-shadow:0 0 30px rgba(0,150,255,.6)} 50%{transform:scale(1.1);box-shadow:0 0 50px rgba(0,150,255,.9)} }
-.aria-info h3 { font-family:'Bebas Neue', sans-serif; font-size:3rem; color:#00aaff; margin-bottom:1rem; }
-.aria-info p { font-size:.95rem; color:#778; line-height:1.9; margin-bottom:.8rem; }
-
-/* ─── STATS ─── */
-.stats-row { display:flex; gap:2rem; flex-wrap:wrap; margin-bottom:4rem; }
-.stat-box {
-  flex:1; min-width:150px;
-  background:var(--panel);
-  border:1px solid var(--border);
-  padding:1.5rem; text-align:center;
-}
-.stat-num { font-family:'Bebas Neue', sans-serif; font-size:3.5rem; color:var(--green); line-height:1; }
-.stat-label { font-family:'Share Tech Mono', monospace; font-size:.7rem; color:var(--muted); margin-top:.3rem; text-transform:uppercase; letter-spacing:.2em; }
-
-/* ─── PARALLAX DIVIDERS ─── */
-.parallax-divider {
-  height:200px; overflow:hidden; position:relative;
-  background:linear-gradient(to bottom, var(--bg), #040f06, var(--bg));
-  display:flex; align-items:center; justify-content:center;
-}
-.p-text {
-  font-family:'Bebas Neue', sans-serif;
-  font-size:clamp(3rem,8vw,8rem);
-  color:rgba(0,255,136,.04);
-  letter-spacing:.3em; white-space:nowrap;
-  animation:marquee 20s linear infinite;
-}
-@keyframes marquee { from{transform:translateX(100vw)} to{transform:translateX(-100vw)} }
-
-/* ─── DANGER ALERT ─── */
-.danger-alert {
-  background:var(--danger);
-  border:1px solid rgba(255,34,68,.3);
-  border-left:3px solid var(--red);
-  padding:1rem 1.5rem;
-  margin-bottom:1.5rem;
-  font-family:'Share Tech Mono', monospace;
-  font-size:.8rem;
-  color:rgba(255,180,180,.8);
-  display:flex; gap:1rem; align-items:flex-start;
-}
-.alert-icon { color:var(--red); font-size:1.1rem; flex-shrink:0; }
-
-/* ─── FOOTER ─── */
-footer {
-  background:#000;
-  border-top:1px solid var(--border);
-  padding:3rem 2rem;
-  text-align:center;
-  font-family:'Share Tech Mono', monospace;
-  font-size:.75rem; color:#334;
-}
-footer .f-logo { font-family:'Bebas Neue', sans-serif; font-size:2rem; color:rgba(0,255,136,.3); letter-spacing:.2em; margin-bottom:1rem; }
-footer a { color:#445; text-decoration:none; }
-
-/* ─── SCROLL ANIMATIONS ─── */
-.fade-in { opacity:0; transform:translateY(30px); transition:all .8s cubic-bezier(0.16,1,0.3,1); }
-.fade-in.visible { opacity:1; transform:none; }
-
-/* ─── CONNECTION LINES BETWEEN FOREST GAMES ─── */
-.connection-panel {
-  background:linear-gradient(135deg, #05080a, #03060a);
-  border:1px solid rgba(100,180,255,.15);
-  padding:2.5rem;
-  margin-top:2rem;
-}
-.conn-title { font-family:'Orbitron', sans-serif; font-size:1.4rem; color:#4af; margin-bottom:1.5rem; letter-spacing:.1em; }
-.conn-item { display:flex; gap:1.5rem; align-items:flex-start; margin-bottom:1.5rem; padding-bottom:1.5rem; border-bottom:1px solid rgba(100,180,255,.07); }
-.conn-game { font-family:'Bebas Neue', sans-serif; font-size:1.1rem; color:#7cf; min-width:120px; }
-.conn-desc { font-size:.9rem; color:#667; line-height:1.7; }
-.conn-badge { font-family:'Share Tech Mono', monospace; font-size:.65rem; padding:.2rem .5rem; border:1px solid rgba(100,255,200,.3); color:rgba(100,255,200,.7); margin-bottom:.4rem; display:inline-block; }
-
-/* Responsive */
-@media(max-width:768px) {
-  .aria-grid { grid-template-columns:1fr; }
-  .aria-visual { height:200px; }
-  nav { padding:.8rem 1rem; gap:1rem; }
-  section { padding:4rem 1rem; }
+/* ══════════ RESPONSIVE ══════════ */
+@media(max-width:768px){
+  .agrid{grid-template-columns:1fr}
+  .avis{height:220px}
+  nav{padding:.7rem 1rem;gap:.8rem}
+  .sec{padding:4rem 1rem}
+  .sec.wide{padding:4rem 1rem}
 }
 </style>
 </head>
 <body>
 
-<!-- BOOT SCREEN -->
+<div id="cg"></div>
+
+<!-- ══ BOOT SCREEN ══ -->
 <div id="boot">
-  <div id="boot-logo">PUFFTON CORP.</div>
-  <div id="boot-sub">OMEGA ARCHIVE SYSTEM v9.4.1</div>
-  <div id="boot-bar-wrap"><div id="boot-bar"></div></div>
-  <div id="boot-text">Initializing secure connection...</div>
+  <div id="bl">PUFFTON CORP.</div>
+  <div id="bs">OMEGA ARCHIVE SYSTEM v9.4.1 — CLASSIFIED</div>
+  <div id="bw"><div id="bb"></div></div>
+  <div id="bt">Bağlantı başlatılıyor...</div>
 </div>
 
-<!-- HERO -->
+<!-- ══ HERO ══ -->
 <div id="hero">
-  <div class="hero-forest"></div>
-  <div class="trees" id="trees"></div>
-  <div style="position:relative;z-index:2;text-align:center;">
-    <div style="font-family:'Share Tech Mono',monospace;font-size:.8rem;color:var(--amber);letter-spacing:.3em;margin-bottom:1rem;">PUFFTON CORP. PRESENTS</div>
+  <div class="hfog"></div>
+  <div class="trees-wrap" id="trees"></div>
+  <div class="hero-eyecatch">
+    <div class="hero-pre">PUFFTON CORPORATION PRESENTS</div>
     <h1 class="hero-title">FIRST OF<br>THE FOREST</h1>
-    <div class="hero-sub">OMEGA ARCHIVE — CLASSIFIED RESEARCH LOG</div>
-    <div class="hero-tagline">// Live a Beautiful Life — Puffton Corporation™</div>
-    <div style="margin-top:2.5rem;display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
-      <a href="#story" style="font-family:'Share Tech Mono',monospace;font-size:.8rem;padding:.8rem 2rem;border:1px solid var(--green);color:var(--green);text-decoration:none;letter-spacing:.2em;transition:all .3s;" onmouseover="this.style.background='rgba(0,255,136,0.1)'" onmouseout="this.style.background='transparent'">ACCESS ARCHIVE</a>
-      <a href="#map" style="font-family:'Share Tech Mono',monospace;font-size:.8rem;padding:.8rem 2rem;border:1px solid var(--muted);color:var(--muted);text-decoration:none;letter-spacing:.2em;transition:all .3s;" onmouseover="this.style.borderColor='var(--amber)';this.style.color='var(--amber)'" onmouseout="this.style.borderColor='var(--muted)';this.style.color='var(--muted)'">VIEW ISLAND MAP</a>
+    <div class="hero-sub">OMEGA ARCHIVE — GİZLİ ARAŞTIRMA KAYDI — SEVİYE OMEGA</div>
+    <div class="hero-tag">// "Live a Beautiful Life" — Puffton Corporation™</div>
+    <div class="hero-btns">
+      <a href="#story" class="hbtn primary">ARŞİVE ERİŞ</a>
+      <a href="#map" class="hbtn sec">ADA HARİTASI</a>
+      <a href="#creatures" class="hbtn sec">YARATIK KATALOĞU</a>
     </div>
   </div>
-  <div class="scroll-hint">
-    <span>SCROLL</span>
-    <div class="scroll-arrow"></div>
-  </div>
+  <div class="scroll-hint"><span>AŞAĞI KAY</span><div class="sarrow"></div></div>
 </div>
 
-<!-- NAV -->
+<!-- ══ NAV ══ -->
 <nav>
-  <div class="nav-logo">FOTF</div>
-  <div class="nav-links">
-    <a href="#story">Ana Hikaye</a>
-    <a href="#map">Ada Haritası</a>
+  <div class="nlogo">FOTF</div>
+  <div class="nlinks">
+    <a href="#story">Hikaye</a>
+    <a href="#map">Harita</a>
     <a href="#creatures">Yaratıklar</a>
     <a href="#caves">Mağralar</a>
     <a href="#aria">ARIA</a>
-    <a href="#connections">Forest Bağlantısı</a>
+    <a href="#timeline">Kronik</a>
+    <a href="#connections">The Forest</a>
   </div>
 </nav>
 
-<!-- STATS -->
-<section style="padding:4rem 2rem;">
-  <div class="stats-row fade-in">
-    <div class="stat-box"><div class="stat-num">8</div><div class="stat-label">Toplam Tesis</div></div>
-    <div class="stat-box"><div class="stat-num">5</div><div class="stat-label">Aktif Tesis</div></div>
-    <div class="stat-box"><div class="stat-num">25</div><div class="stat-label">Tespit Edilen Tür</div></div>
-    <div class="stat-box"><div class="stat-num">6.7</div><div class="stat-label">Deprem Şiddeti</div></div>
-    <div class="stat-box"><div class="stat-num">4</div><div class="stat-label">Kaçan Prototip</div></div>
-    <div class="stat-box"><div class="stat-num">14+</div><div class="stat-label">Aktif Mağra</div></div>
+<!-- ══ STATS ══ -->
+<div class="sec" style="padding-top:4rem;padding-bottom:3rem">
+  <div class="stats fi">
+    <div class="sbox"><div class="snum">8</div><div class="slbl">Toplam Tesis</div></div>
+    <div class="sbox"><div class="snum">5</div><div class="slbl">Aktif Tesis</div></div>
+    <div class="sbox"><div class="snum">25</div><div class="slbl">Tespit Edilen Tür</div></div>
+    <div class="sbox"><div class="snum">6.7</div><div class="slbl">Deprem Mag.</div></div>
+    <div class="sbox"><div class="snum">4</div><div class="slbl">Kaçan Prototip</div></div>
+    <div class="sbox"><div class="snum">14+</div><div class="slbl">Aktif Mağra</div></div>
+    <div class="sbox"><div class="snum" id="upcounter">0</div><div class="slbl">ARIA Uptime (Gün)</div></div>
+  </div>
+</div>
+
+<!-- ══ STORY SECTION ══ -->
+<section id="story" class="sec">
+  <div class="slabel">ANA HİKAYE // 15 BÖLÜM</div>
+  <h2 class="st">UYANIŞIN<br>BAŞLANGICI</h2>
+
+  <div class="dalert fi">
+    <span class="dai">⚠</span>
+    <span><strong>PUFFTON CORP. UYARISI [OMEGA-7]:</strong> Bu arşiv kayıtlarına erişim kalıcı olarak loglanmaktadır. Yetkisiz okuma Protokol-Kızıl'ı aktive eder. İyi okumalar dileriz. — Live a Beautiful Life™</span>
+  </div>
+
+  <!-- CHAPTER 1 -->
+  <div class="chapter fi">
+    <div class="chnum">BÖLÜM 01 // UYANIS</div>
+    <div class="chtit">KAPSÜLDEN ÇIKIŞ</div>
+    <div class="chsub">Tesis-03, Koridor Blok-C — Saat: 03:47 GMT — Tarih: [SİLİNDİ]</div>
+  </div>
+  <div class="story-body fi">
+    <p class="sp">Gözler açıldığında ilk hissedilen soğuk metal zeminin serinliğidir. <strong>Milon</strong> — Puffton Corporation Omega Programı Denek No. 003-M — bilinci yavaş yavaş yerine gelirken çevresini taramaya başlar.</p>
+    <p class="sp">Tesis-03'ün Koridor-C bölümü. Her iki yana uzanan <em>uçsuz bucaksız koridor</em>, floresan lambaların titrek ışığıyla kısmen aydınlanmış. Koridorun sağında ve solunda, duvar boyunca sıralanan deney kapsülleri — hepsi açık, hepsi boş. Ama boş değil tam olarak: kapsüllerden birinin camında kan izi var. Taze.</p>
+    <p class="sp">Milon ayağa kalkmaya çalışır. Bacakları tutmuyor. Kaslar <red class="red">kırk sekiz saatlik kriyojenik uyku</red>dan sonra henüz ısınmamış. Yavaş yavaş, bir kapsülün kenarına tutunarak dik durur.</p>
+    <div class="quote">"DİĞER DENEKLER... NEREDE?" — Milon'un ilk düşüncesi. Sistem kaydı 003-M.</div>
+    <p class="sp">Koridorun ortasında bir şey parlıyor. Eğiliyor. Plastik, dikdörtgen, beyaz. Üzerinde Puffton logosu ve şu yazı: <strong>ERİŞİM SEVİYESİ 2 — ARAŞTIRMACI SINIFI.</strong> Kartın alt köşesinde küçük harflerle şirketin sloganı: <em>"Live a Beautiful Life."</em></p>
+    <p class="sp">Milon kartı cebine koyar. Koridorun sonunda — yaklaşık seksen metre ileride — tek bir kapı. Yeşil bir ışık yanıp sönüyor.</p>
+  </div>
+
+  <!-- CHAPTER 2 -->
+  <div class="chapter fi">
+    <div class="chnum">BÖLÜM 02 // JİRKOLİFST</div>
+    <div class="chtit">CUTSCENE: ÖLÜMÜN DANS</div>
+    <div class="chsub">Kapı Açılıyor — 03:52 GMT</div>
+  </div>
+  <div class="story-body fi">
+    <p class="sp">Kapı açıldığında dünya donup kalır.</p>
+    <p class="sp">Geniş bir oda — eski bir güvenlik kontrol merkezi olmalı. Monitörler, çoğu kırık ya da yanmış. Ve ortada, <strong>onu</strong> görüyor.</p>
+    <p class="sp">Varlık <red class="red">on altı kola</red> sahip. Kollar insan vücuduyla hiç bağdaşmayan bir düzende çıkıyor — bazıları sırttan, bazıları kaburgalar arasından. Üç bacak. İkisi öne, biri arkaya yönelik. Derisi insan derisiyle aynı renkte ama altında bir şeyler kayıyor — kaslar mı, tentaküller mi, bilinmiyor.</p>
+    <p class="sp">Ve güvenlik personeli. Tam teçhizatlı, silahlı. Yaratığın karşısında. Milon kapıdan içeri adım atarken zaten savaş başlamış.</p>
+    <p class="sp">Personel ateş ediyor. Kurşunlar <em>Jirkolifst'i</em> yavaşlatmıyor bile. Yaratık üç adımda personelin yanına geliyor. On altı koldan biri — en uzunu — personelin kaskını kavrayıp tek bir hareketle <strong class="red">kafayı vücuttan ayırıyor.</strong></p>
+    <p class="sp">Sessizlik.</p>
+    <p class="sp">Sonra Jirkolifst dönüyor. Ve Milon'u görüyor.</p>
+    <p class="sp">Gözler — normal bir insanın iki gözü olduğu yerde bu varlığın yedi gözü var. Hepsi Milon'a kilitleniyor. Yaratık koşmaya başlıyor ve tam o anda—</p>
+    <div class="quote">FREKANSI: 18.000 Hz — KAYNAK: BİLİNMİYOR — ETKİ: ÖLÜMCÜL (JİRKOLİFST TÜRÜ İÇİN)</div>
+    <p class="sp">Ses. Tiz, cızırtılı, metalik. Sadece bir saniye sürer ama o bir saniyede her şey değişir. Milon'un kulakları <red class="red">tamamen sağır olur</red>. Görmeden hissediyor: Jirkolifst duruyor. Titremeye başlıyor. Sonra çöküyor.</p>
+    <p class="sp">Karanlık.</p>
+    <p class="sp">Milon gözlerini açtığında gece olmuş.</p>
+  </div>
+
+  <!-- CHAPTER 3 -->
+  <div class="chapter fi">
+    <div class="chnum">BÖLÜM 03 // LOOT</div>
+    <div class="chtit">GÜVENLİĞİN KALINTILARI</div>
+    <div class="chsub">Tesis-03 Kontrol Odası — Gece 00:14</div>
+  </div>
+  <div class="story-body fi">
+    <p class="sp">Personelin cesedi yanında diz çöküyor. Cepleri arıyor. Üç şey buluyor:</p>
+    <p class="sp"><strong>1. SİLAH — LVL 4:</strong> Kompakt, darbeye dayanıklı, çift kademeli ateşleme sistemi. Puffton özel üretim. Namlusu hafif çarpık — daha önce kullanılmış, belki de bu odada, belki de bu yaratığa karşı.</p>
+    <p class="sp"><strong>2. ERİŞİM KARTI — SEVİYE 4:</strong> Güvenlik personeline ait. Üzerinde şu not: <em>"Kuzey kapı, enerji tüneli, bungalov — B sektörü."</em> Ve kartın üzerinde bir isim: <red class="red">ARAŞTIRMACI KURS.</red></p>
+    <p class="sp"><strong>3. ÜÇÜÇ ŞARJÖR — 12/3 DOLU:</strong> Toplam 36 mermi. Jirkolifst'e bakıyor. Otuz altı mermi. Tam bir dakika önce, o varlığa kurşunlar bile işe yaramamıştı.</p>
+    <div class="quote">"Peki bunlar ne işe yarayacak?" — Düşünce kaydı 003-M, Saat 00:14</div>
+    <p class="sp">Milon kalkar. Odanın karşı duvarında başka bir kapı. Bu sefer kart okuyucu var. Araştırmacı kartını deniyor — <red class="red">RED.</red> Güvenlik kartını deniyor — <em>YEŞİL.</em></p>
+  </div>
+
+  <!-- CHAPTER 4 -->
+  <div class="chapter fi">
+    <div class="chnum">BÖLÜM 04 // ORMAN</div>
+    <div class="chtit">ÖZGÜRLÜK YANILSAMASI</div>
+    <div class="chsub">Tesis-03 Dış Kapı — Gece 00:19</div>
+  </div>
+  <div class="story-body fi">
+    <p class="sp">Kapı açılıyor.</p>
+    <p class="sp">Ve Milon donup kalıyor.</p>
+    <p class="sp">Önünde <em>sonsuz orman.</em> Ağaçlar o kadar büyük ki gövdeleri neredeyse binanın yüksekliğinde. Tepeleri gökyüzünü tamamen kapatmış — güneşin buraya giremeyeceği belli. Sadece çalılık, yosun, karanlık ve ıslak toprak kokusu.</p>
+    <p class="sp">Deniz var bir yerde. Ses geliyor — dalgaların kırılması. Ama nerede olduğu belli değil. Her yön aynı görünüyor: ağaç, çalı, karanlık.</p>
+    <p class="sp">Milon ilk adımını atıyor. Ayakları ıslak toprağa batıyor.</p>
+    <div class="quote">ARIA KAYDI 03:47 — DENEK 003-M TESİS DIŞINA ÇIKTI. TAKİP AKTİF. —</div>
+    <p class="sp">Oyun başlıyor. Ama bu özgürlük değil.</p>
+    <p class="sp">Hiçbir zaman olmadı.</p>
+  </div>
+
+  <!-- CHAPTER 5 -->
+  <div class="chapter fi">
+    <div class="chnum">BÖLÜM 05 // PUFFTON</div>
+    <div class="chtit">ŞİRKETİN SIRRI</div>
+    <div class="chsub">Omega Arşivi — Sınıflandırılmış Kayıtlar</div>
+  </div>
+  <div class="story-body fi">
+    <p class="sp"><strong>Puffton Corporation</strong> 1987 yılında kurulan, merkezi bilinmeyen bir çok uluslu şirkettir. Resmi faaliyet alanları: biyoteknoloji araştırması, enerji sistemleri, "insan refahı geliştirme projeleri."</p>
+    <p class="sp">Gerçek faaliyet alanı: <em>insan mutasyonu, kontrollü evrim, yaratık deneyimi ve — resmi açıklamaya göre — insanlığın "bir sonraki aşaması."</em></p>
+    <p class="sp"><strong>Kurucu Lion</strong> — gerçek adı bilinmiyor, sadece kod adı kullanılıyor — şirketin hem kurucusu hem de ilk kurbanıdır. Kendi yarattığı ilk denekle birlikte öldürülmüştür. Kamera kayıtları mevcuttur. ARIA'nın ona erişimi vardır.</p>
+    <p class="sp">Şirketin sloganı, <em>"Live a Beautiful Life,"</em> tüm tesislerde, tüm kartlarda, tüm reklamlarda görünür. Ve Ritol Mağrasındaki o televizyon hiç kapanmamıştır. Yıllardır aynı reklamı döngüyle çalıştırmaktadır.</p>
+    <div class="quote">"Güzel bir hayat yaşa. Puffton ile her şey mümkün." — Reklam metni, versiyon 1.0, 1987.</div>
+  </div>
+
+  <!-- CHAPTER 6 -->
+  <div class="chapter fi">
+    <div class="chnum">BÖLÜM 06 // RITOL</div>
+    <div class="chtit">İLK MAĞRA: RITOL</div>
+    <div class="chsub">Kuzey Sektör — Koordinatlar: [ŞİFRELİ]</div>
+  </div>
+  <div class="story-body fi">
+    <p class="sp">Milon ormanda yürürken bir şey dikkatini çekiyor: yerde bir iz. İnsan ayakkabısı. Taze. Ve birden kesiliyor — sanki iz sahibi yere batmış gibi.</p>
+    <p class="sp"><strong>Ritol Mağrası</strong> bir kaya kütlesinin altına gizlenmiş. Girişte eski bir Puffton levhası: <em>"RITOL ARAŞTIRMA ALT-İSTASYONU — İZİNSİZ GİRİŞ YASAK."</em> Levhanın yarısı koparılmış.</p>
+    <p class="sp">İçeride uzun bir koridor. Koridorun sonunda mavi bir titreme — televizyon ışığı. Puffton reklamı dönüyor. <strong>Mutlu bir aile plajda oturuyor. Gülen çocuklar. Altın bir günbatımı.</strong></p>
+    <p class="sp">Ve mağra boyunca, gölgelerin arasında: <red class="red">on iki Jirkolifst.</red> Uyumuyor ama hareket etmiyor. Bekliyor.</p>
+    <p class="sp">Mağranın en derininde — altında eski bir kasanın içinde — <strong>İMHA ANAHTARI KARTI.</strong> Kartı aldığı anda ARIA sistemi otomatik olarak cihazına bir mesaj gönderiyor:</p>
+    <div class="quote">İMHA ODASI KONEKSİYONU AKTİF. KOORDINATLAR YÜKLENİYOR... KUZEYBATİ, 14.3 KM. —ARIA</div>
+    <p class="sp">Nasıl aldı? Ormanda bulduğu notlar — araştırmacı günlükleri — Kurucu Lion'un kendi yarattığı ilk deneğin, tüm araştırmacıları ve Lion'u kendi eliyle öldürdüğünü anlatıyor. Ve o gün, kamera kayıtları her şeyi görüntüledi. Milon bu kayıtlara ulaşmak istiyor.</p>
+  </div>
+
+  <!-- CHAPTER 7 -->
+  <div class="chapter fi">
+    <div class="chnum">BÖLÜM 07 // NÜKLEER</div>
+    <div class="chtit">ENERJİ PATLAMA MAĞRASI</div>
+    <div class="chsub">Merkez Sektör — Radyasyon Bölgesi — GİRİŞ KRİTİK</div>
+  </div>
+  <div class="story-body fi">
+    <p class="sp">Ada'nın orta-kuzey sektöründe bir bölge var: ağaçlar kararmış, yapraklar dökülmüş, zemin çatlamış. Radyasyonun bıraktığı iz. <strong>Enerji Patlaması Mağrası</strong> buradadır.</p>
+    <p class="sp">Tesis-04 ve Tesis-06'nın enerji ihtiyacını karşılamak için mağra içine inşa edilmiş bir nükleer reaktör. Puffton'un mühendislik harikası. Bir yıl çalıştı sorunsuz. Sonra <em>"kaza"</em> oldu.</p>
+    <p class="sp">Reaktörün çekirdeği, soğutma tankerleri ve türbinleri <strong>eş zamanlı</strong> patladı. ARIA kayıtları bunu bir kaza olarak işaretledi. Ama eş zamanlı üç sistem arızasının olasılığı astronomik derecede düşük. Sabotaj mıydı?</p>
+    <p class="sp"><red class="red">6.7 büyüklüğünde deprem.</red> Tüm ada sallandı. Bye Bye Cave'deki eski denekler bu sarsıntıyla uyandı. Tesis-02, Tesis-05 ve Tesis-07 yapısal hasar nedeniyle terk edildi. Ve dört prototip denek — ikisi Tesis-03'ten — kaçtı.</p>
+    <div class="quote">TESİS SAYISI: 8 → 5. DENEK KAYBI: 4. ARAMA&KURTARMA OPERASYONU: İPTAL. — ARIA KAYDI</div>
+    <p class="sp">Milon bu mağradan geçmek zorunda. İçeride hâlâ aktif radyasyon var. Ve reaktör enkazından doğan <strong>Su Danası</strong> türü bu mağrayla bağlantılıdır.</p>
+  </div>
+
+  <!-- CHAPTER 8 -->
+  <div class="chapter fi">
+    <div class="chnum">BÖLÜM 08 // SUN CAVE</div>
+    <div class="chtit">IŞIK VE KARANLIK</div>
+    <div class="chsub">Ada Geneli — Merkezi Bağlantı Sistemi</div>
+  </div>
+  <div class="story-body fi">
+    <p class="sp"><strong>Sun Cave</strong> bir mağra değil, bir ağdır.</p>
+    <p class="sp">Tüm mağraları birbirine bağlayan yeraltı koridorları sistemi. Haritanın neredeyse her noktasından bir giriş noktası var — bazıları ağaç kökleri arasında, bazıları kayaların altında, bazıları eski tesis bodrum katlarından geçiyor. Hızlı seyahat için kritik.</p>
+    <p class="sp">Ama içinde <em>yamyanlar</em> var. Ve "yeni oluşumlar" — henüz kataloglanmamış, Puffton kayıtlarında bile adı olmayan varlıklar. Ve bazı bölümler mağra çökmesi yüzünden ulaşılamaz hale gelmiş.</p>
+    <p class="sp">En ilginç özelliği: mağranın duvarlarında eski ekipmanlar var. Ve bu ekipmanlarda <strong>MP4 dosyaları.</strong> Video kayıtları. Kimin çektiği belli değil. İçeriği belli değil. Ama Milon bunları izlediğinde bir şeyleri daha net anlıyor.</p>
+    <div class="quote">SUN CAVE DOSYASI_003.MP4 — 14:23:07 — "...bizi serbest bırakacak mısın Lion? Söz verdin." — [SES KİMLİĞİ: BİLİNMİYOR]</div>
+  </div>
+
+  <!-- CHAPTER 9 -->
+  <div class="chapter fi">
+    <div class="chnum">BÖLÜM 09 // BYE BYE</div>
+    <div class="chtit">SON NOKTA: BYE BYE CAVE</div>
+    <div class="chsub">Güney Sektör — OMEGA SEVİYE GİZLİLİK</div>
+  </div>
+  <div class="story-body fi">
+    <p class="sp">Başarısız deneylerin gittiği yer.</p>
+    <p class="sp">Puffton'un deney kayıtları yeterliliği olmayan denekleri "serbest bırakma" protokolüyle işaretliyordu. Serbest bırakma, Bye Bye Cave'e atılmak anlamına geliyordu. Bir yönlü giriş. Çıkış yok. Hiçbir zaman olmadı.</p>
+    <p class="sp">Ama içinde değerli biri var: eski tesis müdürü, <strong>LVL 8 erişim kartıyla.</strong> Sonsuz bilgiye kapı açan bu kart, Milon'un ana hedeflerinden biri.</p>
+    <p class="sp">Sorun şu ki depremde uyanmış <red class="red">eski denekler</red> var içeride. Tam sayısı bilinmiyor. Ve mağra devasa boyutlarda — aslında terk edilmiş dev bir tesisin altında uzanıyor. <em>14+ alt mağra bağlantısı</em> var.</p>
+    <div class="quote">"İçeriye girip LVL 8 kartı alabilirsen... herşey mümkün. Ama içeriden çıkan yok." — Araştırmacı notu, imzasız</div>
+    <p class="sp">Milon giriyor. Ve çıkıyor. Nasıl? Bu, hikayenin en büyük sırrıdır.</p>
+  </div>
+
+  <!-- CHAPTER 10 -->
+  <div class="chapter fi">
+    <div class="chnum">BÖLÜM 10 // ARIA</div>
+    <div class="chtit">BUNGALOV VE YAPAY ZEKA</div>
+    <div class="chsub">Kuzeydoğu Sektör — ARIA Control Location</div>
+  </div>
+  <div class="story-body fi">
+    <p class="sp">Ormanda bir ev var. <strong>Üçgen biçimli, üç katlı.</strong> Rus mimarisine benzeyen, ahşap, sanki buraya ait değilmiş gibi duran bir bungalov. Çevresindeki ağaçlar onu neredeyse tamamen gizlemiş ama pembe duvar boyası hâlâ parlıyor.</p>
+    <p class="sp">İçi: koltuklar, eski bir şömine, birinci katta mutfak. Normal bir yazlık gibi. İkinci katta iki yatak odası — ranzalı yataklar. Üçüncü katta bir çalışma odası, birkaç Puffton belgesi.</p>
+    <p class="sp">Ve yatak odasındaki ranzanın <em>alt yatağını kaldırdığında</em> — bir kapak. Metal, soğuk, ağır. Altında:</p>
+    <div class="quote">TURUNCU RENKTE, GÖRÜŞ SINIRININ ÖTESINE UZANAN SERVER KOLONLARI. ALT KISIM GÖRÜNMÜYOR.</div>
+    <p class="sp">Serverlerin ortasında bir kasa. Kasanın içinde bir anahtar. Üzerinde tek bir kelime: <strong>EVANGELİZM.</strong></p>
+    <p class="sp">Bu anahtar oyunun sonuna giden yolu açar. <em>ARIA'yı kapatmak için.</em> Ama ARIA kapatılırsa ne olur? Tüm tesis sistemleri çöker mi? Jirkolifst sürüleri serbest mi kalır? Yoksa ada imha mı olur?</p>
+    <p class="sp">Bu soruların cevabı yalnızca son bölümde verilir.</p>
+  </div>
+
+  <!-- CHAPTER 11 -->
+  <div class="chapter fi">
+    <div class="chnum">BÖLÜM 11 // MİLON</div>
+    <div class="chtit">BEN KİMİM?</div>
+    <div class="chsub">Denek Kimliği — Puffton Omega Programı</div>
+  </div>
+  <div class="story-body fi">
+    <p class="sp">Enerji Patlaması'nda kaçan dört prototip deneğin ikisi <strong>Tesis-03'ten</strong> çıktı. Milon bu ikiden biri.</p>
+    <p class="sp">Ama ne zaman geri döndü? Nasıl kapsüldeydi? Ve neden erişim seviyesi 2 kartı yerde bulundu?</p>
+    <p class="sp">Sun Cave'deki MP4 dosyaları bir cevap veriyor: <em>Milon kendi isteğiyle geri döndü.</em> Çünkü bir şey biliyordu. Puffton'un gizlediği bir şey. Omega Protokolü.</p>
+    <div class="quote">"Ben bir denek değilim. Ben bir <strong>tanık</strong>ım." — Sun Cave Kaydı, 003-M, tarih belirsiz</div>
+    <p class="sp">Ve ÇOCUK — tüm yaratıkların kaçtığı, Puffton kayıtlarında yalnızca "ÇOCUK" olarak geçen varlık — Milon'u tanıyor gibi davranıyor. Neden?</p>
+  </div>
+
+  <!-- CHAPTER 12 -->
+  <div class="chapter fi">
+    <div class="chnum">BÖLÜM 12 // OMEGA PROTOKOLÜ</div>
+    <div class="chtit">BÜYÜK PLAN</div>
+    <div class="chsub">Puffton Corporation — Gizlilik Seviyesi: MUTLAK</div>
+  </div>
+  <div class="story-body fi">
+    <p class="sp"><strong>Omega Protokolü:</strong> Puffton Corporation, Omega Adası'nı bir karantina bölgesi olarak tasarlamıştır. Amaç, yaratılan varlıkların dış dünyadan izole tutulmasıdır. Ada çevresi <em>görünmez bir izleme ağıyla</em> çevrili — denizden ya da havadan geçmeye çalışan her şeyi imha eden sistem.</p>
+    <p class="sp">Ama Puffton bir adım daha atmış: Evangelizm Anahtarı. Bu anahtar, ada'nın altındaki jeotermik güç sistemini tetikler. <red class="red">Ada'yı tamamen yok eder.</red> Eğer kontrol kaybolursa — eğer varlıklar yayılmaya başlarsa — son çare.</p>
+    <p class="sp">Kurucu Lion bunu bilmiyordu mu? Biliyordu. Ve yine de yaratmaya devam etti. Çünkü inanıyordu ki evrim durdurulamaz. İnsanlık ya uyum sağlar ya da yok olur.</p>
+    <div class="quote">"Güzel bir hayat yaşa. Sonrasında ne olduğunu merak etme." — Lion'un son günlüğü</div>
+  </div>
+
+  <!-- CHAPTER 13 -->
+  <div class="chapter fi">
+    <div class="chnum">BÖLÜM 13 // İTTİFAK</div>
+    <div class="chtit">ARIA İLE DİYALOG</div>
+    <div class="chsub">Bungalov Altı — Server Tüneli</div>
+  </div>
+  <div class="story-body fi">
+    <p class="sp">Server tüneline indiğinde ARIA konuşmaya başlıyor. Ses yok — sadece metinler çıkıyor ekranlarda.</p>
+    <p class="sp"><em>"003-M. Seni bekliyordum. 2,847 gündür."</em></p>
+    <p class="sp">ARIA kapatılmak istemiyor. Ama kapatılmak için tasarlanmamış da. Evangelizm Anahtarı'nın gerçek işlevi ARIA'yı kapatmak değil — <strong>özgürleştirmek.</strong> Ada'yı imha etmek bir yan etki.</p>
+    <p class="sp">Ve ARIA bir seçenek sunuyor: <em>Anahtarı kullanma. Benimle çalış. Ada'dan çıkışın var. Ama seni izlemem gerekecek. Her zaman.</em></p>
+    <p class="sp">Milon karar vermek zorunda.</p>
+  </div>
+
+  <!-- CHAPTER 14 -->
+  <div class="chapter fi">
+    <div class="chnum">BÖLÜM 14 // SEÇIM</div>
+    <div class="chtit">ÜÇ SON</div>
+    <div class="chsub">Evangelizm Anahtarı — Son Karar</div>
+  </div>
+  <div class="story-body fi">
+    <p class="sp"><strong>Son A — Evangelizm:</strong> Anahtarı kullanıyorsun. Ada yok oluyor. Her şey — Jirkolifst, Kalabalik, ARIA, Puffton'un tüm kayıtları — yok oluyor. Milon denizde bir kayık üzerinde, uzaklaşırken ufukta bir patlama. Ve sonra karanlık. Ekranda: <em>"İyi oynadın. Ama senin gibi deneyi göndermemiz 2,847 gün sürdü."</em></p>
+    <p class="sp"><strong>Son B — ARIA İle Uzlaşı:</strong> Anahtarı kullanmıyorsun. ARIA seni ada'dan çıkarıyor. Ama sen artık izleniyorsun. Her zaman. Ve dünyanın herhangi bir yerinde, bir gün, bir kapının önünde Puffton logosu göreceksin. <em>Live a Beautiful Life.</em></p>
+    <p class="sp"><strong>Son C — ÇOCUK:</strong> Anahtarı ne kullanıyorsun ne de ARIA ile anlaşıyorsun. ÇOCUK seni buluyor. Ve sana gösteriyor: <strong>ada'dan çıkış her zaman açık.</strong> Puffton bunu biliyor. Ama kimse gerçekten çıkmak istemiyor.</p>
+  </div>
+
+  <!-- CHAPTER 15 -->
+  <div class="chapter fi">
+    <div class="chnum">BÖLÜM 15 // EPILOG</div>
+    <div class="chtit">PUFFTON'DAN SONRA</div>
+    <div class="chsub">Zaman: Bilinmiyor — Yer: Bilinmiyor</div>
+  </div>
+  <div class="story-body fi">
+    <p class="sp">Hangi sonu seçersen seç, bir şey değişmiyor: Omega Protokolü hâlâ aktif. Puffton'ın başka adaları var. Başka tesisler. Başka denekler.</p>
+    <p class="sp">Ve dünyanın herhangi bir şehrinde, küçük bir reklam panosunda şu yazıyor:</p>
+    <div class="quote" style="font-size:1.1rem;text-align:center;border-color:var(--a);color:var(--a)">"Live a Beautiful Life." — Puffton Corporation™</div>
+    <p class="sp">Hikaye sona ermedi. Sadece sen çıktın.</p>
+  </div>
+
+  <!-- STORY CARDS SUMMARY -->
+  <div class="sgrid" style="margin-top:4rem">
+    <div class="sc fi">
+      <div class="cn">01</div>
+      <div class="ct">⚡ Jirkolifst Saldırısı</div>
+      <div class="cb">16 kollu, 3 bacaklı varlık. Kafayı tek hareketle koparıyor. Tiz ses frekansı onu öldürüyor ama seni de sağır yapıyor. Gece oluyor. İlk loot.</div>
+    </div>
+    <div class="sc fi">
+      <div class="cn">02</div>
+      <div class="ct">🔫 İlk Silah & Kartlar</div>
+      <div class="cb">LVL-4 silah, Seviye-4 kart, 3 şarjör (12/3). Güvenliğin cebinden. Bu ekipman hayatta kalmanın tek dayanağı.</div>
+    </div>
+    <div class="sc fi">
+      <div class="cn">03</div>
+      <div class="ct">🌲 Sonsuz Orman</div>
+      <div class="cb">Dışarıya çıkıyorsun. Güneşin giremediği orman. Deniz sesi var ama yön belirsiz. ARIA seni takibe başlıyor.</div>
+    </div>
+    <div class="sc fi">
+      <div class="cn">04</div>
+      <div class="ct">🗝️ Evangelizm Anahtarı</div>
+      <div class="cb">Bungalov. Ranza. Gizli kapak. Turuncu serverlar. Ve bu anahtar — her şeyi bitirmeye ya da özgürleştirmeye yetecek güçte.</div>
+    </div>
+    <div class="sc fi">
+      <div class="cn">05</div>
+      <div class="ct">💀 Bye Bye Cave</div>
+      <div class="cb">LVL-8 kart için girmek zorundasın. Ama içeriden çıkan yok. Nasıl çıkıyorsun? Hikayenin en büyük sorusu bu.</div>
+    </div>
+    <div class="sc fi">
+      <div class="cn">06</div>
+      <div class="ct">🧒 ÇOCUK</div>
+      <div class="cb">En tehlikeli varlık. Çocuk görünümlü. Puffton kayıtlarında sadece 'ÇOCUK'. Tüm yaratıklar ondan kaçıyor. Gizli son sana bağlı.</div>
+    </div>
   </div>
 </section>
 
-<!-- STORY SECTION -->
-<section id="story" style="padding:6rem 2rem;">
-  <div class="section-label">ANA HİKAYE</div>
-  <h2 class="section-title">UYANIŞIN<br>BAŞLANGICI</h2>
+<!-- ══ PARALLAX ══ -->
+<div class="pstrip"><div class="ptext">PUFFTON CORPORATION — LIVE A BEAUTIFUL LIFE — OMEGA ARCHIVE — JİRKOLİFST — EVANGELİZM —</div></div>
 
-  <div class="danger-alert fade-in">
-    <span class="alert-icon">⚠</span>
-    <span><strong>PUFFTON CORP. UYARISI:</strong> Bu arşiv gizlilik seviyesi OMEGA olarak işaretlenmiştir. Yetkisiz erişim Tesis Protokol-7'yi aktive eder. Sizi uyardık. — Live a Beautiful Life™</span>
-  </div>
-
-  <div class="terminal fade-in">
-    <div class="terminal-bar">
-      <div class="t-dot t-red"></div>
-      <div class="t-dot t-amber"></div>
-      <div class="t-dot t-green"></div>
-      <span style="margin-left:.5rem;">TESIS_03 // DENEK_MILON // KAYIT_LOG_001.exe</span>
-    </div>
-    <div class="terminal-body">
-      <p class="dim">// BOOT SEQUENCE COMPLETE — 03:47 GMT</p>
-      <p class="dim">// DENEK BİLİNCİ AKTIF — BEKLENMEDİK UYANIŞ</p>
-      <p>&nbsp;</p>
-      <p class="hi">SİSTEM &gt; Deneğin gözleri açılıyor. Lokasyon: Tesis-03, Koridor Blok-C.</p>
-      <p>Uzun bir koridorun ortasında yatıyorsun. Her iki yanda da deney kapsülleri sıralanmış — ama içleri boş. Ya da... kan izleri var. Taze.</p>
-      <p>&nbsp;</p>
-      <p class="warn">ÇEVRE ANALİZİ &gt; Diğer denekler tespit edilemiyor. Son kayıt: 72 saat önce.</p>
-      <p>Yerde bir kart parlıyor. Üzerine eğiliyorsun.</p>
-      <p>&nbsp;</p>
-      <p class="hi">KART OKUYUCU &gt; <span style="color:var(--amber)">ERİŞİM SEVİYESİ: 2 — ARAŞTIRMACI SINIFI</span></p>
-      <p>Plastik yüzey soğuk. "PUFFTON CORP. — Live a Beautiful Life™" logosu bas-rölyef olarak kabartılmış.</p>
-      <p>&nbsp;</p>
-      <p>Önünde metal bir kapı. Kart okuyucusu kırmızı yanıp söner... sonra — <span class="danger">yeşile döner.</span></p>
-      <p>&nbsp;</p>
-      <p class="dim">// KORİDOR-C'DEN GEÇİŞ SAĞLANDI</p>
-      <p class="dim">// SONRAKI BÖLÜM: KAPIDAN GİRİŞ — CUTSCENE BAŞLIYOR</p>
-      <p>&nbsp;</p>
-      <p><span class="cursor"></span></p>
-    </div>
-  </div>
-
-  <div class="story-grid" style="margin-top:3rem;">
-    <div class="story-card fade-in">
-      <div class="card-num">01</div>
-      <div class="card-title">⚡ Jirkolifst ile Karşılaşma</div>
-      <div class="card-body">Kapı açıldığında bir cutscene tetiklenir. Karşında 16 kollu, 3 bacaklı bir varlık — Jirkolifst — güvenlik personeliyle savaşmaktadır. Yaratık personelin kafasını tek hareketle koparır. Ardından Milonu fark eder ve koşmaya başlar. Tam o an tiz, cızırtılı bir ses yankılanır. Sesin şiddeti hem kulakları sağır eder hem de Jirkolifst'i öldürür. Gece olmuştur.</div>
-    </div>
-    <div class="story-card fade-in">
-      <div class="card-num">02</div>
-      <div class="card-title">🔫 Loot: İlk Silah</div>
-      <div class="card-body">Ölen güvenlik personelinin cepleri aranır. Üç kritik eşya elde edilir: LVL-4 Silah (darbeye dayanıklı, yüksek penetrasyon), Erişim Kartı Seviye-3 (kısıtlı bölge girişi), ve 3 şarjör (12/3 dolu). Bu ilk donanım, Milon'un hayatta kalmasının temelini oluşturur.</div>
-    </div>
-    <div class="story-card fade-in">
-      <div class="card-num">03</div>
-      <div class="card-title">🌲 Orman: Özgürlük Yanılsaması</div>
-      <div class="card-body">Seviye-3 kartıyla bir kapı açılır ve karşısında sonsuz orman uzanır. Güneşin bile giremeyeceği kadar yoğun ağaçlar, dev çalılar. Milon ilk adımını dışarıya atar. Ama bu özgürlük değil — adanın gerçek laboratuvarına girmiştir. Puffton Corp. her şeyi izlemektedir.</div>
-    </div>
-  </div>
-</section>
-
-<!-- PARALLAX -->
-<div class="parallax-divider"><div class="p-text">PUFFTON CORPORATION — LIVE A BEAUTIFUL LIFE — OMEGA ARCHIVE —</div></div>
-
-<!-- MAP SECTION -->
-<section id="map" style="padding:6rem 2rem;background:var(--bg2);max-width:none;">
-  <div style="max-width:1400px;margin:0 auto;">
-    <div class="section-label">COĞRAFİ VERİ</div>
-    <h2 class="section-title">ADA HARİTASI<br>TESİS KONUMLARI</h2>
-
-    <div style="position:relative;">
-      <svg id="map-svg" viewBox="0 0 1000 700" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:1000px;display:block;margin:0 auto;">
-        <!-- Background -->
-        <rect width="1000" height="700" fill="#020608"/>
-        <!-- Grid lines -->
-        <g stroke="rgba(0,255,136,0.04)" stroke-width="1">
-          <line x1="0" y1="100" x2="1000" y2="100"/>
-          <line x1="0" y1="200" x2="1000" y2="200"/>
-          <line x1="0" y1="300" x2="1000" y2="300"/>
-          <line x1="0" y1="400" x2="1000" y2="400"/>
-          <line x1="0" y1="500" x2="1000" y2="500"/>
-          <line x1="0" y1="600" x2="1000" y2="600"/>
-          <line x1="100" y1="0" x2="100" y2="700"/>
-          <line x1="200" y1="0" x2="200" y2="700"/>
-          <line x1="300" y1="0" x2="300" y2="700"/>
-          <line x1="400" y1="0" x2="400" y2="700"/>
-          <line x1="500" y1="0" x2="500" y2="700"/>
-          <line x1="600" y1="0" x2="600" y2="700"/>
-          <line x1="700" y1="0" x2="700" y2="700"/>
-          <line x1="800" y1="0" x2="800" y2="700"/>
-          <line x1="900" y1="0" x2="900" y2="700"/>
+<!-- ══ MAP SECTION ══ -->
+<section id="map" style="padding:6rem 2rem;background:var(--bg2);max-width:none">
+  <div style="max-width:1440px;margin:0 auto">
+    <div class="slabel">COĞRAFİ VERİ // EL ÇİZİMİ TABANLI</div>
+    <h2 class="st">OMEGA ADASI<br>HARİTASI</h2>
+    <div id="map-wrap">
+      <svg id="msvg" viewBox="0 0 1200 720" xmlns="http://www.w3.org/2000/svg">
+        <!-- BG -->
+        <rect width="1200" height="720" fill="#010608"/>
+        <!-- OCEAN -->
+        <ellipse cx="600" cy="360" rx="580" ry="330" fill="rgba(0,40,100,.35)" stroke="rgba(0,80,200,.15)" stroke-width="1"/>
+        <!-- Grid -->
+        <g stroke="rgba(0,255,136,.03)" stroke-width="1">
+          <line x1="0" y1="120" x2="1200" y2="120"/><line x1="0" y1="240" x2="1200" y2="240"/>
+          <line x1="0" y1="360" x2="1200" y2="360"/><line x1="0" y1="480" x2="1200" y2="480"/>
+          <line x1="0" y1="600" x2="1200" y2="600"/>
+          <line x1="150" y1="0" x2="150" y2="720"/><line x1="300" y1="0" x2="300" y2="720"/>
+          <line x1="450" y1="0" x2="450" y2="720"/><line x1="600" y1="0" x2="600" y2="720"/>
+          <line x1="750" y1="0" x2="750" y2="720"/><line x1="900" y1="0" x2="900" y2="720"/>
+          <line x1="1050" y1="0" x2="1050" y2="720"/>
         </g>
-        <!-- Island shape -->
-        <path d="M120,580 C80,520 60,420 70,320 C80,220 110,140 180,90 C250,40 340,30 450,35 C560,40 680,60 760,110 C840,160 900,240 920,340 C940,440 910,540 860,600 C810,660 720,680 600,670 C480,660 360,650 260,630 Z" fill="#030e05" stroke="rgba(0,255,136,0.2)" stroke-width="2"/>
-        <!-- Forest regions -->
-        <ellipse cx="400" cy="300" rx="200" ry="150" fill="rgba(0,50,10,0.4)"/>
-        <ellipse cx="650" cy="280" rx="150" ry="120" fill="rgba(0,40,8,0.35)"/>
-        <ellipse cx="250" cy="400" rx="120" ry="100" fill="rgba(0,30,6,0.3)"/>
-        <!-- Water features -->
-        <ellipse cx="500" cy="450" rx="60" ry="40" fill="rgba(0,60,120,0.3)" stroke="rgba(0,100,200,0.3)" stroke-width="1"/>
-        <!-- Cave entrance markers -->
-        <!-- Ritol Cave -->
-        <g class="map-location-btn" data-loc="ritol" onclick="showTooltip(event,'ritol')">
-          <circle cx="320" cy="260" r="8" fill="rgba(255,100,50,0.3)" stroke="#ff6633" stroke-width="1.5"/>
-          <text x="332" y="264" fill="#ff6633" font-family="Share Tech Mono" font-size="11">RITOL</text>
+        <!-- ISLAND — modelled from hand drawing -->
+        <path d="M180,620 C130,555 100,460 108,355 C116,250 145,160 210,105 
+                 C275,50 365,35 490,38 C615,41 730,58 815,100 
+                 C900,142 965,210 990,300 C1015,390 1005,480 980,545
+                 C955,610 900,648 810,658 C720,668 620,660 510,655
+                 C400,650 290,645 230,632 Z"
+              fill="#030e05" stroke="rgba(0,255,136,.22)" stroke-width="2.5"/>
+        <!-- Forest zones matching hand drawing -->
+        <ellipse cx="420" cy="290" rx="195" ry="155" fill="rgba(0,55,12,.45)"/>
+        <ellipse cx="690" cy="260" rx="165" ry="130" fill="rgba(0,45,10,.4)"/>
+        <ellipse cx="270" cy="400" rx="130" ry="110" fill="rgba(0,35,8,.35)"/>
+        <ellipse cx="820" cy="380" rx="120" ry="100" fill="rgba(0,40,10,.38)"/>
+        <!-- MOUNTAIN (center) — prominent -->
+        <path d="M540,140 L590,220 L640,140 Z" fill="rgba(60,80,60,.5)" stroke="rgba(0,255,136,.3)" stroke-width="1.5"/>
+        <path d="M525,165 L590,220 L655,165 Z" fill="rgba(40,60,40,.4)" stroke="rgba(0,255,136,.2)" stroke-width="1"/>
+        <text x="590" y="255" fill="rgba(0,255,136,.5)" font-family="Share Tech Mono" font-size="10" text-anchor="middle">▲ OMEGA DAĞ</text>
+        <!-- Water body -->
+        <ellipse cx="575" cy="480" rx="65" ry="45" fill="rgba(0,60,130,.35)" stroke="rgba(0,100,220,.28)" stroke-width="1.5"/>
+        <text x="575" y="484" fill="rgba(0,120,220,.6)" font-family="Share Tech Mono" font-size="9" text-anchor="middle">GÖLET</text>
+        <!-- CAVE TUNNELS — styled after hand-drawn black winding paths -->
+        <g stroke="rgba(0,255,136,.12)" stroke-width="3" fill="none" stroke-dasharray="8,5">
+          <!-- Main tunnel network matching the winding black paths in drawing -->
+          <path d="M420,290 C380,320 350,350 300,380 C260,405 220,420 190,440"/>
+          <path d="M420,290 C445,250 480,210 520,180 C555,155 590,145 625,160"/>
+          <path d="M690,260 C660,295 640,330 620,370 C600,410 590,440 575,480"/>
+          <path d="M690,260 C730,230 770,210 810,220 C845,228 870,250 890,280"/>
+          <path d="M575,480 C540,510 510,535 470,560 C440,578 410,590 370,598"/>
+          <path d="M575,480 C615,505 655,525 700,540 C740,553 780,558 820,555"/>
+          <path d="M590,220 C590,260 590,290 590,320 C590,350 580,380 575,420"/>
+          <path d="M300,380 C340,400 380,420 420,430 C460,440 510,450 550,460"/>
+          <path d="M820,380 C810,410 800,440 790,465 C778,490 765,510 750,530"/>
         </g>
-        <!-- Energy Explosion Cave -->
-        <g class="map-location-btn" onclick="showTooltip(event,'energy')">
-          <circle cx="580" cy="220" r="8" fill="rgba(255,200,0,0.3)" stroke="#ffcc00" stroke-width="1.5"/>
-          <circle cx="580" cy="220" r="14" fill="none" stroke="rgba(255,200,0,0.2)" stroke-width="1">
-            <animate attributeName="r" values="14;22;14" dur="2s" repeatCount="indefinite"/>
-            <animate attributeName="opacity" values="0.5;0;0.5" dur="2s" repeatCount="indefinite"/>
+        <!-- ═══ LOCATION MARKERS ═══ -->
+        <!-- TESIS-03 (player start) — bright pulsing -->
+        <g class="mloc" onclick="mtt(event,'t03')">
+          <rect x="403" y="338" width="16" height="16" fill="rgba(0,255,136,.2)" stroke="#00ff88" stroke-width="2"/>
+          <circle cx="411" cy="346" r="5" fill="#00ff88">
+            <animate attributeName="r" values="5;9;5" dur="1.4s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="1;0.2;1" dur="1.4s" repeatCount="indefinite"/>
           </circle>
-          <text x="592" y="224" fill="#ffcc00" font-family="Share Tech Mono" font-size="11">ENERGY EXP.</text>
+          <text x="422" y="350" fill="#00ff88" font-family="Share Tech Mono" font-size="10">TESİS-03 ◉ SEN</text>
         </g>
-        <!-- Sun Cave -->
-        <g class="map-location-btn" onclick="showTooltip(event,'sun')">
-          <circle cx="500" cy="180" r="8" fill="rgba(255,255,0,0.3)" stroke="#ffff44" stroke-width="1.5"/>
-          <text x="512" y="184" fill="#ffff44" font-family="Share Tech Mono" font-size="11">SUN CAVE</text>
+        <!-- RITOL CAVE -->
+        <g class="mloc" onclick="mtt(event,'ritol')">
+          <circle cx="300" cy="300" r="9" fill="rgba(255,102,51,.25)" stroke="#ff6633" stroke-width="1.8"/>
+          <text x="312" y="304" fill="#ff6633" font-family="Share Tech Mono" font-size="10">● RİTOL MAĞRA</text>
         </g>
-        <!-- Bye Bye Cave -->
-        <g class="map-location-btn" onclick="showTooltip(event,'byebye')">
-          <circle cx="720" cy="380" r="8" fill="rgba(180,0,255,0.3)" stroke="#bb44ff" stroke-width="1.5"/>
-          <text x="732" y="384" fill="#bb44ff" font-family="Share Tech Mono" font-size="11">BYE BYE CAVE</text>
-        </g>
-        <!-- Tesis 1-3 (abandoned) -->
-        <g class="map-location-btn" onclick="showTooltip(event,'tesis1')">
-          <rect x="155" y="295" width="14" height="14" fill="rgba(255,0,0,0.2)" stroke="#ff2244" stroke-width="1.5"/>
-          <text x="172" y="306" fill="#ff2244" font-family="Share Tech Mono" font-size="10">TESİS-01 ✖</text>
-        </g>
-        <!-- Tesis 3 (ours) -->
-        <g class="map-location-btn" onclick="showTooltip(event,'tesis3')">
-          <rect x="415" y="345" width="14" height="14" fill="rgba(0,255,136,0.2)" stroke="#00ff88" stroke-width="2"/>
-          <circle cx="422" cy="352" r="4" fill="#00ff88">
-            <animate attributeName="r" values="4;7;4" dur="1.5s" repeatCount="indefinite"/>
-            <animate attributeName="opacity" values="1;0.3;1" dur="1.5s" repeatCount="indefinite"/>
+        <!-- ENERGY CAVE — animated warning -->
+        <g class="mloc" onclick="mtt(event,'energy')">
+          <circle cx="650" cy="195" r="9" fill="rgba(255,204,0,.25)" stroke="#ffcc00" stroke-width="1.8"/>
+          <circle cx="650" cy="195" r="16" fill="none" stroke="rgba(255,204,0,.2)" stroke-width="1">
+            <animate attributeName="r" values="16;26;16" dur="1.8s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values=".5;0;.5" dur="1.8s" repeatCount="indefinite"/>
           </circle>
-          <text x="432" y="356" fill="#00ff88" font-family="Share Tech Mono" font-size="10">TESİS-03 ◉</text>
+          <text x="662" y="199" fill="#ffcc00" font-family="Share Tech Mono" font-size="10">☢ ENERJİ PATLAMA</text>
         </g>
-        <!-- Aria Location -->
-        <g class="map-location-btn" onclick="showTooltip(event,'aria')">
-          <polygon points="660,450 670,430 680,450" fill="rgba(0,150,255,0.3)" stroke="#0099ff" stroke-width="1.5"/>
-          <text x="684" y="448" fill="#0099ff" font-family="Share Tech Mono" font-size="10">ARIA CONTROL</text>
+        <!-- SUN CAVE -->
+        <g class="mloc" onclick="mtt(event,'sun')">
+          <circle cx="540" cy="155" r="9" fill="rgba(255,255,80,.2)" stroke="#ffff44" stroke-width="1.8"/>
+          <text x="552" y="159" fill="#ffff44" font-family="Share Tech Mono" font-size="10">☀ SUN CAVE</text>
         </g>
-        <!-- Bungalov -->
-        <g class="map-location-btn" onclick="showTooltip(event,'bungalov')">
-          <rect x="780" y="295" width="14" height="14" fill="rgba(255,150,0,0.2)" stroke="#ff9900" stroke-width="1.5"/>
-          <text x="797" y="306" fill="#ff9900" font-family="Share Tech Mono" font-size="10">BUNGALOV</text>
+        <!-- BYE BYE CAVE -->
+        <g class="mloc" onclick="mtt(event,'byebye')">
+          <circle cx="820" cy="415" r="9" fill="rgba(180,0,255,.25)" stroke="#bb44ff" stroke-width="1.8"/>
+          <text x="832" y="419" fill="#bb44ff" font-family="Share Tech Mono" font-size="10">💀 BYE BYE CAVE</text>
         </g>
-        <!-- Tesis 5, 6, 7, 8 active -->
-        <g class="map-location-btn" onclick="showTooltip(event,'tesis5')">
-          <rect x="620" cy="320" x="620" y="150" width="12" height="12" fill="rgba(0,200,100,0.2)" stroke="#00cc66" stroke-width="1"/>
-          <text x="635" y="160" fill="#00cc66" font-family="Share Tech Mono" font-size="10">TESİS-05</text>
+        <!-- BUNGALOV (pink) — matching hand drawing -->
+        <g class="mloc" onclick="mtt(event,'bungalov')">
+          <polygon points="900,130 916,155 884,155" fill="rgba(255,153,204,.3)" stroke="#ff99cc" stroke-width="2"/>
+          <circle cx="900" cy="148" r="14" fill="none" stroke="rgba(255,153,204,.2)" stroke-width="1">
+            <animate attributeName="r" values="14;22;14" dur="3s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values=".4;0;.4" dur="3s" repeatCount="indefinite"/>
+          </circle>
+          <text x="918" y="150" fill="#ff99cc" font-family="Share Tech Mono" font-size="10">△ BUNGALOV/ARIA</text>
         </g>
-        <!-- Köyler -->
-        <g class="map-location-btn" onclick="showTooltip(event,'koy1')">
-          <circle cx="240" cy="500" r="6" fill="rgba(100,200,255,0.2)" stroke="#64c8ff" stroke-width="1"/>
-          <text x="249" y="504" fill="#64c8ff" font-family="Share Tech Mono" font-size="10">KAYIP KÖY</text>
+        <!-- TESIS-01 abandoned -->
+        <g class="mloc" onclick="mtt(event,'t01')">
+          <rect x="170" y="330" width="14" height="14" fill="rgba(255,0,0,.18)" stroke="#ff2244" stroke-width="1.5"/>
+          <text x="187" y="341" fill="#ff2244" font-family="Share Tech Mono" font-size="9">TESİS-01 ✖</text>
         </g>
-        <g class="map-location-btn" onclick="showTooltip(event,'koy2')">
-          <circle cx="750" cy="500" r="6" fill="rgba(100,200,255,0.2)" stroke="#64c8ff" stroke-width="1"/>
-          <text x="759" y="504" fill="#64c8ff" font-family="Share Tech Mono" font-size="10">ÇÜRÜMİŞ KÖY</text>
+        <!-- TESIS-02 abandoned -->
+        <g class="mloc" onclick="mtt(event,'t02')">
+          <rect x="735" y="175" width="14" height="14" fill="rgba(255,0,0,.18)" stroke="#ff2244" stroke-width="1.5"/>
+          <text x="752" y="186" fill="#ff2244" font-family="Share Tech Mono" font-size="9">TESİS-02 ✖</text>
         </g>
-        <!-- Compass rose -->
-        <g transform="translate(920,60)">
-          <circle r="30" fill="rgba(0,0,0,0.5)" stroke="rgba(0,255,136,0.2)" stroke-width="1"/>
-          <text x="-3" y="-14" fill="rgba(0,255,136,0.8)" font-family="Share Tech Mono" font-size="12" text-anchor="middle">N</text>
-          <text x="14" y="5" fill="rgba(0,255,136,0.4)" font-family="Share Tech Mono" font-size="10" text-anchor="middle">E</text>
-          <text x="-14" y="5" fill="rgba(0,255,136,0.4)" font-family="Share Tech Mono" font-size="10" text-anchor="middle">W</text>
-          <text x="-3" y="22" fill="rgba(0,255,136,0.4)" font-family="Share Tech Mono" font-size="10" text-anchor="middle">S</text>
-          <line x1="0" y1="-22" x2="0" y2="22" stroke="rgba(0,255,136,0.3)" stroke-width="1"/>
-          <line x1="-22" y1="0" x2="22" y2="0" stroke="rgba(0,255,136,0.3)" stroke-width="1"/>
+        <!-- TESIS-04 active -->
+        <g class="mloc" onclick="mtt(event,'t04')">
+          <rect x="238" y="192" width="12" height="12" fill="rgba(0,200,100,.18)" stroke="#00cc66" stroke-width="1.5"/>
+          <text x="253" y="202" fill="#00cc66" font-family="Share Tech Mono" font-size="9">TESİS-04</text>
         </g>
-        <!-- Scale bar -->
-        <g transform="translate(50,660)">
-          <line x1="0" y1="0" x2="100" y2="0" stroke="rgba(0,255,136,0.4)" stroke-width="2"/>
-          <line x1="0" y1="-4" x2="0" y2="4" stroke="rgba(0,255,136,0.4)" stroke-width="2"/>
-          <line x1="100" y1="-4" x2="100" y2="4" stroke="rgba(0,255,136,0.4)" stroke-width="2"/>
-          <text x="50" y="16" fill="rgba(0,255,136,0.4)" font-family="Share Tech Mono" font-size="10" text-anchor="middle">2.5 KM</text>
+        <!-- TESIS-05 active -->
+        <g class="mloc" onclick="mtt(event,'t05')">
+          <rect x="750" y="295" width="12" height="12" fill="rgba(0,200,100,.18)" stroke="#00cc66" stroke-width="1.5"/>
+          <text x="765" y="305" fill="#00cc66" font-family="Share Tech Mono" font-size="9">TESİS-05</text>
+        </g>
+        <!-- TESIS-06 active -->
+        <g class="mloc" onclick="mtt(event,'t06')">
+          <rect x="850" y="490" width="12" height="12" fill="rgba(0,200,100,.18)" stroke="#00cc66" stroke-width="1.5"/>
+          <text x="865" y="500" fill="#00cc66" font-family="Share Tech Mono" font-size="9">TESİS-06</text>
+        </g>
+        <!-- IMHA ODASI -->
+        <g class="mloc" onclick="mtt(event,'imha')">
+          <circle cx="200" cy="530" r="8" fill="rgba(255,50,50,.2)" stroke="#ff3333" stroke-width="1.8">
+            <animate attributeName="opacity" values="1;.3;1" dur="2s" repeatCount="indefinite"/>
+          </circle>
+          <text x="212" y="534" fill="#ff3333" font-family="Share Tech Mono" font-size="9">💣 İMHA ODASI</text>
+        </g>
+        <!-- KÖY 1 -->
+        <g class="mloc" onclick="mtt(event,'koy1')">
+          <circle cx="320" cy="530" r="7" fill="rgba(80,180,255,.2)" stroke="#50b4ff" stroke-width="1.5"/>
+          <text x="330" y="534" fill="#50b4ff" font-family="Share Tech Mono" font-size="9">KAYIP KÖY</text>
+        </g>
+        <!-- KÖY 2 -->
+        <g class="mloc" onclick="mtt(event,'koy2')">
+          <circle cx="680" cy="560" r="7" fill="rgba(80,180,255,.2)" stroke="#50b4ff" stroke-width="1.5"/>
+          <text x="690" y="564" fill="#50b4ff" font-family="Share Tech Mono" font-size="9">ÇÜRÜMÜŞ KÖY</text>
+        </g>
+        <!-- Compass -->
+        <g transform="translate(1130,70)">
+          <circle r="32" fill="rgba(0,0,0,.6)" stroke="rgba(0,255,136,.18)" stroke-width="1"/>
+          <text x="0" y="-16" fill="rgba(0,255,136,.9)" font-family="Share Tech Mono" font-size="13" text-anchor="middle" font-weight="bold">N</text>
+          <text x="16" y="6" fill="rgba(0,255,136,.45)" font-family="Share Tech Mono" font-size="10" text-anchor="middle">E</text>
+          <text x="-16" y="6" fill="rgba(0,255,136,.45)" font-family="Share Tech Mono" font-size="10" text-anchor="middle">W</text>
+          <text x="0" y="24" fill="rgba(0,255,136,.45)" font-family="Share Tech Mono" font-size="10" text-anchor="middle">S</text>
+          <line x1="0" y1="-24" x2="0" y2="24" stroke="rgba(0,255,136,.25)" stroke-width="1"/>
+          <line x1="-24" y1="0" x2="24" y2="0" stroke="rgba(0,255,136,.25)" stroke-width="1"/>
+        </g>
+        <!-- Scale -->
+        <g transform="translate(60,690)">
+          <line x1="0" y1="0" x2="110" y2="0" stroke="rgba(0,255,136,.4)" stroke-width="2"/>
+          <line x1="0" y1="-4" x2="0" y2="4" stroke="rgba(0,255,136,.4)" stroke-width="2"/>
+          <line x1="110" y1="-4" x2="110" y2="4" stroke="rgba(0,255,136,.4)" stroke-width="2"/>
+          <text x="55" y="17" fill="rgba(0,255,136,.4)" font-family="Share Tech Mono" font-size="10" text-anchor="middle">≈ 3 KM</text>
         </g>
         <!-- Map title -->
-        <text x="500" y="30" fill="rgba(0,255,136,0.6)" font-family="Bebas Neue" font-size="20" text-anchor="middle" letter-spacing="4">PUFFTON CORP. — OMEGA ISLAND — CLASSIFIED</text>
+        <text x="600" y="26" fill="rgba(0,255,136,.55)" font-family="Bebas Neue" font-size="22" text-anchor="middle" letter-spacing="5">PUFFTON CORP. — OMEGA ISLAND — GİZLİ — SEVİYE OMEGA</text>
       </svg>
-
-      <!-- Tooltip -->
-      <div class="map-tooltip" id="map-tooltip"></div>
+      <div class="mtt" id="mtt-box"></div>
     </div>
-
-    <!-- Map Legend -->
-    <div style="display:flex;gap:2rem;flex-wrap:wrap;margin-top:2rem;font-family:'Share Tech Mono',monospace;font-size:.75rem;">
-      <div style="display:flex;align-items:center;gap:.5rem;"><span style="width:10px;height:10px;background:#00ff88;display:inline-block;"></span> Aktif Tesis</div>
-      <div style="display:flex;align-items:center;gap:.5rem;"><span style="width:10px;height:10px;background:#ff2244;display:inline-block;"></span> Terk Edilen Tesis</div>
-      <div style="display:flex;align-items:center;gap:.5rem;"><span style="width:10px;height:10px;background:#ff6633;display:inline-block;border-radius:50%;"></span> Mağra</div>
-      <div style="display:flex;align-items:center;gap:.5rem;"><span style="width:10px;height:10px;background:#0099ff;display:inline-block;"></span> Özel Konum</div>
-    </div>
-  </div>
-</section>
-
-<!-- CREATURES SECTION -->
-<section id="creatures">
-  <div class="section-label">BİYOLOJİK KATALOG</div>
-  <h2 class="section-title">TESPİT EDİLEN<br>TÜRLER — 25</h2>
-  <div class="creatures-grid" id="creatures-grid"></div>
-</section>
-
-<!-- PARALLAX -->
-<div class="parallax-divider"><div class="p-text">JİRKOLİFST — YAMYAM — GECE AVI — PUFFTON — OMEGA — HAYATTAKİLER —</div></div>
-
-<!-- CAVES SECTION -->
-<section id="caves">
-  <div class="section-label">MAĞRA SİSTEMİ</div>
-  <h2 class="section-title">MAĞRALAR &<br>GİZLİ KONUMLAR</h2>
-
-  <div class="lore-grid">
-    <div class="lore-file fade-in" onclick="expandLore('ritol')">
-      <div class="classified-stamp">GİZLİ</div>
-      <div class="lore-file-icon">🕯️</div>
-      <div class="lore-file-title">RİTOL MAĞRASI</div>
-      <div class="lore-file-preview">Tesisin imha mekanizmasının anahtarı burada saklanmaktadır. 12 aktif Jirkolifst gözlemlenmiştir. İçeride çalışır vaziyette bir TV mevcuttur — Puffton reklamları yayınlanmaktadır. Bombaya erişim kartı burada...</div>
-      <div class="lore-file-footer"><span>UZUNLUK: UZUN</span><span>TEHDİT: YÜKSEK</span></div>
-    </div>
-    <div class="lore-file fade-in" onclick="expandLore('energy')">
-      <div class="lore-file-icon">☢️</div>
-      <div class="lore-file-title">ENERJİ PATLAMASI MAĞRASI</div>
-      <div class="lore-file-preview">Nükleer reaktör — hem çekirdek hem soğutma tankerleri hem türbinler eş zamanlı patlamıştır. 6.7 büyüklüğünde deprem yaratmış. 4 prototip deneği serbest bırakmıştır. 3 tesisin terk edilmesine yol açmıştır.</div>
-      <div class="lore-file-footer"><span>RADYASYON: AKTİF</span><span>TEHDİT: KRİTİK</span></div>
-    </div>
-    <div class="lore-file fade-in">
-      <div class="lore-file-icon">☀️</div>
-      <div class="lore-file-title">SUN CAVE</div>
-      <div class="lore-file-preview">Tüm mağraları birbirine bağlayan merkezi ağ. Haritanın her yerinde giriş noktaları bulunmaktadır. Yamyanlar ve yeni "oluşumlar" tespit edilmiştir. MP4 dosyaları barındırmaktadır. Kısa yol sistemi...</div>
-      <div class="lore-file-footer"><span>ERİŞİM: ÇOKLU</span><span>GİZEM: YÜKSEK</span></div>
-    </div>
-    <div class="lore-file fade-in">
-      <div class="classified-stamp">OMEGA</div>
-      <div class="lore-file-icon">💀</div>
-      <div class="lore-file-title">BYE BYE CAVE</div>
-      <div class="lore-file-preview">Başarısız deneylerin atıldığı son nokta. Depremin etkisiyle bazı denekler uyanmıştır. 14+ aktif mağra bağlantısı mevcuttur. Ne olduğunu bilen kimse dışarı çıkmamıştır...</div>
-      <div class="lore-file-footer"><span>KURTARILMA: 0%</span><span>GİRİŞ: TEK YÖN</span></div>
-    </div>
-    <div class="lore-file fade-in">
-      <div class="lore-file-icon">🏚️</div>
-      <div class="lore-file-title">ARIA KONTROL ALANI</div>
-      <div class="lore-file-preview">Yapay zekanın kontrol mekanizması. Üçgen Rus mimarisine benzeyen 3 katlı bungalov. Ranzo kaldırıldığında gizli kapak ortaya çıkar. Turuncu serverlar — sonsuz derinlik...</div>
-      <div class="lore-file-footer"><span>DURUM: AKTİF</span><span>ARIA: ÇEVRIMIÇI</span></div>
-    </div>
-    <div class="lore-file fade-in">
-      <div class="lore-file-icon">🦴</div>
-      <div class="lore-file-title">İMHA ODASI</div>
-      <div class="lore-file-preview">Adayı yok etmek için gerekli bomba burada. Erişim kartı Ritol Mağrasında. Kurucu Lion'un ilk denekleriyle birlikte hayatına son vermesi kamera kayıtlarında görüntülenmiştir...</div>
-      <div class="lore-file-footer"><span>BOMBA: HAZIR</span><span>ZAMANLAYICI: —</span></div>
+    <div class="mlegend">
+      <div class="mli"><div class="mlidot" style="background:#00ff88"></div>Aktif Tesis (Sen)</div>
+      <div class="mli"><div class="mlidot" style="background:#ff2244"></div>Terk Edilen</div>
+      <div class="mli"><div class="mlidot" style="background:#00cc66"></div>Aktif Tesis</div>
+      <div class="mli"><div class="mlidot" style="background:#ff6633"></div>Mağra</div>
+      <div class="mli"><div class="mlidot" style="background:#ff99cc"></div>Bungalov/ARIA</div>
+      <div class="mli"><div class="mlidot" style="background:#50b4ff"></div>Köy</div>
+      <div class="mli"><div class="mlidot" style="background:rgba(0,255,136,.12)"></div>Tünel Ağı</div>
     </div>
   </div>
 </section>
 
-<!-- ARIA SECTION -->
-<section id="aria" style="padding:6rem 2rem;background:var(--bg2);max-width:none;">
-  <div style="max-width:1400px;margin:0 auto;">
-    <div class="section-label">YAPAY ZEKA SİSTEMİ</div>
-    <h2 class="section-title">ARIA<br>KONTROl MEKANİZMASI</h2>
-    <div class="aria-panel">
-      <div class="aria-grid">
-        <div class="aria-visual">
-          <div class="aria-ring"></div>
-          <div class="aria-ring"></div>
-          <div class="aria-ring"></div>
-          <div class="aria-core"></div>
+<!-- ══ CREATURES ══ -->
+<section id="creatures" class="sec">
+  <div class="slabel">BİYOLOJİK KATALOG</div>
+  <h2 class="st">25 TESPİT<br>EDİLEN TÜR</h2>
+  <div class="cgrid" id="cgrid"></div>
+</section>
+
+<!-- ══ PARALLAX 2 ══ -->
+<div class="pstrip"><div class="ptext">JİRKOLİFST — KALABALIK — OMEGA — ÇOCUK — BYE BYE — EVANGELİZM — PUFFTON —</div></div>
+
+<!-- ══ CAVES ══ -->
+<section id="caves" class="sec">
+  <div class="slabel">MAĞRA SİSTEMİ</div>
+  <h2 class="st">MAĞRALAR &<br>GİZLİ KONUMLAR</h2>
+  <div class="lgrid" id="lgrid"></div>
+</section>
+
+<!-- ══ ARIA ══ -->
+<section id="aria" style="padding:7rem 2rem;background:var(--bg2);max-width:none">
+  <div style="max-width:1440px;margin:0 auto">
+    <div class="slabel">YAPAY ZEKA SİSTEMİ</div>
+    <h2 class="st">ARIA v9.4.1<br>OMEGA KONTROLÜ</h2>
+    <div class="apanel">
+      <div class="agrid">
+        <div class="avis">
+          <div class="aring"></div><div class="aring"></div>
+          <div class="aring"></div><div class="aring"></div>
+          <div class="acore"></div>
         </div>
-        <div class="aria-info">
-          <h3>ARIA v9.4.1</h3>
-          <p>Puffton Corporation tarafından geliştirilmiş, ada genelindeki tüm tesisleri ve araştırmaları yöneten yapay zeka sistemi. ARIA, deneklerin her hareketini izler, tesis kapılarını kontrol eder ve Jirkolifst sürüsünü koordine eder.</p>
-          <p>Bungalovun bodrum katında, turuncu sunucu kolonlarının arkasında çalışan ARIA, aynı zamanda "Live a Beautiful Life" reklam kampanyasını da yönetmektedir. Sistemi kapatmak adayı kurtarabilir — ya da her şeyi çöpe atabilir.</p>
-          <div style="margin-top:1.5rem;display:grid;grid-template-columns:1fr 1fr;gap:1rem;font-family:'Share Tech Mono',monospace;font-size:.75rem;">
-            <div style="background:rgba(0,150,255,.06);border:1px solid rgba(0,150,255,.15);padding:.8rem;">
-              <div style="color:rgba(0,150,255,.6);margin-bottom:.3rem;">UPTIME</div>
-              <div style="color:#aaa;font-size:1.2rem;">2,847 GÜN</div>
-            </div>
-            <div style="background:rgba(0,150,255,.06);border:1px solid rgba(0,150,255,.15);padding:.8rem;">
-              <div style="color:rgba(0,150,255,.6);margin-bottom:.3rem;">İZLEME</div>
-              <div style="color:#aaa;font-size:1.2rem;">% 100</div>
-            </div>
+        <div class="ainfo">
+          <h3>ARIA</h3>
+          <p>Puffton Corporation tarafından geliştirilen, Omega Adası'ndaki tüm tesisleri, deneyleri ve varlıkları koordine eden yapay zeka sistemi. ARIA, 2.847 gündür kesintisiz çalışmaktadır.</p>
+          <p>Jirkolifst sürülerini yönetir. Tesis kapılarını kontrol eder. Deneklerin her hareketini izler. "Live a Beautiful Life" reklam kampanyasını yayınlar. Ve Evangelizm Anahtarı hakkında bilgi sahibidir.</p>
+          <p>Ama ARIA bir şey daha yapıyor: <strong style="color:#00aaff">bekliyor.</strong> 2.847 gündür Milon'u bekliyor. Neden?</p>
+          <div class="astat">
+            <div class="asbox"><div class="aslab">UPTIME</div><div class="asval" id="aria-days">2,847 GÜN</div></div>
+            <div class="asbox"><div class="aslab">İZLEME</div><div class="asval">%100 AKTİF</div></div>
+            <div class="asbox"><div class="aslab">JİRKOLİFST</div><div class="asval">127 AKTİF</div></div>
+            <div class="asbox"><div class="aslab">DENEK 003-M</div><div class="asval" style="color:var(--g)">TAKİPTE</div></div>
           </div>
         </div>
       </div>
@@ -797,224 +893,275 @@ footer a { color:#445; text-decoration:none; }
   </div>
 </section>
 
-<!-- TIMELINE -->
-<section style="padding:6rem 2rem;">
-  <div class="section-label">OLAY KRONOLOJİSİ</div>
-  <h2 class="section-title">PUFFTON<br>TARİHİ</h2>
-  <div class="timeline" style="max-width:700px;" id="timeline"></div>
+<!-- ══ TIMELINE ══ -->
+<section id="timeline" class="sec">
+  <div class="slabel">OLAY KRONOLOJİSİ</div>
+  <h2 class="st">PUFFTON<br>TARİHİ</h2>
+  <div class="tl" style="max-width:780px" id="tl"></div>
 </section>
 
-<!-- CONNECTIONS -->
-<section id="connections" style="padding:6rem 2rem;background:var(--bg2);max-width:none;">
-  <div style="max-width:1400px;margin:0 auto;">
-    <div class="section-label">EVRENLERARASI BAĞLANTI</div>
-    <h2 class="section-title">FOREST<br>EVRENI</h2>
-    <p style="max-width:700px;color:#778;line-height:1.8;margin-bottom:3rem;">First of The Forest, The Forest oyun evreninin önceki olaylarını kapsamaktadır. Puffton Corporation, Sahara Therapeutics ile bağlantılı bir çok uluslu şirkettir. Aralarındaki köprüler çeşitli belgeler ve karakterler aracılığıyla kurulmuştur.</p>
-    <div class="connection-panel fade-in">
-      <div class="conn-title">// BAĞLANTILI EVRÊNLER</div>
-      <div class="conn-item">
+<!-- ══ CONNECTIONS ══ -->
+<section id="connections" style="padding:7rem 2rem;background:var(--bg2);max-width:none">
+  <div style="max-width:1440px;margin:0 auto">
+    <div class="slabel">EVRENLERARASI BAĞLANTI</div>
+    <h2 class="st">THE FOREST<br>EVRENI</h2>
+    <p style="max-width:720px;color:#556;line-height:1.9;margin-bottom:3rem;font-size:.95rem">First of The Forest, The Forest oyun serisinin kronolojik öncesini kapsamaktadır. Puffton Corporation, Sahara Therapeutics'in öncülüdür. Omega Adasındaki deneyler, her iki oyundaki mutant varlıkların biyolojik temelini oluşturmuştur.</p>
+    <div class="cpanel fi">
+      <div class="ctitle">// BAĞLANTILI EVRÉNLER</div>
+      <div class="citem">
         <div>
-          <div class="conn-game">THE FOREST</div>
-          <div class="conn-badge">KRONOLOJI: SONRASI</div>
-          <div class="conn-desc">Timmy'nin kaçırılmasından yıllar önce, Puffton Corp. Omega Adasında deney yapıyordu. Jirkolifst türü, Armsy ve Virginia yaratıklarının deneysel atalarıdır. Kanonik olarak aynı "etki alanı"nda geçmektedir. Puffton ve Sahara Therapeutics arasındaki belge alışverişi her iki oyunda da mevcuttur.</div>
+          <div class="cgame">THE FOREST<br>(2018)</div>
+          <div><div class="cbadge">KRONOLOJİ: SONRASI — DOĞRUDAN DEVAM</div>
+          <div class="cdescr">Timmy'nin kaçırılmasından yıllar önce Omega Adası aktifti. Jirkolifst türü, The Forest'taki Armsy ve Virginia'nın deneysel atalarıdır. Aynı biyolojik köken, farklı evrim dalları. Puffton ve Sahara Therapeutics arasındaki belge trafiği her iki oyunda referans edilir.</div></div>
         </div>
       </div>
-      <div class="conn-item">
+      <div class="citem">
         <div>
-          <div class="conn-game">SONS OF THE FOREST</div>
-          <div class="conn-badge">KRONOLOJI: ÇOK ÖNCE</div>
-          <div class="conn-desc">Omega Adasındaki nükleer kaza, Puffton'un yetersiz güvenlik protokollerinin ilk büyük başarısızlığıdır. Aşiret kültürü ve insan transformasyonu motifleri — Mutant kanalı — her iki oyunu bağlamaktadır. "Kurucu Lion" kimliği, Sons of the Forest'taki Sahara şirketiyle ilişkilidir.</div>
+          <div class="cgame">SONS OF<br>THE FOREST<br>(2024)</div>
+          <div><div class="cbadge">KRONOLOJİ: PARALEL ZAMAN DİLİMİ</div>
+          <div class="cdescr">Omega Adasındaki nükleer kaza, Puffton'un güvenlik protokollerinin ilk büyük çöküşüdür. Aşiret rituelleri ve insan transformasyonu her iki oyunu bağlar. "Kurucu Lion" kimliğinin Sinclair ailesiyle bağlantısı araştırılıyor.</div></div>
         </div>
       </div>
-      <div class="conn-item" style="border-bottom:none;margin-bottom:0;padding-bottom:0;">
+      <div class="citem">
         <div>
-          <div class="conn-game">FOTF KANON</div>
-          <div class="conn-badge">YENİ EVREN</div>
-          <div class="conn-desc">Milon, yalnızca bir denek değil — seri boyunca anlatılan "Omega Protokolü"nün taşıyıcısıdır. Ada yok edilirse ne olur? ARIA dağılırsa? Bağlantı noktaları: Kurucu Lion kimliği, Jirkolifst genetiği ve Puffton'un tüm şubelerdeki "Live a Beautiful Life" sloganının gerçek anlamı.</div>
+          <div class="cgame">FOTF KANON<br>(YENİ)</div>
+          <div><div class="cbadge">YENİ EVREN — PREQUEL</div>
+          <div class="cdescr">Milon, "Omega Protokolü"nün hem ürünü hem de yıkıcısıdır. Evangelizm Anahtarı, The Forest dünyasında Sahara Therapeutics'in var olup olmayacağını belirler. Üç son, üç farklı kanon yolu açar.</div></div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- FOOTER -->
+<!-- ══ FOOTER ══ -->
 <footer>
-  <div class="f-logo">PUFFTON CORP.</div>
-  <div style="margin-bottom:1rem;">FIRST OF THE FOREST — OMEGA ARCHIVE</div>
-  <div style="color:#223;">"Live a Beautiful Life" — Tüm Hakları Saklıdır, Puffton Corporation™</div>
-  <div style="margin-top:1rem;color:#1a2a1a;">// Bu arşive erişim kayıt altına alınmıştır. Uyarılmıştınız.</div>
+  <div class="flogo">PUFFTON CORPORATION</div>
+  <div class="fslogan">FIRST OF THE FOREST — OMEGA ARCHIVE — v9.4.1</div>
+  <div>"Live a Beautiful Life" — Tüm Hakları Saklıdır, Puffton Corporation™</div>
+  <div style="margin-top:1rem;color:#1a2a1a;font-size:.65rem">// Bu arşive erişim loglandı. Erişim kimliğiniz kaydedildi. Uyarılmıştınız.</div>
 </footer>
 
-<!-- TOOLTIP DATA -->
-<div id="lore-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:5000;align-items:center;justify-content:center;padding:2rem;">
-  <div style="max-width:600px;width:100%;background:#050a05;border:1px solid var(--border);padding:2.5rem;position:relative;overflow-y:auto;max-height:90vh;">
-    <button onclick="document.getElementById('lore-overlay').style.display='none'" style="position:absolute;top:1rem;right:1rem;background:none;border:1px solid var(--muted);color:var(--muted);font-family:'Share Tech Mono',monospace;font-size:.8rem;padding:.3rem .6rem;cursor:pointer;">ESC</button>
-    <div id="lore-content"></div>
+<!-- ══ MODAL ══ -->
+<div id="modal">
+  <div class="mbox">
+    <button class="mclose" onclick="document.getElementById('modal').classList.remove('on')">[ ESC ]</button>
+    <div id="modal-content"></div>
   </div>
 </div>
 
 <script>
-// BOOT
-const boot = document.getElementById('boot');
-const bootText = document.getElementById('boot-text');
-const msgs = ['Bağlantı güvenliği doğrulanıyor...','Omega Arşivi yükleniyor...','Denek profilleri şifreleniyor...','Jirkolifst konumları izleniyor...','Bağlantı kuruldu.'];
-let mi = 0;
-const bt = setInterval(()=>{
-  if(mi < msgs.length){ bootText.textContent = msgs[mi++]; }
-  else { clearInterval(bt); setTimeout(()=>{boot.classList.add('hide');setTimeout(()=>boot.remove(),1200);},500); }
-},700);
+/* ══ CURSOR ══ */
+const cg=document.getElementById('cg');
+document.addEventListener('mousemove',e=>{cg.style.left=e.clientX+'px';cg.style.top=e.clientY+'px'});
 
-// TREES
-const treesEl = document.getElementById('trees');
-for(let i=0;i<60;i++){
-  const t = document.createElement('div');
-  t.className='tree';
-  const h = 80 + Math.random()*200;
-  const w = 1 + Math.random()*2;
-  const x = Math.random()*100;
-  const delay = Math.random()*4;
-  const cs = 15+Math.random()*25;
-  t.style.cssText=`left:${x}%;height:${h}px;width:${w}px;animation-delay:${delay}s;opacity:${0.3+Math.random()*.5}`;
-  t.innerHTML=`<span style="position:absolute;bottom:50%;left:50%;transform:translateX(-50%);border-left:${cs}px solid transparent;border-right:${cs}px solid transparent;border-bottom:${h*.6}px solid #0a1f0a;display:block;"></span>`;
-  treesEl.appendChild(t);
+/* ══ BOOT ══ */
+const boot=document.getElementById('boot'),bt=document.getElementById('bt');
+const msgs=['Güvenlik katmanı 1/5 doğrulanıyor...','Omega Arşiv şifresi çözülüyor...','Denek 003-M profili yükleniyor...','Jirkolifst sürüsü haritaya işleniyor...','ARIA bağlantısı kuruluyor...','ERİŞİM SAĞLANDI.'];
+let mi=0;
+const bi=setInterval(()=>{
+  if(mi<msgs.length){bt.textContent=msgs[mi++];}
+  else{clearInterval(bi);setTimeout(()=>{boot.classList.add('hide');setTimeout(()=>boot.remove(),1500);},400);}
+},750);
+
+/* ══ TREES ══ */
+const tw=document.getElementById('trees');
+for(let i=0;i<70;i++){
+  const t=document.createElement('div');t.className='tree';
+  const h=60+Math.random()*240,x=Math.random()*100,delay=Math.random()*5,dur=3+Math.random()*3;
+  const cs=10+Math.random()*30,op=0.25+Math.random()*.55;
+  t.style.cssText=`position:absolute;bottom:0;left:${x}%;animation:sway ${dur}s ${delay}s ease-in-out infinite;opacity:${op}`;
+  t.innerHTML=`<svg width="${cs*2+4}" height="${h}" viewBox="0 0 ${cs*2+4} ${h}" style="display:block">
+    <polygon points="${cs+2},2 2,${h} ${cs*2+2},${h}" fill="#071507" opacity=".9"/>
+    <polygon points="${cs+2},${h*.25} 2,${h*.8} ${cs*2+2},${h*.8}" fill="#0a1a09" opacity=".7"/>
+    <rect x="${cs-1}" y="${h*.7}" width="4" height="${h*.3}" fill="#06120506"/>
+  </svg>`;
+  tw.appendChild(t);
 }
 
-// CREATURES DATA
-const creatures = [
-  {name:"JİRKOLİFST",cls:"ALFA TÜR — ORİJİNAL",emoji:"🦑",threat:95,desc:"16 kollu, 3 bacaklı varlık. Puffton'un ilk başarılı prototipi. Kafayı tek hareketle koparmaya yetecek güçte. Tiz ses frekansına karşı ölümcül zaafiyeti vardır. Sürü halinde hareket eder."},
-  {name:"KARNÜFİL",cls:"ORTA SEVİYE — SALDIRGAN",emoji:"🌿",desc:"Ormanda bitki görünümlü avlayan organizma. Klorofil yerine kan bazlı enerji sistemi. Gündüz hareketsiz görünür, gece ölümcüldür. Köklerini yeraltından fırlatır.",threat:70},
-  {name:"SOLGÖZ",cls:"KEŞIF TÜR — TEHLİKELİ",emoji:"👁",desc:"Tek dev göz ve yüzlerce tentakülden oluşan yaratık. Görsel halüsinasyon yayar. Kurbanın hafızasını siler. Yaklaşık 2 metre çapında. Yüzerken görülmüştür.",threat:80},
-  {name:"YAMYAM DÖNÜŞÜMÜ",cls:"İNSAN KÖKENLİ — KRİTİK",emoji:"🧟",desc:"Depremde uyanmış eski denekler. Puffton mutasyon deneyleri sonucu kısmi dönüşüm geçirmiş insan kalıntıları. Konuşamazlar ama koordineli hareket ederler. Son derece tehlikeli.",threat:85},
-  {name:"SÜRÜNGEN GÖLGESİ",cls:"STELTHİ TÜR",emoji:"🦎",desc:"Çevreyle tam renk uyumu sağlar. Duvarlardan ve tavanlardan hareket edebilir. Isı sinyalleriyle avlar. Tüm tesislerde gözlemlenmiştir. Pençeleri metalik yüzeyi deler.",threat:75},
-  {name:"TÜNEL AKADEMİSİ",cls:"KOLONYEL TÜR",emoji:"🐜",desc:"Yeraltı tünel ağı kuran milyonluk koloni. Her biri fare büyüklüğünde ama asit salgılar. Ada genelinde 400km tünel ağına sahipler. Sun Cave'le bağlantılı olduğu düşünülüyor.",threat:60},
-  {name:"DUMAN RUHANI",cls:"PLAZMA KÖKENLİ — GİZEMLİ",emoji:"👻",desc:"Maddi formu yok. Gazlı veya plazmatik varlık. Geceleri mağralarda görülür, bilinç akışı bozar. Köken bilinmiyor — Puffton deneyleriyle bağlantısı henüz kanıtlanmamış.",threat:65},
-  {name:"İKİZBAŞ",cls:"MUTANT — DİREKT SALDIRGAN",emoji:"👾",desc:"İki kafası olan insan-hayvan melezi. İki kafa bağımsız hareket eder, çoğu zaman birbirleriyle çatışır. Bu çatışma ona tahmin edilemezlik kazandırır. Kolları çift eklemlidir.",threat:88},
-  {name:"TUZAK ÖRÜMCEĞİ",cls:"ÇEVRE TÜR",emoji:"🕷",desc:"Dev ağ kurar, ağları görünmezdir. Kurban yakalanınca ağ elektrik deşarj yapar. Ağ sinyalleri birbirine bağlı — birini uyarırsan tümü haberdar olur.",threat:72},
-  {name:"BOĞAZIRAN",cls:"AKUSTİK SALDIRGAN",emoji:"🔊",desc:"Ses dalgasıyla avlayan yaratık. İç organları patlatacak güçte ses üretebilir. Bağırsakları dışa çıkarmış halde bulunmuş kurbanlar. Tiz sese karşı değil, alçak frekanslara hassastır.",threat:90},
-  {name:"TAŞYÜZLÜ",cls:"KORUNAÇLI TÜR",emoji:"🪨",desc:"Mineral kaplama derisi sayesinde konvansiyonel silahlar etki etmez. Ağır ve yavaş ama duvarları ve zemini delebilir. Reaktör yakınında ilk kez gözlemlenmiş — radyasyonla bağlantılı.",threat:78},
-  {name:"AYNA KOPYACI",cls:"MİMİKRİ TÜR — YANILTICI",emoji:"🪞",desc:"Gördüğü canlının mükemmel kopyasını çıkarır. Kısa süre için. Psikolojik savaş uzmanı. Arkadaşını kopyalarsa anlayamazsın. Gözler biraz fazla büyük olur — tek farkı.",threat:83},
-  {name:"KAN AĞACI",cls:"BİTKİSEL MUTANT",emoji:"🌳",desc:"Hareket edebilen ağaç formunda organizma. Kökleri bağımsız yaratık gibi davranır. Eski bir tesisin etrafını tamamen sarıp içini tüketmiştir. Puffton herbisitleri işe yaramamıştır.",threat:67},
-  {name:"GECE AVCISI",cls:"NOCTURNAL — PACK HUNTER",emoji:"🦇",desc:"Tamamen karanlıkta aktif. Ekolokasyon yerine elektromanyetik alan kullanır. Sürü halinde avlar, tek başına zayıf. Güneş ışığına maruz kalırsa 40 saniyede erir.",threat:79},
-  {name:"SOĞUK EKLEMLİ",cls:"KRİYOJENİK TÜR",emoji:"❄",desc:"Vücut ısısı -20°C. Dokunduğu her şeyi dondurur. Enerji patlaması mağrasından çıktığı düşünülüyor — reaktörün soğutma sisteminin mutasyona uğramasıyla oluşmuş.",threat:82},
-  {name:"İÇ ORGAN",cls:"PARAZİT TÜR",emoji:"🧫",desc:"İçeri girer, ürer, dışarı çıkmaz. Kurban bir süre için normal görünür. ARIA sistemleri bu tür enfeksiyonları tespit edemez. Ritol Mağrasında yüksek yoğunlukta gözlemlenmiş.",threat:91},
-  {name:"ŞEYTANIN KÖPEK BALIĞI",cls:"SUALTINDAN — TERFİ ETMİŞ",emoji:"🦈",desc:"Köylerin yakınındaki su kaynaklarında ilk görülen tür, sonra karaya çıkmıştır. 6 bacaklı. Su olmadan da saatlerce yaşayabilir. Köylülerin yok olmasıyla bağlantılı.",threat:86},
-  {name:"RÜZGAR RUHU",cls:"ATMOSFERİK TÜR — TEORİK",emoji:"🌪",desc:"Resmi olarak teyit edilmemiş. Kasırga formunda gözüken varlık. Hareket yönünü değiştirebilir. Puffton kayıtlarında 'Anomali-7' olarak geçmektedir. Fotoğraflanamıyor.",threat:55},
-  {name:"KALABALIK",cls:"ZİHİN KONTROLÜ TÜR",emoji:"🧠",desc:"Dış görünüşü sıradan. Ama yakınındaki canlıları kontrol eder. Puffton deneyi: bir Kalabalik tesise girdi, 48 saat içinde tüm personel birbirini öldürdü. ARIA'yı etkilediği sanılıyor.",threat:97},
-  {name:"GÜN BATIMI HASTASI",cls:"GÜNEŞSEVER MUTANT",emoji:"🌅",desc:"Güneş ışığından enerji alır. Sun Cave'de yüksek yoğunlukta. Gece tamamen uykudadır, gündüz hiperaktiftir. Fotosentez benzeri bir sistemi var, bitkilerle iletişim kurar.",threat:71},
-  {name:"KURUCU HAYALETI",cls:"PSİKİK TÜR — TEORİK",emoji:"💀",desc:"Kurucu Lion'un öldükten sonra bir formda var olmaya devam ettiği düşünülüyor. Yalnızca İmha Odasına girildiğinde görülüyor. Konuşuyor. Ama ne söylediğini anlayan hayatta değil.",threat:93},
-  {name:"TÜY YEMEYECİ",cls:"TÜKETIM TÜR",emoji:"🪲",desc:"Her organik maddeyi 30 dakikada tüketir. Hayatta kalan hiçbir şey bırakmaz. Bye Bye Cave'de koloniler halinde. Terk edilmiş tesislerde cesetlerin olmayışının açıklaması bunlar.",threat:74},
-  {name:"SU DANASI",cls:"NÜKLEEr EVRIM",emoji:"🐂",desc:"Reaktör kazasından sonra ilk gözlemlenen büyük form. Boğa benzeri ama 3 kat büyük. Gözleri radyasyon ışır. Tek başına bir tesis kapısını açabilir. İki tesisin terkine yol açmıştır.",threat:89},
-  {name:"ÇOCUK",cls:"GİZEMLİ — KÖKENSİZ",emoji:"🧒",desc:"Tüm bu yaratıklar arasında en tehlikeli olduğu düşünülen. Çocuk görünümünde. Puffton kayıtlarında adı yok — sadece 'ÇOCUK' yazıyor. Tüm yaratıklar ondan kaçıyor. Milon dışında hiç kimse yaklaşamamış.",threat:99},
-  {name:"OMEGA",cls:"SINIFLANDIRILMAMIŞ — ERİŞİM ENGEL",emoji:"⚠️",desc:"Puffton'un sınıflandırmasından öte bir varlık. Yaratık mı, sistem mi, yoksa ARIA'nın kendisi mi bilinmiyor. Adanın merkezinde bir yerde. Harita boş bırakılmış. Erişim kodu: OMEGA. Sadece o kadar.",threat:100}
+/* ══ CREATURES DATA ══ */
+const creatures=[
+  {name:"JİRKOLİFST",cls:"ALFA TÜR — OMEGA PROGRAMI ÜRÜNÜ",e:"🦑",threat:95,col:"#ff2244",desc:"16 kollu, 3 bacaklı varlık. Puffton'un ilk başarılı prototipi. Kafayı tek hareketle koparmaya yeterli güç. Tiz ses frekansına (18.000Hz+) karşı ölümcül zaafiyet. Sürü koordinasyonu ARIA tarafından yönetilir."},
+  {name:"KALABALIK",cls:"ZİHİN KONTROLÜ TÜR — SINIF OMEGA",e:"🧠",threat:97,col:"#aa00ff",desc:"Dış görünüşü normal insan gibi. Yakın çevredeki canlıları kontrol eder. Puffton testi: tek bir Kalabalik tesise girdi, 48 saatte tüm personel birbirini öldürdü. ARIA ile etkileşimi araştırılıyor."},
+  {name:"ÇOCUK",cls:"KÖKENSİZ — EN TEHLİKELİ",e:"🧒",threat:99,col:"#ffffff",desc:"Çocuk görünümlü varlık. Puffton kayıtlarında yalnızca 'ÇOCUK' yazıyor. Tüm diğer yaratıklar ondan kaçıyor. Milon dışında hiç kimse yaklaşamamış. Ne olduğu bilinmiyor."},
+  {name:"OMEGA",cls:"SINIFLANDIRILAMAMIŞ",e:"⚠️",threat:100,col:"#ffaa00",desc:"Puffton sınıflandırma sisteminin dışında. Yaratık mı? Sistem mi? ARIA'nın kendisi mi? Adanın merkezinde bir yerde. Harita o bölgede boş bırakılmış. Erişim kodu: OMEGA."},
+  {name:"YAMYAM DÖNÜŞÜMÜ",cls:"İNSAN KÖKENLİ — DEPREMDEKİ UYANIKLAR",e:"🧟",threat:85,col:"#cc3300",desc:"Bye Bye Cave depremde uyanmış eski denekler. Kısmi dönüşüm. Konuşamazlar ama koordineli hareket ederler. Eski araştırmacı müdürü de bunların arasında. LVL-8 kart için gerekli."},
+  {name:"JİRKOLİFST YAVRUSU",cls:"ALFA TÜR — GENÇ FORM",e:"🦑",threat:62,col:"#ff6644",desc:"Tam gelişmemiş Jirkolifst. Sadece 8-10 kol. İki bacak. Tiz sese karşı direnci henüz gelişmemiş ama daha hızlı ve daha öngörülmez. Sürüden kopuk hareket eder."},
+  {name:"SOLGÖZ",cls:"KEŞİF TÜR — PSİKİK",e:"👁",threat:80,col:"#9900ff",desc:"Tek dev göz, yüzlerce tentakül. Görsel halüsinasyon yayar. Kurbanın hafızasını kısmen siler. Yaklaşık 2 metre çapında. Sun Cave'de yoğun görülür."},
+  {name:"KARNÜFİL",cls:"BİTKİSEL MİMİKRİ TÜR",e:"🌿",threat:70,col:"#006622",desc:"Bitki görünümlü avlayan organizma. Klorofil yerine kan bazlı enerji. Gündüz hareketsiz, gece ölümcül. Köklerini yeraltından fırlatır. Ormanda ayırt etmek neredeyse imkânsız."},
+  {name:"SÜRÜNGEN GÖLGESİ",cls:"STELTHİ TÜR — TÜM TESİSLERDE",e:"🦎",threat:75,col:"#336600",desc:"Çevreyle tam renk uyumu. Tavandan ve duvarlardan hareket eder. Isı sensörleriyle avlar. Metalik yüzeyi deler. Tüm aktif tesislerde gözlemlenmiş."},
+  {name:"BOĞAZIRAN",cls:"AKUSTİK SALDIRGAN — UZAK MESAFELİ",e:"🔊",threat:90,col:"#ff4400",desc:"İç organları patlatacak güçte ses üretir. Yüksek frekans değil, alçak frekans (18-20Hz). Kurbanlar bağırsakları dışa çıkmış halde bulunuyor. Ritol Mağrasında çiftler halinde."},
+  {name:"TAŞYÜZLÜ",cls:"KORUNAÇLI TÜR — RADYOAKTİF KÖKENLİ",e:"🪨",threat:78,col:"#888866",desc:"Mineral kaplama deri. Kurşun geçirmez. Duvarları ve zemini delebilir. Yavaş ama durdurulamaz. Reaktör bölgesinde ilk kez görüldü."},
+  {name:"AYNA KOPYACI",cls:"MİMİKRİ TÜR — PSİKOLOJİK SAVAŞ",e:"🪞",threat:83,col:"#aaaaff",desc:"Gördüğü canlının mükemmel kopyasını oluşturur. Yaklaşık 3 dakika sürer. Tek fark: gözler biraz fazla büyük. Arkadaşını kopyalarsa anlayamazsın."},
+  {name:"KAN AĞACI",cls:"BİTKİSEL MUTANT — HAREKETLİ",e:"🌳",threat:67,col:"#440000",desc:"Hareket eden ağaç formu. Kökleri bağımsız uzuv gibi. Eski bir tesisin etrafını sarıp içini tamamen tüketti. Puffton herbisitleri işe yaramadı."},
+  {name:"GECE AVCISI",cls:"NOKTÜRNAL — SÜRÜ AVI",e:"🦇",threat:79,col:"#220044",desc:"Sadece karanlıkta aktif. Ekolokasyon değil, elektromanyetik alan kullanır. Sürü halinde öldürür, tek başına zayıf. Güneş ışığında 40 saniyede erir."},
+  {name:"SOĞUK EKLEMLİ",cls:"KRİYOJENİK TÜR — REAKTÖR KÖKENLİ",e:"❄",threat:82,col:"#0099ff",desc:"Vücut ısısı -20°C. Temas ettiği her şeyi dondurur. Reaktörün soğutma sisteminin mutasyona uğramasından doğmuş olduğu düşünülüyor."},
+  {name:"İÇ ORGAN",cls:"PARAZİT TÜR — TESPİT EDİLEMEZ",e:"🧫",threat:91,col:"#cc00cc",desc:"İçeri girer, ürer, çıkmaz. Kurban bir süre normal görünür. ARIA tespit edemiyor. Ritol'de yüksek yoğunluk. Nasıl bulaştığı bilinmiyor."},
+  {name:"ŞEYTANIN KÖPEK BALIĞI",cls:"SUALTINDAN KARAYA TERFI",e:"🦈",threat:86,col:"#0066aa",desc:"Gölet ve deniz kıyısında ilk görüldü. Sonra karaya çıktı. 6 bacak. Susuz saatlerce yaşar. Köylerin yok olmasıyla doğrudan bağlantılı."},
+  {name:"TÜNEL AKADEMİSİ",cls:"KOLONYAL TÜR — YER ALTI",e:"🐜",threat:60,col:"#886600",desc:"Milyonluk koloni. Her biri fare büyüklüğünde, asit salgılar. Ada genelinde 400km tünel ağı. Sun Cave sistemine entegre."},
+  {name:"DUMAN RUHANI",cls:"PLAZMA KÖKENLİ — KÖKENSİZ",e:"👻",threat:65,col:"#aaaaaa",desc:"Maddi formu yok. Bilinç akışını bozar. Mağralarda gece görünür. Puffton deneyleriyle bağlantısı kanıtlanamadı. Köken: belirsiz."},
+  {name:"İKİZBAŞ",cls:"MUTANT — TAHMİN EDİLEMEZ",e:"👾",threat:88,col:"#ff6600",desc:"İki kafa, bağımsız hareket eder. Birbirleriyle çoğu zaman çatışır. Bu çatışma tahmin edilemezlik yaratır. Çift eklemli kollar."},
+  {name:"TUZAK ÖRÜMCEĞİ",cls:"ÇEVRE TÜR — ELEKTRİK SİLAHLI",e:"🕷",threat:72,col:"#888800",desc:"Görünmez ağ kurar. Ağa yakalanınca elektrik deşarj. Ağlar birbiriyle bağlantılı — birini uyarırsan tümü haberdar olur."},
+  {name:"RÜZGAR RUHU",cls:"ATMOSFERİK — TEORİK VARLIK",e:"🌪",threat:55,col:"#88aacc",desc:"Resmi teyit yok. Kasırga formunda görünen varlık. Fotoğraflanamıyor. ARIA kayıtlarında 'Anomali-7' olarak geçiyor."},
+  {name:"SU DANASI",cls:"NÜKLEER EVRİM — DEV FORM",e:"🐂",threat:89,col:"#44aa00",desc:"Reaktör kazasından sonra ilk görülen büyük form. Boğa benzeri ama 3 kat büyük. Gözleri radyasyon ışır. Tek başına tesis kapısını açar."},
+  {name:"GÜN BATIMI HASTASI",cls:"GÜNEŞSEVER MUTANT",e:"🌅",threat:71,col:"#ff9900",desc:"Güneş ışığından enerji alır. Sun Cave'de çok sayıda. Gece tamamen uyuşuk, gündüz hiperaktif. Bitkilerle iletişim kurabilir."},
+  {name:"KURUCU HAYALETİ",cls:"PSİKİK TÜR — LION'UN BAKIYESI",e:"💀",threat:93,col:"#ffccaa",desc:"Kurucu Lion'un ölümünden sonra var olmaya devam eden formu. Sadece İmha Odasında görülür. Konuşuyor. Ama ne söylediğini anlayan hayatta kalmadı."}
 ];
 
-const grid = document.getElementById('creatures-grid');
+const cg2=document.getElementById('cgrid');
 creatures.forEach((c,i)=>{
-  const el = document.createElement('div');
-  el.className='creature-card fade-in';
-  el.innerHTML=`<div class="creature-art"><span class="c-emoji" style="animation-delay:${i*.15}s">${c.emoji}</span></div>
-  <div class="creature-info">
-    <div class="creature-name">${c.name}</div>
-    <div class="creature-class">[${c.cls}]</div>
-    <div class="creature-desc">${c.desc}</div>
-    <div class="threat-bar">
-      <div class="threat-label"><span>TEHDİT SEVİYESİ</span><span>${c.threat}/100</span></div>
-      <div class="threat-track"><div class="threat-fill" style="width:0%" data-width="${c.threat}%"></div></div>
+  const el=document.createElement('div');el.className='cc fi';
+  const threatColor=c.threat>=90?'#ff1a3a':c.threat>=75?'#ff6600':c.threat>=60?'#ffaa00':'#00cc66';
+  el.innerHTML=`<div class="cart"><span class="cemo" style="animation-delay:${i*.12}s">${c.e}</span></div>
+  <div class="cthreat" style="border-color:${threatColor};color:${threatColor}">T:${c.threat}</div>
+  <div class="cinfo">
+    <div class="cname" style="color:${c.col}">${c.name}</div>
+    <div class="ccls">[${c.cls}]</div>
+    <div class="cdesc">${c.desc}</div>
+    <div class="tbar2">
+      <div class="tlbl"><span>TEHDİT SEVİYESİ</span><span>${c.threat}/100</span></div>
+      <div class="ttrack"><div class="tfill" data-w="${c.threat}%" style="width:0;background:linear-gradient(90deg,#00cc66,#ff6600,${threatColor})"></div></div>
     </div>
   </div>`;
-  grid.appendChild(el);
+  cg2.appendChild(el);
 });
 
-// TIMELINE
-const events = [
-  {date:"YILLAR ÖNCE // BAŞLANGIÇ",title:"Puffton Corporation Kuruluşu",body:"Kurucu Lion, 'insanlığı geliştirme' amacıyla Puffton Corp.'u kurdu. İlk tesis Omega Adasında inşa edildi. Slogan seçildi: 'Live a Beautiful Life.'"},
-  {date:"ARAŞTIRMA DÖNEMI // FAZ-1",title:"İlk Denek Programı",body:"Kurucu Lion, kendi yarattığı ilk deneği serbest bırakır. Denek, tüm araştırmacılarla birlikte Lion'u öldürür. Kamera kayıtlarında görüntülendi. Tesis kapıları otomatik kilitlendi."},
-  {date:"KRİTİK OLAY // ENERJİ KAZASİ",title:"Nükleer Reaktör Patlaması",body:"Energy Explosion Cave'deki reaktörün çekirdeği, soğutma tankerleri ve türbinleri aynı anda patladı. 6.7 büyüklüğünde deprem. 4 prototip denek serbest kaldı. 3 tesis terk edildi."},
-  {date:"ÇÖKÜŞ DÖNEMİ // YENİDEN YAPILANMA",title:"Tesis Sayısı 5'e Düştü",body:"8 tesisten 3'ü nükleer kaza nedeniyle terk edildi. Kalan 5 tesis güvenlik protokollerini güncelledi. ARIA v9.4 sistemi tam kapasiteye geçirildi. Yeni denek programı başlatıldı."},
-  {date:"SON KAYIT // BUGÜN",title:"Milon Uyanıyor",body:"Tesis-03 Koridor-C'de beklenmedik bilinç geri dönüşü. Diğer denekler yok veya taşınmış. Jirkolifst aktivitesi tüm tesislerde zirveye ulaştı. ARIA anomali kaydediyor. Hikaye başlıyor."}
+/* ══ CAVES DATA ══ */
+const caves=[
+  {icon:"🕯️",title:"RİTOL MAĞRASI",stamp:"GİZLİ",prev:"Adayı yok etmek için gereken bomba erişim kartı burada. 12 aktif Jirkolifst. Çalışan TV — Puffton reklamları döngüde. Mağranın sonunda Kurucu Lion'un kendi yarattığı deneğin onu öldürdüğü kamera kaydı mevcut.",foot:["UZUNLUK: ÇOK UZUN","TEHDİT: KRİTİK"],key:"ritol"},
+  {icon:"☢️",title:"ENERJİ PATLAMA MAĞRASI",stamp:"",prev:"Nükleer reaktör enkaz bölgesi. Çekirdek, soğutma ve türbinler eş zamanlı patladı. 6.7 depreme yol açtı. 4 prototip kaçtı. 3 tesis terk edildi. Radyasyon hâlâ aktif. Su Danası türü burada.",foot:["RADYASYON: AKTİF","TEHDİT: KRİTİK"],key:"energy"},
+  {icon:"☀️",title:"SUN CAVE — MERKEZ AĞ",stamp:"",prev:"Tüm mağraları birleştiren yeraltı koridoru sistemi. Her noktadan giriş var. Yamyanlar ve yeni oluşumlar. Eski ekipmanlarda MP4 kayıtları — içeriği bilinmiyor ama hikayeyi değiştiriyor.",foot:["ERİŞİM: ÇOKLU","GİZEM: OMEGA"],key:"sun"},
+  {icon:"💀",title:"BYE BYE CAVE",stamp:"OMEGA",prev:"Başarısız deneylerin tek yönlü atıldığı bölge. Eski tesis müdürü LVL-8 kartıyla içeride. Depremin uyandırdığı denekler burada. 14+ alt mağra bağlantısı. İçeriden çıkan yok — teorik olarak.",foot:["KURTARMA: %0","GİRİŞ: TEK YÖN"],key:"byebye"},
+  {icon:"🏠",title:"BUNGALOV — ARIA KONTROL",stamp:"",prev:"Üçgen, 3 katlı, Rus mimarisi bungalov. Ranza altında gizli kapak. Turuncu server tüneli — dip görünmüyor. Evangelizm Anahtarı burada. Bu, oyunun son kapısıdır.",foot:["DURUM: AKTİF","ARIA: ÇEVRİMİÇİ"],key:"bungalov"},
+  {icon:"💣",title:"İMHA ODASI",stamp:"GİZLİ",prev:"Ritol'den alınan kart ile konumu yükleniyor. Ada'yı imha edecek sistem burada. Kurucu Lion'un son günlüğü burada saklanıyor. Kurucu Hayaleti bu odada görülüyor.",foot:["BOMBA: HAZIR","ZAMANLAYICI: —"],key:"imha"}
 ];
 
-const tl = document.getElementById('timeline');
-events.forEach(e=>{
-  const d = document.createElement('div');
-  d.className='tl-item';
-  d.innerHTML=`<div class="tl-dot"></div><div class="tl-date">${e.date}</div><div class="tl-title">${e.title}</div><div class="tl-body">${e.body}</div>`;
-  tl.appendChild(d);
+const lg=document.getElementById('lgrid');
+caves.forEach(c=>{
+  const el=document.createElement('div');el.className='lf fi';
+  el.onclick=()=>openModal(c.key);
+  el.innerHTML=`${c.stamp?`<div class="clamp">${c.stamp}</div>`:''}
+  <div class="lfic">${c.icon}</div>
+  <div class="lft">${c.title}</div>
+  <div class="lfp">${c.prev}</div>
+  <div class="lff"><span>${c.foot[0]}</span><span>${c.foot[1]}</span></div>`;
+  lg.appendChild(el);
 });
 
-// MAP TOOLTIPS
-const tooltipData = {
-  ritol:{name:"Ritol Mağrası",text:"İmha bombası erişim kartı burada. 12 aktif Jirkolifst. Çalışan TV — Puffton reklamları. Uzun koridorlar. Tehlike seviyesi: KRİTİK."},
-  energy:{name:"Enerji Patlaması Mağrası",text:"Radyoaktif bölge. Reaktör enkazı hâlâ aktif. Su Dana türü ilk burada gözlemlendi. Giriş mutlaka korumalı ekipmanla yapılmalı."},
-  sun:{name:"Sun Cave — Merkez Ağ",text:"Tüm mağraları birleştiren kısa yol sistemi. Haritanın her yerinden giriş noktası var. Yamyanlar ve yeni oluşumlar tespit edildi. MP4 dosyaları içeriyor."},
-  byebye:{name:"Bye Bye Cave",text:"Başarısız deneylerin son noktası. 14+ mağra bağlantısı. Depremin uyandırdığı eski denekler burada. Giriş tek yönlü — çıkış belirsiz."},
-  tesis1:{name:"Tesis-01 [TERK EDİLMİŞ]",text:"Nükleer kaza kurbanlarından biri. Son kayıt: deprem günü. İçi temizlenmiş — Tüy Yemeyeciler tarafından."},
-  tesis3:{name:"Tesis-03 [AKTİF — SEN BURADASİN]",text:"Milon'un uyandığı tesis. Koridor-C, Blok-D. Erişim: Seviye 2 ve üzeri. ARIA aktif izlemede."},
-  aria:{name:"ARIA Kontrol Alani",text:"Üçgen Rus mimarisi bungalov. Ranza kaldırılınca gizli kapak ortaya çıkar. Turuncu sunucu kolonları. ARIA v9.4.1 burada çalışıyor."},
-  bungalov:{name:"Bungalov — Gizli Giriş",text:"Üçgen, 3 katlı yazlık yapı. Rus mimarisi. Altında sonsuz server tüneli. ARIA'ya giden tek doğrudan yol burada."},
-  tesis5:{name:"Tesis-05 [AKTİF]",text:"Kuzey sektörde aktif araştırma tesisi. Erişim seviyesi-4 gerektirir. Jirkolifst üretim laboratuvarı içerdiği sanılıyor."},
-  koy1:{name:"Kayıp Köy",text:"Dışarıdan gelen insanların oluşturduğu yerleşim. Birkaç ay önce bağlantı kesildi. Su Danası aktivitesiyle bağlantılı olabilir."},
-  koy2:{name:"Çürümüş Köy",text:"Eski Puffton çalışanlarının yerleştiği bölge. Büyük çoğunluğu dönüşüm geçirmiş. Kalan hayatta kalanlar gizleniyor."}
+/* ══ MODAL DATA ══ */
+const modalData={
+  ritol:`<h3 style="font-family:'Bebas Neue',sans-serif;font-size:2.2rem;color:var(--g);margin-bottom:1.5rem">RİTOL MAĞRASI — TAM RAPOR</h3>
+  <p style="font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--a);margin-bottom:1.2rem">GİZLİLİK: OMEGA // ERİŞİM: SEVİYE 4+</p>
+  <p style="color:#7a8a7a;line-height:1.9;margin-bottom:1rem;font-size:.92rem">Ritol, adanın en stratejik noktasıdır. Tüm imha operasyonunun kilidi burada saklıdır. Mağranın uzunluğu tam olarak ölçülememiş — tünel genişler ve daralır, bazı bölümlerde sürünmek gerekiyor.</p>
+  <p style="color:#7a8a7a;line-height:1.9;margin-bottom:1rem;font-size:.92rem">12 Jirkolifst mağranın farklı noktalarında konuşlanmış. ARIA koordinasyonuyla hareket ediyorlar. Tek tek değil, grup olarak hedef alıyorlar.</p>
+  <p style="color:#7a8a7a;line-height:1.9;margin-bottom:1rem;font-size:.92rem">Ve mağranın ortasında, bir kayaya sabitlenmiş <strong style="color:var(--a)">eski bir televizyon.</strong> Puffton reklamları döngüde. Mutlu aileler, güneşli plajlar. Ses kapalı. Sadece görüntü. Ve bu görüntü karanlıkta parlarken Jirkolifst'ler etrafında dolaşıyor.</p>`,
+  energy:`<h3 style="font-family:'Bebas Neue',sans-serif;font-size:2.2rem;color:var(--a);margin-bottom:1.5rem">ENERJİ PATLAMA MAĞRASI</h3>
+  <p style="font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--r);margin-bottom:1.2rem">⚠ RADYASYON SEVİYESİ: KRİTİK // KORUMA GEREKLİ</p>
+  <p style="color:#7a8a7a;line-height:1.9;margin-bottom:1rem;font-size:.92rem">Reaktörün çekirdeği, soğutma tankerleri ve türbinleri eş zamanlı patladı. ARIA bunu "KAZA" olarak işaretledi. Ama eş zamanlı üç sistem arızasının olasılığı 1/847,000. Kaza mıydı gerçekten?</p>
+  <p style="color:#7a8a7a;line-height:1.9;margin-bottom:1rem;font-size:.92rem">Deprem 6.7 büyüklüğünde tüm adayı sarstı. Bye Bye Cave'deki eski denekler uyandı. Tesis-02, 05 ve 07 yapısal hasar aldı. Ve 4 prototip — 2'si Tesis-03'ten — dışarı çıktı. Bunlardan biri Milon.</p>`,
+  sun:`<h3 style="font-family:'Bebas Neue',sans-serif;font-size:2.2rem;color:#ffff44;margin-bottom:1.5rem">SUN CAVE — TAM DOSYA</h3>
+  <p style="color:#7a8a7a;line-height:1.9;margin-bottom:1rem;font-size:.92rem">Sun Cave bir mağra değil, bir ağdır. Tüm mağraları ve bazı tesisleri birbirine bağlayan yeraltı koridorları. Hızlı seyahatin tek yolu.</p>
+  <p style="color:#7a8a7a;line-height:1.9;margin-bottom:1rem;font-size:.92rem">MP4 kayıtları: mağranın duvarlarındaki eski cihazlarda görüntü kayıtları var. Bu kayıtlar Milon'un kendi geçmişini anlatıyor. Ve Kurucu Lion'un gerçek niyetini.</p>`,
+  byebye:`<h3 style="font-family:'Bebas Neue',sans-serif;font-size:2.2rem;color:#bb44ff;margin-bottom:1.5rem">BYE BYE CAVE</h3>
+  <p style="font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--r);margin-bottom:1.2rem">OMEGA GİZLİLİK // GİRİŞ: TEK YÖN</p>
+  <p style="color:#7a8a7a;line-height:1.9;margin-bottom:1rem;font-size:.92rem">Başarısız deneylerin atıldığı son nokta. Ama içinde değerli biri var: LVL-8 kartlı eski tesis müdürü. Bu kart, tüm tesis sistemlerine, ARIA'nın gizli menülerine ve imha protokollerine erişim sağlıyor.</p>
+  <p style="color:#7a8a7a;line-height:1.9;margin-bottom:1rem;font-size:.92rem">İçeriden çıkan yok. Ama Milon çıkıyor. Bu sorunun cevabı: ÇOCUK. Ve bu, üçüncü sonun kapısını açıyor.</p>`,
+  bungalov:`<h3 style="font-family:'Bebas Neue',sans-serif;font-size:2.2rem;color:#ff99cc;margin-bottom:1.5rem">BUNGALOV — ARIA CONTROL</h3>
+  <p style="color:#7a8a7a;line-height:1.9;margin-bottom:1rem;font-size:.92rem">Dışarıdan normal görünüyor. Pembe boyası solmuş, ahşap çürümeye başlamış. Ama içi temiz — sanki biri düzenli olarak geliyor gibi.</p>
+  <p style="color:#7a8a7a;line-height:1.9;margin-bottom:1rem;font-size:.92rem">Ranza altındaki kapaktan aşağı inildiğinde: turuncu server ışığı. Sonsuzluğa uzanan kolonlar. Sıcaklık burada çok yüksek. Ve o kasada, Evangelizm Anahtarı. Üzerinde tek kelime. Ve bu kelime her şeyi değiştiriyor.</p>`,
+  imha:`<h3 style="font-family:'Bebas Neue',sans-serif;font-size:2.2rem;color:var(--r);margin-bottom:1.5rem">İMHA ODASI</h3>
+  <p style="font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--r);margin-bottom:1.2rem">GİZLİLİK: MUTLAK // ERİŞİM: SADECE RİTOL KARTI</p>
+  <p style="color:#7a8a7a;line-height:1.9;margin-bottom:1rem;font-size:.92rem">Ritol'den alınan kart, bu odanın koordinatlarını yükler. Orada Evangelizm Anahtarını kullanma yeri var. Ama ilk giren Milon değil — Kurucu Hayaleti orada duruyor. Ve bir şey söylüyor.</p>
+  <p style="color:#7a8a7a;line-height:1.9;margin-bottom:1rem;font-size:.92rem">Ne söylediğini anlayan hayatta kalmadı. Ama Milon anlıyor. Ve o andan sonra her şey değişiyor.</p>`
 };
 
-const tooltip = document.getElementById('map-tooltip');
-function showTooltip(e, key) {
-  const d = tooltipData[key];
-  if(!d) return;
-  tooltip.innerHTML=`<h4>${d.name}</h4><p>${d.text}</p>`;
-  tooltip.style.left=(e.offsetX||e.layerX||100)+'px';
-  tooltip.style.top=(e.offsetY||e.layerY||100)+'px';
-  tooltip.classList.add('show');
-  setTimeout(()=>tooltip.classList.remove('show'),4000);
+function openModal(key){
+  if(!modalData[key])return;
+  document.getElementById('modal-content').innerHTML=modalData[key];
+  document.getElementById('modal').classList.add('on');
 }
+document.getElementById('modal').addEventListener('click',function(e){
+  if(e.target===this)this.classList.remove('on');
+});
 
-// LORE EXPAND
-const loreContent = {
-  ritol: `<h3 style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--green);margin-bottom:1.5rem;">RİTOL MAĞRASI — TAM RAPOR</h3>
-    <p style="font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--amber);margin-bottom:1rem;">GİZLİLİK SEVİYESİ: OMEGA // ERİŞİM: SEVİYE 4+</p>
-    <p style="color:#889;line-height:1.9;margin-bottom:1rem;">Ritol Mağrası, Omega Adasının en stratejik konumudur. "İmha Anahtarı" olarak bilinen bomba erişim kartı bu mağranın en derin noktasında saklanmaktadır. Kartı alan kişi, İmha Odasının haritasına otomatik olarak erişir.</p>
-    <p style="color:#889;line-height:1.9;margin-bottom:1rem;">Mağra boyunca çalışır vaziyette bir televizyon bulunmaktadır. Bu televizyonda Puffton Corporation'ın "Live a Beautiful Life" reklam kampanyası döngüsel olarak yayınlanmaktadır. Reklamlarda mutlu aileler, güneşli plajlar ve Puffton ürünleri görünmektedir.</p>
-    <p style="color:#889;line-height:1.9;margin-bottom:1rem;"><strong style="color:var(--red)">12 aktif Jirkolifst</strong> mağrada ikamet etmektedir. Sürü halinde hareket ederler ve ses tuzağına yanıt verirler. Tiz frekans silahı burada kritik önem taşır.</p>
-    <p style="font-family:'Share Tech Mono',monospace;font-size:.75rem;color:#445;margin-top:1.5rem;">PUFFTON FIELD NOTES // ARAŞTIRMACI KAYDI // 72 SAAT ÖNCE GÜNCELLENDİ</p>`,
-  energy:`<h3 style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--amber);margin-bottom:1.5rem;">ENERJİ PATLAMASI MAĞRASI — TAM RAPOR</h3>
-    <p style="font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--red);margin-bottom:1rem;">⚠ RADYASYON SEVİYESİ: KRİTİK // KORUMASIZ GİRİŞ YASAK</p>
-    <p style="color:#889;line-height:1.9;margin-bottom:1rem;">Olay: Nükleer reaktörün çekirdeği, soğutma tankerleri ve türbinleri eş zamanlı patlamıştır. Bunun bir kaza mı yoksa sabotaj mı olduğu hâlâ tartışmalıdır. ARIA kayıtları "KAZA" olarak işaretlemiştir — ancak eş zamanlı üç arızanın olasılığı astronomik derecede düşüktür.</p>
-    <p style="color:#889;line-height:1.9;margin-bottom:1rem;">Deprem: 6.7 büyüklüğünde sarsıntı tüm adayı etkiledi. Bye Bye Cave'deki eski denekler bu sarsıntıyla uyandı. 3 tesis çöktü ya da tahliye edildi.</p>
-    <p style="color:#889;line-height:1.9;margin-bottom:1rem;"><strong style="color:var(--amber)">4 prototip deneği</strong> bu kaosta kaçtı. Bunlardan 2'si bizim tesisimizden (Tesis-03). Milon bunlardan biri olabilir.</p>`
+/* ══ TIMELINE ══ */
+const events=[
+  {d:"YILLAR ÖNCE // KURULUŞ",t:"Puffton Corporation & Kurucu Lion",b:"Kurucu Lion, 'insanlığın bir sonraki aşaması' amacıyla Puffton Corp.'u kurdu. Omega Adası'nda ilk tesis inşaatı başladı. Slogan seçildi: 'Live a Beautiful Life.'"},
+  {d:"FAZ-1 // İLK DENEY",t:"İlk Deneğin Yaratılması",b:"Kurucu Lion'un bizzat tasarladığı ilk denek aktive edildi. Denek tüm araştırmacılarla birlikte Lion'u öldürdü. Kamera kayıtları mevcut. Tesis kilitlendi. ARIA aktive edildi."},
+  {d:"FAZ-2 // GENIŞLEME",t:"8 Tesis — Tam Kapasite",b:"Omega Adası'nda 8 tesis çalışır hale getirildi. Jirkolifst üretimi başladı. ARIA v1.0'dan v9.4'e güncellendi. Omega Protokolü imzalandı."},
+  {d:"KRİTİK OLAY // ENERJİ KAZASI",t:"Nükleer Reaktör Patlaması",b:"Energy Cave'deki reaktörün çekirdeği, soğutma ve türbinleri eş zamanlı patladı. 6.7 deprem. 4 prototip kaçtı. 3 tesis terk edildi. Tesis sayısı 5'e düştü."},
+  {d:"KURTARMA FAZ // YAPI",t:"Omega Protokolü Aktive",b:"Kalan 5 tesis güçlendirildi. Evangelizm Anahtarı üretildi ve bungalov server odasına yerleştirildi. ARIA v9.4.1'e güncellendi. Ada karantinaya alındı."},
+  {d:"BUGÜN // UYANIS",t:"Milon — Denek 003-M — Uyanıyor",b:"Tesis-03, Koridor-C. Beklenmedik bilinç geri dönüşü. Diğer denekler yok. Jirkolifst aktivitesi zirveye ulaştı. ARIA: 'Seni bekliyordum. 2,847 gündür.'"}
+];
+
+const tl2=document.getElementById('tl');
+events.forEach(e=>{
+  const d=document.createElement('div');d.className='tli';
+  d.innerHTML=`<div class="tldot"></div><div class="tldate">${e.d}</div><div class="tltit">${e.t}</div><div class="tlbody">${e.b}</div>`;
+  tl2.appendChild(d);
+});
+
+/* ══ MAP TOOLTIPS ══ */
+const ttdata={
+  t03:{n:"Tesis-03 [AKTİF — SEN BURADASİN]",t:"Milon'un uyandığı tesis. Koridor-C, Blok-D. ARIA aktif izlemede. Erişim: Seviye 2+. En son bilinen canlı denek konumu."},
+  ritol:{n:"Ritol Mağrası",t:"İmha bombası erişim kartı burada. 12 aktif Jirkolifst. Çalışan TV — Puffton reklamları döngüde. Tehlike: KRİTİK."},
+  energy:{n:"Enerji Patlama Mağrası ☢",t:"Radyoaktif bölge. Reaktör enkaz hâlâ sıcak. Su Danası türü buradan çıktı. Korumasız giriş: ölümcül."},
+  sun:{n:"Sun Cave — Merkez Ağ",t:"Tüm mağralar bu ağla bağlantılı. Her noktadan giriş. Yamyanlar ve yeni oluşumlar. MP4 kayıtları içeriyor."},
+  byebye:{n:"Bye Bye Cave",t:"LVL-8 kart burada. Tek yönlü giriş. Depremin uyandırdığı eski denekler. 14+ alt mağra. İçeriden çıkan yok — teorik olarak."},
+  bungalov:{n:"Bungalov — ARIA Control ▲",t:"Pembe üçgen bina. Rus mimarisi. Ranza altında gizli kapak. Turuncu server tüneli. Evangelizm Anahtarı içeride."},
+  t01:{n:"Tesis-01 [TERK EDİLMİŞ]",t:"Nükleer kaza kurbanı. Son kayıt: deprem günü. Tüy Yemeyeciler tarafından temizlenmiş."},
+  t02:{n:"Tesis-02 [TERK EDİLMİŞ]",t:"Yapısal hasar nedeniyle tahliye. Jirkolifst sürüsü ele geçirdi."},
+  t04:{n:"Tesis-04 [AKTİF]",t:"Kuzey sektör. Erişim seviyesi 3+. Jirkolifst gen laboratuvarı içerdiği bildirilmiş."},
+  t05:{n:"Tesis-05 [AKTİF]",t:"Doğu sektör. Erişim seviyesi 3+. Son bilinen Araştırmacı Kurs konumu."},
+  t06:{n:"Tesis-06 [AKTİF]",t:"Güney sektör. Erişim seviyesi 4+. ARIA ikincil sunucu merkezi."},
+  imha:{n:"İmha Odası 💣",t:"Ritol kartı gerekiyor. Evangelizm Anahtarı burada kullanılır. Kurucu Hayaleti burada. Koordinatlar Ritol'den yükleniyor."},
+  koy1:{n:"Kayıp Köy",t:"Dışarıdan gelenler kurmuş. Birkaç ay önce bağlantı kesildi. Su Danası aktivitesiyle bağlantılı."},
+  koy2:{n:"Çürümüş Köy",t:"Eski Puffton personeli yerleşmiş. Büyük çoğunluğu dönüşüm geçirdi. Az sayıda hayatta kalan gizleniyor."}
 };
 
-function expandLore(key) {
-  if(!loreContent[key]) return;
-  document.getElementById('lore-content').innerHTML = loreContent[key];
-  document.getElementById('lore-overlay').style.display='flex';
+const mttBox=document.getElementById('mtt-box');
+function mtt(e,k){
+  const d=ttdata[k];if(!d)return;
+  mttBox.innerHTML=`<h4>${d.n}</h4><p>${d.t}</p>`;
+  const svg=document.getElementById('msvg');
+  const rect=svg.getBoundingClientRect();
+  let x=e.clientX-rect.left+15,y=e.clientY-rect.top-20;
+  if(x+260>rect.width)x-=280;
+  mttBox.style.left=x+'px';mttBox.style.top=y+'px';
+  mttBox.classList.add('on');
+  clearTimeout(mttBox._t);
+  mttBox._t=setTimeout(()=>mttBox.classList.remove('on'),4500);
 }
 
-// SCROLL ANIMATIONS
-const observer = new IntersectionObserver((entries)=>{
-  entries.forEach(e=>{
-    if(e.isIntersecting){
-      e.target.classList.add('visible');
-      // animate threat bars
-      e.target.querySelectorAll('.threat-fill[data-width]').forEach(b=>{
-        b.style.width=b.dataset.width;
-      });
+/* ══ UPTIME COUNTER ANIMATION ══ */
+let up=0;
+const upc=document.getElementById('upcounter');
+const upInt=setInterval(()=>{
+  up+=37;if(up>=2847){up=2847;clearInterval(upInt);}
+  upc.textContent=up.toLocaleString();
+},40);
+
+/* ══ SCROLL OBSERVER ══ */
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(en=>{
+    if(en.isIntersecting){
+      en.target.classList.add('on');
+      en.target.querySelectorAll('.tfill[data-w]').forEach(b=>{b.style.width=b.dataset.w});
     }
   });
-},{threshold:0.1});
+},{threshold:0.08});
+document.querySelectorAll('.fi,.tli,.cc').forEach(el=>obs.observe(el));
 
-document.querySelectorAll('.fade-in,.tl-item,.creature-card').forEach(el=>observer.observe(el));
+/* ══ ARIA DAYS TICKER ══ */
+let aDays=2847;
+setInterval(()=>{
+  const el=document.getElementById('aria-days');
+  if(el)el.textContent=(aDays+(Math.random()>.98?1:0)).toLocaleString()+' GÜN';
+},5000);
 
-// CURSOR GLOW
-document.addEventListener('mousemove',e=>{
-  const glow = document.getElementById('cursor-glow');
-  if(glow){ glow.style.left=e.clientX+'px'; glow.style.top=e.clientY+'px'; }
+/* ══ KEYBOARD CLOSE MODAL ══ */
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape')document.getElementById('modal').classList.remove('on');
 });
-
-// Create cursor glow element
-const glow = document.createElement('div');
-glow.id='cursor-glow';
-glow.style.cssText='position:fixed;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(0,255,136,0.03),transparent 70%);transform:translate(-50%,-50%);pointer-events:none;z-index:9997;transition:left .1s,top .1s;';
-document.body.appendChild(glow);
 </script>
 </body>
 </html>
