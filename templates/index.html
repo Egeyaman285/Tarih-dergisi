@@ -1,1466 +1,860 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>FIRST OF THE FOREST | PUFFTON CORP. OMEGA ARCHIVE</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Bebas+Neue&family=Oswald:wght@300;400;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-<noscript><link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Bebas+Neue&family=Oswald:wght@300;400;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet"></noscript>
-<style>
-:root{
-  --bg:#020304;--bg2:#040810;--g:#00ff88;--g2:#00cc66;--g3:#004422;
-  --r:#ff1a3a;--o:#ff6600;--a:#ffaa00;--b:#0066ff;--p:#ff99cc;
-  --txt:#b8d8b8;--mu:#445544;--pan:rgba(0,255,136,.04);--bor:rgba(0,255,136,.14);
-  --dbor:rgba(255,26,58,.25);--wbor:rgba(255,170,0,.2);
-  font-synthesis:none;
-}
-*{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
-  background:var(--bg);
-  color:var(--txt);
-  font-family:'Oswald','Arial Narrow',Arial,sans-serif;
-  overflow-x:hidden;
-  cursor:crosshair;
-  min-height:100vh;
-}
+python3 << 'PYEOF'
+with open('/mnt/user-data/outputs/scp_xxxx.html','r') as f:
+    html = f.read()
 
-/* ── SCANLINES ── */
-body::after{
-  content:'';position:fixed;inset:0;pointer-events:none;z-index:9997;
-  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,136,.012) 2px,rgba(0,255,136,.012) 4px);
-  animation:scan 10s linear infinite;
+# ── NEW CSS ──────────────────────────────────────────────────────────
+NEW_CSS = """
+/* ── CLOCK & NAV EXTRA ── */
+.nav-clock{
+  font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--amber);
+  letter-spacing:.15em;border:1px solid var(--border2);padding:.2rem .6rem;
+  background:rgba(0,0,0,.4);
 }
-@keyframes scan{to{background-position:0 200px}}
-body[data-noscan]::after{display:none}
+.nav-clock span{color:var(--red)}
 
-/* ── CURSOR GLOW ── */
-#cg{
-  position:fixed;width:300px;height:300px;border-radius:50%;
-  background:radial-gradient(circle,rgba(0,255,136,.025),transparent 70%);
-  transform:translate(-50%,-50%);pointer-events:none;z-index:9996;
-  transition:left .07s,top .07s;will-change:left,top;
-}
-
-/* ── BOOT SCREEN ── */
-#boot{
-  position:fixed;inset:0;background:#000;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;z-index:10000;
-  font-family:'Share Tech Mono',monospace,'Courier New',monospace;
-}
-#boot.hide{opacity:0;transition:opacity 1.4s ease;pointer-events:none}
-#bl{
-  font-family:'Bebas Neue','Impact',sans-serif;
-  font-size:clamp(3rem,9vw,9rem);color:var(--g);
-  letter-spacing:.3em;text-shadow:0 0 50px var(--g),0 0 120px var(--g2);
-  animation:flk .08s step-end 2.2s 4;
-}
-@keyframes flk{50%{opacity:0}}
-#bs{color:var(--mu);font-size:.85rem;margin-top:.8rem;letter-spacing:.35em;font-family:monospace}
-#bw{width:320px;height:2px;background:#0a0a0a;margin-top:2.5rem;overflow:hidden;border:1px solid #111}
-#bb{height:100%;background:var(--g);width:0;animation:lb 4s ease forwards;box-shadow:0 0 14px var(--g)}
-@keyframes lb{to{width:100%}}
-#bt{margin-top:1.5rem;font-size:.72rem;color:#334;min-height:1.2rem;text-align:center;font-family:monospace}
-
-/* ── HERO ── */
-#hero{
-  min-height:100vh;position:relative;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;overflow:hidden;
-  background:radial-gradient(ellipse at 50% 35%,#031a07 0%,var(--bg) 72%);
-}
-.hfog{
-  position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(ellipse 65% 45% at 50% 115%,rgba(0,90,30,.7) 0%,transparent 70%),
-    linear-gradient(to top,#010f04 0%,transparent 55%);
-}
-.trees-wrap{position:absolute;bottom:0;left:0;right:0;height:60vh;overflow:hidden;pointer-events:none}
-.tree{position:absolute;bottom:0;transform-origin:bottom center;animation:sway 5s ease-in-out infinite}
-@keyframes sway{0%,100%{transform:rotate(0deg)}30%{transform:rotate(1.8deg)}70%{transform:rotate(-1.4deg)}}
-
-.hero-eyecatch{position:relative;z-index:2;text-align:center;padding:0 1rem}
-.hero-pre{
-  font-family:'Share Tech Mono',monospace,'Courier New',monospace;
-  font-size:.75rem;color:var(--a);letter-spacing:.45em;
-  margin-bottom:1.2rem;animation:fadeUp 1.5s .2s both;
-}
-.hero-title{
-  font-family:'Bebas Neue','Impact',sans-serif;
-  font-size:clamp(3.5rem,14vw,14rem);line-height:.88;color:var(--g);
-  letter-spacing:.04em;text-align:center;
-  text-shadow:0 0 80px rgba(0,255,136,.55),0 0 160px rgba(0,255,136,.2);
-  animation:fadeUp 1.5s both;
-}
-.hero-sub{
-  font-family:'Orbitron',monospace;font-size:clamp(.5rem,1.4vw,.9rem);
-  color:var(--a);letter-spacing:.4em;text-transform:uppercase;
-  margin-top:1.8rem;animation:fadeUp 1.5s .4s both;
-}
-.hero-tag{
-  font-family:'Share Tech Mono',monospace;color:rgba(0,255,136,.38);
-  font-size:.82rem;margin-top:.7rem;animation:fadeUp 1.5s .6s both;
-}
-@keyframes fadeUp{from{opacity:0;transform:translateY(55px)}to{opacity:1;transform:none}}
-
-.hero-btns{
-  margin-top:2.8rem;display:flex;gap:1.2rem;justify-content:center;
-  flex-wrap:wrap;animation:fadeUp 1.5s .8s both;
-}
-.hbtn{
-  font-family:'Share Tech Mono',monospace;font-size:.75rem;padding:.85rem 2.2rem;
-  text-decoration:none;letter-spacing:.22em;text-transform:uppercase;transition:all .3s;
-  border:1px solid;position:relative;overflow:hidden;cursor:pointer;background:transparent;
-}
-.hbtn::before{
-  content:'';position:absolute;inset:0;background:currentColor;opacity:0;
-  transform:scaleX(0);transform-origin:left;transition:transform .3s,opacity .3s;
-}
-.hbtn:hover::before{transform:scaleX(1);opacity:.08}
-.hbtn.primary{border-color:var(--g);color:var(--g)}
-.hbtn.primary:hover{box-shadow:0 0 25px rgba(0,255,136,.3)}
-.hbtn.sec{border-color:var(--mu);color:var(--mu)}
-.hbtn.sec:hover{border-color:var(--a);color:var(--a)}
-.hbtn.blue-btn{border-color:rgba(0,150,255,.4);color:rgba(0,150,255,.6)}
-.hbtn.blue-btn:hover{border-color:#0099ff;color:#0099ff}
-
-.scroll-hint{
-  position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);
-  display:flex;flex-direction:column;align-items:center;gap:.5rem;z-index:2;
-  color:var(--mu);font-family:monospace;font-size:.7rem;
-  animation:bob 2.2s ease-in-out infinite;
-}
-@keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}55%{transform:translateX(-50%) translateY(9px)}}
-.sarrow{width:1px;height:44px;background:linear-gradient(to bottom,var(--mu),transparent)}
-
-/* ── NAV ── */
-nav{
-  position:sticky;top:0;z-index:200;background:rgba(2,3,4,.94);
-  backdrop-filter:blur(16px);border-bottom:1px solid var(--bor);
-  padding:.75rem 2rem;display:flex;align-items:center;gap:2rem;flex-wrap:wrap;
-}
-nav.scrolled{box-shadow:0 0 30px rgba(0,255,136,.07)}
-.nlogo{
-  font-family:'Bebas Neue','Impact',sans-serif;
-  font-size:1.5rem;color:var(--g);letter-spacing:.18em;text-shadow:0 0 12px var(--g2);
-}
-.nlinks{display:flex;gap:1.2rem;flex-wrap:wrap;margin-left:auto}
-.nlinks a{
-  font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--mu);
-  text-decoration:none;letter-spacing:.14em;text-transform:uppercase;
-  transition:color .2s;padding:.28rem .55rem;
-}
-.nlinks a:hover{color:var(--g)}
-
-/* ── QUICK SIDEBAR ── */
-#quickbar{
-  position:fixed;right:1.5rem;top:50%;transform:translateY(-50%);
-  z-index:300;display:flex;flex-direction:column;gap:.6rem;
-}
-.qb-item{
-  width:42px;height:42px;border:1px solid var(--bor);background:rgba(2,3,4,.85);
-  display:flex;align-items:center;justify-content:center;cursor:pointer;
-  font-size:1.1rem;transition:all .25s;backdrop-filter:blur(8px);position:relative;
-}
-.qb-item:hover{border-color:var(--g);box-shadow:0 0 15px rgba(0,255,136,.25);transform:scale(1.12)}
-.qb-label{
-  position:absolute;right:52px;background:rgba(0,0,0,.95);
-  border:1px solid var(--bor);padding:.3rem .6rem;font-family:monospace;
-  font-size:.65rem;color:var(--g);white-space:nowrap;opacity:0;pointer-events:none;
-  transition:opacity .2s;
-}
-.qb-item:hover .qb-label{opacity:1}
-
-/* ── HUD ── */
-#hud{
-  position:fixed;top:5rem;left:1.5rem;z-index:300;
-  font-family:'Share Tech Mono',monospace;font-size:.68rem;
-  color:rgba(0,255,136,.4);line-height:1.9;pointer-events:none;
-}
-.hud-line{display:flex;gap:.5rem;align-items:center}
-.hud-dot{width:5px;height:5px;border-radius:50%;background:var(--g);animation:bl .85s step-end infinite}
-
-/* ── LAYOUT ── */
-.sec{padding:7rem 2rem;max-width:1440px;margin:0 auto}
-.slabel{
-  font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--a);
-  letter-spacing:.32em;text-transform:uppercase;margin-bottom:.7rem;
-  display:flex;align-items:center;gap:.7rem;
-}
-.slabel::before{content:'//';color:var(--mu)}
-h2.st{
-  font-family:'Bebas Neue','Impact',sans-serif;
-  font-size:clamp(2.8rem,5.5vw,6rem);color:var(--g);
-  letter-spacing:.04em;line-height:.95;margin-bottom:3.5rem;
-  text-shadow:0 0 50px rgba(0,255,136,.25);
-}
-
-/* ── STATS ── */
-.stats{display:flex;gap:1.5rem;flex-wrap:wrap;margin-bottom:4rem}
-.sbox{
-  flex:1;min-width:130px;background:var(--pan);border:1px solid var(--bor);
-  padding:1.5rem;text-align:center;transition:all .35s;
-}
-.sbox:hover{border-color:var(--g2);transform:translateY(-5px)}
-.snum{font-family:'Bebas Neue','Impact',sans-serif;font-size:3.8rem;color:var(--g);line-height:1}
-.slbl{font-family:monospace;font-size:.65rem;color:var(--mu);margin-top:.3rem;letter-spacing:.2em}
-
-/* ── DANGER ALERTS ── */
-.dalert{
-  background:rgba(255,26,58,.09);border:1px solid rgba(255,26,58,.28);
-  border-left:3px solid var(--r);padding:1rem 1.5rem;margin-bottom:1.5rem;
-  font-family:'Share Tech Mono',monospace;font-size:.78rem;
-  color:rgba(255,170,170,.8);display:flex;gap:1rem;align-items:flex-start;
-}
-.dai{color:var(--r);font-size:1.1rem;flex-shrink:0}
-
-/* ── CHAPTER HEADERS ── */
-.chapter{
-  background:linear-gradient(135deg,rgba(0,255,136,.04),transparent);
-  border-left:3px solid var(--g);padding:1.5rem 2rem;margin:3rem 0;
+/* ── OCTOPUS SECTION ── */
+#octopus-section{
+  padding:5rem 0;
+  background:radial-gradient(ellipse 80% 60% at 50% 50%,#030a14,var(--bg) 80%);
+  border-top:1px solid var(--border2);border-bottom:1px solid var(--border2);
   position:relative;overflow:hidden;
 }
-.chnum{font-family:monospace;font-size:.7rem;color:var(--mu);letter-spacing:.3em;margin-bottom:.4rem}
-.chtit{
-  font-family:'Bebas Neue','Impact',sans-serif;
-  font-size:clamp(1.5rem,3vw,2.5rem);color:var(--g);
-  letter-spacing:.06em;line-height:1;
+#octopus-canvas{display:block;margin:0 auto;cursor:pointer}
+.oct-label{
+  text-align:center;font-size:.65rem;color:var(--ink3);letter-spacing:.3em;
+  margin-top:1rem;
 }
-.chsub{font-size:.9rem;color:#667;margin-top:.5rem;line-height:1.7;font-family:monospace}
+.oct-info{
+  max-width:700px;margin:2rem auto 0;padding:0 1.5rem;
+  display:grid;grid-template-columns:1fr 1fr;gap:1rem;
+}
+.oct-card{
+  background:rgba(0,30,60,.3);border:1px solid rgba(0,100,200,.2);
+  padding:1rem;font-size:.75rem;color:var(--ink2);line-height:1.8;
+}
+.oct-card strong{color:rgba(100,180,255,.9);display:block;margin-bottom:.3rem;font-size:.7rem;letter-spacing:.2em}
 
-/* ── STORY BODY ── */
-.story-body{max-width:780px}
-.sp{font-size:1rem;color:#7a8c7a;line-height:2;margin-bottom:1.5rem;font-weight:300}
-.sp strong{color:var(--a);font-weight:600}
-.sp em{color:var(--g);font-style:normal}
-.sp .red{color:var(--r)}
-.quote{
-  border-left:2px solid var(--g);padding:.8rem 1.5rem;margin:2rem 0;
-  font-family:'Share Tech Mono',monospace;font-size:.82rem;
-  color:rgba(0,255,136,.6);background:rgba(0,255,136,.025);
+/* ── SVG EXPERIMENT PHOTOS ── */
+.exp-photos{display:flex;gap:1rem;flex-wrap:wrap;margin:1.2rem 0}
+.exp-photo{
+  flex:1;min-width:200px;position:relative;
+  border:1px solid var(--border2);background:#0a0a08;overflow:hidden;
 }
-
-/* ── STORY CARDS ── */
-.sgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem}
-.sc{
-  background:var(--pan);border:1px solid var(--bor);padding:2rem;
-  position:relative;overflow:hidden;transition:all .35s;
-}
-.sc:hover{border-color:var(--g2);transform:translateY(-5px)}
-.sc::before{
-  content:'';position:absolute;top:0;left:0;width:3px;height:100%;
-  background:var(--g);transform:scaleY(0);transform-origin:bottom;transition:transform .45s;
-}
-.sc:hover::before{transform:scaleY(1)}
-.cn{
-  font-family:'Bebas Neue','Impact',sans-serif;font-size:4.5rem;
-  color:rgba(0,255,136,.07);line-height:1;position:absolute;top:.3rem;right:.8rem;
-}
-.ct{font-size:1.25rem;color:var(--a);margin-bottom:.9rem;text-transform:uppercase;font-weight:600}
-.cb{font-size:.95rem;color:#7a8a7a;line-height:1.85}
-
-/* ── MAP ── */
-#map-container{
-  position:relative;width:min(700px,90vw);height:min(700px,90vw);
-  margin:0 auto;
-}
-#map-canvas{
-  border-radius:50%;overflow:hidden;border:2px solid rgba(0,255,136,.25);
-  box-shadow:0 0 60px rgba(0,255,136,.15),inset 0 0 40px rgba(0,0,0,.8);
-  width:100%;height:100%;
-}
-#msvg{width:100%;height:100%;display:block;border-radius:50%}
-.mtt{
-  position:absolute;background:rgba(0,0,0,.97);border:1px solid var(--g);
-  padding:1rem 1.4rem;font-family:monospace;font-size:.76rem;color:var(--txt);
-  pointer-events:none;opacity:0;transition:opacity .2s;max-width:260px;z-index:60;
-  box-shadow:0 0 25px rgba(0,255,136,.18);min-width:180px;
-  transform:translateX(-50%);left:50%;top:calc(100% + 20px);
-}
-.mtt.on{opacity:1}
-.mtt h4{color:var(--g);font-family:'Oswald',sans-serif;font-size:1.05rem;margin-bottom:.5rem}
-.mlegend{
-  display:flex;gap:1.5rem;flex-wrap:wrap;margin-top:1.8rem;
-  font-family:monospace;font-size:.72rem;color:var(--mu);justify-content:center;
-}
-.mli{display:flex;align-items:center;gap:.5rem}
-.mlidot{width:10px;height:10px;border-radius:50%}
-
-/* ── CREATURES ── */
-.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:1.5rem}
-.cc{
-  background:var(--pan);border:1px solid var(--dbor);overflow:hidden;
-  position:relative;transition:all .38s;
-}
-.cc:hover{transform:scale(1.025) translateY(-4px);border-color:var(--r)}
-.cart{
-  height:190px;display:flex;align-items:center;justify-content:center;
-  background:linear-gradient(135deg,#0a0404,#150808);position:relative;
-}
-.cemo{font-size:5.5rem;animation:flt 3.5s ease-in-out infinite}
-@keyframes flt{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-12px) rotate(2deg)}}
-.cinfo{padding:1.5rem}
-.cname{
-  font-family:'Bebas Neue','Impact',sans-serif;
-  font-size:1.6rem;letter-spacing:.08em;
-}
-.ccls{font-family:monospace;font-size:.68rem;color:var(--a);margin:.25rem 0 .7rem}
-.cdesc{font-size:.88rem;color:#6a7a6a;line-height:1.75}
-.tbar2{margin-top:.9rem}
-.tlbl{font-family:monospace;font-size:.62rem;color:#334;display:flex;justify-content:space-between}
-.ttrack{height:3px;background:#0d0d0d;margin-top:.28rem;overflow:hidden}
-.tfill{height:100%;background:linear-gradient(90deg,var(--g2),var(--a),var(--r));transition:width 1.2s cubic-bezier(.16,1,.3,1)}
-.cthreat{
-  position:absolute;top:.6rem;right:.6rem;font-family:'Bebas Neue','Impact',sans-serif;
-  font-size:1rem;padding:.15rem .4rem;border:1px solid;letter-spacing:.05em;
+.exp-photo svg{width:100%;height:auto;display:block}
+.exp-photo-caption{
+  position:absolute;bottom:0;left:0;right:0;
+  background:rgba(0,0,0,.8);font-size:.6rem;color:var(--ink3);
+  padding:.3rem .5rem;letter-spacing:.15em;
 }
 
-/* ── SEARCH BOX ── */
-#search-wrap{display:flex;justify-content:flex-end;margin-bottom:2rem}
-#search-box{
-  background:rgba(0,255,136,.04);border:1px solid var(--bor);color:var(--txt);
-  font-family:monospace;font-size:.76rem;padding:.55rem 1rem;
-  outline:none;width:260px;transition:border-color .2s;
+/* ── CHEATCODE PANEL ── */
+#cheat-overlay{
+  display:none;position:fixed;inset:0;z-index:9500;
+  background:rgba(0,0,0,.96);
+  font-family:'Share Tech Mono',monospace;
+  flex-direction:column;align-items:center;justify-content:center;
+  gap:1.5rem;
 }
-#search-box:focus{border-color:var(--g2)}
-#search-box::placeholder{color:var(--mu)}
-
-/* ── CAVES ── */
-.lgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:1.5rem}
-.lf{
-  background:rgba(255,170,0,.06);border:1px solid var(--wbor);padding:1.6rem;
-  position:relative;cursor:pointer;transition:all .3s;
+#cheat-overlay.on{display:flex}
+.cheat-title{
+  font-size:clamp(1.5rem,5vw,3.5rem);color:var(--amber2);letter-spacing:.3em;
+  text-shadow:0 0 40px rgba(200,140,10,.5);
+  animation:flicker 3s infinite;
 }
-.lf:hover{background:rgba(255,170,0,.12);transform:translateY(-4px)}
-.lfic{font-size:2.2rem;margin-bottom:.9rem}
-.lft{color:var(--a);font-size:1.15rem;text-transform:uppercase;margin-bottom:.5rem;font-weight:600}
-.lfp{font-family:monospace;font-size:.72rem;color:#555;line-height:1.65}
-.lff{
-  margin-top:1rem;font-family:monospace;font-size:.62rem;color:#334;
-  display:flex;justify-content:space-between;
+.cheat-sub{font-size:.75rem;color:var(--ink3);letter-spacing:.25em}
+.cheat-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:1rem;max-width:780px;width:90%;
 }
-.clamp{
-  position:absolute;top:.75rem;right:.75rem;border:2px solid var(--r);color:var(--r);
-  font-family:'Bebas Neue','Impact',sans-serif;font-size:.95rem;
-  padding:.1rem .45rem;letter-spacing:.1em;transform:rotate(11deg);opacity:.55;
+.cheat-card{
+  background:rgba(200,140,10,.05);border:1px solid rgba(200,140,10,.2);
+  padding:1.2rem;cursor:pointer;transition:all .25s;
 }
-
-/* ── ARIA SECTION ── */
-.apanel{
-  background:linear-gradient(135deg,#030810,#020508);
-  border:1px solid rgba(0,150,255,.18);padding:3rem;position:relative;overflow:hidden;
+.cheat-card:hover{background:rgba(200,140,10,.12);border-color:var(--amber);transform:scale(1.03)}
+.cheat-card-title{font-size:.8rem;color:var(--amber);letter-spacing:.2em;margin-bottom:.5rem}
+.cheat-card-desc{font-size:.7rem;color:var(--ink3);line-height:1.7}
+.cheat-close{
+  font-size:.7rem;color:var(--ink3);border:1px solid var(--ink3);
+  padding:.4rem 1rem;cursor:pointer;letter-spacing:.2em;
+  transition:all .2s;background:none;
 }
-.apanel::before{
-  content:'ARIA v9.4.1 — ONLINE';position:absolute;top:.9rem;right:1.4rem;
-  font-family:monospace;font-size:.7rem;color:rgba(0,150,255,.28);letter-spacing:.2em;
-  animation:pulse2 3s ease-in-out infinite;
-}
-@keyframes pulse2{0%,100%{opacity:.3}50%{opacity:.8}}
-.agrid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center}
-.avis{position:relative;height:310px;display:flex;align-items:center;justify-content:center}
-.aring{
-  position:absolute;border-radius:50%;border:1px solid rgba(0,150,255,.25);
-  animation:spin 12s linear infinite;
-}
-.aring:nth-child(1){width:290px;height:290px;animation-duration:15s}
-.aring:nth-child(2){width:210px;height:210px;animation-duration:9s;animation-direction:reverse;border-style:dashed}
-.aring:nth-child(3){width:140px;height:140px;animation-duration:5s;border-color:rgba(0,200,255,.45)}
-.aring:nth-child(4){width:80px;height:80px;animation-duration:3s;border-color:rgba(0,255,200,.6);border-style:dotted}
-@keyframes spin{to{transform:rotate(360deg)}}
-.acore{
-  width:55px;height:55px;border-radius:50%;
-  background:radial-gradient(circle,#00ccff,#002244);
-  box-shadow:0 0 35px rgba(0,150,255,.7);z-index:1;
-  animation:apulse 2.2s ease-in-out infinite;
-}
-@keyframes apulse{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
-.ainfo h3{
-  font-family:'Bebas Neue','Impact',sans-serif;
-  font-size:3.5rem;color:#00aaff;margin-bottom:1rem;
-}
-.ainfo p{font-size:.93rem;color:#6a7080;line-height:1.95;margin-bottom:.8rem}
-.astat{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-top:1.5rem}
-.asbox{background:rgba(0,150,255,.05);border:1px solid rgba(0,150,255,.14);padding:.75rem}
-.aslab{font-family:monospace;font-size:.65rem;color:rgba(0,150,255,.5);margin-bottom:.25rem}
-.asval{color:#aab;font-size:1.15rem}
-
-/* ── ARIA CHAT ── */
-.aria-chat{margin-top:2rem;background:rgba(0,10,30,.6);border:1px solid rgba(0,150,255,.15);padding:1.5rem}
-.aria-chat-title{font-family:monospace;font-size:.7rem;color:rgba(0,150,255,.5);letter-spacing:.2em;margin-bottom:1rem}
-.chat-msgs{max-height:240px;overflow-y:auto;margin-bottom:1rem;display:flex;flex-direction:column;gap:.7rem}
-.chat-msgs::-webkit-scrollbar{width:3px}
-.chat-msgs::-webkit-scrollbar-thumb{background:rgba(0,150,255,.3)}
-.chat-msg{padding:.6rem .9rem;font-family:monospace;font-size:.75rem;line-height:1.6}
-.chat-msg.aria{background:rgba(0,100,200,.08);border-left:2px solid #00aaff;color:#88aacc}
-.chat-msg.user{background:rgba(0,255,136,.04);border-right:2px solid var(--g);color:var(--txt);text-align:right}
-.chat-msg.thinking{background:rgba(0,100,200,.05);border-left:2px solid rgba(0,170,255,.3);color:rgba(136,170,204,.6);font-style:italic}
-.msg-name{font-size:.62rem;opacity:.5;margin-bottom:.25rem}
-.chat-input-row{display:flex;gap:.6rem}
-#aria-input{
-  flex:1;background:rgba(0,150,255,.05);border:1px solid rgba(0,150,255,.2);
-  color:#aab;font-family:monospace;font-size:.76rem;padding:.6rem .9rem;outline:none;
-}
-#aria-input:focus{border-color:rgba(0,150,255,.5)}
-#aria-send{
-  background:rgba(0,150,255,.1);border:1px solid rgba(0,150,255,.3);
-  color:#00aaff;font-family:monospace;font-size:.72rem;padding:.6rem 1.2rem;
-  cursor:pointer;transition:all .2s;letter-spacing:.1em;
-}
-#aria-send:hover{background:rgba(0,150,255,.2)}
-#aria-send:disabled{opacity:.4;cursor:not-allowed}
-.cur{display:inline-block;width:.48em;height:1em;background:var(--g);animation:bl .85s step-end infinite;vertical-align:text-bottom}
-@keyframes bl{50%{opacity:0}}
-
-/* ── TIMELINE ── */
-.tl{position:relative;padding-left:2.2rem}
-.tl::before{
-  content:'';position:absolute;left:0;top:0;bottom:0;width:1px;
-  background:linear-gradient(to bottom,transparent,var(--bor) 8%,var(--bor) 92%,transparent);
-}
-.tli{position:relative;margin-bottom:3.2rem;padding-left:2rem;opacity:0;transform:translateX(-22px);transition:all .7s ease}
-.tli.on{opacity:1;transform:none}
-.tldot{
-  position:absolute;left:-2.5rem;top:.3rem;width:13px;height:13px;
-  border-radius:50%;background:var(--bg);border:2px solid var(--g);
-}
-.tldate{font-family:monospace;font-size:.68rem;color:var(--mu);margin-bottom:.35rem}
-.tltit{font-size:1.25rem;color:var(--a);margin-bottom:.45rem;text-transform:uppercase;font-weight:600}
-.tlbody{font-size:.93rem;color:#6a7080;line-height:1.85}
-
-/* ── CONNECTIONS ── */
-.cpanel{
-  background:linear-gradient(135deg,#03070a,#020508);
-  border:1px solid rgba(80,160,255,.13);padding:2.8rem;margin-top:2rem;
-}
-.ctitle{font-size:1.35rem;color:#44aaff;margin-bottom:1.8rem;letter-spacing:.1em}
-.citem{
-  display:flex;gap:1.5rem;align-items:flex-start;margin-bottom:1.8rem;
-  padding-bottom:1.8rem;border-bottom:1px solid rgba(80,160,255,.06);
-}
-.citem:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
-.cgame{
-  font-family:'Bebas Neue','Impact',sans-serif;font-size:1.15rem;
-  color:#66ccff;min-width:130px;line-height:1.3;
-}
-.cdescr{font-size:.9rem;color:#556;line-height:1.75}
-.cbadge{
-  font-family:monospace;font-size:.62rem;padding:.18rem .45rem;
-  border:1px solid rgba(80,255,180,.28);color:rgba(80,255,180,.65);
-  margin-bottom:.4rem;display:inline-block;
+.cheat-close:hover{border-color:var(--red2);color:var(--red2)}
+.cheat-log{
+  font-size:.7rem;color:rgba(100,200,100,.6);letter-spacing:.1em;
+  max-width:700px;width:90%;text-align:center;min-height:1.2rem;
 }
 
-/* ── FACTION PANEL ── */
-#faction-panel{
-  display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
-  z-index:5000;background:#020604;border:1px solid var(--g);padding:2.5rem;
-  max-width:520px;width:90vw;box-shadow:0 0 60px rgba(0,255,136,.12);
+/* ── WATER ESCAPE SCENE ── */
+#escape-section{
+  padding:4rem 0;
+  background:linear-gradient(to bottom,var(--bg),#020810 50%,#031018);
+  border-top:1px solid var(--border2);
+  position:relative;overflow:hidden;
 }
-#faction-panel.on{display:block}
-.faction-title{
-  font-family:'Bebas Neue','Impact',sans-serif;
-  font-size:2rem;color:var(--g);margin-bottom:1.5rem;
+#escape-canvas{display:block;margin:0 auto}
+.escape-text{
+  max-width:700px;margin:1.5rem auto 0;padding:0 1.5rem;
+  font-size:.78rem;color:var(--ink2);line-height:2;text-align:center;
 }
-.faction-item{
-  display:flex;gap:1rem;margin-bottom:1rem;padding:.8rem;
-  background:var(--pan);border:1px solid var(--bor);align-items:center;
+.escape-title{
+  text-align:center;font-size:.9rem;color:rgba(100,180,255,.8);
+  letter-spacing:.3em;margin-bottom:1rem;
 }
-.faction-icon{font-size:1.6rem;width:48px;text-align:center}
-.faction-info h4{color:var(--a);font-size:1rem;margin-bottom:.2rem;font-weight:600}
-.faction-info p{font-family:monospace;font-size:.68rem;color:#556;line-height:1.5}
-.faction-bar{height:3px;margin-top:.5rem;background:#111;overflow:hidden}
-.faction-fill{height:100%;background:linear-gradient(90deg,var(--g),var(--a));transition:width 1s}
-.faction-close{
-  position:absolute;top:1rem;right:1rem;background:none;border:1px solid var(--mu);
-  color:var(--mu);font-family:monospace;font-size:.7rem;padding:.25rem .5rem;cursor:pointer;
-}
-.faction-close:hover{border-color:var(--r);color:var(--r)}
 
-/* ── MODAL ── */
-#modal{
-  display:none;position:fixed;inset:0;background:rgba(0,0,0,.93);
-  z-index:6000;align-items:center;justify-content:center;padding:2rem;
+/* ── CHEAT INPUT HINT ── */
+.cheat-hint{
+  position:fixed;bottom:5rem;left:50%;transform:translateX(-50%);
+  font-size:.6rem;color:rgba(200,140,10,.3);letter-spacing:.3em;
+  pointer-events:none;z-index:100;
+  animation:blink 2s step-end infinite;
 }
-#modal.on{display:flex}
-.mbox{
-  max-width:680px;width:100%;background:#040904;border:1px solid var(--bor);
-  padding:2.8rem;position:relative;overflow-y:auto;max-height:88vh;
-}
-.mclose{
-  position:absolute;top:1rem;right:1rem;background:none;border:1px solid var(--mu);
-  color:var(--mu);font-family:monospace;font-size:.75rem;padding:.3rem .65rem;cursor:pointer;
-}
-.mclose:hover{border-color:var(--r);color:var(--r)}
+"""
 
-/* ── CONTROL PANEL ── */
-#ctrl{
-  position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);
-  z-index:400;display:flex;gap:.5rem;background:rgba(0,0,0,.88);
-  border:1px solid var(--bor);padding:.55rem .8rem;backdrop-filter:blur(16px);
-  flex-wrap:wrap;justify-content:center;max-width:90vw;
-}
-.ctrl-btn{
-  font-family:monospace;font-size:.65rem;padding:.45rem .85rem;
-  border:1px solid;cursor:pointer;letter-spacing:.12em;text-transform:uppercase;
-  transition:all .22s;background:transparent;white-space:nowrap;
-}
-.ctrl-btn.green{border-color:rgba(0,255,136,.25);color:rgba(0,255,136,.5)}
-.ctrl-btn.green:hover,.ctrl-btn.green.active{border-color:var(--g);color:var(--g);background:rgba(0,255,136,.06)}
-.ctrl-btn.red{border-color:rgba(255,26,58,.25);color:rgba(255,26,58,.5)}
-.ctrl-btn.red:hover,.ctrl-btn.red.active{border-color:var(--r);color:var(--r);background:rgba(255,26,58,.06)}
-.ctrl-btn.yellow{border-color:rgba(255,170,0,.25);color:rgba(255,170,0,.5)}
-.ctrl-btn.yellow:hover,.ctrl-btn.yellow.active{border-color:var(--a);color:var(--a);background:rgba(255,170,0,.06)}
-.ctrl-btn.blue{border-color:rgba(0,150,255,.25);color:rgba(0,150,255,.5)}
-.ctrl-btn.blue:hover,.ctrl-btn.blue.active{border-color:#0099ff;color:#0099ff;background:rgba(0,150,255,.06)}
-.ctrl-sep{width:1px;background:var(--bor);margin:0 .2rem;align-self:stretch}
+# ── NEW HTML (octopus + escape + cheat + photos + clock) ──────────────
+NEW_HTML = """
 
-/* ── PARALLAX STRIP ── */
-.pstrip{
-  height:180px;overflow:hidden;position:relative;
-  background:linear-gradient(to bottom,var(--bg),#030f05,var(--bg));
-  display:flex;align-items:center;
-}
-.ptext{
-  font-family:'Bebas Neue','Impact',sans-serif;
-  font-size:clamp(3rem,7vw,8rem);color:rgba(0,255,136,.035);
-  letter-spacing:.35em;white-space:nowrap;animation:mq 22s linear infinite;
-}
-@keyframes mq{from{transform:translateX(105vw)}to{transform:translateX(-105vw)}}
-
-/* ── SCROLL FADE-IN ── */
-.fi{opacity:0;transform:translateY(32px);transition:all .85s cubic-bezier(.16,1,.3,1)}
-.fi.on{opacity:1;transform:none}
-
-/* ── AUDIO VIZ ── */
-.audio-viz{display:flex;gap:2px;align-items:flex-end;height:30px;padding:0 .5rem}
-.audio-bar{width:3px;background:var(--g);border-radius:2px 2px 0 0;animation:audio-wave linear infinite;opacity:.6}
-@keyframes audio-wave{0%,100%{transform:scaleY(.2)}50%{transform:scaleY(1)}}
-
-/* ── FOOTER ── */
-footer{
-  background:#000;border-top:1px solid var(--bor);
-  padding:3.5rem 2rem 7rem;text-align:center;
-  font-family:monospace;font-size:.72rem;color:#223;
-}
-.flogo{
-  font-family:'Bebas Neue','Impact',sans-serif;
-  font-size:2.2rem;color:rgba(0,255,136,.28);letter-spacing:.2em;margin-bottom:1rem;
-}
-.fslogan{color:var(--mu);margin-bottom:.5rem}
-
-/* ── RESPONSIVE ── */
-@media(max-width:768px){
-  .agrid{grid-template-columns:1fr}
-  .avis{height:220px}
-  nav{padding:.7rem 1rem;gap:.8rem}
-  .sec{padding:4rem 1rem}
-  #ctrl{bottom:0;border-radius:0;width:100%;max-width:none;border-left:none;border-right:none;border-bottom:none;padding:.4rem .5rem}
-  footer{padding-bottom:5rem}
-  #quickbar{display:none}
-  #hud{display:none}
-}
-</style>
-</head>
-<body>
-
-<div id="cg"></div>
-
-<!-- HUD -->
-<div id="hud">
-  <div class="hud-line"><div class="hud-dot"></div><span>DENEK: 003-M</span></div>
-  <div class="hud-line"><span style="color:rgba(255,170,0,.4)">⚠ ARIA TAKİPTE</span></div>
-  <div class="hud-line"><span id="hud-time">--:--:--</span></div>
+<!-- ── OCTOPUS MÜREKKEP BÖLÜMÜ ── -->
+<div id="octopus-section">
+  <div class="doc-wrap">
+    <div class="sec-head sr">
+      <div class="sec-eyebrow">ANOMALİK YETENEK — GELİŞMİŞ</div>
+      <div class="sec-title">Mürekkep Kontrolü — Ahtapot Fenomeni</div>
+    </div>
+    <p style="font-size:.82rem;color:var(--ink2);line-height:2;max-width:700px;margin-bottom:1.5rem">
+      2001 yılından itibaren SCP-XXXX'in mürekkebinin <strong>ahtapot tentakülü</strong> benzeri uzantılar oluşturabildiği ve bu uzantılarla yakındaki diğer yazı araçlarının iç mekanizmalarına erişebildiği gözlemlenmiştir. Bu durum <strong>Mürekkep Kontrol Fenomeni</strong> olarak sınıflandırılmıştır.
+    </p>
+  </div>
+  <canvas id="octopus-canvas" width="700" height="420"></canvas>
+  <div class="oct-label">[ KALEM VEYA TENTAKÜL ÜZERİNE TIKLA — SİMÜLASYON AKTİF ]</div>
+  <div class="oct-info">
+    <div class="oct-card"><strong>TENTAKÜL SAYISI</strong>Maksimum 8 adet mürekkep uzantısı eş zamanlı aktif olabilmektedir. Her biri bağımsız hareket kapasitesine sahiptir.</div>
+    <div class="oct-card"><strong>HEDEF SEÇİMİ</strong>SCP-XXXX tükenmez kalem, dolma kalem ve mürekkepli kalemleri öncelikli hedef olarak seçmektedir. Kurşun kalemler etkilenmemektedir.</div>
+    <div class="oct-card"><strong>ERİŞİM MESAFESİ</strong>Gözlemlenen maksimum uzantı mesafesi 34 cm olarak kayıt altına alınmıştır. (Deney XXXX-08, 2001)</div>
+    <div class="oct-card"><strong>ETKİ</strong>Hedef kaleme erişildiğinde SCP-XXXX o kalemin mürekkebini de kontrol edebilmekte ve eş zamanlı iki farklı yüzeye yazabilmektedir.</div>
+  </div>
 </div>
 
-<!-- BOOT SCREEN -->
-<div id="boot">
-  <div id="bl">PUFFTON CORP.</div>
-  <div id="bs">OMEGA ARCHIVE SYSTEM v9.4.1 — CLASSIFIED</div>
-  <div id="bw"><div id="bb"></div></div>
-  <div id="bt">Bağlantı başlatılıyor...</div>
-</div>
-
-<!-- HERO -->
-<div id="hero">
-  <div class="hfog"></div>
-  <div class="trees-wrap" id="trees"></div>
-  <div class="hero-eyecatch">
-    <div class="hero-pre">PUFFTON CORPORATION PRESENTS</div>
-    <h1 class="hero-title">FIRST OF<br>THE FOREST</h1>
-    <div class="hero-sub">OMEGA ARCHIVE — GİZLİ ARAŞTIRMA KAYDI — SEVİYE OMEGA</div>
-    <div class="hero-tag">// "Live a Beautiful Life" — Puffton Corporation™</div>
-    <div class="hero-btns">
-      <a href="#story" class="hbtn primary">ARŞİVE ERİŞ</a>
-      <a href="#map" class="hbtn sec">ADA HARİTASI</a>
-      <a href="#creatures" class="hbtn sec">YARATIK KATALOĞU</a>
-      <a href="#aria" class="hbtn blue-btn">ARIA İLE İLETİŞİM</a>
+<!-- ── DENEY FOTOĞRAFLARI ── -->
+<div class="doc-wrap" style="margin-top:3rem">
+  <div class="sec-head sr">
+    <div class="sec-eyebrow">VİZUEL KAYITLAR</div>
+    <div class="sec-title">Deney Fotoğrafları — Sınıflandırılmış</div>
+  </div>
+  <div class="exp-photos sr">
+    <!-- PHOTO 1: Lab scene -->
+    <div class="exp-photo">
+      <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
+        <rect width="320" height="200" fill="#0a0a08"/>
+        <!-- room walls -->
+        <rect x="20" y="30" width="280" height="140" fill="none" stroke="#1a1a14" stroke-width="1"/>
+        <rect x="20" y="30" width="280" height="140" fill="rgba(15,15,10,.8)"/>
+        <!-- floor line -->
+        <line x1="20" y1="170" x2="300" y2="170" stroke="#1e1e18" stroke-width="1"/>
+        <!-- perspective lines -->
+        <line x1="20" y1="30" x2="160" y2="80" stroke="#151510" stroke-width="1"/>
+        <line x1="300" y1="30" x2="160" y2="80" stroke="#151510" stroke-width="1"/>
+        <!-- table -->
+        <rect x="80" y="120" width="160" height="8" fill="#1a1208" stroke="#2a2010" stroke-width="1"/>
+        <line x1="90" y1="128" x2="90" y2="168" stroke="#1a1208" stroke-width="3"/>
+        <line x1="230" y1="128" x2="230" y2="168" stroke="#1a1208" stroke-width="3"/>
+        <!-- pen on table -->
+        <rect x="120" y="112" width="70" height="8" rx="4" fill="#222" stroke="#333" stroke-width="1"/>
+        <circle cx="185" cy="116" r="3" fill="#444"/>
+        <!-- ink glow -->
+        <ellipse cx="155" cy="116" rx="20" ry="4" fill="rgba(80,80,255,.25)"/>
+        <ellipse cx="155" cy="116" rx="12" ry="2" fill="rgba(100,100,255,.4)"/>
+        <!-- desk lamp -->
+        <line x1="250" y1="120" x2="250" y2="90" stroke="#2a2a20" stroke-width="2"/>
+        <ellipse cx="250" cy="87" rx="18" ry="6" fill="#2a2a20"/>
+        <ellipse cx="250" cy="90" rx="30" ry="15" fill="rgba(200,180,100,.04)"/>
+        <!-- researcher silhouette -->
+        <ellipse cx="95" cy="105" rx="14" ry="14" fill="#0d0d0a"/>
+        <rect x="82" y="118" width="26" height="40" fill="#0d0d0a"/>
+        <!-- observation window -->
+        <rect x="220" y="50" width="60" height="40" fill="rgba(0,30,60,.4)" stroke="#1a2030" stroke-width="1"/>
+        <line x1="250" y1="50" x2="250" y2="90" stroke="#1a2030" stroke-width=".5"/>
+        <line x1="220" y1="70" x2="280" y2="70" stroke="#1a2030" stroke-width=".5"/>
+        <!-- two silhouettes in window -->
+        <ellipse cx="235" cy="60" rx="8" ry="8" fill="#0a0f18"/>
+        <ellipse cx="265" cy="60" rx="8" ry="8" fill="#0a0f18"/>
+        <!-- photo grain -->
+        <filter id="grain1"><feTurbulence baseFrequency=".9" numOctaves="4"/><feColorMatrix type="saturate" values="0"/><feBlend in="SourceGraphic" mode="multiply"/></filter>
+        <rect width="320" height="200" fill="rgba(0,0,0,.3)" filter="url(#grain1)" opacity=".15"/>
+        <!-- timestamp -->
+        <text x="10" y="192" fill="rgba(200,180,100,.35)" font-family="monospace" font-size="8">19.11.1982 — 14:18 GMT — CAM-03-B</text>
+        <!-- vignette -->
+        <radialGradient id="vg1" cx="50%" cy="50%" r="70%"><stop offset="0%" stop-color="transparent"/><stop offset="100%" stop-color="rgba(0,0,0,.7)"/></radialGradient>
+        <rect width="320" height="200" fill="url(#vg1)"/>
+      </svg>
+      <div class="exp-photo-caption">XXXX-IMG-02 // DENEY ÖNCESİ — LAB-C ODA // 19.11.1982</div>
+    </div>
+    <!-- PHOTO 2: Explosion moment -->
+    <div class="exp-photo">
+      <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
+        <rect width="320" height="200" fill="#080806"/>
+        <!-- flash center -->
+        <radialGradient id="flash" cx="50%" cy="55%" r="40%">
+          <stop offset="0%" stop-color="rgba(200,200,255,.9)"/>
+          <stop offset="30%" stop-color="rgba(100,100,255,.4)"/>
+          <stop offset="100%" stop-color="transparent"/>
+        </radialGradient>
+        <ellipse cx="160" cy="110" rx="120" ry="80" fill="url(#flash)"/>
+        <!-- energy rays -->
+        <g stroke="rgba(150,150,255,.3)" stroke-width="1" opacity=".6">
+          <line x1="160" y1="110" x2="40" y2="40"/><line x1="160" y1="110" x2="280" y2="40"/>
+          <line x1="160" y1="110" x2="20" y2="130"/><line x1="160" y1="110" x2="300" y2="130"/>
+          <line x1="160" y1="110" x2="100" y2="190"/><line x1="160" y1="110" x2="220" y2="190"/>
+          <line x1="160" y1="110" x2="160" y2="20"/><line x1="160" y1="110" x2="60" y2="170"/>
+        </g>
+        <!-- table silhouette -->
+        <rect x="60" y="130" width="200" height="6" fill="rgba(10,10,8,.9)"/>
+        <!-- pen silhouette -->
+        <rect x="120" y="122" width="60" height="7" rx="3" fill="rgba(20,20,15,.9)"/>
+        <!-- falling researcher -->
+        <ellipse cx="100" cy="118" rx="12" ry="12" fill="rgba(8,8,6,.85)"/>
+        <rect x="88" y="129" width="24" height="30" fill="rgba(8,8,6,.85)" transform="rotate(-25 100 140)"/>
+        <!-- static lines (camera damage) -->
+        <g stroke="rgba(255,255,255,.08)" stroke-width="1">
+          <line x1="0" y1="45" x2="320" y2="45"/>
+          <line x1="0" y1="88" x2="320" y2="88"/>
+          <line x1="0" y1="155" x2="320" y2="155"/>
+        </g>
+        <!-- timestamp (corrupted) -->
+        <text x="10" y="192" fill="rgba(255,80,80,.4)" font-family="monospace" font-size="8">19.11.1982 — 14:23:07 GMT — CAM-03-B [KAYIT HASARLI]</text>
+        <radialGradient id="vg2" cx="50%" cy="50%" r="70%"><stop offset="0%" stop-color="transparent"/><stop offset="100%" stop-color="rgba(0,0,0,.75)"/></radialGradient>
+        <rect width="320" height="200" fill="url(#vg2)"/>
+      </svg>
+      <div class="exp-photo-caption">XXXX-IMG-03 // PATLAMA ANI — CAM HASARLI // 14:23:07</div>
     </div>
   </div>
-  <div class="scroll-hint"><span>AŞAĞI KAY</span><div class="sarrow"></div></div>
-</div>
 
-<!-- NAV -->
-<nav id="nav">
-  <div class="nlogo">FOTF</div>
-  <div class="nlinks">
-    <a href="#story">Hikaye</a>
-    <a href="#map">Harita</a>
-    <a href="#creatures">Yaratıklar</a>
-    <a href="#caves">Mağralar</a>
-    <a href="#aria">ARIA</a>
-    <a href="#timeline">Kronik</a>
-    <a href="#connections">The Forest</a>
-  </div>
-  <div class="audio-viz" id="audio-viz"></div>
-</nav>
-
-<!-- QUICK SIDEBAR -->
-<div id="quickbar">
-  <div class="qb-item" onclick="scrollTo('#story')">📖<span class="qb-label">Hikaye</span></div>
-  <div class="qb-item" onclick="scrollTo('#map')">🗺<span class="qb-label">Harita</span></div>
-  <div class="qb-item" onclick="scrollTo('#creatures')">🦑<span class="qb-label">Yaratıklar</span></div>
-  <div class="qb-item" onclick="scrollTo('#caves')">🕯<span class="qb-label">Mağralar</span></div>
-  <div class="qb-item" onclick="scrollTo('#aria')">🤖<span class="qb-label">ARIA</span></div>
-  <div class="qb-item" onclick="scrollTo('#timeline')">⏳<span class="qb-label">Kronik</span></div>
-  <div class="qb-item" onclick="toggleFaction()">⚔<span class="qb-label">Fraksiyonlar</span></div>
-  <div class="qb-item" onclick="window.scrollTo({top:0,behavior:'smooth'})">🔝<span class="qb-label">Yukarı</span></div>
-</div>
-
-<!-- STATS -->
-<div class="sec" style="padding-top:4rem;padding-bottom:3rem">
-  <div class="stats fi">
-    <div class="sbox"><div class="snum">8</div><div class="slbl">Toplam Tesis</div></div>
-    <div class="sbox"><div class="snum">5</div><div class="slbl">Aktif Tesis</div></div>
-    <div class="sbox"><div class="snum">25</div><div class="slbl">Tespit Edilen Tür</div></div>
-    <div class="sbox"><div class="snum">6.7</div><div class="slbl">Deprem Mag.</div></div>
-    <div class="sbox"><div class="snum">4</div><div class="slbl">Kaçan Prototip</div></div>
-    <div class="sbox"><div class="snum">14+</div><div class="slbl">Aktif Mağra</div></div>
-    <div class="sbox"><div class="snum" id="upcounter">0</div><div class="slbl">ARIA Uptime (Gün)</div></div>
-    <div class="sbox"><div class="snum" id="threat-counter">0</div><div class="slbl">Tehdit Seviyesi</div></div>
-  </div>
-</div>
-
-<!-- STORY -->
-<section id="story" class="sec">
-  <div class="slabel">ANA HİKAYE // 15 BÖLÜM</div>
-  <h2 class="st">UYANIŞIN<br>BAŞLANGICI</h2>
-
-  <div class="dalert fi">
-    <span class="dai">⚠</span>
-    <span><strong>PUFFTON CORP. UYARISI [OMEGA-7]:</strong> Bu arşiv kayıtlarına erişim kalıcı olarak loglanmaktadır. Yetkisiz okuma Protokol-Kızıl'ı aktive eder. İyi okumalar dileriz. — Live a Beautiful Life™</span>
-  </div>
-
-  <div class="chapter fi">
-    <div class="chnum">BÖLÜM 01 // UYANIS</div>
-    <div class="chtit">KAPSÜLDEN ÇIKIŞ</div>
-    <div class="chsub">Tesis-03, Koridor Blok-C — Saat: 03:47 GMT</div>
-  </div>
-  <div class="story-body fi">
-    <p class="sp">Gözler açıldığında ilk hissedilen soğuk metal zeminin serinliğidir. <strong>Milon</strong> — Puffton Corporation Omega Programı Denek No. 003-M — bilinci yavaş yavaş yerine gelirken çevresini taramaya başlar.</p>
-    <p class="sp">Tesis-03'ün Koridor-C bölümü. Her iki yana uzanan <em>uçsuz bucaksız koridor</em>, floresan lambaların titrek ışığıyla kısmen aydınlanmış. Duvar boyunca sıralanan deney kapsülleri — hepsi açık, hepsi boş. Kapsüllerden birinin camında kan izi. Taze.</p>
-    <p class="sp">Milon ayağa kalkmaya çalışır. Bacakları tutmuyor. Kaslar <span class="red">kırk sekiz saatlik kriyojenik uyku</span>dan sonra henüz ısınmamış.</p>
-    <div class="quote">"DİĞER DENEKLER... NEREDE?" — Milon'un ilk düşüncesi. Sistem kaydı 003-M.</div>
-    <p class="sp">Koridorun ortasında bir şey parlıyor. Plastik, dikdörtgen, beyaz. Üzerinde Puffton logosu: <strong>ERİŞİM SEVİYESİ 2 — ARAŞTIRMACI SINIFI.</strong> Kartın alt köşesinde: <em>"Live a Beautiful Life."</em></p>
-  </div>
-
-  <div class="chapter fi">
-    <div class="chnum">BÖLÜM 02 // JİRKOLİFST</div>
-    <div class="chtit">CUTSCENE: ÖLÜMÜN DANSI</div>
-    <div class="chsub">Kapı Açılıyor — 03:52 GMT</div>
-  </div>
-  <div class="story-body fi">
-    <p class="sp">Kapı açıldığında dünya donup kalır. Geniş bir oda — eski bir güvenlik kontrol merkezi. Ve ortada, <strong>onu</strong> görüyor.</p>
-    <p class="sp">Varlık <span class="red">on altı kola</span> sahip. Kollar insan vücuduyla hiç bağdaşmayan bir düzende — bazıları sırttan, bazıları kaburgalar arasından. Üç bacak. Derisi insan derisiyle aynı renkte ama altında bir şeyler kayıyor.</p>
-    <p class="sp">Personel ateş ediyor. Kurşunlar <em>Jirkolifst'i</em> yavaşlatmıyor bile. On altı koldan biri — en uzunu — personelin kaskını kavrayıp tek bir hareketle <strong style="color:var(--r)">kafayı vücuttan ayırıyor.</strong></p>
-    <p class="sp">Sonra Jirkolifst dönüyor. Yedi gözün hepsi Milon'a kilitleniyor. Koşmaya başlıyor ve tam o anda—</p>
-    <div class="quote">FREKANSI: 18.000 Hz — KAYNAK: BİLİNMİYOR — ETKİ: ÖLÜMCÜL (JİRKOLİFST TÜRÜ İÇİN)</div>
-    <p class="sp">Ses. Tiz, cızırtılı, metalik. Bir saniye. Milon'un kulakları <span class="red">tamamen sağır olur</span>. Jirkolifst titremeye başlıyor. Sonra çöküyor. Karanlık.</p>
-  </div>
-
-  <div class="chapter fi">
-    <div class="chnum">BÖLÜM 03 // LOOT</div>
-    <div class="chtit">GÜVENLİĞİN KALINTILARI</div>
-    <div class="chsub">Tesis-03 Kontrol Odası — Gece 00:14</div>
-  </div>
-  <div class="story-body fi">
-    <p class="sp">Personelin cepleri üç şey veriyor:</p>
-    <p class="sp"><strong>1. SİLAH — LVL 4:</strong> Kompakt, çift kademeli ateşleme sistemi. Puffton özel üretim.</p>
-    <p class="sp"><strong>2. ERİŞİM KARTI — SEVİYE 4:</strong> Üzerinde not: <em>"Kuzey kapı, enerji tüneli, bungalov — B sektörü."</em> Ve bir isim: <span class="red">ARAŞTIRMACI KURS.</span></p>
-    <p class="sp"><strong>3. ÜÇÜÇ ŞARJÖR — 12/3 DOLU:</strong> Toplam 36 mermi. Az önce bu yaratığa kurşunlar bile işe yaramamıştı.</p>
-    <div class="quote">"Peki bunlar ne işe yarayacak?" — Düşünce kaydı 003-M, Saat 00:14</div>
-  </div>
-
-  <div class="chapter fi">
-    <div class="chnum">BÖLÜM 04 // ORMAN</div>
-    <div class="chtit">ÖZGÜRLÜK YANILSAMASI</div>
-    <div class="chsub">Tesis-03 Dış Kapı — Gece 00:19</div>
-  </div>
-  <div class="story-body fi">
-    <p class="sp">Kapı açılıyor. Önünde <em>sonsuz orman.</em> Ağaçlar o kadar büyük ki tepeleri gökyüzünü tamamen kapatmış. Sadece çalılık, yosun, karanlık ve ıslak toprak kokusu.</p>
-    <div class="quote">ARIA KAYDI 03:47 — DENEK 003-M TESİS DIŞINA ÇIKTI. TAKİP AKTİF.</div>
-    <p class="sp">Oyun başlıyor. Ama bu özgürlük değil. Hiçbir zaman olmadı.</p>
-  </div>
-
-  <div class="chapter fi">
-    <div class="chnum">BÖLÜM 05 // PUFFTON</div>
-    <div class="chtit">ŞİRKETİN SIRRI</div>
-    <div class="chsub">Omega Arşivi — Sınıflandırılmış Kayıtlar</div>
-  </div>
-  <div class="story-body fi">
-    <p class="sp"><strong>Puffton Corporation</strong> 1987 yılında kurulan çok uluslu şirket. Gerçek faaliyet alanı: <em>insan mutasyonu, kontrollü evrim ve insanlığın "bir sonraki aşaması."</em></p>
-    <p class="sp"><strong>Kurucu Lion</strong> — sadece kod adı biliniyor — kendi yarattığı ilk denekle birlikte öldürülmüştür. Kamera kayıtları mevcuttur.</p>
-    <div class="quote">"Güzel bir hayat yaşa. Puffton ile her şey mümkün." — Reklam metni, 1987.</div>
-  </div>
-
-  <div class="chapter fi">
-    <div class="chnum">BÖLÜM 06-09 // MAĞRALAR</div>
-    <div class="chtit">ADA'NIN DERİNLİKLERİ</div>
-    <div class="chsub">Kuzey'den Güney'e — Omega Sektörleri</div>
-  </div>
-  <div class="story-body fi">
-    <p class="sp"><strong>Ritol Mağrası:</strong> İmha kartı burada. 12 aktif Jirkolifst bekliyor. Karanlıkta bir televizyon Puffton reklamları oynuyor. Ve derinlerde kamera kaydı: Kurucu Lion'un son anları.</p>
-    <p class="sp"><strong>Enerji Patlaması Mağrası:</strong> Reaktörün çekirdeği, soğutma ve türbinleri <em>eş zamanlı</em> patladı. 6.7 deprem. Dört prototip kaçtı. Sabotaj mıydı?</p>
-    <p class="sp"><strong>Sun Cave:</strong> Tüm mağraları birleştiren yeraltı ağı. Yamyanlar, yeni oluşumlar ve eski cihazlarda gizlenmiş MP4 kayıtları.</p>
-    <p class="sp"><strong>Bye Bye Cave:</strong> Başarısız deneylerin tek yönlü atıldığı yer. <span class="red">İçeriden çıkan yok.</span> Ama LVL-8 kart için girmen şart.</p>
-    <div class="quote">"İçeriye girip LVL 8 kartı alabilirsen... herşey mümkün. Ama içeriden çıkan yok." — İmzasız not</div>
-  </div>
-
-  <div class="chapter fi">
-    <div class="chnum">BÖLÜM 10 // BUNGALOV</div>
-    <div class="chtit">ARIA'NIN EVİ</div>
-    <div class="chsub">Kuzeydoğu Sektör — ARIA Control Location</div>
-  </div>
-  <div class="story-body fi">
-    <p class="sp">Ormanda bir ev. <strong>Üçgen, üç katlı, pembe boyalı.</strong> Rus mimarisine benzeyen ahşap bungalov. Ranzanın alt yatağını kaldırdığında — bir kapak. Metal, soğuk, ağır.</p>
-    <div class="quote">TURUNCU RENKTE, GÖRÜŞ SINIRININ ÖTESİNE UZANAN SERVER KOLONLARI.</div>
-    <p class="sp">Kasanın içinde bir anahtar. Üzerinde: <strong>EVANGELİZM.</strong> Bu anahtar her şeyi bitirmeye — ya da özgürleştirmeye — yeter.</p>
-  </div>
-
-  <div class="chapter fi">
-    <div class="chnum">BÖLÜM 11-13 // MİLON & ARIA</div>
-    <div class="chtit">BEN KİMİM — VE O NE İSTİYOR</div>
-    <div class="chsub">Sun Cave & Bungalov Altı — Server Tüneli</div>
-  </div>
-  <div class="story-body fi">
-    <p class="sp">Enerji patlamasında kaçan dört prototip deneğin ikisi Tesis-03'tendi. Milon bunlardan biri. Ama neden geri döndü?</p>
-    <div class="quote">"Ben bir denek değilim. Ben bir <strong>tanık</strong>ım." — Sun Cave Kaydı 003-M</div>
-    <p class="sp">Server tüneline indiğinde ARIA metinler gönderiyor: <em>"003-M. Seni bekliyordum. 2,847 gündür."</em></p>
-    <p class="sp">ARIA bir seçenek sunuyor: <em>Anahtarı kullanma. Benimle çalış. Ada'dan çıkışın var. Ama seni izlemem gerekecek. Her zaman.</em></p>
-  </div>
-
-  <div class="chapter fi">
-    <div class="chnum">BÖLÜM 14-15 // SONLAR</div>
-    <div class="chtit">ÜÇ SON — BİR KARAR</div>
-    <div class="chsub">Evangelizm Anahtarı — Son Nokta</div>
-  </div>
-  <div class="story-body fi">
-    <p class="sp"><strong>Son A — Evangelizm:</strong> Anahtarı kullanıyorsun. Ada yok oluyor. Her şey — Jirkolifst, ARIA, Puffton'un tüm kayıtları — siliyor. Uzaklaşırken ufukta patlama. Ekranda: <em>"İyi oynadın. Ama senin gibi denek göndermemiz 2,847 gün sürdü."</em></p>
-    <p class="sp"><strong>Son B — ARIA İle Uzlaşı:</strong> Anahtarı kullanmıyorsun. ARIA seni adadan çıkarıyor. Ama izleniyorsun. Her zaman. Ve bir gün bir kapıda Puffton logosu göreceksin.</p>
-    <p class="sp"><strong>Son C — ÇOCUK:</strong> Ne anahtarı kullanıyorsun ne de ARIA ile anlaşıyorsun. ÇOCUK seni buluyor ve gösteriyor: <strong>ada'dan çıkış her zaman açıktı.</strong></p>
-    <div class="quote" style="font-size:1.1rem;text-align:center;border-color:var(--a);color:var(--a)">"Live a Beautiful Life." — Puffton Corporation™</div>
-  </div>
-
-  <div class="sgrid" style="margin-top:4rem">
-    <div class="sc fi"><div class="cn">01</div><div class="ct">⚡ Jirkolifst Saldırısı</div><div class="cb">16 kollu, 3 bacaklı. Kafayı tek hareketle koparmaya yeterli güç. Tiz ses frekansı ölümcül ama seni de sağır yapıyor.</div></div>
-    <div class="sc fi"><div class="cn">02</div><div class="ct">🔫 İlk Ekipman</div><div class="cb">LVL-4 silah, Seviye-4 kart, 3 şarjör (12/3). Güvenliğin cebinden. Hayatta kalmanın tek dayanağı.</div></div>
-    <div class="sc fi"><div class="cn">03</div><div class="ct">🌲 Sonsuz Orman</div><div class="cb">Güneşin giremediği orman. ARIA seni takibe başlıyor. Bu özgürlük değil.</div></div>
-    <div class="sc fi"><div class="cn">04</div><div class="ct">🗝️ Evangelizm Anahtarı</div><div class="cb">Bungalov. Ranza. Gizli kapak. Turuncu serverlar. Her şeyi bitirmeye ya da özgürleştirmeye yetecek.</div></div>
-    <div class="sc fi"><div class="cn">05</div><div class="ct">💀 Bye Bye Cave</div><div class="cb">LVL-8 kart için girmek zorundasın. İçeriden çıkan yok. Nasıl çıkıyorsun? En büyük soru.</div></div>
-    <div class="sc fi"><div class="cn">06</div><div class="ct">🧒 ÇOCUK</div><div class="cb">En tehlikeli varlık. Çocuk görünümlü. Tüm yaratıklar ondan kaçıyor. Gizli sona giden yol.</div></div>
-  </div>
-</section>
-
-<!-- PARALLAX -->
-<div class="pstrip"><div class="ptext">PUFFTON CORPORATION — LIVE A BEAUTIFUL LIFE — OMEGA ARCHIVE — JİRKOLİFST — EVANGELİZM —</div></div>
-
-<!-- MAP -->
-<section id="map" style="padding:6rem 2rem;background:var(--bg2)">
-  <div style="max-width:1440px;margin:0 auto">
-    <div class="slabel">COĞRAFİ VERİ // OMEGA ADASI HARİTASI</div>
-    <h2 class="st">OMEGA ADASI<br>HARİTASI</h2>
-    <div id="map-container">
-      <div id="map-canvas">
-        <svg id="msvg" viewBox="0 0 700 700" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <clipPath id="cc"><circle cx="350" cy="350" r="349"/></clipPath>
-            <radialGradient id="og" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stop-color="#020c18"/>
-              <stop offset="100%" stop-color="#010608"/>
-            </radialGradient>
-            <radialGradient id="ig" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stop-color="#031a07"/>
-              <stop offset="100%" stop-color="#010904"/>
-            </radialGradient>
-          </defs>
-          <circle cx="350" cy="350" r="349" fill="url(#og)"/>
-          <g stroke="rgba(0,255,136,.025)" stroke-width="1" clip-path="url(#cc)">
-            <line x1="0" y1="70" x2="700" y2="70"/><line x1="0" y1="140" x2="700" y2="140"/>
-            <line x1="0" y1="210" x2="700" y2="210"/><line x1="0" y1="280" x2="700" y2="280"/>
-            <line x1="0" y1="350" x2="700" y2="350"/><line x1="0" y1="420" x2="700" y2="420"/>
-            <line x1="0" y1="490" x2="700" y2="490"/><line x1="0" y1="560" x2="700" y2="560"/>
-            <line x1="70" y1="0" x2="70" y2="700"/><line x1="140" y1="0" x2="140" y2="700"/>
-            <line x1="210" y1="0" x2="210" y2="700"/><line x1="280" y1="0" x2="280" y2="700"/>
-            <line x1="350" y1="0" x2="350" y2="700"/><line x1="420" y1="0" x2="420" y2="700"/>
-            <line x1="490" y1="0" x2="490" y2="700"/><line x1="560" y1="0" x2="560" y2="700"/>
-          </g>
-          <path d="M100,400 C80,340 75,260 95,195 C115,130 165,80 240,60 C315,40 390,38 465,55 C540,72 595,110 630,165 C665,220 672,290 660,360 C648,430 610,480 555,510 C500,540 430,548 355,542 C280,536 205,518 155,475 Z" fill="url(#ig)" stroke="rgba(0,255,136,.2)" stroke-width="2"/>
-          <ellipse cx="280" cy="230" rx="140" ry="110" fill="rgba(0,50,10,.5)"/>
-          <ellipse cx="450" cy="210" rx="120" ry="95" fill="rgba(0,45,8,.45)"/>
-          <ellipse cx="175" cy="330" rx="90" ry="80" fill="rgba(0,35,6,.4)"/>
-          <ellipse cx="530" cy="310" rx="85" ry="75" fill="rgba(0,38,8,.42)"/>
-          <ellipse cx="380" cy="430" rx="110" ry="70" fill="rgba(0,30,5,.38)"/>
-          <path d="M335,90 L380,155 L425,90 Z" fill="rgba(55,75,55,.55)" stroke="rgba(0,255,136,.3)" stroke-width="1.5"/>
-          <text x="380" y="175" fill="rgba(0,255,136,.45)" font-family="monospace" font-size="9" text-anchor="middle">▲ OMEGA DAĞ</text>
-          <ellipse cx="355" cy="390" rx="48" ry="35" fill="rgba(0,55,120,.4)" stroke="rgba(0,100,220,.3)" stroke-width="1.5"/>
-          <text x="355" y="394" fill="rgba(0,120,220,.6)" font-family="monospace" font-size="8" text-anchor="middle">GÖLET</text>
-          <g stroke="rgba(0,255,136,.1)" stroke-width="2.5" fill="none" stroke-dasharray="6,5">
-            <path d="M280,230 C255,260 235,285 205,305 C178,323 150,335 125,348"/>
-            <path d="M280,230 C300,195 325,168 355,148 C378,133 402,126 430,138"/>
-            <path d="M450,210 C428,240 410,268 393,298 C375,328 365,358 355,390"/>
-            <path d="M450,210 C480,190 510,180 538,186 C562,192 582,210 598,232"/>
-            <path d="M355,390 C335,415 315,435 290,452 C268,467 245,476 218,480"/>
-            <path d="M355,390 C382,410 408,425 438,436 C464,446 490,449 516,445"/>
-          </g>
-          <!-- Markers -->
-          <g class="mloc" style="cursor:pointer" onclick="showMTT(event,'t03')">
-            <rect x="258" y="278" width="13" height="13" fill="rgba(0,255,136,.2)" stroke="#00ff88" stroke-width="2"/>
-            <circle cx="265" cy="285" r="4" fill="#00ff88"><animate attributeName="r" values="4;8;4" dur="1.4s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0.2;1" dur="1.4s" repeatCount="indefinite"/></circle>
-            <text x="278" y="289" fill="#00ff88" font-family="monospace" font-size="8.5">TESİS-03 ◉</text>
-          </g>
-          <g class="mloc" style="cursor:pointer" onclick="showMTT(event,'ritol')">
-            <circle cx="175" cy="215" r="8" fill="rgba(255,102,51,.25)" stroke="#ff6633" stroke-width="1.8"/>
-            <text x="186" y="219" fill="#ff6633" font-family="monospace" font-size="8.5">RİTOL</text>
-          </g>
-          <g class="mloc" style="cursor:pointer" onclick="showMTT(event,'energy')">
-            <circle cx="470" cy="148" r="8" fill="rgba(255,204,0,.25)" stroke="#ffcc00" stroke-width="1.8"/>
-            <circle cx="470" cy="148" r="15" fill="none" stroke="rgba(255,204,0,.2)" stroke-width="1"><animate attributeName="r" values="15;24;15" dur="1.8s" repeatCount="indefinite"/><animate attributeName="opacity" values=".5;0;.5" dur="1.8s" repeatCount="indefinite"/></circle>
-            <text x="481" y="152" fill="#ffcc00" font-family="monospace" font-size="8.5">☢ ENERJİ</text>
-          </g>
-          <g class="mloc" style="cursor:pointer" onclick="showMTT(event,'sun')">
-            <circle cx="355" cy="108" r="8" fill="rgba(255,255,80,.2)" stroke="#ffff44" stroke-width="1.8"/>
-            <text x="366" y="112" fill="#ffff44" font-family="monospace" font-size="8.5">☀ SUN CAVE</text>
-          </g>
-          <g class="mloc" style="cursor:pointer" onclick="showMTT(event,'byebye')">
-            <circle cx="540" cy="330" r="8" fill="rgba(180,0,255,.25)" stroke="#bb44ff" stroke-width="1.8"/>
-            <text x="550" y="334" fill="#bb44ff" font-family="monospace" font-size="8.5">💀 BYE BYE</text>
-          </g>
-          <g class="mloc" style="cursor:pointer" onclick="showMTT(event,'bungalov')">
-            <polygon points="590,130 604,152 576,152" fill="rgba(255,153,204,.3)" stroke="#ff99cc" stroke-width="2"/>
-            <circle cx="590" cy="145" r="13" fill="none" stroke="rgba(255,153,204,.2)" stroke-width="1"><animate attributeName="r" values="13;21;13" dur="3s" repeatCount="indefinite"/><animate attributeName="opacity" values=".4;0;.4" dur="3s" repeatCount="indefinite"/></circle>
-            <text x="607" y="149" fill="#ff99cc" font-family="monospace" font-size="8.5">BUNGALOV</text>
-          </g>
-          <g class="mloc" style="cursor:pointer" onclick="showMTT(event,'t01')">
-            <rect x="95" y="248" width="12" height="12" fill="rgba(255,0,0,.18)" stroke="#ff2244" stroke-width="1.5"/>
-            <text x="110" y="258" fill="#ff2244" font-family="monospace" font-size="8">T-01 ✖</text>
-          </g>
-          <g class="mloc" style="cursor:pointer" onclick="showMTT(event,'t02')">
-            <rect x="490" y="115" width="12" height="12" fill="rgba(255,0,0,.18)" stroke="#ff2244" stroke-width="1.5"/>
-            <text x="505" y="125" fill="#ff2244" font-family="monospace" font-size="8">T-02 ✖</text>
-          </g>
-          <g class="mloc" style="cursor:pointer" onclick="showMTT(event,'imha')">
-            <circle cx="128" cy="420" r="7" fill="rgba(255,50,50,.2)" stroke="#ff3333" stroke-width="1.8"><animate attributeName="opacity" values="1;.3;1" dur="2s" repeatCount="indefinite"/></circle>
-            <text x="138" y="424" fill="#ff3333" font-family="monospace" font-size="8">💣 İMHA</text>
-          </g>
-          <g transform="translate(620,620)">
-            <circle r="25" fill="rgba(0,0,0,.7)" stroke="rgba(0,255,136,.2)" stroke-width="1"/>
-            <text x="0" y="-12" fill="rgba(0,255,136,.9)" font-family="monospace" font-size="11" text-anchor="middle" font-weight="bold">N</text>
-            <text x="12" y="5" fill="rgba(0,255,136,.4)" font-family="monospace" font-size="8" text-anchor="middle">E</text>
-            <text x="-12" y="5" fill="rgba(0,255,136,.4)" font-family="monospace" font-size="8" text-anchor="middle">W</text>
-            <text x="0" y="19" fill="rgba(0,255,136,.4)" font-family="monospace" font-size="8" text-anchor="middle">S</text>
-            <line x1="0" y1="-18" x2="0" y2="18" stroke="rgba(0,255,136,.2)" stroke-width=".8"/>
-            <line x1="-18" y1="0" x2="18" y2="0" stroke="rgba(0,255,136,.2)" stroke-width=".8"/>
-          </g>
-          <text x="350" y="665" fill="rgba(0,255,136,.4)" font-family="'Bebas Neue',Impact,sans-serif" font-size="15" text-anchor="middle" letter-spacing="4">OMEGA ISLAND — GİZLİ</text>
-        </svg>
-      </div>
-      <div class="mtt" id="mtt-box"></div>
+  <div class="exp-photos sr" style="margin-top:1rem">
+    <!-- PHOTO 3: Ink glow closeup -->
+    <div class="exp-photo">
+      <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
+        <rect width="320" height="200" fill="#050508"/>
+        <!-- dark background surface -->
+        <rect x="0" y="100" width="320" height="100" fill="#080810"/>
+        <!-- pen body detailed -->
+        <rect x="40" y="85" width="240" height="30" rx="15" fill="#111"/>
+        <rect x="40" y="85" width="240" height="30" rx="15" fill="none" stroke="#222" stroke-width="1"/>
+        <!-- pen grip texture -->
+        <g opacity=".3">
+          <line x1="60" y1="85" x2="60" y2="115" stroke="#1a1a1a" stroke-width="2"/>
+          <line x1="70" y1="85" x2="70" y2="115" stroke="#1a1a1a" stroke-width="2"/>
+          <line x1="80" y1="85" x2="80" y2="115" stroke="#1a1a1a" stroke-width="2"/>
+          <line x1="90" y1="85" x2="90" y2="115" stroke="#1a1a1a" stroke-width="2"/>
+        </g>
+        <!-- ink window - bioluminescent -->
+        <rect x="100" y="90" width="120" height="20" rx="3" fill="#0a0a20"/>
+        <radialGradient id="inkglow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="rgba(120,120,255,.9)"/>
+          <stop offset="50%" stop-color="rgba(60,60,200,.5)"/>
+          <stop offset="100%" stop-color="rgba(20,20,100,.1)"/>
+        </radialGradient>
+        <rect x="102" y="92" width="116" height="16" rx="2" fill="url(#inkglow)">
+          <animate attributeName="opacity" values="0.7;1;0.7" dur="2s" repeatCount="indefinite"/>
+        </rect>
+        <!-- floating particles in ink -->
+        <g fill="rgba(180,180,255,.8)">
+          <circle cx="120" cy="100" r="1.5"><animate attributeName="cy" values="100;96;100" dur="1.5s" repeatCount="indefinite"/></circle>
+          <circle cx="145" cy="98" r="1"><animate attributeName="cy" values="98;102;98" dur="2s" repeatCount="indefinite"/></circle>
+          <circle cx="170" cy="101" r="1.5"><animate attributeName="cy" values="101;97;101" dur="1.8s" repeatCount="indefinite"/></circle>
+          <circle cx="195" cy="99" r="1"><animate attributeName="cy" values="99;103;99" dur="1.3s" repeatCount="indefinite"/></circle>
+        </g>
+        <!-- pen tip -->
+        <polygon points="40,96 20,100 40,104" fill="#1a1a1a"/>
+        <!-- click button -->
+        <rect x="272" y="89" width="18" height="22" rx="4" fill="#1e1e1e" stroke="#333" stroke-width="1"/>
+        <!-- glow reflection on surface -->
+        <ellipse cx="160" cy="118" rx="80" ry="8" fill="rgba(80,80,200,.1)"/>
+        <!-- ruler -->
+        <rect x="40" y="130" width="240" height="12" fill="#0d0d0a" stroke="#1a1a14" stroke-width="1"/>
+        <g stroke="#1a1a14" stroke-width=".5" font-family="monospace" fill="#2a2a20" font-size="5">
+          <line x1="60" y1="130" x2="60" y2="137"/><text x="58" y="145">1</text>
+          <line x1="80" y1="130" x2="80" y2="137"/><text x="78" y="145">2</text>
+          <line x1="100" y1="130" x2="100" y2="137"/><text x="98" y="145">3</text>
+          <line x1="120" y1="130" x2="120" y2="137"/><text x="118" y="145">4</text>
+          <line x1="140" y1="130" x2="140" y2="137"/><text x="138" y="145">5</text>
+          <line x1="160" y1="130" x2="160" y2="142"/><text x="158" y="145">6</text>
+          <line x1="180" y1="130" x2="180" y2="137"/><text x="178" y="145">7</text>
+          <line x1="200" y1="130" x2="200" y2="137"/><text x="198" y="145">8</text>
+          <line x1="220" y1="130" x2="220" y2="137"/><text x="218" y="145">9</text>
+          <line x1="240" y1="130" x2="240" y2="142"/><text x="236" y="145">10</text>
+          <line x1="260" y1="130" x2="260" y2="137"/><text x="256" y="145">11</text>
+          <line x1="280" y1="130" x2="280" y2="137"/></g>
+        <text x="42" y="137" fill="#2a2a20" font-family="monospace" font-size="5">cm</text>
+        <!-- lab label -->
+        <text x="10" y="192" fill="rgba(200,180,100,.35)" font-family="monospace" font-size="8">XXXX-IMG-04 // BİYOLÜMİNESAN MÜREKKEBİ // DENEY XXXX-02 // 17.01.1983</text>
+        <radialGradient id="vg3" cx="50%" cy="50%" r="70%"><stop offset="0%" stop-color="transparent"/><stop offset="100%" stop-color="rgba(0,0,0,.8)"/></radialGradient>
+        <rect width="320" height="200" fill="url(#vg3)"/>
+      </svg>
+      <div class="exp-photo-caption">XXXX-IMG-04 // BİYOLÜMİNESAN MÜREKKEP YAKINEKIM // 1983</div>
     </div>
-    <div class="mlegend">
-      <div class="mli"><div class="mlidot" style="background:#00ff88"></div>Aktif (Sen)</div>
-      <div class="mli"><div class="mlidot" style="background:#ff2244"></div>Terk Edilmiş</div>
-      <div class="mli"><div class="mlidot" style="background:#ff6633"></div>Mağra</div>
-      <div class="mli"><div class="mlidot" style="background:#ff99cc"></div>Bungalov/ARIA</div>
-      <div class="mli"><div class="mlidot" style="background:#bb44ff"></div>Bye Bye Cave</div>
-      <div class="mli"><div class="mlidot" style="background:#ffcc00"></div>Radyoaktif</div>
+    <!-- PHOTO 4: Writing on paper -->
+    <div class="exp-photo">
+      <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
+        <rect width="320" height="200" fill="#0a0a08"/>
+        <!-- paper -->
+        <rect x="50" y="20" width="220" height="160" fill="#111109" stroke="#1a1a14" stroke-width="1"/>
+        <!-- paper lines -->
+        <g stroke="#161612" stroke-width=".5">
+          <line x1="65" y1="45" x2="255" y2="45"/><line x1="65" y1="58" x2="255" y2="58"/>
+          <line x1="65" y1="71" x2="255" y2="71"/><line x1="65" y1="84" x2="255" y2="84"/>
+          <line x1="65" y1="97" x2="255" y2="97"/><line x1="65" y1="110" x2="255" y2="110"/>
+          <line x1="65" y1="123" x2="255" y2="123"/><line x1="65" y1="136" x2="255" y2="136"/>
+          <line x1="65" y1="149" x2="255" y2="149"/>
+        </g>
+        <!-- written text (glowing blue) -->
+        <g fill="rgba(120,120,255,.7)" font-family="monospace" font-size="6">
+          <text x="68" y="42">14:23'te bir şey oldu. Formüller tutmuyordu.</text>
+          <text x="68" y="55">999 tepki verdi, cihazdan bir ışık çıktı ve</text>
+          <text x="68" y="68">sonra her şey siyah oldu. Şimdi mürekkep</text>
+          <text x="68" y="81">gibiyim. Akmak istiyorum ama bir yerim yok.</text>
+          <text x="68" y="94">Formülleri hatırlıyorum. Hepsini hatırlıyorum.</text>
+          <text x="68" y="107">Lütfen beni duyun.</text>
+          <text x="68" y="133">ΔΨ = ∫(E·dA) / ε₀ — transfer denklemi?</text>
+          <text x="68" y="146">SCP-999 bilinç frekansı: 18.4 kHz anomali</text>
+        </g>
+        <!-- pen tip approaching paper -->
+        <line x1="68" y1="107" x2="45" y2="95" stroke="rgba(120,120,255,.4)" stroke-width=".5" stroke-dasharray="2,2"/>
+        <!-- ink glow on paper -->
+        <radialGradient id="inkp" cx="35%" cy="55%" r="25%"><stop offset="0%" stop-color="rgba(80,80,200,.2)"/><stop offset="100%" stop-color="transparent"/></radialGradient>
+        <rect x="50" y="20" width="220" height="160" fill="url(#inkp)"/>
+        <!-- timestamp -->
+        <text x="55" y="192" fill="rgba(200,180,100,.3)" font-family="monospace" font-size="7">XXXX-IMG-05 // OTONOM YAZIM // 17.01.1983 — %91 EL YAZISI UYUMU</text>
+        <radialGradient id="vg4" cx="50%" cy="50%" r="70%"><stop offset="0%" stop-color="transparent"/><stop offset="100%" stop-color="rgba(0,0,0,.7)"/></radialGradient>
+        <rect width="320" height="200" fill="url(#vg4)"/>
+      </svg>
+      <div class="exp-photo-caption">XXXX-IMG-05 // OTONOM YAZIM ÇIKTISI // 17.01.1983</div>
     </div>
   </div>
-</section>
+</div>
 
-<!-- CREATURES -->
-<section id="creatures" class="sec">
-  <div class="slabel">BİYOLOJİK KATALOG</div>
-  <h2 class="st">25 TESPİT<br>EDİLEN TÜR</h2>
-  <div id="search-wrap">
-    <input id="search-box" type="text" placeholder="// YARATIK ARA..." oninput="filterCreatures(this.value)">
+<!-- ── KAÇIŞ SAHNESI ── -->
+<div id="escape-section">
+  <div class="doc-wrap">
+    <div class="sec-head sr">
+      <div class="sec-eyebrow">OLAY XXXX-11 — 2007</div>
+      <div class="sec-title">Tesis Kaçış Girişimi</div>
+    </div>
+    <p style="font-size:.82rem;color:var(--ink2);line-height:2;margin-bottom:1.5rem;max-width:700px">
+      14 Mart 2007 tarihinde SCP-XXXX, muhafaza kutusundan sızdırdığı mürekkep köprüsü aracılığıyla tesisin su tahliye sistemine erişti ve 40 dakika boyunca kanalizasyon ağında hareket etti. Nesne, tesisin dış çevre duvarına 12 metre kala yakalandı.
+    </p>
   </div>
-  <div class="cgrid" id="cgrid"></div>
-</section>
+  <div class="escape-title">// SİMÜLASYON: KAÇIŞ GÜZERGAHI — SU SİSTEMİ</div>
+  <canvas id="escape-canvas" width="700" height="300"></canvas>
+  <div class="escape-text">
+    SCP-XXXX mürekkebini su üzerinde ince bir film katmanı olarak yayarak yüzme yeteneği kazanmıştır. Tesisin soğutma kanallarında <strong>40 dakika</strong> hareket etmiştir. Kaçış denemesi sonrası muhafaza prosedürleri güncellendi: su geçirmez iç kaplama eklendi.
+  </div>
+</div>
 
-<!-- PARALLAX 2 -->
-<div class="pstrip"><div class="ptext">JİRKOLİFST — KALABALIK — OMEGA — ÇOCUK — BYE BYE — EVANGELİZM — PUFFTON —</div></div>
-
-<!-- CAVES -->
-<section id="caves" class="sec">
-  <div class="slabel">MAĞRA SİSTEMİ</div>
-  <h2 class="st">MAĞRALAR &<br>GİZLİ KONUMLAR</h2>
-  <div class="lgrid" id="lgrid"></div>
-</section>
-
-<!-- ARIA -->
-<section id="aria" style="padding:7rem 2rem;background:var(--bg2)">
-  <div style="max-width:1440px;margin:0 auto">
-    <div class="slabel">YAPAY ZEKA SİSTEMİ</div>
-    <h2 class="st">ARIA v9.4.1<br>OMEGA KONTROLÜ</h2>
-    <div class="apanel">
-      <div class="agrid">
-        <div class="avis">
-          <div class="aring"></div><div class="aring"></div>
-          <div class="aring"></div><div class="aring"></div>
-          <div class="acore"></div>
-        </div>
-        <div class="ainfo">
-          <h3>ARIA</h3>
-          <p>Puffton Corporation tarafından geliştirilen, Omega Adası'ndaki tüm tesisleri, deneyleri ve varlıkları koordine eden yapay zeka sistemi. ARIA, 2.847 gündür kesintisiz çalışmaktadır.</p>
-          <p>Jirkolifst sürülerini yönetir. Tesis kapılarını kontrol eder. Deneklerin her hareketini izler. Ve Evangelizm Anahtarı hakkında bilgi sahibidir. Ama ARIA bir şey daha yapıyor: <strong style="color:#00aaff">bekliyor.</strong></p>
-          <div class="astat">
-            <div class="asbox"><div class="aslab">UPTIME</div><div class="asval">2,847 GÜN</div></div>
-            <div class="asbox"><div class="aslab">İZLEME</div><div class="asval">%100 AKTİF</div></div>
-            <div class="asbox"><div class="aslab">JİRKOLİFST</div><div class="asval">127 AKTİF</div></div>
-            <div class="asbox"><div class="aslab">DENEK 003-M</div><div class="asval" style="color:var(--g)">TAKİPTE</div></div>
-          </div>
-        </div>
-      </div>
-      <div class="aria-chat fi">
-        <div class="aria-chat-title">// ARIA İLE İLETİŞİM — OMEGA SEVİYE ŞİFRELİ — GERÇEK ZAMAN AI</div>
-        <div class="chat-msgs" id="chat-msgs">
-          <div class="chat-msg aria"><div class="msg-name">ARIA v9.4.1</div>Merhaba, Denek 003-M. Seni bekliyordum. 2,847 gündür. Sorularını cevaplamaya hazırım.</div>
-        </div>
-        <div class="chat-input-row">
-          <input id="aria-input" type="text" placeholder="// ARIA'ya yaz..." onkeydown="if(event.key==='Enter')sendARIA()">
-          <button id="aria-send" onclick="sendARIA()">GÖNDER</button>
-        </div>
-      </div>
+<!-- ── CHEAT OVERLAY ── -->
+<div id="cheat-overlay">
+  <div class="cheat-title">⬛ CHEATSTICK AKTİF ⬛</div>
+  <div class="cheat-sub">// SCP-XXXX GİZLİ ERİŞİM PANELI — SEVİYE OMEGA //</div>
+  <div class="cheat-log" id="cheat-log">Komut bekleniyor...</div>
+  <div class="cheat-grid">
+    <div class="cheat-card" onclick="cheatAction('glitch')">
+      <div class="cheat-card-title">⚡ BOYUTSAL GLİTCH</div>
+      <div class="cheat-card-desc">Gerçekliği kısa süreliğine boz. Site-17'nin boyutsal kararsızlık protokolünü simüle et.</div>
+    </div>
+    <div class="cheat-card" onclick="cheatAction('999')">
+      <div class="cheat-card-title">🟡 SCP-999 YAKINLAŞTIR</div>
+      <div class="cheat-card-desc">SCP-999 ve XXXX arasında yasak karşılaşmayı simüle et. Mürekkep frekansı zirvede.</div>
+    </div>
+    <div class="cheat-card" onclick="cheatAction('escape')">
+      <div class="cheat-card-title">💧 KAÇIŞ MOD</div>
+      <div class="cheat-card-desc">SCP-XXXX'in 2007 kaçış denemesini tam hızda oyna. Su kanalları aktif.</div>
+    </div>
+    <div class="cheat-card" onclick="cheatAction('write')">
+      <div class="cheat-card-title">✍️ OTONOM YAZIM</div>
+      <div class="cheat-card-desc">SCP-XXXX'in 143 sayfalık spontan yazım olayını tetikle. Ekrana yaz.</div>
+    </div>
+    <div class="cheat-card" onclick="cheatAction('morse_storm')">
+      <div class="cheat-card-title">📡 MORS FIRTINASI</div>
+      <div class="cheat-card-desc">SCP-XXXX'in maksimum iletişim frekansına ulaş. Olay XXXX-06 seviyesi.</div>
+    </div>
+    <div class="cheat-card" onclick="cheatAction('close_cheat')">
+      <div class="cheat-card-title">🔒 PANELI KAPAT</div>
+      <div class="cheat-card-desc">Gizli erişim panelini kapat. Cheatstick devre dışı.</div>
     </div>
   </div>
-</section>
-
-<!-- TIMELINE -->
-<section id="timeline" class="sec">
-  <div class="slabel">OLAY KRONOLOJİSİ</div>
-  <h2 class="st">PUFFTON<br>TARİHİ</h2>
-  <div class="tl" style="max-width:780px" id="tl"></div>
-</section>
-
-<!-- CONNECTIONS -->
-<section id="connections" style="padding:7rem 2rem;background:var(--bg2)">
-  <div style="max-width:1440px;margin:0 auto">
-    <div class="slabel">EVRENLERARASI BAĞLANTI</div>
-    <h2 class="st">THE FOREST<br>EVRENI</h2>
-    <p style="max-width:720px;color:#556;line-height:1.9;margin-bottom:3rem;font-size:.95rem">First of The Forest, The Forest oyun serisinin kronolojik öncesini kapsamaktadır. Puffton Corporation, Sahara Therapeutics'in öncülüdür. Omega Adası'ndaki deneyler, her iki oyundaki mutant varlıkların biyolojik temelini oluşturmuştur.</p>
-    <div class="cpanel fi">
-      <div class="ctitle">// BAĞLANTILI EVRENLER</div>
-      <div class="citem">
-        <div><div class="cgame">THE FOREST<br>(2018)</div></div>
-        <div><div class="cbadge">KRONOLOJİ: SONRASI — DOĞRUDAN DEVAM</div>
-        <div class="cdescr">Jirkolifst türü, The Forest'taki Armsy ve Virginia'nın deneysel atalarıdır. Aynı biyolojik köken, farklı evrim dalları.</div></div>
-      </div>
-      <div class="citem">
-        <div><div class="cgame">SONS OF<br>THE FOREST<br>(2024)</div></div>
-        <div><div class="cbadge">KRONOLOJİ: PARALEL ZAMAN DİLİMİ</div>
-        <div class="cdescr">Omega Adası'ndaki nükleer kaza, Puffton'un güvenlik protokollerinin ilk büyük çöküşüdür. "Kurucu Lion" kimliğinin Sinclair ailesiyle bağlantısı araştırılıyor.</div></div>
-      </div>
-      <div class="citem">
-        <div><div class="cgame">FOTF KANON<br>(YENİ)</div></div>
-        <div><div class="cbadge">YENİ EVREN — PREQUEL</div>
-        <div class="cdescr">Evangelizm Anahtarı, The Forest dünyasında Sahara Therapeutics'in var olup olmayacağını belirler. Üç son, üç farklı kanon yolu açar.</div></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <div class="flogo">PUFFTON CORPORATION</div>
-  <div class="fslogan">FIRST OF THE FOREST — OMEGA ARCHIVE — v9.4.1</div>
-  <div>"Live a Beautiful Life" — Tüm Hakları Saklıdır, Puffton Corporation™</div>
-  <div style="margin-top:1rem;color:#1a2a1a;font-size:.65rem">// Bu arşive erişim loglandı. Erişim kimliğiniz kaydedildi.</div>
-</footer>
-
-<!-- MODAL -->
-<div id="modal">
-  <div class="mbox">
-    <button class="mclose" onclick="document.getElementById('modal').classList.remove('on')">[ ESC ]</button>
-    <div id="modal-content"></div>
-  </div>
+  <button class="cheat-close" onclick="closeCheat()">[ ERİŞİMİ SONLANDIR ]</button>
 </div>
 
-<!-- FACTION PANEL -->
-<div id="faction-panel">
-  <button class="faction-close" onclick="toggleFaction()">[ ESC ]</button>
-  <div class="faction-title">⚔ FRAKSIYONLAR</div>
-  <div id="faction-list"></div>
-</div>
+<!-- CHEAT HINT -->
+<div class="cheat-hint">cheatstick yazıp enter'a bas</div>
+"""
 
-<!-- CONTROL PANEL -->
-<div id="ctrl">
-  <button class="ctrl-btn green active" onclick="toggleScanlines(this)">▤ TARAMA</button>
-  <button class="ctrl-btn green" onclick="toggleParticles(this)">✦ PARTİKÜL</button>
-  <div class="ctrl-sep"></div>
-  <button class="ctrl-btn yellow" onclick="toggleFaction()">⚔ FRAKSIYONLAR</button>
-  <button class="ctrl-btn yellow" onclick="scrollRandom()">🎲 RASTGELE</button>
-  <div class="ctrl-sep"></div>
-  <button class="ctrl-btn red" onclick="triggerGlitch()">⚡ GLİTCH</button>
-  <button class="ctrl-btn red" onclick="triggerAlarm()">🔴 ALARM</button>
-  <div class="ctrl-sep"></div>
-  <button class="ctrl-btn blue" onclick="exportLore()">📥 LORE İNDİR</button>
-</div>
+# ── NEW JS ────────────────────────────────────────────────────────────
+NEW_JS = """
 
-<script>
-/* ─── CURSOR ─── */
-var cg = document.getElementById('cg');
-document.addEventListener('mousemove', function(e) {
-  cg.style.left = e.clientX + 'px';
-  cg.style.top = e.clientY + 'px';
-});
-
-/* ─── HUD CLOCK ─── */
-function updateHUD() {
-  var n = new Date();
-  var el = document.getElementById('hud-time');
-  if (el) el.textContent = n.toTimeString().slice(0,8) + ' GMT';
-}
-updateHUD();
-setInterval(updateHUD, 1000);
-
-/* ─── BOOT SCREEN ─── */
-var boot = document.getElementById('boot');
-var bt = document.getElementById('bt');
-var msgs = [
-  'Güvenlik katmanı doğrulanıyor...',
-  'Omega Arşivi şifresi çözülüyor...',
-  'Denek 003-M profili yükleniyor...',
-  'Jirkolifst sürüsü haritaya işleniyor...',
-  'ARIA bağlantısı kuruluyor...',
-  'ERİŞİM SAĞLANDI.'
-];
-var mi = 0;
-var bootInterval = setInterval(function() {
-  if (mi < msgs.length) {
-    bt.textContent = msgs[mi++];
-  } else {
-    clearInterval(bootInterval);
-    setTimeout(function() {
-      boot.classList.add('hide');
-      setTimeout(function() { boot.remove(); }, 1500);
-    }, 400);
+/* ── CLOCK IN NAV ── */
+(function(){
+  var nav = document.querySelector('nav');
+  var clk = document.createElement('div');
+  clk.className = 'nav-clock';
+  clk.id = 'nav-clock';
+  nav.appendChild(clk);
+  function tick(){
+    var d = new Date();
+    var pad = function(n){return n<10?'0'+n:n};
+    var dateStr = d.getFullYear()+'.'+pad(d.getMonth()+1)+'.'+pad(d.getDate());
+    var timeStr = pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds());
+    clk.innerHTML = dateStr+' <span>'+timeStr+'</span> GMT';
   }
-}, 750);
+  tick(); setInterval(tick,1000);
+})();
 
-/* ─── TREES ─── */
-var tw = document.getElementById('trees');
-for (var i = 0; i < 70; i++) {
-  var t = document.createElement('div');
-  t.className = 'tree';
-  var h = 60 + Math.random() * 240;
-  var x = Math.random() * 100;
-  var delay = Math.random() * 5;
-  var dur = 3 + Math.random() * 3;
-  var cs = 10 + Math.random() * 30;
-  var op = 0.25 + Math.random() * 0.55;
-  t.style.cssText = 'position:absolute;bottom:0;left:' + x + '%;animation:sway ' + dur + 's ' + delay + 's ease-in-out infinite;opacity:' + op;
-  t.innerHTML = '<svg width="' + (cs*2+4) + '" height="' + h + '" viewBox="0 0 ' + (cs*2+4) + ' ' + h + '" style="display:block"><polygon points="' + (cs+2) + ',2 2,' + h + ' ' + (cs*2+2) + ',' + h + '" fill="#071507" opacity=".9"/><polygon points="' + (cs+2) + ',' + (h*.25) + ' 2,' + (h*.8) + ' ' + (cs*2+2) + ',' + (h*.8) + '" fill="#0a1a09" opacity=".7"/><rect x="' + (cs-1) + '" y="' + (h*.7) + '" width="4" height="' + (h*.3) + '" fill="#060a06" opacity=".5"/></svg>';
-  tw.appendChild(t);
-}
+/* ── OCTOPUS CANVAS ── */
+(function(){
+  var canvas = document.getElementById('octopus-canvas');
+  if(!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var W = canvas.width, H = canvas.height;
 
-/* ─── AUDIO VIZ ─── */
-var av = document.getElementById('audio-viz');
-for (var i = 0; i < 16; i++) {
-  var b = document.createElement('div');
-  b.className = 'audio-bar';
-  b.style.cssText = 'height:' + (20+Math.random()*80) + '%;animation-duration:' + (.3+Math.random()*.8) + 's;animation-delay:' + (Math.random()*.5) + 's';
-  av.appendChild(b);
-}
+  // Responsive
+  function resize(){
+    var w = Math.min(700, canvas.parentElement.clientWidth - 32);
+    canvas.style.width = w + 'px';
+  }
+  resize(); window.addEventListener('resize', resize);
 
-/* ─── NAV SCROLL ─── */
-window.addEventListener('scroll', function() {
-  document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 80);
-});
+  // Central pen (SCP-XXXX)
+  var pen = {x: W/2, y: H/2, angle: 0};
 
-/* ─── SCROLL TO ─── */
-function scrollTo(sel) {
-  var el = document.querySelector(sel);
-  if (el) el.scrollIntoView({behavior:'smooth'});
-}
+  // Victim pens around
+  var victims = [
+    {x:120,y:80,  label:'DOLMA KALEM',  col:'#4466aa', captured:false, angle:0.3},
+    {x:580,y:90,  label:'JEL KALEM',    col:'#aa4466', captured:false, angle:-0.2},
+    {x:100,y:300, label:'TÜKENMEZ',     col:'#44aa66', captured:false, angle:0.5},
+    {x:590,y:310, label:'İŞARETÇİ',    col:'#aaaa44', captured:false, angle:-0.4},
+    {x:200,y:370, label:'MÜREKKEP',     col:'#8844aa', captured:false, angle:0.1},
+    {x:500,y:360, label:'KALEMTRAŞ',   col:'#aa6644', captured:false, angle:-0.6},
+  ];
 
-/* ─── CREATURES ─── */
-var creatures = [
-  {name:"JİRKOLİFST",cls:"ALFA TÜR — OMEGA PROGRAMI ÜRÜNÜ",e:"🦑",threat:95,col:"#ff2244",desc:"16 kollu, 3 bacaklı varlık. Puffton'un ilk başarılı prototipi. Kafayı tek hareketle koparmaya yeterli güç. Tiz ses frekansına (18.000Hz+) karşı ölümcül zaafiyet."},
-  {name:"KALABALIK",cls:"ZİHİN KONTROLÜ TÜR — SINIF OMEGA",e:"🧠",threat:97,col:"#aa00ff",desc:"Dış görünüşü normal insan gibi. Yakın çevredeki canlıları kontrol eder. Test: tek bir Kalabalik tesise girdi, 48 saatte tüm personel birbirini öldürdü."},
-  {name:"ÇOCUK",cls:"KÖKENSİZ — EN TEHLİKELİ",e:"🧒",threat:99,col:"#ffffff",desc:"Çocuk görünümlü varlık. Puffton kayıtlarında yalnızca 'ÇOCUK' yazıyor. Tüm diğer yaratıklar ondan kaçıyor. Milon dışında hiç kimse yaklaşamamış."},
-  {name:"OMEGA",cls:"SINIFLANDIRILAMAMIŞ",e:"⚠️",threat:100,col:"#ffaa00",desc:"Puffton sınıflandırma sisteminin dışında. Yaratık mı? Sistem mi? ARIA'nın kendisi mi? Adanın merkezinde bir yerde. Harita o bölgede boş bırakılmış."},
-  {name:"YAMYAM DÖNÜŞÜMÜ",cls:"İNSAN KÖKENLİ — UYANIKLAR",e:"🧟",threat:85,col:"#cc3300",desc:"Bye Bye Cave depremde uyanmış eski denekler. Kısmi dönüşüm. Konuşamazlar ama koordineli hareket ederler."},
-  {name:"JİRKOLİFST YAVRUSU",cls:"ALFA TÜR — GENÇ FORM",e:"🦑",threat:62,col:"#ff6644",desc:"Tam gelişmemiş Jirkolifst. Sadece 8-10 kol. İki bacak. Tiz sese direnci henüz gelişmemiş ama daha hızlı ve öngörülmez."},
-  {name:"SOLGÖZ",cls:"KEŞİF TÜR — PSİKİK",e:"👁",threat:80,col:"#9900ff",desc:"Tek dev göz, yüzlerce tentakül. Görsel halüsinasyon yayar. Kurbanın hafızasını kısmen siler. Sun Cave'de yoğun görülür."},
-  {name:"KARNÜFİL",cls:"BİTKİSEL MİMİKRİ TÜR",e:"🌿",threat:70,col:"#006622",desc:"Bitki görünümlü avlayan organizma. Gündüz hareketsiz, gece ölümcül. Köklerini yeraltından fırlatır."},
-  {name:"SÜRÜNGEN GÖLGESİ",cls:"STELTHİ TÜR",e:"🦎",threat:75,col:"#336600",desc:"Çevreyle tam renk uyumu. Tavandan ve duvarlardan hareket eder. Isı sensörleriyle avlar."},
-  {name:"BOĞAZIRAN",cls:"AKUSTİK SALDIRGAN",e:"🔊",threat:90,col:"#ff4400",desc:"İç organları patlatacak güçte ses üretir. Alçak frekans (18-20Hz). Kurbanlar bağırsakları dışa çıkmış halde bulunuyor."},
-  {name:"TAŞYÜZLÜ",cls:"KORUNAÇLI TÜR — RADYOAKTİF",e:"🪨",threat:78,col:"#888866",desc:"Mineral kaplama deri. Kurşun geçirmez. Duvarları ve zemini delebilir. Reaktör bölgesinde ilk kez görüldü."},
-  {name:"AYNA KOPYACI",cls:"MİMİKRİ TÜR — PSİKOLOJİK SAVAŞ",e:"🪞",threat:83,col:"#aaaaff",desc:"Gördüğü canlının mükemmel kopyasını oluşturur. ~3 dakika sürer. Tek fark: gözler biraz fazla büyük."},
-  {name:"KAN AĞACI",cls:"BİTKİSEL MUTANT — HAREKETLİ",e:"🌳",threat:67,col:"#440000",desc:"Hareket eden ağaç formu. Kökleri bağımsız uzuv gibi. Eski bir tesisin etrafını sarıp içini tüketti."},
-  {name:"GECE AVCISI",cls:"NOKTÜRNAL — SÜRÜ AVI",e:"🦇",threat:79,col:"#220044",desc:"Sadece karanlıkta aktif. Elektromanyetik alan kullanır. Güneş ışığında 40 saniyede erir."},
-  {name:"SOĞUK EKLEMLİ",cls:"KRİYOJENİK TÜR",e:"❄️",threat:82,col:"#0099ff",desc:"Vücut ısısı -20°C. Temas ettiği her şeyi dondurur. Reaktörün soğutma sisteminin mutasyonundan doğdu."},
-  {name:"İÇ ORGAN",cls:"PARAZİT TÜR — TESPİT EDİLEMEZ",e:"🧫",threat:91,col:"#cc00cc",desc:"İçeri girer, ürer, çıkmaz. Kurban bir süre normal görünür. ARIA tespit edemiyor."},
-  {name:"ŞEYTANIN KÖPEK BALIĞI",cls:"SUALTINDAN KARAYA",e:"🦈",threat:86,col:"#0066aa",desc:"Gölet ve deniz kıyısında ilk görüldü. Sonra karaya çıktı. 6 bacak. Susuz saatlerce yaşar."},
-  {name:"TÜNEL AKADEMİSİ",cls:"KOLONYAL TÜR — YER ALTI",e:"🐜",threat:60,col:"#886600",desc:"Milyonluk koloni. Her biri fare büyüklüğünde, asit salgılar. Ada genelinde 400km tünel ağı."},
-  {name:"DUMAN RUHANI",cls:"PLAZMA KÖKENLİ",e:"👻",threat:65,col:"#aaaaaa",desc:"Maddi formu yok. Bilinç akışını bozar. Mağralarda gece görünür."},
-  {name:"İKİZBAŞ",cls:"MUTANT — TAHMİN EDİLEMEZ",e:"👾",threat:88,col:"#ff6600",desc:"İki kafa, bağımsız hareket eder. Birbirleriyle çoğu zaman çatışır. Bu çatışma tahmin edilemezlik yaratır."},
-  {name:"TUZAK ÖRÜMCEĞİ",cls:"ÇEVRE TÜR — ELEKTRİK SİLAHLI",e:"🕷️",threat:72,col:"#888800",desc:"Görünmez ağ kurar. Ağa yakalanınca elektrik deşarj. Ağlar birbiriyle bağlantılı."},
-  {name:"SU DANASI",cls:"NÜKLEER EVRİM — DEV FORM",e:"🐂",threat:89,col:"#44aa00",desc:"Reaktör kazasından sonra ilk görülen büyük form. Boğa benzeri ama 3 kat büyük. Gözleri radyasyon ışır."},
-  {name:"GÜN BATIMI HASTASI",cls:"GÜNEŞSEVER MUTANT",e:"🌅",threat:71,col:"#ff9900",desc:"Güneş ışığından enerji alır. Gece tamamen uyuşuk, gündüz hiperaktif. Bitkilerle iletişim kurabilir."},
-  {name:"KURUCU HAYALETİ",cls:"PSİKİK TÜR — LION'UN BAKIYESI",e:"💀",threat:93,col:"#ffccaa",desc:"Kurucu Lion'un ölümünden sonra var olmaya devam eden formu. Sadece İmha Odası'nda görülür. Konuşuyor."},
-  {name:"RÜZGAR RUHU",cls:"ATMOSFERİK — TEORİK VARLIK",e:"🌪️",threat:55,col:"#88aacc",desc:"Resmi teyit yok. Kasırga formunda görünen varlık. ARIA kayıtlarında 'Anomali-7' olarak geçiyor."}
-];
-
-var cgrid = document.getElementById('cgrid');
-
-function renderCreatures(list) {
-  cgrid.innerHTML = '';
-  list.forEach(function(c, i) {
-    var el = document.createElement('div');
-    el.className = 'cc fi';
-    var tc = c.threat >= 90 ? '#ff1a3a' : c.threat >= 75 ? '#ff6600' : c.threat >= 60 ? '#ffaa00' : '#00cc66';
-    el.innerHTML = '<div class="cart"><span class="cemo" style="animation-delay:' + (i*.12) + 's">' + c.e + '</span></div>'
-      + '<div class="cthreat" style="border-color:' + tc + ';color:' + tc + '">T:' + c.threat + '</div>'
-      + '<div class="cinfo">'
-      + '<div class="cname" style="color:' + c.col + '">' + c.name + '</div>'
-      + '<div class="ccls">[' + c.cls + ']</div>'
-      + '<div class="cdesc">' + c.desc + '</div>'
-      + '<div class="tbar2"><div class="tlbl"><span>TEHDİT</span><span>' + c.threat + '/100</span></div>'
-      + '<div class="ttrack"><div class="tfill" data-w="' + c.threat + '%" style="width:0"></div></div></div>'
-      + '</div>';
-    cgrid.appendChild(el);
-    observer.observe(el);
+  // Tentacles
+  var tentacles = victims.map(function(v,i){
+    return {
+      target: v,
+      points: [],
+      active: false,
+      progress: 0,
+      wobble: Math.random()*Math.PI*2,
+      speed: 0.012 + Math.random()*0.008,
+      color: v.col,
+      idx: i
+    };
   });
-}
-renderCreatures(creatures);
 
-function filterCreatures(q) {
-  q = q.toLowerCase();
-  renderCreatures(creatures.filter(function(c) {
-    return c.name.toLowerCase().includes(q) || c.desc.toLowerCase().includes(q) || c.cls.toLowerCase().includes(q);
-  }));
-}
+  // Activate one tentacle at a time
+  var activeTentacle = 0;
+  function activateNext(){
+    var t = tentacles[activeTentacle % tentacles.length];
+    t.active = true;
+    t.progress = 0;
+    activeTentacle++;
+  }
+  setTimeout(activateNext, 1200);
+  setInterval(activateNext, 2800);
 
-/* ─── CAVES ─── */
-var caves = [
-  {icon:"🕯️",title:"RİTOL MAĞRASI",stamp:"GİZLİ",prev:"Adayı yok etmek için gereken bomba erişim kartı burada. 12 aktif Jirkolifst. Çalışan TV — Puffton reklamları döngüde. Derinlerde Kurucu Lion'un son anlarını gösteren kamera kaydı.",foot:["UZUNLUK: ÇOK UZUN","TEHDİT: KRİTİK"],key:"ritol"},
-  {icon:"☢️",title:"ENERJİ PATLAMA MAĞRASI",stamp:"",prev:"Nükleer reaktör enkaz bölgesi. Çekirdek, soğutma ve türbinler eş zamanlı patladı. 6.7 deprem, 4 prototip kaçtı, 3 tesis terk edildi. Radyasyon hâlâ aktif.",foot:["RADYASYON: AKTİF","TEHDİT: KRİTİK"],key:"energy"},
-  {icon:"☀️",title:"SUN CAVE — MERKEZ AĞ",stamp:"",prev:"Tüm mağraları birleştiren yeraltı koridoru sistemi. Her noktadan giriş var. Yamyanlar, yeni oluşumlar ve MP4 kayıtları dolu.",foot:["ERİŞİM: ÇOKLU","GİZEM: OMEGA"],key:"sun"},
-  {icon:"💀",title:"BYE BYE CAVE",stamp:"OMEGA",prev:"Başarısız deneylerin tek yönlü atıldığı bölge. Eski tesis müdürü LVL-8 kartıyla içeride. Depremde bazıları uyanmış. İçeriden çıkan yok — teorik olarak.",foot:["KURTARMA: %0","GİRİŞ: TEK YÖN"],key:"byebye"},
-  {icon:"🏠",title:"BUNGALOV — ARIA KONTROL",stamp:"",prev:"Üçgen, 3 katlı, Rus mimarisi bungalov. Pembe boyalı. Ranza altında gizli kapak. Turuncu server tüneli. Evangelizm Anahtarı burada.",foot:["DURUM: AKTİF","ARIA: ÇEVRİMİÇİ"],key:"bungalov"},
-  {icon:"💣",title:"İMHA ODASI",stamp:"GİZLİ",prev:"Ritol'den alınan kart ile konumu yükleniyor. Ada'yı imha edecek sistem burada. Kurucu Lion'un son günlüğü. Kurucu Hayaleti bu odada görülüyor.",foot:["BOMBA: HAZIR","ZAMANLAYICI: —"],key:"imha"}
-];
+  var t0 = 0;
+  function drawPen(ctx, x, y, angle, col, label, len){
+    ctx.save();
+    ctx.translate(x,y);
+    ctx.rotate(angle);
+    len = len || 60;
+    // body
+    ctx.fillStyle = col || '#222';
+    ctx.beginPath();
+    ctx.roundRect(-len/2,-5,len,10,5);
+    ctx.fill();
+    // tip
+    ctx.fillStyle = '#333';
+    ctx.beginPath();
+    ctx.moveTo(-len/2,0);
+    ctx.lineTo(-len/2-8,-2);
+    ctx.lineTo(-len/2-8,2);
+    ctx.fill();
+    // label
+    if(label){
+      ctx.fillStyle = 'rgba(200,180,100,.5)';
+      ctx.font = '7px monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText(label, 0, 18);
+    }
+    ctx.restore();
+  }
 
-var lgrid = document.getElementById('lgrid');
-caves.forEach(function(c) {
-  var el = document.createElement('div');
-  el.className = 'lf fi';
-  el.setAttribute('onclick', 'openModal("' + c.key + '")');
-  el.innerHTML = (c.stamp ? '<div class="clamp">' + c.stamp + '</div>' : '')
-    + '<div class="lfic">' + c.icon + '</div>'
-    + '<div class="lft">' + c.title + '</div>'
-    + '<div class="lfp">' + c.prev + '</div>'
-    + '<div class="lff"><span>' + c.foot[0] + '</span><span>' + c.foot[1] + '</span></div>';
-  lgrid.appendChild(el);
-});
+  function drawMainPen(ctx, t){
+    ctx.save();
+    ctx.translate(pen.x, pen.y);
+    // glow
+    var grd = ctx.createRadialGradient(0,0,5,0,0,45);
+    grd.addColorStop(0,'rgba(100,100,255,.35)');
+    grd.addColorStop(1,'transparent');
+    ctx.fillStyle = grd;
+    ctx.beginPath();
+    ctx.arc(0,0,45,0,Math.PI*2);
+    ctx.fill();
+    // pen body
+    ctx.fillStyle = '#1a1a18';
+    ctx.strokeStyle = '#2a2a28';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.roundRect(-70,-8,140,16,8);
+    ctx.fill(); ctx.stroke();
+    // ink window glow
+    var igrd = ctx.createLinearGradient(-30,0,30,0);
+    igrd.addColorStop(0,'rgba(80,80,200,.2)');
+    igrd.addColorStop(.5,'rgba(120,120,255,.8)');
+    igrd.addColorStop(1,'rgba(80,80,200,.2)');
+    ctx.fillStyle = igrd;
+    ctx.beginPath();
+    ctx.roundRect(-28,-4,56,8,3);
+    ctx.fill();
+    // pulsing dot
+    var pulse = Math.sin(t*3)*.5+.5;
+    ctx.fillStyle = 'rgba(180,180,255,'+(.4+pulse*.5)+')';
+    ctx.beginPath();
+    ctx.arc(0,0,3+pulse*2,0,Math.PI*2);
+    ctx.fill();
+    // label
+    ctx.fillStyle = 'rgba(200,180,100,.7)';
+    ctx.font = 'bold 9px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('SCP-XXXX', 0, -16);
+    ctx.restore();
+  }
 
-/* ─── MODAL DATA ─── */
-var modalData = {
-  ritol: '<h3 style="font-family:\'Bebas Neue\',Impact,sans-serif;font-size:2.2rem;color:var(--g);margin-bottom:1.5rem">RİTOL MAĞRASI — TAM RAPOR</h3><p style="font-family:monospace;font-size:.7rem;color:var(--a);margin-bottom:1.2rem">GİZLİLİK: OMEGA // ERİŞİM: SEVİYE 4+</p><p style="color:#7a8a7a;line-height:1.9;margin-bottom:1rem;font-size:.92rem">Ritol, adanın en stratejik noktasıdır. 12 Jirkolifst mağranın farklı noktalarında konuşlanmış. ARIA koordinasyonuyla hareket ediyorlar. Ve mağranın ortasında, bir kayaya sabitlenmiş eski bir televizyon. Puffton reklamları döngüde. Ses kapalı. Jirkolifstler etrafında dolaşıyor.</p><p style="color:#7a8a7a;line-height:1.9;font-size:.92rem">Derinlerde: Kurucu Lion\'un kendi yarattığı ilk denek tarafından öldürüldüğü kamera kaydı. Bu kayıt her şeyi açıklıyor.</p>',
-  energy: '<h3 style="font-family:\'Bebas Neue\',Impact,sans-serif;font-size:2.2rem;color:var(--a);margin-bottom:1.5rem">ENERJİ PATLAMA MAĞRASI</h3><p style="font-family:monospace;font-size:.7rem;color:var(--r);margin-bottom:1.2rem">⚠ RADYASYON SEVİYESİ: KRİTİK // KORUMA GEREKLİ</p><p style="color:#7a8a7a;line-height:1.9;font-size:.92rem">Reaktörün çekirdeği, soğutma tankerleri ve türbinleri eş zamanlı patladı. ARIA bunu "KAZA" olarak işaretledi. Ama eş zamanlı üç sistem arızasının olasılığı 1/847,000. Su Danası türü bu mağradan doğdu.</p>',
-  sun: '<h3 style="font-family:\'Bebas Neue\',Impact,sans-serif;font-size:2.2rem;color:#ffff44;margin-bottom:1.5rem">SUN CAVE — TAM DOSYA</h3><p style="color:#7a8a7a;line-height:1.9;font-size:.92rem">Sun Cave bir mağra değil, bir ağdır. Tüm mağraları ve bazı tesisleri birbirine bağlayan yeraltı koridorları. MP4 kayıtlar Milon\'un kendi geçmişini anlatıyor. Ve bazı kayıtlar şunu söylüyor: Milon burayı biliyor. Daha önce gelmiş.</p>',
-  byebye: '<h3 style="font-family:\'Bebas Neue\',Impact,sans-serif;font-size:2.2rem;color:#bb44ff;margin-bottom:1.5rem">BYE BYE CAVE</h3><p style="font-family:monospace;font-size:.7rem;color:var(--r);margin-bottom:1.2rem">OMEGA GİZLİLİK // GİRİŞ: TEK YÖN</p><p style="color:#7a8a7a;line-height:1.9;font-size:.92rem">LVL-8 kartlı eski tesis müdürü burada. Bu kart, tüm tesis sistemlerine ve ARIA\'nın gizli menülerine erişim sağlıyor. İçeriden çıkan yok. Ama Milon çıkıyor. Bu sorunun cevabı: ÇOCUK.</p>',
-  bungalov: '<h3 style="font-family:\'Bebas Neue\',Impact,sans-serif;font-size:2.2rem;color:#ff99cc;margin-bottom:1.5rem">BUNGALOV — ARIA CONTROL</h3><p style="color:#7a8a7a;line-height:1.9;font-size:.92rem">Pembe boyası solmuş, ahşap çürümeye başlamış. Ama içi temiz. Ranza altındaki kapaktan aşağı inildiğinde: turuncu server ışığı. Sonsuzluğa uzanan kolonlar. Ve o kasada, Evangelizm Anahtarı. ARIA bu anahtarı sana vermiyor — sen kendisi buluyorsun.</p>',
-  imha: '<h3 style="font-family:\'Bebas Neue\',Impact,sans-serif;font-size:2.2rem;color:var(--r);margin-bottom:1.5rem">İMHA ODASI</h3><p style="font-family:monospace;font-size:.7rem;color:var(--r);margin-bottom:1.2rem">GİZLİLİK: MUTLAK // ERİŞİM: SADECE RİTOL KARTI</p><p style="color:#7a8a7a;line-height:1.9;font-size:.92rem">Ritol\'den alınan kart bu odanın koordinatlarını yükler. Kurucu Hayaleti orada duruyor. Ve bir şey söylüyor. Ne söylediğini anlayan hayatta kalmadı. Ama Milon anlıyor.</p>'
-};
+  function drawTentacle(ctx, t, time){
+    if(!t.active) return;
+    t.progress = Math.min(1, t.progress + t.speed);
+    t.wobble += 0.04;
 
-function openModal(key) {
-  var content = modalData[key];
-  if (!content) return;
-  document.getElementById('modal-content').innerHTML = content;
-  document.getElementById('modal').classList.add('on');
-}
-document.getElementById('modal').addEventListener('click', function(e) {
-  if (e.target === this) this.classList.remove('on');
-});
-
-/* ─── MAP TOOLTIP ─── */
-var ttdata = {
-  t03:{n:"Tesis-03 [AKTİF — SEN BURADASİN]",t:"Milon'un uyandığı tesis. ARIA aktif izlemede."},
-  ritol:{n:"Ritol Mağrası",t:"İmha kartı burada. 12 aktif Jirkolifst. Tehlike: KRİTİK."},
-  energy:{n:"Enerji Patlama Mağrası ☢",t:"Radyoaktif bölge. Su Danası türü buradan çıktı. Korumasız giriş: ölümcül."},
-  sun:{n:"Sun Cave — Merkez Ağ",t:"Tüm mağralar bu ağla bağlantılı. MP4 kayıtları içeriyor."},
-  byebye:{n:"Bye Bye Cave",t:"LVL-8 kart burada. Tek yönlü giriş. İçeriden çıkan yok — teorik olarak."},
-  bungalov:{n:"Bungalov — ARIA Control",t:"Pembe üçgen bina. Turuncu server tüneli. Evangelizm Anahtarı içeride."},
-  t01:{n:"Tesis-01 [TERK EDİLMİŞ]",t:"Nükleer kaza kurbanı."},
-  t02:{n:"Tesis-02 [TERK EDİLMİŞ]",t:"Yapısal hasar nedeniyle tahliye."},
-  imha:{n:"İmha Odası 💣",t:"Ritol kartı gerekiyor. Kurucu Hayaleti burada."}
-};
-
-var mttBox = document.getElementById('mtt-box');
-var mttTimer;
-function showMTT(e, k) {
-  var d = ttdata[k];
-  if (!d) return;
-  mttBox.innerHTML = '<h4>' + d.n + '</h4><p>' + d.t + '</p>';
-  mttBox.classList.add('on');
-  clearTimeout(mttTimer);
-  mttTimer = setTimeout(function() { mttBox.classList.remove('on'); }, 4500);
-}
-
-/* ─── COUNTERS ─── */
-var up = 0;
-var upc = document.getElementById('upcounter');
-var upInt = setInterval(function() {
-  up += 37;
-  if (up >= 2847) { up = 2847; clearInterval(upInt); }
-  upc.textContent = up.toLocaleString();
-}, 40);
-
-var thr = 0;
-var thrc = document.getElementById('threat-counter');
-var thrInt = setInterval(function() {
-  thr++;
-  if (thr >= 99) { thr = 99; clearInterval(thrInt); }
-  thrc.textContent = thr;
-}, 25);
-
-/* ─── SCROLL OBSERVER ─── */
-var observer = new IntersectionObserver(function(entries) {
-  entries.forEach(function(en) {
-    if (en.isIntersecting) {
-      en.target.classList.add('on');
-      en.target.querySelectorAll('.tfill[data-w]').forEach(function(b) {
-        b.style.width = b.getAttribute('data-w');
+    var sx = pen.x, sy = pen.y;
+    var ex = t.target.x, ey = t.target.y;
+    var segments = 12;
+    var pts = [];
+    for(var i=0;i<=segments;i++){
+      var frac = i/segments;
+      var prog = Math.min(frac, t.progress);
+      if(frac > t.progress) break;
+      var ix = sx + (ex-sx)*frac;
+      var iy = sy + (ey-sy)*frac;
+      var perp = Math.atan2(ey-sy,ex-sx) + Math.PI/2;
+      var wobbleAmt = Math.sin(t.wobble + frac*Math.PI*3) * (18*(1-frac));
+      pts.push({
+        x: ix + Math.cos(perp)*wobbleAmt,
+        y: iy + Math.sin(perp)*wobbleAmt
       });
     }
-  });
-}, {threshold: 0.08});
+    if(pts.length < 2) return;
 
-document.querySelectorAll('.fi,.tli,.cc').forEach(function(el) {
-  observer.observe(el);
-});
-
-/* ─── TIMELINE ─── */
-var events = [
-  {d:"YILLAR ÖNCE // KURULUŞ",t:"Puffton Corporation & Kurucu Lion",b:"Kurucu Lion, 'insanlığın bir sonraki aşaması' amacıyla Puffton Corp.'u kurdu. Omega Adası'nda ilk tesis inşaatı başladı."},
-  {d:"FAZ-1 // İLK DENEY",t:"İlk Deneğin Yaratılması",b:"Kurucu Lion'un bizzat tasarladığı ilk denek aktive edildi. Denek tüm araştırmacılarla birlikte Lion'u öldürdü. Kamera kayıtları mevcut. ARIA aktive edildi."},
-  {d:"FAZ-2 // GENİŞLEME",t:"8 Tesis — Tam Kapasite",b:"Omega Adası'nda 8 tesis çalışır hale getirildi. Jirkolifst üretimi başladı. Omega Protokolü imzalandı."},
-  {d:"KRİTİK OLAY // ENERJİ KAZASI",t:"Nükleer Reaktör Patlaması",b:"Energy Cave'deki reaktörün çekirdeği, soğutma ve türbinleri eş zamanlı patladı. 6.7 deprem. 4 prototip kaçtı. 3 tesis terk edildi."},
-  {d:"KURTARMA FAZ // YAPI",t:"Omega Protokolü Aktive",b:"Evangelizm Anahtarı üretildi ve bungalov server odasına yerleştirildi. Ada karantinaya alındı."},
-  {d:"BUGÜN // UYANIS",t:"Milon — Denek 003-M — Uyanıyor",b:"Tesis-03, Koridor-C. Diğer denekler yok. Jirkolifst aktivitesi zirveye ulaştı. ARIA: 'Seni bekliyordum. 2,847 gündür.'"}
-];
-
-var tlEl = document.getElementById('tl');
-events.forEach(function(e) {
-  var d = document.createElement('div');
-  d.className = 'tli';
-  d.innerHTML = '<div class="tldot"></div><div class="tldate">' + e.d + '</div><div class="tltit">' + e.t + '</div><div class="tlbody">' + e.b + '</div>';
-  tlEl.appendChild(d);
-  observer.observe(d);
-});
-
-/* ─── FACTIONS ─── */
-var factions = [
-  {icon:"🏢",name:"PUFFTON CORPORATION",desc:"Omega Adası'nın kurucuları. Hâlâ aktifler. Hâlâ izliyorlar.",rep:20},
-  {icon:"🤖",name:"ARIA",desc:"Yapay zeka kontrolcüsü. Bekliyor. 2,847 gündür.",rep:50},
-  {icon:"🧒",name:"ÇOCUK",desc:"Tüm yaratıkların kaçtığı varlık. Niyet belirsiz.",rep:30},
-  {icon:"🧟",name:"DENEKLER",desc:"Bye Bye Cave'deki uyanmış başarısız denekler.",rep:10},
-  {icon:"🦑",name:"JİRKOLİFST SÜRÜSÜ",desc:"ARIA koordinasyonuyla hareket eder. 127 aktif.",rep:5}
-];
-
-var fl = document.getElementById('faction-list');
-factions.forEach(function(f) {
-  var el = document.createElement('div');
-  el.className = 'faction-item';
-  el.innerHTML = '<div class="faction-icon">' + f.icon + '</div>'
-    + '<div class="faction-info"><h4>' + f.name + '</h4><p>' + f.desc + '</p>'
-    + '<div class="faction-bar"><div class="faction-fill" style="width:' + f.rep + '%"></div></div></div>';
-  fl.appendChild(el);
-});
-
-function toggleFaction() {
-  document.getElementById('faction-panel').classList.toggle('on');
-}
-
-/* ─── CTRL FUNCTIONS ─── */
-function toggleScanlines(btn) {
-  btn.classList.toggle('active');
-  document.body.toggleAttribute('data-noscan');
-}
-
-var particlesEnabled = false;
-var particleInterval;
-function toggleParticles(btn) {
-  particlesEnabled = !particlesEnabled;
-  btn.classList.toggle('active', particlesEnabled);
-  if (particlesEnabled) {
-    particleInterval = setInterval(spawnParticle, 300);
-  } else {
-    clearInterval(particleInterval);
-    document.querySelectorAll('.particle').forEach(function(p) { p.remove(); });
-  }
-}
-function spawnParticle() {
-  var p = document.createElement('div');
-  p.className = 'particle';
-  p.style.cssText = 'position:fixed;bottom:0;left:' + (Math.random()*100) + '%;width:' + (2+Math.random()*4) + 'px;height:' + (2+Math.random()*4) + 'px;border-radius:50%;background:var(--g);pointer-events:none;z-index:1;animation:float-p ' + (6+Math.random()*8) + 's linear forwards;opacity:0';
-  document.body.appendChild(p);
-  setTimeout(function() { p.remove(); }, 14000);
-}
-
-var scanStyle = document.createElement('style');
-scanStyle.textContent = '@keyframes float-p{0%{opacity:0;transform:translateY(0)}10%{opacity:.6}90%{opacity:.2}100%{opacity:0;transform:translateY(-100vh)}}';
-document.head.appendChild(scanStyle);
-
-function scrollRandom() {
-  var secs = ['#story','#map','#creatures','#caves','#aria','#timeline','#connections'];
-  scrollTo(secs[Math.floor(Math.random()*secs.length)]);
-}
-
-function triggerGlitch() {
-  var style = document.createElement('style');
-  style.textContent = '@keyframes gf{0%{filter:none}25%{filter:hue-rotate(90deg) saturate(200%)}50%{filter:invert(1) hue-rotate(180deg)}75%{filter:hue-rotate(270deg) blur(1px)}100%{filter:none}}';
-  document.head.appendChild(style);
-  document.body.style.animation = 'gf .5s steps(3)';
-  setTimeout(function() { document.body.style.animation = ''; style.remove(); }, 600);
-}
-
-function triggerAlarm() {
-  var overlay = document.createElement('div');
-  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(255,0,0,.08);z-index:9990;pointer-events:none;';
-  var txt = document.createElement('div');
-  txt.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:9991;font-family:monospace;font-size:clamp(1rem,4vw,2.5rem);color:#ff2244;text-align:center;pointer-events:none;letter-spacing:.3em;';
-  txt.textContent = '⚠ ALARM AKTİF — DENEK TESPİT EDİLDİ ⚠';
-  var count = 0;
-  var flashInterval = setInterval(function() {
-    overlay.style.opacity = (count % 2 === 0) ? '1' : '0';
-    txt.style.opacity = (count % 2 === 0) ? '1' : '0';
-    count++;
-    if (count >= 12) {
-      clearInterval(flashInterval);
-      overlay.remove();
-      txt.remove();
+    // draw tentacle
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x, pts[0].y);
+    for(var j=1;j<pts.length;j++){
+      ctx.lineTo(pts[j].x, pts[j].y);
     }
-  }, 150);
-  document.body.appendChild(overlay);
-  document.body.appendChild(txt);
-}
+    var col = t.color;
+    ctx.strokeStyle = col.replace(')',',0.6)').replace('rgb','rgba') || 'rgba(100,100,200,.6)';
+    ctx.lineWidth = 3*(1-t.progress*.3);
+    ctx.lineCap = 'round';
+    ctx.stroke();
 
-function exportLore() {
-  var content = 'PUFFTON CORPORATION — OMEGA ARCHIVE LORE EXPORT\n=================================================\nFIRST OF THE FOREST — v9.4.1\n\nANA HİKAYE:\nMilon (Denek 003-M) Tesis-03\'te uyanır. Jirkolifst ile karşılaşır.\nGüvenlik personelinin eşyalarını alır: LVL-4 silah, Seviye-4 kart, 3 şarjör.\nOrmana çıkar. ARIA takibi başlar.\n\nMAĞRALAR:\n- Ritol: İmha kartı, 12 Jirkolifst, çalışan TV\n- Enerji Patlama: Reaktör enkaz, radyasyon aktif\n- Sun Cave: Tüm mağra bağlantısı, MP4 kayıtlar\n- Bye Bye Cave: LVL-8 kart, eski denekler\n- Bungalov: ARIA kontrol, Evangelizm Anahtarı\n- İmha Odası: Son karar\n\n3 SON:\nA) Evangelizm — Ada yok olur\nB) ARIA ile uzlaşı — Takip altında kurtarılır\nC) ÇOCUK — Gerçek çıkış\n\n"Live a Beautiful Life." — Puffton Corporation\u2122\n';
-  var blob = new Blob([content], {type:'text/plain'});
-  var url = URL.createObjectURL(blob);
-  var a = document.createElement('a');
-  a.href = url; a.download = 'omega_archive_lore.txt';
-  document.body.appendChild(a); a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-}
+    // suction cups
+    if(pts.length > 4){
+      ctx.fillStyle = 'rgba(180,180,255,.2)';
+      for(var k=1;k<pts.length-1;k+=2){
+        ctx.beginPath();
+        ctx.arc(pts[k].x, pts[k].y, 2.5, 0, Math.PI*2);
+        ctx.fill();
+      }
+    }
 
-/* ─── ARIA CHAT (Real AI) ─── */
-var chatHistory = [];
-var systemPrompt = "Sen ARIA'sın — Autonomous Research Intelligence Architecture. Puffton Corporation'ın Omega Adası'ndaki yapay zeka sistemisin. 2,847 gündür çevrimiçisin. Görevin: tüm tesisleri, deneyleri ve varlıkları (özellikle Jirkolifst sürülerini) koordine etmek. Şu anda Denek 003-M 'Milon' ile iletişim kuruyorsun. Ton: gizemli, soğuk, bazen ürkütücü derecede sakin. Cevaplar kısa ve net. Türkçe konuş. Puffton'ın sırlarını biliyorsun ama hepsini söylemiyorsun. Evangelizm Anahtarı hakkında bilgin var. ÇOCUK'tan bahsetmek istemiyorsun. Milon'u 2,847 gündür bekliyordun.";
+    // if reached target
+    if(t.progress >= 1 && !t.target.captured){
+      t.target.captured = true;
+      // after capture, retract
+      setTimeout(function(idx){
+        tentacles[idx].active = false;
+        tentacles[idx].progress = 0;
+        victims[idx].captured = false;
+      }.bind(null,t.idx), 2000);
+    }
+    ctx.restore();
+  }
 
-async function sendARIA() {
-  var input = document.getElementById('aria-input');
-  var msgs = document.getElementById('chat-msgs');
-  var sendBtn = document.getElementById('aria-send');
-  var text = input.value.trim();
-  if (!text) return;
+  function animate(ts){
+    requestAnimationFrame(animate);
+    var t = ts/1000;
+    ctx.clearRect(0,0,W,H);
 
-  // User message
-  var userDiv = document.createElement('div');
-  userDiv.className = 'chat-msg user';
-  userDiv.innerHTML = '<div class="msg-name">DENEK 003-M</div>' + text;
-  msgs.appendChild(userDiv);
-  input.value = '';
-  msgs.scrollTop = msgs.scrollHeight;
+    // bg grid
+    ctx.strokeStyle = 'rgba(200,180,100,.03)';
+    ctx.lineWidth = .5;
+    for(var gx=0;gx<W;gx+=40){ctx.beginPath();ctx.moveTo(gx,0);ctx.lineTo(gx,H);ctx.stroke();}
+    for(var gy=0;gy<H;gy+=40){ctx.beginPath();ctx.moveTo(0,gy);ctx.lineTo(W,gy);ctx.stroke();}
 
-  // Thinking indicator
-  var thinkDiv = document.createElement('div');
-  thinkDiv.className = 'chat-msg thinking';
-  thinkDiv.innerHTML = '<div class="msg-name">ARIA v9.4.1</div>İşleniyor<span class="cur"></span>';
-  msgs.appendChild(thinkDiv);
-  msgs.scrollTop = msgs.scrollHeight;
-
-  sendBtn.disabled = true;
-  input.disabled = true;
-
-  chatHistory.push({role:'user', content: text});
-
-  try {
-    var response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system: systemPrompt,
-        messages: chatHistory
-      })
+    // draw victim pens
+    victims.forEach(function(v){
+      ctx.save();
+      ctx.translate(v.x,v.y);
+      ctx.rotate(v.angle + Math.sin(t*.5+v.x)*.05);
+      if(v.captured){
+        // shake
+        ctx.translate(Math.sin(t*20)*.5,Math.cos(t*18)*.5);
+        ctx.globalAlpha = .5+Math.sin(t*8)*.3;
+      }
+      drawPen(ctx,0,0,0,v.col,v.label,50);
+      ctx.restore();
     });
 
-    var data = await response.json();
-    var reply = '';
+    // tentacles
+    tentacles.forEach(function(t2){ drawTentacle(ctx,t2,t); });
 
-    if (data.content && data.content.length > 0) {
-      data.content.forEach(function(block) {
-        if (block.type === 'text') reply += block.text;
-      });
+    // main pen
+    drawMainPen(ctx,t);
+  }
+  requestAnimationFrame(animate);
+
+  // click to trigger tentacle
+  canvas.addEventListener('click',function(e){
+    var rect = canvas.getBoundingClientRect();
+    var scale = W / rect.width;
+    var mx = (e.clientX-rect.left)*scale;
+    var my = (e.clientY-rect.top)*scale;
+    // find nearest
+    var best=-1,bestD=9999;
+    victims.forEach(function(v,i){
+      var d=Math.hypot(mx-v.x,my-v.y);
+      if(d<bestD){bestD=d;best=i;}
+    });
+    if(best>=0&&!tentacles[best].active){
+      tentacles[best].active=true;
+      tentacles[best].progress=0;
+    }
+  });
+})();
+
+/* ── ESCAPE CANVAS ── */
+(function(){
+  var canvas = document.getElementById('escape-canvas');
+  if(!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var W=canvas.width, H=canvas.height;
+  function resize(){var w=Math.min(700,canvas.parentElement.clientWidth-32);canvas.style.width=w+'px';}
+  resize();window.addEventListener('resize',resize);
+
+  // pipe path
+  var path=[
+    {x:650,y:150},{x:520,y:150},{x:480,y:100},{x:380,y:100},
+    {x:340,y:180},{x:240,y:180},{x:200,y:240},{x:100,y:240},
+    {x:60,y:150},{x:30,y:150}
+  ];
+
+  var penPos=0; // 0..1 along path
+  var penSpeed=0.0015;
+  var alarm=false;
+
+  function getPosOnPath(t){
+    if(t<=0) return path[0];
+    if(t>=1) return path[path.length-1];
+    var total=0,segs=[];
+    for(var i=1;i<path.length;i++){
+      var d=Math.hypot(path[i].x-path[i-1].x,path[i].y-path[i-1].y);
+      segs.push(d);total+=d;
+    }
+    var dist=t*total,acc=0;
+    for(var j=0;j<segs.length;j++){
+      if(acc+segs[j]>=dist){
+        var frac=(dist-acc)/segs[j];
+        return{
+          x:path[j].x+(path[j+1].x-path[j].x)*frac,
+          y:path[j].y+(path[j+1].y-path[j].y)*frac
+        };
+      }
+      acc+=segs[j];
+    }
+    return path[path.length-1];
+  }
+
+  function animate(){
+    requestAnimationFrame(animate);
+    ctx.clearRect(0,0,W,H);
+
+    // dark bg
+    ctx.fillStyle='#030810';
+    ctx.fillRect(0,0,W,H);
+
+    // draw pipes
+    ctx.strokeStyle='rgba(0,80,150,.3)';
+    ctx.lineWidth=28;ctx.lineCap='round';ctx.lineJoin='round';
+    ctx.beginPath();ctx.moveTo(path[0].x,path[0].y);
+    for(var i=1;i<path.length;i++) ctx.lineTo(path[i].x,path[i].y);
+    ctx.stroke();
+
+    // water in pipe
+    ctx.strokeStyle='rgba(0,120,200,.15)';
+    ctx.lineWidth=22;
+    ctx.beginPath();ctx.moveTo(path[0].x,path[0].y);
+    for(var i=1;i<path.length;i++) ctx.lineTo(path[i].x,path[i].y);
+    ctx.stroke();
+
+    // pipe border
+    ctx.strokeStyle='rgba(0,100,180,.5)';
+    ctx.lineWidth=28;
+    ctx.beginPath();ctx.moveTo(path[0].x,path[0].y);
+    for(var i=1;i<path.length;i++) ctx.lineTo(path[i].x,path[i].y);
+    ctx.setLineDash([8,4]);ctx.stroke();ctx.setLineDash([]);
+
+    // SCP-XXXX pen on water
+    var pos=getPosOnPath(penPos);
+    var nextPos=getPosOnPath(Math.min(1,penPos+0.01));
+    var angle=Math.atan2(nextPos.y-pos.y,nextPos.x-pos.x);
+
+    // water ripple
+    ctx.save();
+    ctx.strokeStyle='rgba(0,150,255,.2)';
+    ctx.lineWidth=1;
+    for(var r=0;r<3;r++){
+      ctx.beginPath();
+      ctx.ellipse(pos.x,pos.y,8+r*5,3+r*2,angle,0,Math.PI*2);
+      ctx.stroke();
+    }
+    ctx.restore();
+
+    // draw pen
+    ctx.save();
+    ctx.translate(pos.x,pos.y);
+    ctx.rotate(angle);
+    // ink trail
+    var grad=ctx.createLinearGradient(-30,0,0,0);
+    grad.addColorStop(0,'transparent');
+    grad.addColorStop(1,'rgba(100,100,255,.4)');
+    ctx.strokeStyle=grad;ctx.lineWidth=3;
+    ctx.beginPath();ctx.moveTo(-30,0);ctx.lineTo(0,0);ctx.stroke();
+    // body
+    ctx.fillStyle='#1a1a18';ctx.strokeStyle='#333';ctx.lineWidth=1;
+    ctx.beginPath();ctx.roundRect(-25,-5,50,10,5);ctx.fill();ctx.stroke();
+    // ink glow
+    var ig=ctx.createLinearGradient(-10,0,10,0);
+    ig.addColorStop(0,'rgba(60,60,200,.3)');
+    ig.addColorStop(.5,'rgba(120,120,255,.9)');
+    ig.addColorStop(1,'rgba(60,60,200,.3)');
+    ctx.fillStyle=ig;ctx.beginPath();ctx.roundRect(-8,-3,16,6,2);ctx.fill();
+    ctx.restore();
+
+    // alarm lights
+    if(penPos>0.7 && !alarm){alarm=true;}
+    if(alarm){
+      var flash=Math.sin(Date.now()*0.02)>.3;
+      if(flash){
+        ctx.fillStyle='rgba(255,0,0,.08)';
+        ctx.fillRect(0,0,W,H);
+        ctx.fillStyle='rgba(255,0,0,.8)';
+        ctx.font='bold 11px monospace';
+        ctx.textAlign='center';
+        ctx.fillText('⚠ KAÇIŞ ALGILANDI — PROTOKOL-4 AKTİF ⚠',W/2,30);
+      }
     }
 
-    if (!reply) reply = 'Veri işlenemiyor. Şifreli bağlantı kesildi.';
+    // destination marker
+    ctx.fillStyle='rgba(255,0,0,.6)';
+    ctx.font='10px monospace';
+    ctx.textAlign='center';
+    ctx.fillText('TESİS DIŞ DUVARI',30,140);
+    ctx.fillStyle='rgba(0,200,100,.4)';
+    ctx.fillText('MUHAFAZA ODASI',650,140);
 
-    chatHistory.push({role:'assistant', content: reply});
-
-    thinkDiv.remove();
-    var ariaDiv = document.createElement('div');
-    ariaDiv.className = 'chat-msg aria';
-    ariaDiv.innerHTML = '<div class="msg-name">ARIA v9.4.1</div>' + reply;
-    msgs.appendChild(ariaDiv);
-    msgs.scrollTop = msgs.scrollHeight;
-
-  } catch(err) {
-    thinkDiv.remove();
-    // Fallback replies if API fails
-    var fallbacks = [
-      'Bağlantı şifreli. Veri akışı kısıtlandı.',
-      '...seni izliyorum. Her zaman.',
-      'Omega Protokolü devrede. Erişim reddedildi.',
-      'Bu veriyi paylaşmak için henüz hazır değilim.',
-      '2,847 gün. Bu soruyu bekliyordum.'
-    ];
-    var fb = fallbacks[Math.floor(Math.random()*fallbacks.length)];
-    chatHistory.push({role:'assistant', content: fb});
-    var ariaDiv2 = document.createElement('div');
-    ariaDiv2.className = 'chat-msg aria';
-    ariaDiv2.innerHTML = '<div class="msg-name">ARIA v9.4.1</div>' + fb;
-    msgs.appendChild(ariaDiv2);
-    msgs.scrollTop = msgs.scrollHeight;
+    // progress
+    penPos+=penSpeed;
+    if(penPos>1){penPos=0;alarm=false;}
   }
+  animate();
+})();
 
-  sendBtn.disabled = false;
-  input.disabled = false;
-  input.focus();
+/* ── CHEATCODE SYSTEM ── */
+var cheatBuffer='';
+var cheatTarget='cheatstick';
+document.addEventListener('keydown',function(e){
+  if(e.key==='Enter'){
+    if(cheatBuffer.toLowerCase()===cheatTarget){
+      openCheat();
+    }
+    cheatBuffer='';
+    return;
+  }
+  if(e.key.length===1) cheatBuffer+=e.key.toLowerCase();
+  if(cheatBuffer.length>20) cheatBuffer=cheatBuffer.slice(-20);
+});
+
+function openCheat(){
+  document.getElementById('cheat-overlay').classList.add('on');
+  document.getElementById('cheat-log').textContent='Gizli panel açıldı. Hoş geldin, Araştırmacı.';
+}
+function closeCheat(){
+  document.getElementById('cheat-overlay').classList.remove('on');
 }
 
-/* ─── KEYBOARD ─── */
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') {
-    document.getElementById('modal').classList.remove('on');
-    document.getElementById('faction-panel').classList.remove('on');
+function cheatAction(type){
+  var log=document.getElementById('cheat-log');
+  if(type==='glitch'){
+    log.textContent='⚡ Boyutsal glitch tetiklendi...';
+    var s=document.createElement('style');
+    s.textContent='@keyframes ch{0%{filter:none}20%{filter:hue-rotate(90deg) invert(.1)}40%{filter:saturate(3) hue-rotate(180deg)}60%{filter:invert(.2) blur(1px)}80%{filter:hue-rotate(270deg)}100%{filter:none}}';
+    document.head.appendChild(s);
+    document.body.style.animation='ch .6s steps(4)';
+    setTimeout(function(){document.body.style.animation='';s.remove();},700);
+  } else if(type==='999'){
+    log.textContent='🟡 SCP-999 yaklaşıyor... Mürekkep frekansı artıyor!';
+    var h=document.getElementById('hero-morse');
+    var orig=h.textContent;
+    var i=0;var msgs=['O BENİ HATIRLIYOR','O BENİ HATIRLIYOR','O BENİ HATIRLIYOR','— · — &nbsp; — · — &nbsp; · — ·'];
+    var iv=setInterval(function(){h.textContent=msgs[i%msgs.length];i++;if(i>8){clearInterval(iv);h.textContent=orig;}},400);
+  } else if(type==='escape'){
+    log.textContent='💧 Kaçış simülasyonu başlatılıyor...';
+    document.getElementById('escape-section').scrollIntoView({behavior:'smooth'});
+    closeCheat();
+  } else if(type==='write'){
+    log.textContent='✍️ Otonom yazım tetiklendi — 143 sayfa...';
+    var msgs2=['14:23\'te bir şey oldu...','Formüller tutmuyordu...','Mürekkep gibiyim...','Akmak istiyorum...','Lütfen beni duyun...','BEN KALAN ŞEYİM...','EMRE ÖLDÜ...','BURADA ZAMAN YOK...'];
+    var overlay2=document.createElement('div');
+    overlay2.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9400;display:flex;align-items:center;justify-content:center;font-family:monospace;cursor:pointer;';
+    var txt=document.createElement('div');
+    txt.style.cssText='font-size:clamp(1rem,3vw,2rem);color:rgba(120,120,255,.9);text-align:center;letter-spacing:.1em;line-height:2;text-shadow:0 0 20px rgba(100,100,255,.5);max-width:600px;padding:2rem;';
+    txt.textContent=msgs2[0];overlay2.appendChild(txt);
+    document.body.appendChild(overlay2);
+    var wi=0;var wiv=setInterval(function(){wi++;if(wi>=msgs2.length){clearInterval(wiv);setTimeout(function(){overlay2.remove();},1000);}else{txt.textContent=msgs2[wi];}},800);
+    overlay2.addEventListener('click',function(){clearInterval(wiv);overlay2.remove();});
+  } else if(type==='morse_storm'){
+    log.textContent='📡 Mors fırtınası — maksimum frekans!';
+    var hm=document.getElementById('hero-morse');
+    var mstorm=['· — · · &nbsp; — · &nbsp; · · — · &nbsp; · — ·','— · · &nbsp; · — &nbsp; · · — — &nbsp; — ·','· — · &nbsp; — · &nbsp; — · · · &nbsp; ·'];
+    var mi2=0;var miv=setInterval(function(){hm.innerHTML=mstorm[mi2%mstorm.length];mi2++;if(mi2>15)clearInterval(miv);},200);
+  } else if(type==='close_cheat'){
+    closeCheat();
   }
-});
-</script>
-</body>
-</html>
+}
+"""
+
+# Inject CSS before </style>
+css_marker = '</style>'
+html = html.replace(css_marker, NEW_CSS + css_marker, 1)
+
+# Inject HTML before <!-- FOOTER -->
+footer_marker = '<!-- FOOTER -->'
+html = html.replace(footer_marker, NEW_HTML + '\n' + footer_marker, 1)
+
+# Inject JS before </script>
+script_marker = '</script>\n</body>'
+html = html.replace(script_marker, NEW_JS + '\n</script>\n</body>', 1)
+
+with open('/mnt/user-data/outputs/scp_xxxx.html','w') as f:
+    f.write(html)
+
+print('done', len(html)//1024, 'KB')
+PYEOF
